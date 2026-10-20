@@ -160,4 +160,4 @@ PSD 编码器的依赖许可位于 `web/vendor/PSD-LICENSES.txt`。需要重新�
 
 ## 参考来源
 
-本工具的早期设计与部分图形实现参考了 [EasyCG TexForge](https://easycg-texforge.app.workbuddy.host/)。
+本工具的早期设计与部分图形参考了 [EasyCG TexForge](https://easycg-texforge.app.workbuddy.host/)。
