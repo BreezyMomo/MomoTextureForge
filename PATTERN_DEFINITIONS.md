@@ -108,3 +108,11 @@ OgeeFlowerTile 只绘制居中单体，使用body公式文件；周期复制由�
 含生成器的资源包声明 `momo-pattern/16-v1+generator-v1` 接口版本，使旧工具拒绝导入而非显示空图。普通公式资源包继续使用原来的接口版本。底层三图层 `Renderer` 不合并同 ID 的多套生成器参数，调用方应使用节点 `TreeRenderer` 分别生成再合成；工作台已经使用该通路。
 
 这七项按种子生成静态结果，不声明连续时间动画；可以通过节点关键帧改变参数。相同种子、参数和尺寸可复现输出。无缝平铺使用通用边缘融合，不宣称原生周期或动画首尾循环。胶片颗粒使用 Ashima Arts/Stefan Gustavson 的 MIT simplex 噪声实现，声明与许可随对应 GLSL 依赖分发。
+
+### 自定义生成器
+
+“创建资源 → 生成器”接受 `momo.generator-authoring/v1` JSON，声明参数、辅助函数和按顺序执行的 GLSL 步骤；不是内置效果的模板选择器。详细约定及示例见[生成器创作规范](skills/texture-forge-author/references/generator-guide.md)。公式与生成器 JSON 可通过“导入文件”一起导入，生成器也可使用随附 CLI 的 validate/render/check 命令。
+
+资源内部使用 `generator.effect: pipeline`，`passes` 每项声明 `id`、`program`、`inputs` 和 `scale`，`program` 引用携带的 GLSL 库；`helpers` 为辅助函数库名数组。输入只能引用前面的步骤，最多三个，按顺序绑定到 input0～input2。最后一步为全尺寸输出；运行时在后续步骤不再使用中间纹理时回收。它仍使用 `momo.generator/v1` 能力及生成器资源包 ABI，旧版本不认识 pipeline 时明确拒绝加载。
+
+用户 GLSL 在浏览器 WebGL2 中执行，不运行用户 JavaScript 或任意 CPU 轨迹代码。当前没有跨帧反馈或内置 time，可通过参数关键帧改变生成结果。相同参数与尺寸的结果会缓存；编辑器保存、节点组合和导出继续使用同一生成器通路。

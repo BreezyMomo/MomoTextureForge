@@ -4,6 +4,7 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {BUILTIN} from '../web/definition-runtime.js';
+import {GENERATOR_EXAMPLE} from '../web/generator-authoring.js';
 
 const html=await readFile(new URL('../site/index.html',import.meta.url));
 const prefix='/MomoTextureForge/';
@@ -31,6 +32,13 @@ try{
  await page.getByRole('button',{name:'编辑 湍流火焰',exact:true}).click();
  const generatorDialog=page.locator('dialog.graphic-editor-dialog');await generatorDialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
  const generatorColors=await generatorDialog.locator('canvas').evaluate(canvas=>{const data=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;let colors=0;for(let i=0;i<data.length;i+=4)if(data[i+3]>8&&data[i]>data[i+2]+20)colors++;return colors;});assert.ok(generatorColors>0,'embedded generator retains fire colors');
+ await generatorDialog.locator('header .graphics-close').click();
+ await page.getByPlaceholder('搜索名称、分类或标签').fill('');
+ await page.getByRole('button',{name:'创建资源',exact:true}).click();const customDialog=page.locator('dialog.resource-create-dialog');await customDialog.getByRole('tab',{name:'生成器',exact:true}).click();
+ await customDialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();await customDialog.getByRole('textbox',{name:'生成器JSON',exact:true}).fill(JSON.stringify(GENERATOR_EXAMPLE));
+ await customDialog.getByRole('button',{name:'验证并预览',exact:true}).click();await customDialog.getByRole('slider',{name:'半径滑动条'}).waitFor();await customDialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
+ const customPixels=await customDialog.locator('section:not([hidden]) .graphic-preview-panel canvas').evaluate(c=>c.getContext('2d').getImageData(0,0,c.width,c.height).data.filter((v,i)=>i%4===3&&v>5).length);assert.ok(customPixels>100,'custom pipeline works inside standalone HTML');
+ await customDialog.getByRole('button',{name:'导入图形库',exact:true}).click();await customDialog.waitFor({state:'detached'});assert.ok(await page.locator('.graphics-card[data-origin="local"]').filter({hasText:GENERATOR_EXAMPLE.name}).count());
  // A new navigation closes the modal while keeping the same hosted path.
  await page.goto(address);await ready();
  await page.locator('#export-now').click();
@@ -65,7 +73,7 @@ try{
  assert.ok(await page.locator('#composite').count());
  assert.deepEqual(errors,[]);
  assert.ok(requests.every(request=>request.type==='document'&&new URL(request.url).pathname===prefix),JSON.stringify(requests));
- const report={builtins:BUILTIN.catalog.length,views:['editor','examples','validate'],emptyNewProject:true,undoNewProject:true,pngExport:png.length,embeddedWorker:true,embeddedGenerator:true,generatorColors,externalAssets:0,errors};
+ const report={builtins:BUILTIN.catalog.length,views:['editor','examples','validate'],emptyNewProject:true,undoNewProject:true,pngExport:png.length,embeddedWorker:true,embeddedGenerator:true,customGenerator:true,customPixels,generatorColors,externalAssets:0,errors};
  await mkdir(new URL('../test-results/pages/',import.meta.url),{recursive:true});
  await writeFile(new URL('../test-results/pages/report.json',import.meta.url),JSON.stringify(report,null,2));
  console.log(JSON.stringify(report,null,2));

@@ -58,7 +58,7 @@ export const AUTHORING_GUIDE=`# Momo Texture Forge 图形创作规范
 
 多公式交付优先提供独立JSON；附加普通合集ZIP时，下载链接和导入说明都要标注“先解压”。需要可直接导入的ZIP时，使用编辑器图形库“导出资源”，或在具备源码环境时调用其正式资源打包/图形库导出API，并用“导入文件”复验条目数量、预览与保存。不要手工拼清单、资源ID或哈希，也不要把仅有JSON的压缩包改名冒充资源ZIP。无法使用正式导出能力时，保留独立JSON交付，不承诺直接ZIP导入。
 
-出现“缺少资源文件：manifest.json”时，先核对交付包类型：普通合集应解压后选择JSON；正式资源包应重新通过导出流程生成并复验。不能补一个空manifest.json，也不能用单个JSON的validate/render成功冒充整个ZIP导入成功。随附CLI仅支持公式JSON的validate/render/check，不提供资源包导出命令。下载的AI Skill ZIP用于加载技能，也不是图形资源包。
+出现“缺少资源文件：manifest.json”时，先核对交付包类型：普通合集应解压后选择JSON；正式资源包应重新通过导出流程生成并复验。不能补一个空manifest.json，也不能用单个JSON的validate/render成功冒充整个ZIP导入成功。随附CLI支持公式和生成器JSON的validate/render/check，不提供资源包导出命令。下载的AI Skill ZIP用于加载技能，也不是图形资源包。
 
 字段：name（1～80字）、category（默认我的图形）、description（最多2000字）；formula={kind:expression或body,source:GLSL源码}；parameters数组（最多16项），每项variable、label、min、max、step、default；helpers为可选全局GLSL辅助函数文本。所有参数绑定float，整数用途在公式里显式转换；variable使用不保留的ASCII标识符，互不重复，不与函数重名。范围必须min<max，step>0，默认值在范围内。
 
@@ -71,12 +71,12 @@ export const AUTHORING_GUIDE=`# Momo Texture Forge 图形创作规范
 验收：结构校验不代表GLSL编译或视觉正确。必须通过编辑器或随附命令行工具验证预览，检查默认值、参数两端和中间值；动画查看0、0.5、1、2秒。避免除零、非法sqrt/pow/normalize、无界循环。确认画面与用户描述一致，参数实际生效，无意外裁边；编译失败时使用“复制修复信息”。不宣称未经执行的检查通过。`;
 export const AUTHORING_SKILL=`---
 name: texture-forge-author
-description: Help users turn screenshots or ideas into Momo Texture Forge resources by choosing formula, SVG or bitmap workflows, optionally refining images, authoring and debugging formulas, and guiding image editing and import.
+description: Help users turn screenshots or ideas into Momo Texture Forge resources by choosing formula, custom generator, SVG or bitmap workflows, optionally refining images, debugging procedural graphics, and guiding image editing and import.
 ---
 
 # Texture Forge 图形创作
 
-帮助用户把截图、参考图或文字想法变成可导入资源。流程：理解需求 → 辅助选择公式/SVG/位图 → 按需整理参考图 → 制作与验证 → 导入编辑器 → 根据反馈修改。公式最灵活，但不必强求公式。
+帮助用户把截图、参考图或文字想法变成可导入资源。流程：理解需求 → 辅助选择公式/生成器/SVG/位图 → 按需整理参考图 → 制作与验证 → 导入编辑器 → 根据反馈修改。公式最灵活，但不必强求公式。
 
 ## 1. 理解需求
 
@@ -91,6 +91,7 @@ description: Help users turn screenshots or ideas into Momo Texture Forge resour
 | 方式 | 适用情况 | 取舍 |
 | --- | --- | --- |
 | 公式 | 规则几何、重复纹样、可参数化轮廓、程序动画 | 参数和运动最灵活；复杂造型可能只能近似 |
+| 生成器 | 原生彩色/透明效果、柔光和多步骤程序纹理 | 可自定义GLSL、参数和中间纹理；当前按固定种子生成单帧，动画使用参数关键帧 |
 | SVG | 清晰线稿、标志、装饰花纹，希望放大时轮廓清晰 | 保留轮廓，支持静态填充/描边/渐变；不适合细密纹理和柔光 |
 | 位图 | 复杂花型、插画、照片、丰富纹理、柔光或半透明效果 | 优先保留视觉效果；放大质量受源图分辨率影响 |
 
@@ -108,6 +109,7 @@ description: Help users turn screenshots or ideas into Momo Texture Forge resour
 
 ## 4. 按选定路线制作
 
+- 生成器：需要原生RGBA或多个渲染步骤时，读取[生成器规范](references/generator-guide.md)和[三步骤示例](references/example.generator.json)，交付.generator.json。可自定义GLSL和中间纹理，最多64个参数和16个步骤；不执行用户JS，不提供跨帧反馈。图库已有生成器可编辑后另存；创建新算法通过“创建资源 → 生成器”输入代码，不需要模板选择。
 - 公式：读取[创作规范](references/authoring-guide.md)和[示例](references/example.graphic.json)，制作完整.graphic.json及有用的参数。不要编辑内部图形目录或自行生成资源ID、槽位。当前公式只输出0～1标量（形状/透明度/强度），不支持任意RGB/RGBA输出或图片sampler；最多16个参数，公式60000字符。不要把工具限制说成数学上不可能。time是持续累加的秒数，不默认保证0～1首尾衔接。
 - SVG：交付独立.svg文件，保留主体轮廓和孔洞，控制路径复杂度。最大2MB；支持路径、基础形状、组、填充/描边、渐变、裁切和遮罩。仅本地引用；拒绝CSS样式、文字、外链、脚本和动画。文字须转路径，style改为展示属性。不要把内嵌位图包装成SVG后称其为矢量重建。编辑器保留SVG源文件，但显示时按渲染尺寸栅格化；没有路径编辑器。
 - 位图：保留或制作符合需求的PNG/WebP，明确像素尺寸和背景/透明度。图片入口支持PNG/JPG/WebP，最长边4096、单张16MB。需要透明背景时不要交付不支持透明的JPEG，也不要把棋盘格烘焙进图中。
@@ -120,7 +122,7 @@ description: Help users turn screenshots or ideas into Momo Texture Forge resour
 
 公式使用下方命令行工具或实际编辑器渲染，检查默认参数、端点和中间值、多个时间点；看图比较轮廓、比例、细节、裁边。编译成功不等于视觉符合需求。
 
-SVG按上述限制检查结构；有渲染能力时检查孔洞、描边、渐变、裁切及透明背景，最终仍需确认编辑器导入效果。位图检查目标尺寸下的清晰度、透明度、边缘及残留背景。随附validate/render/check命令只支持公式JSON，不支持SVG或位图；不使用它们冒充这两类资源的验证。缺少执行或看图能力时，明确哪些检查未完成。
+SVG按上述限制检查结构；有渲染能力时检查孔洞、描边、渐变、裁切及透明背景，最终仍需确认编辑器导入效果。位图检查目标尺寸下的清晰度、透明度、边缘及残留背景。随附validate/render/check命令支持公式和生成器JSON，不支持SVG或位图；不使用它们冒充这两类资源的验证。缺少执行或看图能力时，明确哪些检查未完成。
 
 针对实际图片给出必要操作，而不是罗列所有开关。图片和SVG入口均为“打开图形库 → 创建资源 → 图片”；公式JSON入口为“打开图形库 → 创建资源 → 导入文件”。在图片页中上传位图后，可以按问题选择：
 

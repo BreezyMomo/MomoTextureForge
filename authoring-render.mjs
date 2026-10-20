@@ -3,7 +3,8 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {resolve,dirname,extname,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {bindFormulaParameters} from './web/formula-parameters.js';
-import {parseAuthoring,assetFromAuthoring,AUTHORING_LIMIT} from './web/ai-authoring.js';
+import {AUTHORING_LIMIT} from './web/ai-authoring.js';
+import {parseCreationAuthoring,assetFromCreationAuthoring} from './web/creation-authoring.js';
 const root=dirname(fileURLToPath(import.meta.url));
 export function renderOptions(command,args){
  const options={size:512,times:command==='check'?[0,.25,.5,1,2]:[0],output:command==='check'?'previews':'preview.png',timeout:60000};
@@ -22,7 +23,7 @@ export async function renderFile(command,file,args){
  const report={schema:'momo.graphic-render-report/v1',ok:false,input:resolve(file),size:options.size,times:options.times,renderer:'TreeRenderer/WebGL2/Chromium',visual:'not-reviewed',frames:[]};
  let server,browser,timer;
  try{
-  const bytes=await readFile(file);if(bytes.length>AUTHORING_LIMIT)throw Error('创作文件超过2MB');const draft=parseAuthoring(bytes.toString('utf8'));report.unusedParameters=bindFormulaParameters(draft.formula.source,assetFromAuthoring(draft).definition.parameters,draft.formula.kind).unused;
+  const bytes=await readFile(file);if(bytes.length>AUTHORING_LIMIT)throw Error('创作文件超过2MB');const draft=parseCreationAuthoring(bytes.toString('utf8'));report.unusedParameters=draft.formula?bindFormulaParameters(draft.formula.source,assetFromCreationAuthoring(draft).definition.parameters,draft.formula.kind).unused:[];
   const {chromium}=await import('playwright');
   server=createServer(async(req,res)=>{try{
    const url=new URL(req.url,'http://localhost'),path=resolve(root,'.'+decodeURIComponent(url.pathname));

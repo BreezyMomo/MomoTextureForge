@@ -1,0 +1,59 @@
+{
+  "schema": "momo.generator-authoring/v1",
+  "name": "彩色柔光环",
+  "category": "我的图形",
+  "description": "形状、柔光和合成三个渲染步骤。",
+  "scalar": "alpha",
+  "parameters": [
+    {
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "variable": "radius",
+      "label": "半径",
+      "min": 0.1,
+      "max": 0.8,
+      "step": 0.01,
+      "default": 0.45
+    },
+    {
+      "variable": "softness",
+      "label": "柔光",
+      "min": 0.01,
+      "max": 0.15,
+      "step": 0.01,
+      "default": 0.05
+    }
+  ],
+  "helpers": "float ringDistance(vec2 p,float radius){return abs(length(p*2.-1.)-radius);}",
+  "passes": [
+    {
+      "id": "shape",
+      "inputs": [],
+      "scale": 0.5,
+      "source": "vec4 generate(vec2 uv){float a=1.-smoothstep(.02,.04,ringDistance(uv,radius));return vec4(.1,.5,1.,a);}"
+    },
+    {
+      "id": "glow",
+      "inputs": [
+        "shape"
+      ],
+      "scale": 1,
+      "source": "vec4 generate(vec2 uv){vec4 sum=vec4(0);for(int i=-4;i<=4;i++)sum+=texture(input0,uv+vec2(float(i)*softness,0));sum/=9.;return vec4(sum.rgb,sum.a);}"
+    },
+    {
+      "id": "result",
+      "inputs": [
+        "shape",
+        "glow"
+      ],
+      "scale": 1,
+      "source": "vec4 generate(vec2 uv){vec4 a=texture(input0,uv),b=texture(input1,uv);return vec4(mix(b.rgb,a.rgb,a.a),max(a.a,b.a*.6));}"
+    }
+  ]
+}

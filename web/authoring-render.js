@@ -1,11 +1,11 @@
 import {TreeRenderer} from './tree-renderer.js';
 import {node,project} from './tree-model.js';
-import {assetFromAuthoring} from './ai-authoring.js';
+import {assetFromCreationAuthoring} from './creation-authoring.js';
 import {registerAsset,unregisterAsset} from './resource-assets.js';
 window.renderAuthoring=({draft,size,times})=>{
  const canvas=document.createElement('canvas'),renderer=new TreeRenderer(canvas),id='asset_cli_preview';
  try{
-  registerAsset(id,assetFromAuthoring(draft));const p=project();p.root.children=[node('shape',id)];
+  registerAsset(id,assetFromCreationAuthoring(draft));const p=project();p.root.children=[node('shape',id)];
   const sheet=document.createElement('canvas'),columns=Math.min(4,times.length);sheet.width=columns*size;sheet.height=Math.ceil(times.length/columns)*(size+24);const sheetCtx=sheet.getContext('2d');
   const frames=times.map((time,index)=>{
    const pixels=renderer.draw(p,size,size,{formulaSeconds:time,read:true});

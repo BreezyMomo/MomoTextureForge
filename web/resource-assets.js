@@ -29,6 +29,10 @@ export function validateAsset(asset){
  validateLibrary(library);
  for(const spec of [d.outputs.scalar,d.seamless.source].filter(Boolean)){if(spec.file)throw Error('图形公式未解析');validateFormula(spec.inline,spec.kind,d.id);}
  for(const text of Object.values(libs))if(typeof text!=='string'||text.length>1048576||/^\s*#\s*(?:extension|include|version)/m.test(text))throw Error('公式函数库无效或超过大小限制');
+ if(d.generator?.effect==='pipeline')for(const pass of d.generator.passes){
+  const source=[...(d.generator.helpers??[]),pass.program].map(id=>libs[id]).join('\n').replace(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g,' ');
+  for(const match of source.matchAll(/\binput([012])\b/g))if(Number(match[1])>=pass.inputs.length)throw Error('生成器步骤 '+pass.id+' 使用了未连接的 input'+match[1]);
+ }
  if(asset.kind==='image'&&(!['image/png','image/jpeg','image/webp','image/svg+xml'].includes(asset.mime)||typeof asset.data!=='string'||asset.data.length>22000000))throw Error('图片资源无效');
  if(asset.kind==='image'){validateImageColor(asset.imageColor);validateImageTransform(asset.imageTransform);validateImageProcessing(asset.imageProcessing);if(asset.mime==='image/svg+xml'){validateSvgText(svgText(asset));if(asset.imageProcessing)throw Error('SVG不支持位图处理设置');}}
  return asset;
