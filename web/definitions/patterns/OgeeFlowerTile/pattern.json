@@ -1,0 +1,117 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "OgeeFlowerTile",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "弧菱花砖",
+  "category": "shape",
+  "order": 55,
+  "variant": 29,
+  "parameters": [
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "高度比例",
+      "min": 0.5,
+      "max": 1.05,
+      "step": 0.01,
+      "default": 1
+    },
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "宽度比例",
+      "min": 0.5,
+      "max": 1.2,
+      "step": 0.01,
+      "default": 1
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "边框粗细",
+      "min": 0.005,
+      "max": 0.04,
+      "step": 0.001,
+      "default": 0.023
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "羽化",
+      "min": 0.001,
+      "max": 0.03,
+      "step": 0.001,
+      "default": 0.003
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "弧线弯曲",
+      "min": 0,
+      "max": 0.1,
+      "step": 0.001,
+      "default": 0.065
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "label": "花芯大小",
+      "min": 0.04,
+      "max": 0.18,
+      "step": 0.001,
+      "default": 0.13
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "label": "边框比例",
+      "min": 0.7,
+      "max": 1.08,
+      "step": 0.01,
+      "default": 1
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "label": "装饰点大小",
+      "min": 0,
+      "max": 0.04,
+      "step": 0.001,
+      "default": 0.027
+    }
+  ],
+  "defaults": [
+    1,
+    0.023,
+    1,
+    0.003,
+    0.065,
+    0.13,
+    1,
+    0.027,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

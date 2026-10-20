@@ -1,0 +1,72 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "LinearGradient",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "线性渐变",
+  "category": "gradient",
+  "order": 106,
+  "variant": 0,
+  "parameters": [
+    {
+      "slot": 5,
+      "key": "K",
+      "label": "渐变角度",
+      "min": -180,
+      "max": 180,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "渐变偏移",
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0
+    },
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "渐变跨度",
+      "min": 0.02,
+      "max": 1.5,
+      "step": 0.01,
+      "default": 0.62
+    }
+  ],
+  "defaults": [
+    0.62,
+    0,
+    8,
+    0.015,
+    0.5,
+    0,
+    1,
+    0.2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "expression",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

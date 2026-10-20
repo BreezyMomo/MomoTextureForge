@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "BeveledShape",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "倒角形",
+  "category": "shape",
+  "order": 43,
+  "variant": 18,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "半径",
+      "min": 0.05,
+      "max": 1.2,
+      "step": 0.01,
+      "default": 0.7
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "边数",
+      "min": 3.0,
+      "max": 16.0,
+      "step": 1.0,
+      "default": 6.0
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "倒角宽",
+      "min": 0.01,
+      "max": 0.6,
+      "step": 0.005,
+      "default": 0.18
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "旋转",
+      "min": 0.0,
+      "max": 6.28,
+      "step": 0.01,
+      "default": 0.3
+    }
+  ],
+  "defaults": [
+    0.7,
+    6.0,
+    0.18,
+    0.3,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

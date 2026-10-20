@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Polygon",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "多边形",
+  "category": "shape",
+  "order": 25,
+  "variant": 0,
+  "parameters": [
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "边数",
+      "min": 3,
+      "max": 32,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "外接半径",
+      "min": 0.02,
+      "max": 1.5,
+      "step": 0.01,
+      "default": 0.62
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "label": "旋转角度",
+      "min": -180,
+      "max": 180,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "羽化",
+      "min": 0.001,
+      "max": 0.3,
+      "step": 0.001,
+      "default": 0.015
+    }
+  ],
+  "defaults": [
+    0.62,
+    0.025,
+    6,
+    0.015,
+    0.5,
+    0,
+    1,
+    0.2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "expression",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "repeat",
+    "extent": "polygon"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

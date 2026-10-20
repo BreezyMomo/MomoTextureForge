@@ -1,0 +1,5 @@
+import {CATALOG,BY_ID} from './catalog.js';
+export function forProjectNodes(p,visit){function walk(n){if(!n)return;visit(n);for(const c of n.children??[])walk(c);walk(n.mask);}walk(p.root);for(const r of p.projectResources??[])walk(r.root);}
+export function projectDependencyIds(p){const ids=new Set();forProjectNodes(p,n=>{if(n.kind==='shape')ids.add(n.type);if(n.arrange?.length>39){for(const i of [n.arrange[39],...(n.tracks?.['arrange.39']?.keys??[]).map(k=>k[1])]){const id=CATALOG[i]?.id;if(id)ids.add(id);}}});return ids;}
+export function serializeLocalProject(p){const copy=structuredClone(p);forProjectNodes(copy,n=>{if(n.arrange?.length>39)n.packDensity={base:CATALOG[n.arrange[39]]?.id,keys:(n.tracks?.['arrange.39']?.keys??[]).map(k=>CATALOG[k[1]]?.id)};});return JSON.stringify(copy);}
+export function restoreLocalProject(p){forProjectNodes(p,n=>{if(n.packDensity){const indices=[n.packDensity.base,...n.packDensity.keys].map(id=>{if(!BY_ID.has(id))throw Error('缺少密度图：'+id);return BY_ID.get(id).index;});n.arrange[39]=indices[0];(n.tracks?.['arrange.39']?.keys??[]).forEach((k,i)=>k[1]=indices[i+1]);delete n.packDensity;}});return p;}

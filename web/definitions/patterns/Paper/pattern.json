@@ -1,0 +1,73 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Paper",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "纸张",
+  "category": "natural",
+  "order": 165,
+  "variant": 18,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "缩放",
+      "min": 1.0,
+      "max": 24.0,
+      "step": 0.5,
+      "default": 7.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "纤维",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.35
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "起伏",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.25
+    }
+  ],
+  "defaults": [
+    7.0,
+    0.35,
+    0.25,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

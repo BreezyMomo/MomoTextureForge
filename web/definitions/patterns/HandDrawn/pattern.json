@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "HandDrawn",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "手绘抖动形",
+  "category": "shape",
+  "order": 41,
+  "variant": 16,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "半径",
+      "min": 0.1,
+      "max": 1.2,
+      "step": 0.01,
+      "default": 0.62
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "抖动幅度",
+      "min": 0.0,
+      "max": 0.3,
+      "step": 0.002,
+      "default": 0.05
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "抖动频率",
+      "min": 0.5,
+      "max": 16.0,
+      "step": 0.1,
+      "default": 4.0
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "圆方混合",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.0
+    }
+  ],
+  "defaults": [
+    0.62,
+    0.05,
+    4.0,
+    0.0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

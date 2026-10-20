@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Terrazzo",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "水磨石",
+  "category": "pattern",
+  "order": 101,
+  "variant": 45,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "密度",
+      "min": 3.0,
+      "max": 20.0,
+      "step": 0.5,
+      "default": 7.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "块大小",
+      "min": 0.05,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.2
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "出现概率",
+      "min": 0.1,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.75
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "边缘柔化",
+      "min": 0.002,
+      "max": 0.06,
+      "step": 0.002,
+      "default": 0.012
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "描边宽",
+      "min": 0.0,
+      "max": 0.06,
+      "step": 0.002,
+      "default": 0.0
+    }
+  ],
+  "defaults": [
+    7.0,
+    0.2,
+    0.75,
+    0.012,
+    0.0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

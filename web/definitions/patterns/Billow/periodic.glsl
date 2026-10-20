@@ -1,0 +1,1 @@
+abs(periodicFractal(u,N,5,.5,H,T)*2.-1.)

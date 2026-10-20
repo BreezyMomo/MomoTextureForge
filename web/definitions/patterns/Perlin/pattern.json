@@ -1,0 +1,86 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Perlin",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "柏林噪声",
+  "category": "noise",
+  "order": 119,
+  "variant": 5,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "缩放",
+      "min": 1.0,
+      "max": 24.0,
+      "step": 0.5,
+      "default": 5.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "八度",
+      "min": 1.0,
+      "max": 8.0,
+      "step": 1.0,
+      "default": 4.0
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "增益",
+      "min": 0.2,
+      "max": 0.9,
+      "step": 0.01,
+      "default": 0.5
+    }
+  ],
+  "defaults": [
+    5.0,
+    4.0,
+    0.5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "periodic",
+    "source": {
+      "kind": "body",
+      "file": "periodic.glsl",
+      "libraries": [
+        "math-v1",
+        "periodic-v1"
+      ]
+    },
+    "order": 14,
+    "countMultiplier": 1,
+    "countSlot": 0,
+    "evenCount": false,
+    "rows": false
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

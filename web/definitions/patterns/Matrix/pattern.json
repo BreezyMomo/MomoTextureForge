@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Matrix",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "数字雨",
+  "category": "digital",
+  "order": 194,
+  "variant": 3,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "列数",
+      "min": 4.0,
+      "max": 60.0,
+      "step": 1.0,
+      "default": 18.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "速度",
+      "min": 0.0,
+      "max": 3.0,
+      "step": 0.05,
+      "default": 0.8
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "拖尾",
+      "min": 0.1,
+      "max": 2.0,
+      "step": 0.05,
+      "default": 0.6
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "行数",
+      "min": 4.0,
+      "max": 30.0,
+      "step": 1.0,
+      "default": 12.0
+    }
+  ],
+  "defaults": [
+    18.0,
+    0.8,
+    0.6,
+    12.0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

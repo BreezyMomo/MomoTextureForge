@@ -1,0 +1,16 @@
+import {libraryIdentity,saveLibraryEntry,libraryEntries,libraryBundle,bundleKey,deleteLibraryEntry} from './graphics-library.js';
+import {builtinAsset,resources,contentHash} from './resource-assets.js';
+import {encodeResourcePack,readResourcePack} from './resource-pack.js';
+import {createProjectResource,replaceProjectResource,publishedProjectResource} from './project-resources.js';
+import {project,node,cloneNode,sanitizeTree,PRESET_SCHEMA} from './tree-model.js';
+const btn=document.querySelector('#run'),result=document.querySelector('#result');
+btn.onclick=async()=>{const ids=[],packs=[],rows=[];btn.disabled=true;const check=(condition,message)=>{if(!condition)throw Error(message);};try{
+ const asset=builtinAsset('Circle');asset.definition.name='QA Only';asset.definition.outputs.scalar.inline='sat(R*.5)';const assetId='asset_'+await contentHash(asset),root={...node(),type:'QA'},meta={...libraryIdentity(),name:'QA library lifecycle',kind:'formula',category:'QA',thumbnail:''};ids.push(meta.resourceId);const payload={schema:PRESET_SCHEMA,root,graphicResource:meta},bytes=await encodeResourcePack(payload,{assets:[['QA',asset]]});
+ const before=resources.size;await saveLibraryEntry(meta,bytes);await libraryEntries();check(resources.size===before,'library browsing loaded runtime resources');rows.push('metadata browsing does not register resources');
+ const pack=await readResourcePack(await libraryBundle(bundleKey(meta)));packs.push(pack);pack.register();const copy=createProjectResource(pack.payload.root,meta),instance=cloneNode(copy.root),modified=replaceProjectResource(copy,{...copy.root,opacity:.25});check(modified.personalRevision===1&&instance.opacity===1,'instance coupling');
+ const p=project();p.root.children=[];p.projectResources=[modified];const projectBytes=await encodeResourcePack(p);rows.push('unused project resources packaged');
+ const v2={...meta,versionId:2},bytes2=await encodeResourcePack({...payload,graphicResource:v2},{assets:[['QA',asset]]});await saveLibraryEntry(v2,bytes2,{update:true});const published=publishedProjectResource(modified,v2);check(published.versionId===2&&published.personalRevision===0&&copy.versionId===1,'version lifecycle');rows.push('1/0 → 1/1 → publish 2/0, original copy unchanged');
+ let conflict=false;try{await saveLibraryEntry({...v2,name:'tampered'},bytes);}catch{conflict=true;}check(conflict,'same-version overwrite allowed');rows.push('same ID/version conflict rejected');
+ await deleteLibraryEntry(meta.resourceId);check(!(await libraryEntries()).some(e=>e.resourceId===meta.resourceId),'deletion failed');const restored=await readResourcePack(projectBytes);packs.push(restored);restored.register();const clean=sanitizeTree(restored.payload);check(clean.projectResources.length===1&&clean.projectResources[0].root.type===assetId&&clean.projectResources[0].personalRevision===1,'deleted library broke project');rows.push('deleted library resource does not break independent project ZIP');
+ result.textContent=JSON.stringify({status:'PASS',rows},null,2);
+}catch(e){result.textContent=JSON.stringify({status:'FAIL',error:e.stack,rows},null,2);}finally{for(const p of packs.reverse())p.rollback();for(const id of ids)await deleteLibraryEntry(id);btn.disabled=false;}};

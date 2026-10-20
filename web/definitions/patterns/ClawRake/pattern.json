@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "ClawRake",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "爪痕",
+  "category": "ribbon",
+  "order": 276,
+  "variant": 11,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "抓痕数",
+      "min": 1.0,
+      "max": 7.0,
+      "step": 1.0,
+      "default": 4.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "痕宽",
+      "min": 0.005,
+      "max": 0.12,
+      "step": 0.002,
+      "default": 0.035
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "弯曲",
+      "min": 0.0,
+      "max": 0.8,
+      "step": 0.01,
+      "default": 0.26
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "尾部收尖",
+      "min": 0.0,
+      "max": 2.0,
+      "step": 0.05,
+      "default": 0.9
+    }
+  ],
+  "defaults": [
+    4.0,
+    0.035,
+    0.26,
+    0.9,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

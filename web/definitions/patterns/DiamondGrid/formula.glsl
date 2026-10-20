@@ -1,0 +1,1 @@
+grid(rot(q,PI*.25)*N,W,S)

@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "RingPulse",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "脉冲环",
+  "category": "radial",
+  "order": 15,
+  "variant": 15,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "环数",
+      "min": 0.5,
+      "max": 12.0,
+      "step": 0.5,
+      "default": 4.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "速度",
+      "min": -3.0,
+      "max": 3.0,
+      "step": 0.05,
+      "default": 0.6
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "锐度",
+      "min": 0.3,
+      "max": 6.0,
+      "step": 0.1,
+      "default": 2.0
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "衰减",
+      "min": 0.2,
+      "max": 1.5,
+      "step": 0.01,
+      "default": 0.9
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "衰减模式（平滑/指数）",
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "default": 0
+    }
+  ],
+  "defaults": [
+    4.0,
+    0.6,
+    2.0,
+    0.9,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

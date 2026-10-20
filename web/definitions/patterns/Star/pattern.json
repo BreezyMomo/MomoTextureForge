@@ -1,0 +1,100 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Star",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "星形",
+  "category": "shape",
+  "order": 26,
+  "variant": 1,
+  "parameters": [
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "星角数量",
+      "min": 3,
+      "max": 24,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "内径比例",
+      "min": 0.1,
+      "max": 0.9,
+      "step": 0.01,
+      "default": 0.45
+    },
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "外半径",
+      "min": 0.02,
+      "max": 1.5,
+      "step": 0.01,
+      "default": 0.62
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "label": "星形轮廓",
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "星尖圆角",
+      "min": 0,
+      "max": 0.25,
+      "step": 0.005,
+      "default": 0.06
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "羽化",
+      "min": 0.001,
+      "max": 0.3,
+      "step": 0.001,
+      "default": 0.015
+    }
+  ],
+  "defaults": [
+    0.62,
+    0.06,
+    5,
+    0.015,
+    0.45,
+    0,
+    1,
+    0.2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "expression",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "repeat",
+    "extent": "radius"
+  },
+  "editor": {
+    "kind": "star"
+  }
+}

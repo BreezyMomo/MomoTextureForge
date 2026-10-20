@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "EnergyBeam",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "能量束",
+  "category": "energy",
+  "order": 219,
+  "variant": 4,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "宽度",
+      "min": 0.01,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.09
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "核心比",
+      "min": 0.01,
+      "max": 0.6,
+      "step": 0.005,
+      "default": 0.16
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "外晕",
+      "min": 0.0,
+      "max": 3.0,
+      "step": 0.05,
+      "default": 1.2
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "柔和",
+      "min": 0.005,
+      "max": 0.4,
+      "step": 0.005,
+      "default": 0.06
+    }
+  ],
+  "defaults": [
+    0.09,
+    0.16,
+    1.2,
+    0.06,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

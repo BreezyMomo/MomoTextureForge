@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "WaveformBar",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "音频频谱条",
+  "category": "digital",
+  "order": 212,
+  "variant": 21,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "条数",
+      "min": 8.0,
+      "max": 48.0,
+      "step": 1.0,
+      "default": 22.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "最大高度",
+      "min": 0.1,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.82
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "跳动速度",
+      "min": 0.2,
+      "max": 4.0,
+      "step": 0.05,
+      "default": 1.5
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "条宽比",
+      "min": 0.2,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.68
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "峰值抖动",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.42
+    }
+  ],
+  "defaults": [
+    22.0,
+    0.82,
+    1.5,
+    0.68,
+    0.42,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

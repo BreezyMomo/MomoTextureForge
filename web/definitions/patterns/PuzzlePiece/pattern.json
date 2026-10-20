@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "PuzzlePiece",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "拼图纹理",
+  "category": "pattern",
+  "order": 51,
+  "variant": 0,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "格数",
+      "min": 1.0,
+      "max": 8.0,
+      "step": 1.0,
+      "default": 3.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "凸耳大小",
+      "min": 0.06,
+      "max": 0.5,
+      "step": 0.01,
+      "default": 0.22
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "块大小",
+      "min": 0.55,
+      "max": 0.95,
+      "step": 0.01,
+      "default": 0.8
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "线宽",
+      "min": 0.002,
+      "max": 0.03,
+      "step": 0.001,
+      "default": 0.007
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "边缘柔化",
+      "min": 0.002,
+      "max": 0.04,
+      "step": 0.001,
+      "default": 0.004
+    }
+  ],
+  "defaults": [
+    3.0,
+    0.22,
+    0.8,
+    0.007,
+    0.004,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

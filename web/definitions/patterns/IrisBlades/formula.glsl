@@ -1,0 +1,1 @@
+fill(poly(q,N,R)-W*cos(angle*N),S)

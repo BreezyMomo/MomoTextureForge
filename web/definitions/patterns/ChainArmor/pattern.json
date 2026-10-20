@@ -1,0 +1,73 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "ChainArmor",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "链甲护具",
+  "category": "pattern",
+  "order": 91,
+  "variant": 35,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "环数",
+      "min": 4.0,
+      "max": 22.0,
+      "step": 1.0,
+      "default": 8.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "环径",
+      "min": 0.2,
+      "max": 0.8,
+      "step": 0.02,
+      "default": 0.62
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "线宽",
+      "min": 0.02,
+      "max": 0.25,
+      "step": 0.01,
+      "default": 0.09
+    }
+  ],
+  "defaults": [
+    8.0,
+    0.62,
+    0.09,
+    1.0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

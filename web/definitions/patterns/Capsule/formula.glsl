@@ -1,0 +1,1 @@
+fill(segment(q,vec2(-R*.5,0.),vec2(R*.5,0.))-W,S)

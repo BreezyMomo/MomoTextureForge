@@ -1,0 +1,73 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "RadialSteps",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "径向阶梯",
+  "category": "gradient",
+  "order": 113,
+  "variant": 7,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "阶梯数",
+      "min": 2.0,
+      "max": 40.0,
+      "step": 1.0,
+      "default": 10.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "羽化",
+      "min": 0.0,
+      "max": 0.9,
+      "step": 0.01,
+      "default": 0.15
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "反转",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 1.0,
+      "default": 0.0
+    }
+  ],
+  "defaults": [
+    10.0,
+    0.15,
+    0.0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

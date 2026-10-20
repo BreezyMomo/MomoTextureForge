@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Seigaiha",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "青海波",
+  "category": "pattern",
+  "order": 103,
+  "variant": 47,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "密排数",
+      "min": 3.0,
+      "max": 16.0,
+      "step": 1.0,
+      "default": 7.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "环数",
+      "min": 1.0,
+      "max": 5.0,
+      "step": 1.0,
+      "default": 3.0
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "线宽",
+      "min": 0.002,
+      "max": 0.03,
+      "step": 0.001,
+      "default": 0.006
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "柔化",
+      "min": 0.2,
+      "max": 1.2,
+      "step": 0.02,
+      "default": 0.6
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "行错位",
+      "min": 0.0,
+      "max": 0.5,
+      "step": 0.01,
+      "default": 0.5
+    }
+  ],
+  "defaults": [
+    7.0,
+    3.0,
+    0.006,
+    0.6,
+    0.5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

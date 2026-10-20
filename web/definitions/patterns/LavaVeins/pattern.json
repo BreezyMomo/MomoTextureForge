@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "LavaVeins",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "熔岩脉络",
+  "category": "noise",
+  "order": 139,
+  "variant": 24,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "缩放",
+      "min": 1.0,
+      "max": 10.0,
+      "step": 0.5,
+      "default": 3.5
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "扭曲",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.45
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "层数",
+      "min": 1.0,
+      "max": 8.0,
+      "step": 1.0,
+      "default": 5.0
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "流速",
+      "min": 0.0,
+      "max": 2.0,
+      "step": 0.05,
+      "default": 0.3
+    }
+  ],
+  "defaults": [
+    3.5,
+    0.45,
+    5.0,
+    0.3,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

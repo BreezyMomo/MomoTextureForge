@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "ScimitarRibbon",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "斩击弧光",
+  "category": "ribbon",
+  "order": 275,
+  "variant": 10,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "弧半径",
+      "min": 0.15,
+      "max": 0.62,
+      "step": 0.005,
+      "default": 0.52
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "弧张角",
+      "min": 0.4,
+      "max": 3.2,
+      "step": 0.05,
+      "default": 2.0
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "弧厚",
+      "min": 0.01,
+      "max": 0.25,
+      "step": 0.005,
+      "default": 0.07
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "两端收束",
+      "min": 0.02,
+      "max": 0.6,
+      "step": 0.005,
+      "default": 0.22
+    }
+  ],
+  "defaults": [
+    0.52,
+    2.0,
+    0.07,
+    0.22,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

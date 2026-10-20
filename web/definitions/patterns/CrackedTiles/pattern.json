@@ -1,0 +1,95 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "CrackedTiles",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "碎裂瓷砖",
+  "category": "pattern",
+  "order": 84,
+  "variant": 28,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "数量",
+      "min": 2.0,
+      "max": 30.0,
+      "step": 1.0,
+      "default": 8.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "缝宽",
+      "min": 0.01,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.24
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "扰动频率",
+      "min": 0.2,
+      "max": 8.0,
+      "step": 0.1,
+      "default": 2.2
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "扰动幅度",
+      "min": 0.0,
+      "max": 0.6,
+      "step": 0.01,
+      "default": 0.22
+    }
+  ],
+  "defaults": [
+    8.0,
+    0.24,
+    2.2,
+    0.22,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "periodic",
+    "source": {
+      "kind": "body",
+      "file": "periodic.glsl",
+      "libraries": [
+        "math-v1",
+        "periodic-v1"
+      ]
+    },
+    "order": 11,
+    "countMultiplier": 1,
+    "countSlot": 0,
+    "evenCount": false,
+    "rows": false
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

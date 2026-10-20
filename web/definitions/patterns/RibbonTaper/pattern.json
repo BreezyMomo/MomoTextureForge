@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "RibbonTaper",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "锥形拖尾",
+  "category": "ribbon",
+  "order": 266,
+  "variant": 1,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "头宽",
+      "min": 0.05,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.38
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "尾宽",
+      "min": 0.0,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.04
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "收窄曲线",
+      "min": 0.3,
+      "max": 4.0,
+      "step": 0.05,
+      "default": 1.0
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "横向柔化",
+      "min": 0.02,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.14
+    }
+  ],
+  "defaults": [
+    0.38,
+    0.04,
+    1.0,
+    0.14,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

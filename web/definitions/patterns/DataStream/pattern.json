@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "DataStream",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "数据流",
+  "category": "digital",
+  "order": 197,
+  "variant": 6,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "行数",
+      "min": 4.0,
+      "max": 80.0,
+      "step": 1.0,
+      "default": 22.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "段长",
+      "min": 0.02,
+      "max": 0.8,
+      "step": 0.005,
+      "default": 0.25
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "密度",
+      "min": 2.0,
+      "max": 60.0,
+      "step": 1.0,
+      "default": 14.0
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "速度",
+      "min": 0.0,
+      "max": 3.0,
+      "step": 0.05,
+      "default": 0.6
+    }
+  ],
+  "defaults": [
+    22.0,
+    0.25,
+    14.0,
+    0.6,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

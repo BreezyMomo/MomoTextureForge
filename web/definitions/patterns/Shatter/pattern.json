@@ -1,0 +1,73 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Shatter",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "破碎片",
+  "category": "energy",
+  "order": 222,
+  "variant": 7,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "数量",
+      "min": 1.0,
+      "max": 20.0,
+      "step": 0.5,
+      "default": 6.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "扩散",
+      "min": 0.0,
+      "max": 3.0,
+      "step": 0.05,
+      "default": 1.4
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "扰动",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.85
+    }
+  ],
+  "defaults": [
+    6.0,
+    1.4,
+    0.85,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

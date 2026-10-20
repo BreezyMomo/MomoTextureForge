@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "SaltFlat",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "盐渍结晶",
+  "category": "natural",
+  "order": 187,
+  "variant": 40,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "晶格密度",
+      "min": 2.0,
+      "max": 14.0,
+      "step": 0.5,
+      "default": 6.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "裂纹宽度",
+      "min": 0.004,
+      "max": 0.1,
+      "step": 0.002,
+      "default": 0.03
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "裂纹亮度",
+      "min": 0.2,
+      "max": 1.4,
+      "step": 0.02,
+      "default": 0.95
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "晶粒亮度",
+      "min": 0.0,
+      "max": 0.7,
+      "step": 0.02,
+      "default": 0.26
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "破碎度",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.55
+    }
+  ],
+  "defaults": [
+    6.0,
+    0.03,
+    0.95,
+    0.26,
+    0.55,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

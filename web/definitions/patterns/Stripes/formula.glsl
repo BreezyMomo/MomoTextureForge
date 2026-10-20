@@ -1,0 +1,1 @@
+line(sin(q.x*N*PI),W*4.,S)

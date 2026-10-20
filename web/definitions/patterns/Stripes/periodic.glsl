@@ -1,0 +1,1 @@
+line(sin(u.x*N*TAU),W*4.,S)

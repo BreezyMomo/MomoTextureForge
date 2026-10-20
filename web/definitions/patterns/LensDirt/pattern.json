@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "LensDirt",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "镜头污渍",
+  "category": "natural",
+  "order": 184,
+  "variant": 37,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "横向拉伸",
+      "min": 0.3,
+      "max": 3.0,
+      "step": 0.05,
+      "default": 1.1
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "污渍覆盖",
+      "min": 0.02,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.5
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "划痕数",
+      "min": 0.0,
+      "max": 6.0,
+      "step": 1.0,
+      "default": 3.0
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "尘点数",
+      "min": 0.0,
+      "max": 12.0,
+      "step": 1.0,
+      "default": 7.0
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "径向衰减",
+      "min": 0.6,
+      "max": 1.6,
+      "step": 0.02,
+      "default": 1.0
+    }
+  ],
+  "defaults": [
+    1.1,
+    0.5,
+    3.0,
+    7.0,
+    1.0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

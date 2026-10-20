@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "RustPatch",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "锈斑铁器",
+  "category": "natural",
+  "order": 175,
+  "variant": 28,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "锈蚀量",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.5
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "颗粒",
+      "min": 10.0,
+      "max": 160.0,
+      "step": 2.0,
+      "default": 52.0
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "蚀坑深度",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.45
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "流动",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.3
+    }
+  ],
+  "defaults": [
+    0.5,
+    52.0,
+    0.45,
+    0.3,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

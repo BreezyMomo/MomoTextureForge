@@ -1,0 +1,109 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Halftone",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "半调网点",
+  "category": "pattern",
+  "order": 79,
+  "variant": 23,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "数量",
+      "min": 3.0,
+      "max": 60.0,
+      "step": 1.0,
+      "default": 16.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "最大半径",
+      "min": 0.05,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.42
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "角度",
+      "min": 0.0,
+      "max": 3.14,
+      "step": 0.01,
+      "default": 0.6
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "渐变半径",
+      "min": 0.3,
+      "max": 1.4,
+      "step": 0.01,
+      "default": 0.85
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "灰度来源（径向/线性/噪声）",
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "label": "灰度中心 X",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "label": "灰度中心 Y",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5
+    }
+  ],
+  "defaults": [
+    16.0,
+    0.42,
+    0.6,
+    0.85,
+    0,
+    0.5,
+    0.5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

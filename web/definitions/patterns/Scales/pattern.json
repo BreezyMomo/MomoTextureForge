@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Scales",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "鳞片",
+  "category": "pattern",
+  "order": 69,
+  "variant": 13,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "数量",
+      "min": 2.0,
+      "max": 30.0,
+      "step": 1.0,
+      "default": 8.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "鳞片半径",
+      "min": 0.4,
+      "max": 1.6,
+      "step": 0.01,
+      "default": 0.72
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "描边宽",
+      "min": 0.002,
+      "max": 0.1,
+      "step": 0.002,
+      "default": 0.014
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "行错位",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.5
+    }
+  ],
+  "defaults": [
+    8.0,
+    0.72,
+    0.014,
+    0.5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

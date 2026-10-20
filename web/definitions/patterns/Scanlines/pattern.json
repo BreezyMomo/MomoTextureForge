@@ -1,0 +1,73 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Scanlines",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "扫描线",
+  "category": "digital",
+  "order": 191,
+  "variant": 0,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "数量",
+      "min": 2.0,
+      "max": 300.0,
+      "step": 1.0,
+      "default": 60.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "柔和",
+      "min": 0.0,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.05
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "速度",
+      "min": 0.0,
+      "max": 2.0,
+      "step": 0.05,
+      "default": 0.2
+    }
+  ],
+  "defaults": [
+    60.0,
+    0.05,
+    0.2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

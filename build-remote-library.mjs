@@ -1,0 +1,7 @@
+import {readFile,writeFile,mkdir,rename} from 'node:fs/promises';
+import {resolve,join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {buildRemoteLibrary} from './remote-library-publisher.mjs';
+export {buildRemoteLibrary};
+export async function main(args){const inputs=[];let out,name;for(let i=0;i<args.length;i++){const flag=args[i],value=args[++i];if(!value)throw Error('选项缺少值');if(flag==='--input')inputs.push(resolve(value));else if(flag==='--out')out=resolve(value);else if(flag==='--name')name=value;else throw Error('未知选项：'+flag);}if(!inputs.length||!out)throw Error('用法：node build-remote-library.mjs --input 图库.zip --out 输出目录 --name 图库名称');let previous=null;try{previous=JSON.parse(await readFile(join(out,'index.json'),'utf8'));}catch(e){if(e.code!=='ENOENT')throw e;}const prepared=await buildRemoteLibrary(await Promise.all(inputs.map(p=>readFile(p))),{name:name??previous?.name,previous});await mkdir(out,{recursive:true});await (await import('./build-library-manager.mjs')).installManager(out);for(const [path,bytes]of prepared.files){if(path==='index.json')continue;await mkdir(resolve(out,path,'..'),{recursive:true});await writeFile(join(out,path),bytes);}await writeFile(join(out,'index.json.tmp'),prepared.files.get('index.json'));await rename(join(out,'index.json.tmp'),join(out,'index.json'));console.log('已生成 '+prepared.index.entries.length+' 项资源的静态图库：'+out);}
+if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href)main(process.argv.slice(2)).catch(e=>{console.error(e.message);process.exitCode=1;});

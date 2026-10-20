@@ -1,0 +1,1 @@
+fill(length(fract(vec2(u.x*N,u.y*N+sin(u.x*TAU)*K))-.5)-R*.3,S)

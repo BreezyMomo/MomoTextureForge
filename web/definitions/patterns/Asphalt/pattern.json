@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Asphalt",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "沥青颗粒",
+  "category": "natural",
+  "order": 189,
+  "variant": 42,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "石粒密度",
+      "min": 4.0,
+      "max": 24.0,
+      "step": 1.0,
+      "default": 11.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "石粒大小",
+      "min": 0.06,
+      "max": 0.6,
+      "step": 0.01,
+      "default": 0.26
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "石粒对比",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.62
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "边缘柔化",
+      "min": 0.002,
+      "max": 0.06,
+      "step": 0.001,
+      "default": 0.01
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "砂底亮度",
+      "min": 0.0,
+      "max": 0.6,
+      "step": 0.02,
+      "default": 0.22
+    }
+  ],
+  "defaults": [
+    11.0,
+    0.26,
+    0.62,
+    0.01,
+    0.22,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

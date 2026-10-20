@@ -1,0 +1,21 @@
+vec2 p=q,uv=u;
+float refP0=a.x;
+float refP1=a.y;
+float refP2=a.z;
+float refP3=a.w;
+float refP4=b.x;
+float refP5=b.y;
+float refP6=b.z;
+float refP7=b.w;
+
+    float a = atan(p.y, p.x);
+    float r = length(p);
+    float n = floor(max(refP0, 2.0));
+    float seg = 6.28318530718 / n;
+    float ai = floor(a / seg + 0.5) * seg;
+    float idx = floor(a / seg + 0.5);
+    float jit = (ref_fbmP(vec2(r * 3.0, idx * 3.7 + time * 0.5), 4, 0.5) * 2.0 - 1.0) * seg * 0.5 * refP1;
+    float arc = (a - ai) * r - jit * r;
+    float d = abs(arc) - refP2;
+    float len = refP3 * (0.45 + 0.55 * ref_hash1(vec2(idx, 2.2)));
+    return clamp(ref_fillD(d, 0.004) * (1.0 - ref_smoothstep(len * 0.65, len, r)), 0.0, 1.0);

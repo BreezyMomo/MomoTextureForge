@@ -1,0 +1,1 @@
+max(grid(rot(q,PI/3.)*N,W,S),line(sin(q.y*N*PI),W*3.,S))

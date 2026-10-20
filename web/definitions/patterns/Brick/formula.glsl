@@ -1,0 +1,1 @@
+brick(u,N,R,W,K,S)

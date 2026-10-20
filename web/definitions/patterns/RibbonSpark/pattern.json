@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "RibbonSpark",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "火花拖尾",
+  "category": "ribbon",
+  "order": 280,
+  "variant": 15,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "火花密度",
+      "min": 10.0,
+      "max": 90.0,
+      "step": 2.0,
+      "default": 36.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "闪烁速度",
+      "min": 0.0,
+      "max": 8.0,
+      "step": 0.1,
+      "default": 2.2
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "点大小",
+      "min": 0.05,
+      "max": 0.6,
+      "step": 0.01,
+      "default": 0.26
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "长度衰减",
+      "min": 0.3,
+      "max": 4.0,
+      "step": 0.05,
+      "default": 1.5
+    }
+  ],
+  "defaults": [
+    36.0,
+    2.2,
+    0.26,
+    1.5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

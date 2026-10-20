@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "HexData",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "六角数据格",
+  "category": "digital",
+  "order": 214,
+  "variant": 23,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "六角密度",
+      "min": 3.0,
+      "max": 20.0,
+      "step": 0.5,
+      "default": 8.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "填充亮度",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.8
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "数据密度",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.45
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "发光层数",
+      "min": 0.0,
+      "max": 4.0,
+      "step": 1.0,
+      "default": 2.0
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "线宽",
+      "min": 0.002,
+      "max": 0.04,
+      "step": 0.001,
+      "default": 0.008
+    }
+  ],
+  "defaults": [
+    8.0,
+    0.8,
+    0.45,
+    2.0,
+    0.008,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

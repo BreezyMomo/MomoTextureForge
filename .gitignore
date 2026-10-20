@@ -1,0 +1,8 @@
+/node_modules/
+/dist/
+/test-results/
+
+/skills/texture-forge-author/scripts/
+/skills/texture-forge-author/package.json
+/skills/texture-forge-author/node_modules/
+/skills/texture-forge-author/package-lock.json

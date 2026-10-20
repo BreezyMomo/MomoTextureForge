@@ -1,0 +1,73 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "RoofTiles",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "瓦片",
+  "category": "pattern",
+  "order": 76,
+  "variant": 20,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "列数",
+      "min": 2.0,
+      "max": 24.0,
+      "step": 1.0,
+      "default": 8.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "行数",
+      "min": 2.0,
+      "max": 32.0,
+      "step": 1.0,
+      "default": 14.0
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "缝宽",
+      "min": 0.004,
+      "max": 0.1,
+      "step": 0.002,
+      "default": 0.014
+    }
+  ],
+  "defaults": [
+    8.0,
+    14.0,
+    0.014,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

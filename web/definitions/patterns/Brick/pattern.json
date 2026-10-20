@@ -1,0 +1,102 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Brick",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "砖墙",
+  "category": "pattern",
+  "order": 65,
+  "variant": 9,
+  "parameters": [
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "列数",
+      "min": 1,
+      "max": 64,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "行数",
+      "min": 1,
+      "max": 64,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "灰缝",
+      "min": 0.01,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.12
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "label": "行错位",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "柔和",
+      "min": 0,
+      "max": 0.1,
+      "step": 0.001,
+      "default": 0.005
+    }
+  ],
+  "defaults": [
+    12,
+    0.12,
+    8,
+    0.005,
+    0.5,
+    0.5,
+    1,
+    0.2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "expression",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "periodic",
+    "source": {
+      "kind": "expression",
+      "file": "periodic.glsl",
+      "libraries": [
+        "math-v1",
+        "periodic-v1"
+      ]
+    },
+    "order": 0,
+    "countMultiplier": 1,
+    "evenCount": false,
+    "rows": true
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

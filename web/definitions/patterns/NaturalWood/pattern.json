@@ -1,0 +1,212 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "NaturalWood",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "自然木纹",
+  "category": "natural",
+  "order": 283,
+  "variant": 44,
+  "parameters": [
+    {
+      "variable": "grainCount",
+      "label": "纹路数量",
+      "min": 2,
+      "max": 80,
+      "step": 1,
+      "default": 24,
+      "slot": 0,
+      "key": "R"
+    },
+    {
+      "variable": "grainWidth",
+      "label": "纹线基础粗细",
+      "min": 0.015,
+      "max": 0.3,
+      "step": 0.005,
+      "default": 0.055,
+      "slot": 1,
+      "key": "W"
+    },
+    {
+      "variable": "bendAmount",
+      "label": "弯曲幅度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4,
+      "slot": 2,
+      "key": "N"
+    },
+    {
+      "variable": "bendScale",
+      "label": "弯曲频率",
+      "min": 0.3,
+      "max": 5,
+      "step": 0.1,
+      "default": 1.1,
+      "slot": 3,
+      "key": "S"
+    },
+    {
+      "variable": "irregularity",
+      "label": "纹路间隔变化",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.85,
+      "slot": 4,
+      "key": "D"
+    },
+    {
+      "variable": "knotDensity",
+      "label": "木结疏密（越大越密）",
+      "min": 0.35,
+      "max": 3,
+      "step": 0.05,
+      "default": 1.4,
+      "slot": 5,
+      "key": "K"
+    },
+    {
+      "variable": "knotStrength",
+      "label": "木结强度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 1,
+      "slot": 6,
+      "key": "H"
+    },
+    {
+      "variable": "knotSize",
+      "label": "木结生长范围",
+      "min": 0.04,
+      "max": 0.24,
+      "step": 0.005,
+      "default": 0.1,
+      "slot": 7,
+      "key": "T"
+    },
+    {
+      "variable": "strokeVariation",
+      "label": "纹线粗细变化",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.85,
+      "slot": 8,
+      "key": "A"
+    },
+    {
+      "variable": "edgeSoftness",
+      "label": "边缘柔和",
+      "min": 0.005,
+      "max": 0.15,
+      "step": 0.005,
+      "default": 0.01,
+      "slot": 9,
+      "key": "B"
+    },
+    {
+      "variable": "grainContrast",
+      "label": "纹理对比",
+      "min": 0.2,
+      "max": 2,
+      "step": 0.05,
+      "default": 1,
+      "slot": 10,
+      "key": "C"
+    },
+    {
+      "variable": "directionDeg",
+      "label": "方向（度）",
+      "min": -180,
+      "max": 180,
+      "step": 1,
+      "default": 0,
+      "slot": 11,
+      "key": "E"
+    },
+    {
+      "variable": "randomSeed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 7,
+      "slot": 12,
+      "key": "F"
+    },
+    {
+      "variable": "ringLayers",
+      "label": "内圈年轮层次",
+      "min": 0,
+      "max": 9,
+      "step": 1,
+      "default": 2,
+      "slot": 13,
+      "key": "G"
+    },
+    {
+      "variable": "knotAspect",
+      "label": "木结狭长程度",
+      "min": 2,
+      "max": 7,
+      "step": 0.1,
+      "default": 4.2,
+      "slot": 14,
+      "key": "I"
+    },
+    {
+      "variable": "knotScatter",
+      "label": "木结分布错落",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.35,
+      "slot": 15,
+      "key": "J"
+    }
+  ],
+  "defaults": [
+    24,
+    0.055,
+    0.4,
+    1.1,
+    0.85,
+    1.4,
+    1,
+    0.1,
+    0.85,
+    0.01,
+    1,
+    0,
+    7,
+    2,
+    4.2,
+    0.35
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "natural-wood-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  },
+  "authoring": {
+    "formula": "vec2 p = rot(u - 0.5, directionDeg * PI / 180.0) + 0.5;\nvec2 off = vec2(randomSeed * 3.17 + 11.0, randomSeed * 1.73 + 29.0);\nfloat count = floor(grainCount + 0.5);\nfloat warp = (noise(vec2(p.y * bendScale * 2.0, 3.2) + off) - 0.5) * 0.16;\nwarp += sin(p.y * bendScale * TAU + randomSeed) * 0.025;\np.x += warp * bendAmount;\nvec2 s = p * knotDensity;\nvec2 cellSize = vec2(0.75, 1.10);\nvec2 cell = floor(s / cellSize);\nfloat growth = 100.0;\nfloat tipWeight = 0.0;\nfloat totalWeight = 0.0;\n// Each knot is a minimum of one continuous growth field, not a displacement hill.\n// Parabolic length with a narrow axial crease creates long, tapered inner rings.\nfor (int row = -2; row <= 2; row++) {\n for (int col = -2; col <= 2; col++) {\n  vec2 id = cell + vec2(float(col),float(row));\n  float seed = dot(id,vec2(17.0,97.0)) + randomSeed * 7.0;\n  vec2 jitter = vec2(nwHash(seed+3.0),nwHash(seed+31.0))-0.5;\n  vec2 center = (id+0.5+jitter*knotScatter*0.55)*cellSize;\n  center.y += mod(id.x,2.0) * cellSize.y * 0.47;\n  vec2 delta = (s-center)/knotDensity;\n  delta.x += (nwHash(seed+47.0)-0.5)*0.07*delta.y;\n  delta.x += sin(delta.y*2.5+seed)*0.006*irregularity;\n  delta.x += delta.y*delta.y*(nwHash(seed+59.0)-0.5)*0.08;\n  float axial = sqrt(delta.x*delta.x+0.000004);\n  float longitudinal = delta.y / knotAspect;\n  float taper = 1.0 + 0.25*tanh(delta.y*2.0);\n  float metric = axial + longitudinal*longitudinal*taper / max(knotSize,0.01);\n  float blendScale = 0.08/max(knotDensity,1.0);\n  float nextGrowth = nwSmoothMin(growth,metric,blendScale);\n  // Stable soft-nearest weights also blend tip taper continuously across joins.\n  float keepWeight = exp(-(growth-nextGrowth)/blendScale);\n  float addWeight = exp(-(metric-nextGrowth)/blendScale);\n  float axisTaper = smoothstep(0.001,0.026,abs(delta.x));\n  axisTaper = mix(1.0,axisTaper,smoothstep(0.02,0.10,abs(delta.y)));\n  tipWeight = tipWeight*keepWeight + axisTaper*addWeight;\n  totalWeight = totalWeight*keepWeight + addWeight;\n  growth = nextGrowth;\n }\n}\ngrowth = max(growth,0.0);\nfloat grainField = mix(p.x, growth, knotStrength);\nfloat phase = grainField*count;\nphase += knotStrength*ringLayers*(1.0-exp(-growth/max(knotSize,0.01)));\nphase += (noise(vec2(p.x*5.0,p.y*0.7)+off+70.0)-0.5)*irregularity*0.55;\n// Monotone phase remapping changes spacing without creating folded extra rings.\nfloat rhythm = phase;\nphase += irregularity*(0.70*sin(rhythm*0.61+randomSeed) + 0.18*sin(rhythm*1.77+randomSeed*2.3));\n// Each growth line has its own thickness, with gradual variation along its length.\nfloat bandIndex = floor(phase+0.5);\nfloat bandWidth = 0.25+1.65*pow(nwHash(bandIndex+randomSeed*13.0+7.0),0.7);\nfloat along = noise(vec2(bandIndex*4.7+off.x,p.y*4.5+off.y));\nfloat alongWidth = mix(0.32,1.65,smoothstep(0.15,0.85,along));\nfloat widthVariation = mix(1.0,bandWidth*alongWidth,strokeVariation);\nfloat tipTaper = mix(1.0,mix(0.10,1.0,tipWeight/max(totalWeight,0.0001)),knotStrength);\nwidthVariation *= tipTaper;\nfloat baseRate = count*length(vec2(dFdx(p.x),dFdy(p.y)))*0.7071;\nfloat broad = nwGrowthBand(phase,grainWidth*widthVariation,edgeSoftness,baseRate);\n\nfloat variation = 0.85+noise(vec2(p.x*24.0,p.y*1.8)+off)*0.15;\nreturn sat(broad*variation*grainContrast);",
+    "kind": "body",
+    "portable": true
+  },
+  "description": "自然纵切木纹：狭长木结、逐渐收细的尖梢、不等间隔与沿线粗细渐变。木结疏密控制整幅分布，纹路数量控制主纹密度，间隔变化与纹线粗细变化可分别调整。密集或较粗的纹路可能相互靠近、并合。输出为纹理遮罩，可自行搭配木色；非原生无缝。"
+}

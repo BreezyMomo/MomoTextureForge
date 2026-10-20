@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "RasterScan",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "光栅扫描",
+  "category": "digital",
+  "order": 210,
+  "variant": 19,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "线数",
+      "min": 16.0,
+      "max": 360.0,
+      "step": 4.0,
+      "default": 90.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "滚动速度",
+      "min": 0.0,
+      "max": 6.0,
+      "step": 0.05,
+      "default": 1.2
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "线宽",
+      "min": 0.05,
+      "max": 0.9,
+      "step": 0.01,
+      "default": 0.45
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "扫描速度",
+      "min": 0.0,
+      "max": 4.0,
+      "step": 0.05,
+      "default": 0.9
+    }
+  ],
+  "defaults": [
+    90.0,
+    1.2,
+    0.45,
+    0.9,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

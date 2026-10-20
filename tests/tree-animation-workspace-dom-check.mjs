@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {pathToFileURL} from 'node:url';
+import {node,find} from '../web/tree-model.js';
+import {createAnimationWorkspace} from '../web/tree-animation-workspace.js';
+const {Window}=await import(pathToFileURL(process.argv[2]).href),win=new Window();globalThis.document=win.document;
+const root=node('group'),child=node('group'),leaf=node();root.name='Root';child.name='Child';leaf.name='Leaf';root.children=[child];child.children=[leaf];child.timing.start=.2;child.timing.end=.6;leaf.tracks.opacity={mode:'absolute',ease:'linear',keys:[[0,0],[1,1]]};
+let selected=root,commits=0,seek=null;const host=document.createElement('div');document.body.append(host);
+const editor=createAnimationWorkspace(host,{getRoot:()=>root,getNode:()=>selected,selectNode:id=>{selected=find(root,id).node;},progressNode:()=>0,getProgress:()=>0,isLocal:()=>false,seekNode:(id,t)=>seek=[id,t],seek(){},returnWork(){},label:p=>p,change:fn=>{fn();commits++;}});editor.update();
+const buttons=text=>[...host.querySelectorAll('button')].filter(b=>b.textContent===text);
+assert.ok(host.textContent.includes('Leaf'));buttons('opacity')[0].click();editor.update();assert.equal(selected,leaf);assert.equal(host.querySelectorAll('.animation-interval').length,3);assert.ok(host.textContent.includes('Root'));
+const bar=host.querySelector(`.animation-interval[data-node="${child.id}"]`);Object.defineProperty(bar.parentElement,'clientWidth',{value:100});bar.setPointerCapture=()=>{};bar.releasePointerCapture=()=>{};
+bar.onpointerdown({target:bar,clientX:20,pointerId:1,stopPropagation(){}});bar.onpointermove({clientX:30});assert.equal(commits,0);bar.onpointerup({pointerId:1});assert.equal(commits,1);assert.ok(Math.abs(child.timing.start-.3)<1e-10);assert.ok(Math.abs(child.timing.end-.7)<1e-10);
+// Deep descendant editing uses its parent's clock, including reversed resize handles.
+leaf.timing.start=.2;leaf.timing.end=.6;editor.update(true);
+const childBar=()=>host.querySelector(`.animation-interval[data-node="${leaf.id}"]`);let nested=childBar();assert.equal(nested.getAttribute('aria-readonly'),'false');Object.defineProperty(nested.parentElement,'clientWidth',{value:100});nested.setPointerCapture=()=>{};
+nested.onpointerdown({target:nested,clientX:0,pointerId:1,stopPropagation(){}});nested.onpointermove({clientX:4});nested.onpointerup();assert.ok(Math.abs(leaf.timing.start-.3)<1e-8);assert.ok(Math.abs(leaf.timing.end-.7)<1e-8);assert.deepEqual(leaf.tracks.opacity.keys,[[0,0],[1,1]]);
+child.timing.from=1;child.timing.to=0;editor.update(true);nested=childBar();assert.equal(nested.querySelector('.animation-handle.start').dataset.edge,'end');
+child.timing.from=0;child.timing.to=1;child.timing.loop=true;child.timing.cycles=2;editor.update(true);assert.equal(host.querySelectorAll(`.animation-interval.readonly[data-node="${leaf.id}"]`).length,2);nested=childBar();assert.equal(nested.onpointerdown,null);assert.equal(nested.querySelector('.animation-handle'),null);nested.ondblclick();assert.equal(editor.getScope(),child.id);assert.equal(childBar().getAttribute('aria-readonly'),'false');buttons('Root')[0].click();child.timing.loop=false;child.timing.cycles=1;editor.update(true);
+buttons('▾')[1].click();assert.ok(!host.textContent.includes('Leaf'));buttons('▸')[0].click();
+host.querySelector(`.animation-interval[data-node="${child.id}"]`).ondblclick();assert.equal(selected,child);assert.equal(editor.getScope(),child.id);assert.ok(host.textContent.includes('编辑范围'));
+buttons('Root')[0].click();assert.ok(host.textContent.includes('Leaf'));console.log('Animation workspace DOM PASS: subtree, stable scope, interval single commit, collapse, local entry and breadcrumb return.');win.happyDOM.abort();

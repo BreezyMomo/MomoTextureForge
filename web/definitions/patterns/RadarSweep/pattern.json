@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "RadarSweep",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "雷达扫描",
+  "category": "digital",
+  "order": 208,
+  "variant": 17,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "扫描速度",
+      "min": 0.0,
+      "max": 3.0,
+      "step": 0.05,
+      "default": 0.8
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "余辉",
+      "min": 0.5,
+      "max": 8.0,
+      "step": 0.1,
+      "default": 3.0
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "环数",
+      "min": 2.0,
+      "max": 12.0,
+      "step": 0.5,
+      "default": 4.0
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "噪点",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.3
+    }
+  ],
+  "defaults": [
+    0.8,
+    3.0,
+    4.0,
+    0.3,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

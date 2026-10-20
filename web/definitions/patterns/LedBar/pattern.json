@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "LedBar",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "电平条",
+  "category": "digital",
+  "order": 211,
+  "variant": 20,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "柱数",
+      "min": 4.0,
+      "max": 56.0,
+      "step": 2.0,
+      "default": 18.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "刷新率",
+      "min": 0.0,
+      "max": 8.0,
+      "step": 0.1,
+      "default": 1.5
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "段数",
+      "min": 8.0,
+      "max": 56.0,
+      "step": 2.0,
+      "default": 22.0
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "亮度",
+      "min": 0.3,
+      "max": 1.6,
+      "step": 0.02,
+      "default": 1.0
+    }
+  ],
+  "defaults": [
+    18.0,
+    1.5,
+    22.0,
+    1.0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

@@ -1,0 +1,24 @@
+vec2 p=q,uv=u;
+float refP0=a.x;
+float refP1=a.y;
+float refP2=a.z;
+float refP3=a.w;
+float refP4=b.x;
+float refP5=b.y;
+float refP6=b.z;
+float refP7=b.w;
+
+    vec2 q = abs(uv - 0.5);
+    float m = max(q.x, q.y);
+    float w = max(refP0, 0.001) * 0.5;
+    float rin = 0.5 - clamp(refP3, 0.0, 0.45);
+    float frame = ref_strokeD(m - rin, w, 0.002);
+    float corner = step(rin - refP1, m);
+    float bracket = frame * corner;
+    vec2 t = uv * refP2;
+    float tw = max(refP2 / 44.0, 0.5);
+    float tickX = ref_strokeD(abs(fract(t.x) - 0.5) / tw, 0.06, 0.002);
+    float tickY = ref_strokeD(abs(fract(t.y) - 0.5) / tw, 0.06, 0.002);
+    float nearEdge = ref_smoothstep(rin - 0.08, rin - 0.05, m);
+    float tick = max(tickX, tickY) * nearEdge;
+    return clamp(max(frame * 0.5, max(bracket, tick * 0.8)), 0.0, 1.0);

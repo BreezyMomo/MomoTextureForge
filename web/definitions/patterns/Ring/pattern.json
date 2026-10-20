@@ -1,0 +1,73 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Ring",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "圆环",
+  "category": "radial",
+  "order": 1,
+  "variant": 1,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "半径",
+      "min": 0.02,
+      "max": 1.5,
+      "step": 0.01,
+      "default": 0.62
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "环线宽",
+      "min": 0.001,
+      "max": 0.5,
+      "step": 0.001,
+      "default": 0.025
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "羽化",
+      "min": 0.001,
+      "max": 0.3,
+      "step": 0.001,
+      "default": 0.015
+    }
+  ],
+  "defaults": [
+    0.62,
+    0.025,
+    8,
+    0.015,
+    0.5,
+    0.25,
+    1,
+    0.2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "expression",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "repeat",
+    "extent": "ring"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

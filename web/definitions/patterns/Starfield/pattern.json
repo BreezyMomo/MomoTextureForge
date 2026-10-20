@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Starfield",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "星场",
+  "category": "energy",
+  "order": 233,
+  "variant": 18,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "密度",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.22
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "大小",
+      "min": 0.005,
+      "max": 0.15,
+      "step": 0.002,
+      "default": 0.11
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "闪烁",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.6
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "层数",
+      "min": 1.0,
+      "max": 3.0,
+      "step": 1.0,
+      "default": 3.0
+    }
+  ],
+  "defaults": [
+    0.22,
+    0.11,
+    0.6,
+    3.0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

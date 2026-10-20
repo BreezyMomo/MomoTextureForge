@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Moire",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "莫尔干涉",
+  "category": "pattern",
+  "order": 88,
+  "variant": 32,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "频率",
+      "min": 10.0,
+      "max": 120.0,
+      "step": 1.0,
+      "default": 48.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "角度",
+      "min": 0.0,
+      "max": 0.3,
+      "step": 0.002,
+      "default": 0.06
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "频差",
+      "min": 0.0,
+      "max": 0.3,
+      "step": 0.005,
+      "default": 0.05
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "对比",
+      "min": 0.2,
+      "max": 4.0,
+      "step": 0.05,
+      "default": 1.2
+    }
+  ],
+  "defaults": [
+    48.0,
+    0.06,
+    0.05,
+    1.2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

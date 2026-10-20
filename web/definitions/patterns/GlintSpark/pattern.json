@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "GlintSpark",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "星光闪烁",
+  "category": "shape",
+  "order": 49,
+  "variant": 24,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "臂长",
+      "min": 0.15,
+      "max": 1.2,
+      "step": 0.01,
+      "default": 0.85
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "尖度",
+      "min": 6.0,
+      "max": 64.0,
+      "step": 1.0,
+      "default": 26.0
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "芯大小",
+      "min": 0.01,
+      "max": 0.25,
+      "step": 0.005,
+      "default": 0.05
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "臂数",
+      "min": 3.0,
+      "max": 8.0,
+      "step": 1.0,
+      "default": 4.0
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "闪烁速度",
+      "min": 0.0,
+      "max": 3.0,
+      "step": 0.05,
+      "default": 1.2
+    }
+  ],
+  "defaults": [
+    0.85,
+    26.0,
+    0.05,
+    4.0,
+    1.2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Bokeh",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "散景光斑",
+  "category": "radial",
+  "order": 19,
+  "variant": 19,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "光斑数量",
+      "min": 2.0,
+      "max": 14.0,
+      "step": 1.0,
+      "default": 7.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "光斑尺寸",
+      "min": 0.02,
+      "max": 0.3,
+      "step": 0.005,
+      "default": 0.1
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "亮度差",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.05,
+      "default": 0.5
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "边缘柔化",
+      "min": 0.05,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.55
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "分布范围",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.85
+    }
+  ],
+  "defaults": [
+    7.0,
+    0.1,
+    0.5,
+    0.55,
+    0.85,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

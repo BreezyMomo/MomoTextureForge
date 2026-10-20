@@ -1,0 +1,73 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Ripple",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "涟漪",
+  "category": "pattern",
+  "order": 64,
+  "variant": 8,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "频率",
+      "min": 1.0,
+      "max": 40.0,
+      "step": 0.5,
+      "default": 12.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "柔和",
+      "min": 0.0,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.1
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "速度",
+      "min": 0.0,
+      "max": 2.0,
+      "step": 0.05,
+      "default": 0.2
+    }
+  ],
+  "defaults": [
+    12.0,
+    0.1,
+    0.2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

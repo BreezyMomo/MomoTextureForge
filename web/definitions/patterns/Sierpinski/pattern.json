@@ -1,0 +1,73 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Sierpinski",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "分形三角",
+  "category": "pattern",
+  "order": 100,
+  "variant": 44,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "格数",
+      "min": 4.0,
+      "max": 64.0,
+      "step": 1.0,
+      "default": 24.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "留白半径",
+      "min": 0.4,
+      "max": 1.05,
+      "step": 0.01,
+      "default": 0.96
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "底纹强度",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.0
+    }
+  ],
+  "defaults": [
+    24.0,
+    0.96,
+    0.0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

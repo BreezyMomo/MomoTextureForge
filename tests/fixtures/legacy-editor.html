@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Momo Texture Forge · 特效贴图生成器</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <span class="brand-icon">M</span>
+        <div>
+          <strong>MOMO <span>TEXTURE FORGE</span></strong
+          ><small>程序化特效贴图工作台</small>
+        </div>
+      </div>
+      <nav>
+        <button id="examples">图形示例</button>
+        <button id="help">使用说明</button
+        ><button id="undo" title="Ctrl+Z">撤销</button
+        ><button id="redo" title="Ctrl+Shift+Z">重做</button
+        ><button id="share">分享配置</button><button id="batch">批量 ZIP</button
+        ><button id="export-exr">EXR</button
+        ><button id="export" class="primary">导出 PNG</button>
+      </nav>
+    </header>
+    <main>
+      <aside class="library">
+        <div class="library-top">
+          <label class="search-label" for="search">图案库</label
+          ><input
+            id="search"
+            type="search"
+            placeholder="搜索类型 / 中文名"
+            autocomplete="off"
+          />
+          <div class="library-meta">
+            <span id="type-count">加载中</span
+            ><button id="collapse" class="text-btn">收起分类</button>
+          </div>
+          <label class="sr-only" for="type-select">图案类型</label
+          ><select id="type-select"></select>
+        </div>
+        <div id="type-list"></div>
+        <footer><span id="catalog-summary">加载图案目录</span><br />独立程序化实现 / WebGL2</footer>
+      </aside>
+      <section class="workspace" aria-label="贴图预览">
+        <div class="workspace-heading">
+          <div>
+            <span class="eyebrow">LIVE PREVIEW</span>
+            <h1 id="current-title">圆形 <span>Circle</span></h1>
+          </div>
+          <div class="preview-info">
+            <span id="render-status">初始化渲染器</span
+            ><span id="precision-status"></span>
+          </div>
+        </div>
+        <div id="canvas-stage">
+          <canvas
+            id="preview"
+            width="512"
+            height="512"
+            aria-label="程序化贴图预览"
+          ></canvas>
+          <div id="render-error" role="alert" hidden></div>
+          <span id="stage-badge">1:1</span>
+        </div>
+        <div class="preview-toolbar">
+          <label
+            >预览
+            <select id="preview-size">
+              <option>256</option>
+              <option selected>512</option>
+              <option>1024</option>
+            </select></label
+          ><button id="play" aria-label="播放动画">播放</button
+          ><button id="random">随机生成</button
+          ><button id="tile" aria-pressed="false">平铺检查</button
+          ><button
+            id="grab"
+            aria-pressed="false"
+            title="拖动平移，滚轮缩放，Shift 拖动旋转，双击复位"
+          >
+            操控 UV
+          </button>
+        </div>
+        <div class="timeline">
+          <div class="timeline-label">
+            <label for="time">时间轴</label
+            ><output id="time-value">0.00 s</output
+            ><label
+              >播放速度
+              <select id="play-speed">
+                <option value=".25">0.25×</option>
+                <option value=".5">0.5×</option>
+                <option value="1" selected>1×</option>
+                <option value="2">2×</option>
+                <option value="4">4×</option>
+              </select></label
+            >
+          </div>
+          <input id="time" type="range" min="0" max="3" step=".01" value="0" />
+          <div class="keyframe-row">
+            <label
+              ><input id="key-enabled" type="checkbox" checked />关键帧</label
+            ><label
+              >插值
+              <select id="key-ease">
+                <option value="linear">线性</option>
+                <option value="smooth">缓入缓出</option>
+                <option value="hold">保持</option>
+              </select></label
+            ><button id="clear-keys" class="text-btn">清空</button>
+          </div>
+          <div id="key-track" aria-label="关键帧轨道"></div>
+          <p id="key-summary">点参数右侧 ◇，在当前时间记录关键帧</p>
+        </div>
+        <div class="workspace-bottom">
+          <span>↑↓ 切图案 · Space 播放 · R 随机 · T 平铺 · E 导出</span
+          ><button id="reset" class="text-btn">恢复默认配置</button>
+        </div>
+        <section id="flipbook-preview" hidden>
+          <h2>翻转书图集</h2>
+          <canvas id="atlas-preview" aria-label="翻转书图集预览"></canvas
+          ><button id="build-atlas">更新图集预览</button>
+        </section>
+      </section>
+      <aside class="inspector" aria-label="参数编辑器">
+        <section>
+          <div class="section-heading">
+            <h2>配色渐变</h2>
+            <span>COLOR</span>
+          </div>
+          <div id="palette-grid"></div>
+          <div id="background-panel"></div>
+          <details id="custom-gradient">
+            <summary>编辑自定义渐变</summary>
+            <div id="color-stops"></div>
+            <button id="add-stop">增加色标</button>
+          </details>
+        </section>
+        <section>
+          <div class="section-heading">
+            <h2>图层与参数</h2>
+            <button id="random-params" class="text-btn">随机参数</button>
+          </div>
+          <div id="layer-tabs"></div>
+          <div id="layer-config"></div>
+          <div id="param-panel"></div>
+          <p id="algorithm-note" class="note"></p>
+        </section>
+        <section>
+          <div class="section-heading"><h2>无缝平铺</h2><span>SEAMLESS</span></div>
+          <div id="seamless-panel"></div>
+          <p id="seamless-summary" class="note"></p>
+        </section>
+        <section>
+          <div class="section-heading"><h2>图形排列器</h2><span>ARRANGE</span></div>
+          <div id="arrangement-panel"></div>
+        </section>
+        <section>
+          <div class="section-heading">
+            <h2>UV 变换</h2>
+            <button id="reset-uv" class="text-btn">复位</button>
+          </div>
+          <div id="uv-panel"></div>
+          <label class="check"
+            ><input id="polar" type="checkbox" />极坐标采样</label
+          >
+        </section>
+        <section>
+          <div class="section-heading">
+            <h2>图层混合</h2>
+            <span>3 LAYERS</span>
+          </div>
+          <div id="order-panel"></div>
+          <div id="mask-panel"></div>
+        </section>
+        <section>
+          <div class="section-heading">
+            <h2>后处理</h2>
+            <button id="reset-post" class="text-btn">复位</button>
+          </div>
+          <div id="post-panel"></div>
+        </section>
+        <section>
+          <div class="section-heading"><h2>动画与序列帧</h2></div>
+          <div id="animation-panel"></div>
+        </section>
+        <section>
+          <div class="section-heading">
+            <h2>预设</h2>
+            <span id="preset-count"></span>
+          </div>
+          <div class="inline">
+            <input
+              id="preset-name"
+              placeholder="预设名称（最多 80 字）"
+              maxlength="80"
+            /><button id="preset-save">保存</button>
+          </div>
+          <label
+            >分类
+            <select id="preset-category">
+              <option>未分类</option>
+              <option>常用</option>
+              <option>材质</option>
+              <option>图案</option>
+              <option>能量</option>
+              <option>其他</option>
+            </select></label
+          >
+          <div id="preset-list"></div>
+          <div class="inline">
+            <button id="preset-export">导出预设</button
+            ><button id="preset-import">导入预设</button>
+          </div>
+          <input
+            id="preset-file"
+            type="file"
+            accept=".json,application/json"
+            hidden
+          /><label class="check"
+            ><input
+              id="keep"
+              type="checkbox"
+            />保留参数，下次打开自动恢复</label
+          >
+        </section>
+        <section>
+          <div class="section-heading">
+            <h2>输出</h2>
+            <span>EXPORT</span>
+          </div>
+          <div id="output-panel"></div>
+          <button id="copy-image">复制 PNG 图片</button
+          ><button id="frames-zip">逐帧 PNG ZIP</button>
+          <p class="note">
+            PNG16 / EXR 从浮点渲染直出。数据贴图导入 Unity 时关闭
+            sRGB，法线与图集按用途设置。
+          </p>
+        </section>
+        <footer>Momo Texture Forge 1.0<br />全部配置与计算留在本机</footer>
+      </aside>
+    </main>
+    <dialog id="help-dialog">
+      <div class="dialog-head">
+        <h2>Momo Texture Forge 使用说明</h2>
+        <button id="close-help" aria-label="关闭使用说明">关闭</button>
+      </div>
+      <div class="help-content">
+        <h3>开始制作</h3>
+        <p>
+          从左侧选择图案，右栏固定显示正在编辑的图层和显示状态。“图形”调整专属参数，“排列”设置布局与无缝，“合成”调整蒙版、混合与配色，“输出”设置文件。中央显示所有启用图层的合成预览；顺序条的上下按钮改变合成顺序。
+        </p>
+        <h3>参数与动画</h3>
+        <p>
+          每种图案显示自己的参数、范围和默认值。例如圆形有半径/内径/羽化，FBM
+          有八度/增益，Brick
+          有列数/行数/灰缝/行错位。蒙版同样拥有专属参数和关键帧。所有图案还支持
+          UV 时间滚动。静态默认收起空时间轴，点击“动画 / 时间轴”或播放可展开。点 ◇
+          在当前时间加/删关键帧；有轨道的参数调整时自动记录该时刻。轨道点可跳到对应时刻。
+        </p>
+        <h3>配色与数据</h3>
+        <p>
+          12 组配色可以直接选择；自定义最多 8 色标。高度模式不使用配色，法线由
+          Sobel 求导；矢量场在图案模式显示 RG 向量（0.5
+          表示零分量），高度模式显示标量预览。RGBA
+          通道可分别装入高度、反相、法线分量和常量。
+        </p>
+        <h3>导出</h3>
+        <p>
+          PNG 支持 8/16 bit RGBA；EXR 支持半精度、无压缩或 ZIP16
+          无损压缩，保留浮点范围。4096
+          级图像和多层法线会较慢，导出期间有进度与取消。单张上限 1677
+          万像素，图集上限 4096 边长；超限会报错。批量 ZIP 包含 256/512/1024
+          三档；逐帧 ZIP 和图集使用相同时间采样。帧序为从左到右、从上到下，0
+          号帧在左上角。
+        </p>
+        <h3>预设、分享与恢复</h3>
+        <p>
+          顶部“保存项目 / 打开项目”通过 JSON 搬运当前贴图和导出设置。默认自动保存草稿，刷新可恢复；同一浏览器来源只保留一份最新草稿。合成区的预设管理最多保存 40 个预设；预设导入先校验全部内容，再合并。分享链接只编码贴图参数，不上传；接收方使用自己运行的工具地址，保留 #fx= 后的部分。
+        </p>
+        <h3>实现边界</h3>
+        <p>
+          这是 Momo
+          独立的本地工具，同名图案不承诺与参考站逐像素一致。反应扩散、复杂材质等采用程序化近似，不是物理仿真；蓝噪声项采用抖动细胞点近似。预览为
+          8bit，真实高精度仅在 PNG16/EXR
+          导出时读取浮点。未启用外部账号或云端服务。
+        </p>
+        <h3>检查运行环境</h3>
+        <p id="environment-info"></p>
+        <button id="diagnostics">检查全部图案</button>
+        <pre id="diagnostics-result">尚未运行图案检查</pre>
+      </div>
+    </dialog>
+    <dialog id="export-dialog">
+      <h2>正在生成贴图</h2>
+      <p id="export-message">准备渲染</p>
+      <progress id="export-progress" max="1" value="0"></progress
+      ><button id="cancel-export">取消</button>
+    </dialog>
+    <div id="toast" role="status" aria-live="polite" hidden></div>
+    <script type="module" src="bootstrap.js"></script>
+  </body>
+</html>

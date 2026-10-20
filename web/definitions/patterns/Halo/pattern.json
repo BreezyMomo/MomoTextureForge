@@ -1,0 +1,73 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Halo",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "高斯光晕",
+  "category": "radial",
+  "order": 16,
+  "variant": 16,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "半径",
+      "min": 0.0,
+      "max": 1.4,
+      "step": 0.01,
+      "default": 0.65
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "宽度",
+      "min": 0.005,
+      "max": 0.6,
+      "step": 0.005,
+      "default": 0.12
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "强度",
+      "min": 0.1,
+      "max": 2.0,
+      "step": 0.02,
+      "default": 1.0
+    }
+  ],
+  "defaults": [
+    0.65,
+    0.12,
+    1.0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

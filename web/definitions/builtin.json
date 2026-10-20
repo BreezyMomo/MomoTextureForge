@@ -1,0 +1,1215 @@
+{
+  "schema": "momo.texture-index/v1",
+  "revision": 10,
+  "abi": "momo-pattern/16-v1",
+  "categories": [
+    {
+      "id": "radial",
+      "name": "径向"
+    },
+    {
+      "id": "shape",
+      "name": "形状"
+    },
+    {
+      "id": "pattern",
+      "name": "图案"
+    },
+    {
+      "id": "gradient",
+      "name": "渐变"
+    },
+    {
+      "id": "noise",
+      "name": "噪声"
+    },
+    {
+      "id": "natural",
+      "name": "自然材质"
+    },
+    {
+      "id": "digital",
+      "name": "数字"
+    },
+    {
+      "id": "energy",
+      "name": "能量"
+    },
+    {
+      "id": "vector",
+      "name": "矢量场"
+    },
+    {
+      "id": "mask",
+      "name": "遮罩"
+    },
+    {
+      "id": "ribbon",
+      "name": "拖尾"
+    },
+    {
+      "id": "sigil",
+      "name": "法阵"
+    }
+  ],
+  "libraries": {
+    "math-v1": {
+      "file": "libraries/math-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "periodic-v1": {
+      "file": "libraries/periodic-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "vector-v1": {
+      "file": "libraries/vector-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "reference-v1": {
+      "file": "libraries/reference-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "natural-wood-v1": {
+      "file": "libraries/natural-wood-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    }
+  },
+  "patterns": [
+    {
+      "id": "Circle",
+      "file": "patterns/Circle/pattern.json"
+    },
+    {
+      "id": "Ring",
+      "file": "patterns/Ring/pattern.json"
+    },
+    {
+      "id": "RadialGradient",
+      "file": "patterns/RadialGradient/pattern.json"
+    },
+    {
+      "id": "Vignette",
+      "file": "patterns/Vignette/pattern.json"
+    },
+    {
+      "id": "Sunburst",
+      "file": "patterns/Sunburst/pattern.json"
+    },
+    {
+      "id": "Concentric",
+      "file": "patterns/Concentric/pattern.json"
+    },
+    {
+      "id": "Spiral",
+      "file": "patterns/Spiral/pattern.json"
+    },
+    {
+      "id": "LensFlare",
+      "file": "patterns/LensFlare/pattern.json"
+    },
+    {
+      "id": "ShockwaveRing",
+      "file": "patterns/ShockwaveRing/pattern.json"
+    },
+    {
+      "id": "LightStreak",
+      "file": "patterns/LightStreak/pattern.json"
+    },
+    {
+      "id": "ArcRing",
+      "file": "patterns/ArcRing/pattern.json"
+    },
+    {
+      "id": "PieSlice",
+      "file": "patterns/PieSlice/pattern.json"
+    },
+    {
+      "id": "NovaBurst",
+      "file": "patterns/NovaBurst/pattern.json"
+    },
+    {
+      "id": "RadialStreak",
+      "file": "patterns/RadialStreak/pattern.json"
+    },
+    {
+      "id": "IrisBlades",
+      "file": "patterns/IrisBlades/pattern.json"
+    },
+    {
+      "id": "RingPulse",
+      "file": "patterns/RingPulse/pattern.json"
+    },
+    {
+      "id": "Halo",
+      "file": "patterns/Halo/pattern.json"
+    },
+    {
+      "id": "CompassTick",
+      "file": "patterns/CompassTick/pattern.json"
+    },
+    {
+      "id": "RadialBlurMask",
+      "file": "patterns/RadialBlurMask/pattern.json"
+    },
+    {
+      "id": "Bokeh",
+      "file": "patterns/Bokeh/pattern.json"
+    },
+    {
+      "id": "AnamorphicFlare",
+      "file": "patterns/AnamorphicFlare/pattern.json"
+    },
+    {
+      "id": "GodRay",
+      "file": "patterns/GodRay/pattern.json"
+    },
+    {
+      "id": "RadialWave",
+      "file": "patterns/RadialWave/pattern.json"
+    },
+    {
+      "id": "LensBlur",
+      "file": "patterns/LensBlur/pattern.json"
+    },
+    {
+      "id": "ChromaticEdge",
+      "file": "patterns/ChromaticEdge/pattern.json"
+    },
+    {
+      "id": "Polygon",
+      "file": "patterns/Polygon/pattern.json"
+    },
+    {
+      "id": "Star",
+      "file": "patterns/Star/pattern.json"
+    },
+    {
+      "id": "RoundedRect",
+      "file": "patterns/RoundedRect/pattern.json"
+    },
+    {
+      "id": "Cross",
+      "file": "patterns/Cross/pattern.json"
+    },
+    {
+      "id": "Crescent",
+      "file": "patterns/Crescent/pattern.json"
+    },
+    {
+      "id": "Gear",
+      "file": "patterns/Gear/pattern.json"
+    },
+    {
+      "id": "Ellipse",
+      "file": "patterns/Ellipse/pattern.json"
+    },
+    {
+      "id": "Capsule",
+      "file": "patterns/Capsule/pattern.json"
+    },
+    {
+      "id": "RoundedPolygon",
+      "file": "patterns/RoundedPolygon/pattern.json"
+    },
+    {
+      "id": "Squircle",
+      "file": "patterns/Squircle/pattern.json"
+    },
+    {
+      "id": "Bell",
+      "file": "patterns/Bell/pattern.json"
+    },
+    {
+      "id": "ConeParaboloid",
+      "file": "patterns/ConeParaboloid/pattern.json"
+    },
+    {
+      "id": "Thorn",
+      "file": "patterns/Thorn/pattern.json"
+    },
+    {
+      "id": "Blob",
+      "file": "patterns/Blob/pattern.json"
+    },
+    {
+      "id": "CloudShape",
+      "file": "patterns/CloudShape/pattern.json"
+    },
+    {
+      "id": "Splat",
+      "file": "patterns/Splat/pattern.json"
+    },
+    {
+      "id": "HandDrawn",
+      "file": "patterns/HandDrawn/pattern.json"
+    },
+    {
+      "id": "HeartLeafTeardrop",
+      "file": "patterns/HeartLeafTeardrop/pattern.json"
+    },
+    {
+      "id": "BeveledShape",
+      "file": "patterns/BeveledShape/pattern.json"
+    },
+    {
+      "id": "FragmentChip",
+      "file": "patterns/FragmentChip/pattern.json"
+    },
+    {
+      "id": "TrapezoidArc",
+      "file": "patterns/TrapezoidArc/pattern.json"
+    },
+    {
+      "id": "SpikeBurst",
+      "file": "patterns/SpikeBurst/pattern.json"
+    },
+    {
+      "id": "Metaballs",
+      "file": "patterns/Metaballs/pattern.json"
+    },
+    {
+      "id": "Flower",
+      "file": "patterns/Flower/pattern.json"
+    },
+    {
+      "id": "GlintSpark",
+      "file": "patterns/GlintSpark/pattern.json"
+    },
+    {
+      "id": "ArrowHead",
+      "file": "patterns/ArrowHead/pattern.json"
+    },
+    {
+      "id": "PuzzlePiece",
+      "file": "patterns/PuzzlePiece/pattern.json"
+    },
+    {
+      "id": "Teardrop",
+      "file": "patterns/Teardrop/pattern.json"
+    },
+    {
+      "id": "Leaf",
+      "file": "patterns/Leaf/pattern.json"
+    },
+    {
+      "id": "BezierRibbon",
+      "file": "patterns/BezierRibbon/pattern.json"
+    },
+    {
+      "id": "OgeeFlowerTile",
+      "file": "patterns/OgeeFlowerTile/pattern.json"
+    },
+    {
+      "id": "LineSegment",
+      "file": "patterns/LineSegment/pattern.json"
+    },
+    {
+      "id": "Stripes",
+      "file": "patterns/Stripes/pattern.json"
+    },
+    {
+      "id": "Checker",
+      "file": "patterns/Checker/pattern.json"
+    },
+    {
+      "id": "Dots",
+      "file": "patterns/Dots/pattern.json"
+    },
+    {
+      "id": "Grid",
+      "file": "patterns/Grid/pattern.json"
+    },
+    {
+      "id": "HexGrid",
+      "file": "patterns/HexGrid/pattern.json"
+    },
+    {
+      "id": "Waves",
+      "file": "patterns/Waves/pattern.json"
+    },
+    {
+      "id": "Zigzag",
+      "file": "patterns/Zigzag/pattern.json"
+    },
+    {
+      "id": "Ripple",
+      "file": "patterns/Ripple/pattern.json"
+    },
+    {
+      "id": "Brick",
+      "file": "patterns/Brick/pattern.json"
+    },
+    {
+      "id": "Herringbone",
+      "file": "patterns/Herringbone/pattern.json"
+    },
+    {
+      "id": "BasketWeave",
+      "file": "patterns/BasketWeave/pattern.json"
+    },
+    {
+      "id": "Parquet",
+      "file": "patterns/Parquet/pattern.json"
+    },
+    {
+      "id": "Scales",
+      "file": "patterns/Scales/pattern.json"
+    },
+    {
+      "id": "Knit",
+      "file": "patterns/Knit/pattern.json"
+    },
+    {
+      "id": "Chainmail",
+      "file": "patterns/Chainmail/pattern.json"
+    },
+    {
+      "id": "Weave",
+      "file": "patterns/Weave/pattern.json"
+    },
+    {
+      "id": "Truchet",
+      "file": "patterns/Truchet/pattern.json"
+    },
+    {
+      "id": "TriangleGrid",
+      "file": "patterns/TriangleGrid/pattern.json"
+    },
+    {
+      "id": "DiamondGrid",
+      "file": "patterns/DiamondGrid/pattern.json"
+    },
+    {
+      "id": "RoofTiles",
+      "file": "patterns/RoofTiles/pattern.json"
+    },
+    {
+      "id": "PavingStone",
+      "file": "patterns/PavingStone/pattern.json"
+    },
+    {
+      "id": "CrossHatch",
+      "file": "patterns/CrossHatch/pattern.json"
+    },
+    {
+      "id": "Halftone",
+      "file": "patterns/Halftone/pattern.json"
+    },
+    {
+      "id": "IslamicPattern",
+      "file": "patterns/IslamicPattern/pattern.json"
+    },
+    {
+      "id": "CelticKnot",
+      "file": "patterns/CelticKnot/pattern.json"
+    },
+    {
+      "id": "Circuit",
+      "file": "patterns/Circuit/pattern.json"
+    },
+    {
+      "id": "FibonacciDot",
+      "file": "patterns/FibonacciDot/pattern.json"
+    },
+    {
+      "id": "CrackedTiles",
+      "file": "patterns/CrackedTiles/pattern.json"
+    },
+    {
+      "id": "WovenMesh",
+      "file": "patterns/WovenMesh/pattern.json"
+    },
+    {
+      "id": "Perforated",
+      "file": "patterns/Perforated/pattern.json"
+    },
+    {
+      "id": "SnakeDots",
+      "file": "patterns/SnakeDots/pattern.json"
+    },
+    {
+      "id": "Moire",
+      "file": "patterns/Moire/pattern.json"
+    },
+    {
+      "id": "Fingerprint",
+      "file": "patterns/Fingerprint/pattern.json"
+    },
+    {
+      "id": "DottedWave",
+      "file": "patterns/DottedWave/pattern.json"
+    },
+    {
+      "id": "ChainArmor",
+      "file": "patterns/ChainArmor/pattern.json"
+    },
+    {
+      "id": "ConveyorArrows",
+      "file": "patterns/ConveyorArrows/pattern.json"
+    },
+    {
+      "id": "SunburstRays",
+      "file": "patterns/SunburstRays/pattern.json"
+    },
+    {
+      "id": "GearTeeth",
+      "file": "patterns/GearTeeth/pattern.json"
+    },
+    {
+      "id": "ContourLines",
+      "file": "patterns/ContourLines/pattern.json"
+    },
+    {
+      "id": "GridMosaic",
+      "file": "patterns/GridMosaic/pattern.json"
+    },
+    {
+      "id": "Kaleido",
+      "file": "patterns/Kaleido/pattern.json"
+    },
+    {
+      "id": "StainedGlass",
+      "file": "patterns/StainedGlass/pattern.json"
+    },
+    {
+      "id": "Camo",
+      "file": "patterns/Camo/pattern.json"
+    },
+    {
+      "id": "Sierpinski",
+      "file": "patterns/Sierpinski/pattern.json"
+    },
+    {
+      "id": "Terrazzo",
+      "file": "patterns/Terrazzo/pattern.json"
+    },
+    {
+      "id": "Plaid",
+      "file": "patterns/Plaid/pattern.json"
+    },
+    {
+      "id": "Seigaiha",
+      "file": "patterns/Seigaiha/pattern.json"
+    },
+    {
+      "id": "Maze",
+      "file": "patterns/Maze/pattern.json"
+    },
+    {
+      "id": "Guilloche",
+      "file": "patterns/Guilloche/pattern.json"
+    },
+    {
+      "id": "LinearGradient",
+      "file": "patterns/LinearGradient/pattern.json"
+    },
+    {
+      "id": "DiamondGradient",
+      "file": "patterns/DiamondGradient/pattern.json"
+    },
+    {
+      "id": "ShapeGradient",
+      "file": "patterns/ShapeGradient/pattern.json"
+    },
+    {
+      "id": "SphericalGradient",
+      "file": "patterns/SphericalGradient/pattern.json"
+    },
+    {
+      "id": "RingGradient",
+      "file": "patterns/RingGradient/pattern.json"
+    },
+    {
+      "id": "MultiLinear",
+      "file": "patterns/MultiLinear/pattern.json"
+    },
+    {
+      "id": "ConeGradient",
+      "file": "patterns/ConeGradient/pattern.json"
+    },
+    {
+      "id": "RadialSteps",
+      "file": "patterns/RadialSteps/pattern.json"
+    },
+    {
+      "id": "ValueNoise",
+      "file": "patterns/ValueNoise/pattern.json"
+    },
+    {
+      "id": "FBM",
+      "file": "patterns/FBM/pattern.json"
+    },
+    {
+      "id": "Turbulence",
+      "file": "patterns/Turbulence/pattern.json"
+    },
+    {
+      "id": "VoronoiCells",
+      "file": "patterns/VoronoiCells/pattern.json"
+    },
+    {
+      "id": "VoronoiEdges",
+      "file": "patterns/VoronoiEdges/pattern.json"
+    },
+    {
+      "id": "Perlin",
+      "file": "patterns/Perlin/pattern.json"
+    },
+    {
+      "id": "Simplex",
+      "file": "patterns/Simplex/pattern.json"
+    },
+    {
+      "id": "Ridged",
+      "file": "patterns/Ridged/pattern.json"
+    },
+    {
+      "id": "Billow",
+      "file": "patterns/Billow/pattern.json"
+    },
+    {
+      "id": "Curl",
+      "file": "patterns/Curl/pattern.json"
+    },
+    {
+      "id": "Swirl",
+      "file": "patterns/Swirl/pattern.json"
+    },
+    {
+      "id": "Anisotropic",
+      "file": "patterns/Anisotropic/pattern.json"
+    },
+    {
+      "id": "Directional",
+      "file": "patterns/Directional/pattern.json"
+    },
+    {
+      "id": "WhiteNoise",
+      "file": "patterns/WhiteNoise/pattern.json"
+    },
+    {
+      "id": "BlueNoise",
+      "file": "patterns/BlueNoise/pattern.json"
+    },
+    {
+      "id": "WorleyRidge",
+      "file": "patterns/WorleyRidge/pattern.json"
+    },
+    {
+      "id": "WorleyBorder",
+      "file": "patterns/WorleyBorder/pattern.json"
+    },
+    {
+      "id": "Gabor",
+      "file": "patterns/Gabor/pattern.json"
+    },
+    {
+      "id": "Crystal",
+      "file": "patterns/Crystal/pattern.json"
+    },
+    {
+      "id": "Creased",
+      "file": "patterns/Creased/pattern.json"
+    },
+    {
+      "id": "Fluid",
+      "file": "patterns/Fluid/pattern.json"
+    },
+    {
+      "id": "Plasma",
+      "file": "patterns/Plasma/pattern.json"
+    },
+    {
+      "id": "ReactionDiffusion",
+      "file": "patterns/ReactionDiffusion/pattern.json"
+    },
+    {
+      "id": "DomainWarp",
+      "file": "patterns/DomainWarp/pattern.json"
+    },
+    {
+      "id": "Silk",
+      "file": "patterns/Silk/pattern.json"
+    },
+    {
+      "id": "LavaVeins",
+      "file": "patterns/LavaVeins/pattern.json"
+    },
+    {
+      "id": "Vapor",
+      "file": "patterns/Vapor/pattern.json"
+    },
+    {
+      "id": "AnisoBrushed",
+      "file": "patterns/AnisoBrushed/pattern.json"
+    },
+    {
+      "id": "FiberPaper",
+      "file": "patterns/FiberPaper/pattern.json"
+    },
+    {
+      "id": "InkBleed",
+      "file": "patterns/InkBleed/pattern.json"
+    },
+    {
+      "id": "GrainNoise",
+      "file": "patterns/GrainNoise/pattern.json"
+    },
+    {
+      "id": "CellularNoise",
+      "file": "patterns/CellularNoise/pattern.json"
+    },
+    {
+      "id": "PowderNoise",
+      "file": "patterns/PowderNoise/pattern.json"
+    },
+    {
+      "id": "Clouds",
+      "file": "patterns/Clouds/pattern.json"
+    },
+    {
+      "id": "Smoke",
+      "file": "patterns/Smoke/pattern.json"
+    },
+    {
+      "id": "Fire",
+      "file": "patterns/Fire/pattern.json"
+    },
+    {
+      "id": "Water",
+      "file": "patterns/Water/pattern.json"
+    },
+    {
+      "id": "Caustics",
+      "file": "patterns/Caustics/pattern.json"
+    },
+    {
+      "id": "Wood",
+      "file": "patterns/Wood/pattern.json"
+    },
+    {
+      "id": "Marble",
+      "file": "patterns/Marble/pattern.json"
+    },
+    {
+      "id": "Rust",
+      "file": "patterns/Rust/pattern.json"
+    },
+    {
+      "id": "DirtGrunge",
+      "file": "patterns/DirtGrunge/pattern.json"
+    },
+    {
+      "id": "Splotch",
+      "file": "patterns/Splotch/pattern.json"
+    },
+    {
+      "id": "Moss",
+      "file": "patterns/Moss/pattern.json"
+    },
+    {
+      "id": "Stone",
+      "file": "patterns/Stone/pattern.json"
+    },
+    {
+      "id": "Gravel",
+      "file": "patterns/Gravel/pattern.json"
+    },
+    {
+      "id": "Sand",
+      "file": "patterns/Sand/pattern.json"
+    },
+    {
+      "id": "SnowIce",
+      "file": "patterns/SnowIce/pattern.json"
+    },
+    {
+      "id": "FurGrass",
+      "file": "patterns/FurGrass/pattern.json"
+    },
+    {
+      "id": "Fibers",
+      "file": "patterns/Fibers/pattern.json"
+    },
+    {
+      "id": "Leather",
+      "file": "patterns/Leather/pattern.json"
+    },
+    {
+      "id": "Paper",
+      "file": "patterns/Paper/pattern.json"
+    },
+    {
+      "id": "Scratch",
+      "file": "patterns/Scratch/pattern.json"
+    },
+    {
+      "id": "Speckle",
+      "file": "patterns/Speckle/pattern.json"
+    },
+    {
+      "id": "Splatter",
+      "file": "patterns/Splatter/pattern.json"
+    },
+    {
+      "id": "ScaleKeratin",
+      "file": "patterns/ScaleKeratin/pattern.json"
+    },
+    {
+      "id": "Tendril",
+      "file": "patterns/Tendril/pattern.json"
+    },
+    {
+      "id": "CrackedMud",
+      "file": "patterns/CrackedMud/pattern.json"
+    },
+    {
+      "id": "Coral",
+      "file": "patterns/Coral/pattern.json"
+    },
+    {
+      "id": "DuneRipple",
+      "file": "patterns/DuneRipple/pattern.json"
+    },
+    {
+      "id": "Bark",
+      "file": "patterns/Bark/pattern.json"
+    },
+    {
+      "id": "RustPatch",
+      "file": "patterns/RustPatch/pattern.json"
+    },
+    {
+      "id": "WeatheredPaint",
+      "file": "patterns/WeatheredPaint/pattern.json"
+    },
+    {
+      "id": "Sediment",
+      "file": "patterns/Sediment/pattern.json"
+    },
+    {
+      "id": "FrostFern",
+      "file": "patterns/FrostFern/pattern.json"
+    },
+    {
+      "id": "SnakeSkin",
+      "file": "patterns/SnakeSkin/pattern.json"
+    },
+    {
+      "id": "PebbleField",
+      "file": "patterns/PebbleField/pattern.json"
+    },
+    {
+      "id": "CharredCoal",
+      "file": "patterns/CharredCoal/pattern.json"
+    },
+    {
+      "id": "AshDeposit",
+      "file": "patterns/AshDeposit/pattern.json"
+    },
+    {
+      "id": "Snowflake",
+      "file": "patterns/Snowflake/pattern.json"
+    },
+    {
+      "id": "LensDirt",
+      "file": "patterns/LensDirt/pattern.json"
+    },
+    {
+      "id": "RainGlass",
+      "file": "patterns/RainGlass/pattern.json"
+    },
+    {
+      "id": "HammeredMetal",
+      "file": "patterns/HammeredMetal/pattern.json"
+    },
+    {
+      "id": "SaltFlat",
+      "file": "patterns/SaltFlat/pattern.json"
+    },
+    {
+      "id": "Feather",
+      "file": "patterns/Feather/pattern.json"
+    },
+    {
+      "id": "Asphalt",
+      "file": "patterns/Asphalt/pattern.json"
+    },
+    {
+      "id": "Travertine",
+      "file": "patterns/Travertine/pattern.json"
+    },
+    {
+      "id": "Scanlines",
+      "file": "patterns/Scanlines/pattern.json"
+    },
+    {
+      "id": "PixelGrid",
+      "file": "patterns/PixelGrid/pattern.json"
+    },
+    {
+      "id": "Glitch",
+      "file": "patterns/Glitch/pattern.json"
+    },
+    {
+      "id": "Matrix",
+      "file": "patterns/Matrix/pattern.json"
+    },
+    {
+      "id": "Hologram",
+      "file": "patterns/Hologram/pattern.json"
+    },
+    {
+      "id": "HudFrame",
+      "file": "patterns/HudFrame/pattern.json"
+    },
+    {
+      "id": "DataStream",
+      "file": "patterns/DataStream/pattern.json"
+    },
+    {
+      "id": "Barcode",
+      "file": "patterns/Barcode/pattern.json"
+    },
+    {
+      "id": "PerspectiveGrid",
+      "file": "patterns/PerspectiveGrid/pattern.json"
+    },
+    {
+      "id": "RandomBlocks",
+      "file": "patterns/RandomBlocks/pattern.json"
+    },
+    {
+      "id": "BinaryNoise",
+      "file": "patterns/BinaryNoise/pattern.json"
+    },
+    {
+      "id": "ConcentricUI",
+      "file": "patterns/ConcentricUI/pattern.json"
+    },
+    {
+      "id": "PixelDissolve",
+      "file": "patterns/PixelDissolve/pattern.json"
+    },
+    {
+      "id": "DiodeGrid",
+      "file": "patterns/DiodeGrid/pattern.json"
+    },
+    {
+      "id": "SlotVent",
+      "file": "patterns/SlotVent/pattern.json"
+    },
+    {
+      "id": "DataCode",
+      "file": "patterns/DataCode/pattern.json"
+    },
+    {
+      "id": "Datamosh",
+      "file": "patterns/Datamosh/pattern.json"
+    },
+    {
+      "id": "RadarSweep",
+      "file": "patterns/RadarSweep/pattern.json"
+    },
+    {
+      "id": "QrBlocks",
+      "file": "patterns/QrBlocks/pattern.json"
+    },
+    {
+      "id": "RasterScan",
+      "file": "patterns/RasterScan/pattern.json"
+    },
+    {
+      "id": "LedBar",
+      "file": "patterns/LedBar/pattern.json"
+    },
+    {
+      "id": "WaveformBar",
+      "file": "patterns/WaveformBar/pattern.json"
+    },
+    {
+      "id": "PixelSort",
+      "file": "patterns/PixelSort/pattern.json"
+    },
+    {
+      "id": "HexData",
+      "file": "patterns/HexData/pattern.json"
+    },
+    {
+      "id": "Lightning",
+      "file": "patterns/Lightning/pattern.json"
+    },
+    {
+      "id": "LightningBranch",
+      "file": "patterns/LightningBranch/pattern.json"
+    },
+    {
+      "id": "Arc",
+      "file": "patterns/Arc/pattern.json"
+    },
+    {
+      "id": "ElectricField",
+      "file": "patterns/ElectricField/pattern.json"
+    },
+    {
+      "id": "EnergyBeam",
+      "file": "patterns/EnergyBeam/pattern.json"
+    },
+    {
+      "id": "SpeedLines",
+      "file": "patterns/SpeedLines/pattern.json"
+    },
+    {
+      "id": "ImpactCrack",
+      "file": "patterns/ImpactCrack/pattern.json"
+    },
+    {
+      "id": "Shatter",
+      "file": "patterns/Shatter/pattern.json"
+    },
+    {
+      "id": "ShockwaveFlat",
+      "file": "patterns/ShockwaveFlat/pattern.json"
+    },
+    {
+      "id": "Slash",
+      "file": "patterns/Slash/pattern.json"
+    },
+    {
+      "id": "Swipe",
+      "file": "patterns/Swipe/pattern.json"
+    },
+    {
+      "id": "ExplosionSpikes",
+      "file": "patterns/ExplosionSpikes/pattern.json"
+    },
+    {
+      "id": "SmokePuff",
+      "file": "patterns/SmokePuff/pattern.json"
+    },
+    {
+      "id": "FlameShape",
+      "file": "patterns/FlameShape/pattern.json"
+    },
+    {
+      "id": "PlasmaBall",
+      "file": "patterns/PlasmaBall/pattern.json"
+    },
+    {
+      "id": "Portal",
+      "file": "patterns/Portal/pattern.json"
+    },
+    {
+      "id": "DissolveNoise",
+      "file": "patterns/DissolveNoise/pattern.json"
+    },
+    {
+      "id": "Fireflies",
+      "file": "patterns/Fireflies/pattern.json"
+    },
+    {
+      "id": "Starfield",
+      "file": "patterns/Starfield/pattern.json"
+    },
+    {
+      "id": "EnergyRing",
+      "file": "patterns/EnergyRing/pattern.json"
+    },
+    {
+      "id": "VortexSpiral",
+      "file": "patterns/VortexSpiral/pattern.json"
+    },
+    {
+      "id": "MuzzleFlash",
+      "file": "patterns/MuzzleFlash/pattern.json"
+    },
+    {
+      "id": "ChargeGather",
+      "file": "patterns/ChargeGather/pattern.json"
+    },
+    {
+      "id": "IonStorm",
+      "file": "patterns/IonStorm/pattern.json"
+    },
+    {
+      "id": "GeyserBurst",
+      "file": "patterns/GeyserBurst/pattern.json"
+    },
+    {
+      "id": "AuroraVeil",
+      "file": "patterns/AuroraVeil/pattern.json"
+    },
+    {
+      "id": "AuraPulse",
+      "file": "patterns/AuraPulse/pattern.json"
+    },
+    {
+      "id": "ShieldHex",
+      "file": "patterns/ShieldHex/pattern.json"
+    },
+    {
+      "id": "PyroBurst",
+      "file": "patterns/PyroBurst/pattern.json"
+    },
+    {
+      "id": "TeslaCoil",
+      "file": "patterns/TeslaCoil/pattern.json"
+    },
+    {
+      "id": "IonOrb",
+      "file": "patterns/IonOrb/pattern.json"
+    },
+    {
+      "id": "Singularity",
+      "file": "patterns/Singularity/pattern.json"
+    },
+    {
+      "id": "FlowMap",
+      "file": "patterns/FlowMap/pattern.json"
+    },
+    {
+      "id": "TurbulenceMap",
+      "file": "patterns/TurbulenceMap/pattern.json"
+    },
+    {
+      "id": "RadialFlow",
+      "file": "patterns/RadialFlow/pattern.json"
+    },
+    {
+      "id": "VortexFlow",
+      "file": "patterns/VortexFlow/pattern.json"
+    },
+    {
+      "id": "DirectionalFlow",
+      "file": "patterns/DirectionalFlow/pattern.json"
+    },
+    {
+      "id": "PolarFlow",
+      "file": "patterns/PolarFlow/pattern.json"
+    },
+    {
+      "id": "HeightNormal",
+      "file": "patterns/HeightNormal/pattern.json"
+    },
+    {
+      "id": "VectorWarp",
+      "file": "patterns/VectorWarp/pattern.json"
+    },
+    {
+      "id": "Displacement",
+      "file": "patterns/Displacement/pattern.json"
+    },
+    {
+      "id": "PositionGradient",
+      "file": "patterns/PositionGradient/pattern.json"
+    },
+    {
+      "id": "ErosionMask",
+      "file": "patterns/ErosionMask/pattern.json"
+    },
+    {
+      "id": "RadialErosion",
+      "file": "patterns/RadialErosion/pattern.json"
+    },
+    {
+      "id": "DissolveEdge",
+      "file": "patterns/DissolveEdge/pattern.json"
+    },
+    {
+      "id": "SDFShapeMask",
+      "file": "patterns/SDFShapeMask/pattern.json"
+    },
+    {
+      "id": "EdgeMask",
+      "file": "patterns/EdgeMask/pattern.json"
+    },
+    {
+      "id": "ThicknessMask",
+      "file": "patterns/ThicknessMask/pattern.json"
+    },
+    {
+      "id": "FresnelMask",
+      "file": "patterns/FresnelMask/pattern.json"
+    },
+    {
+      "id": "GradientRamp",
+      "file": "patterns/GradientRamp/pattern.json"
+    },
+    {
+      "id": "RibbonFade",
+      "file": "patterns/RibbonFade/pattern.json"
+    },
+    {
+      "id": "RibbonTaper",
+      "file": "patterns/RibbonTaper/pattern.json"
+    },
+    {
+      "id": "RibbonCore",
+      "file": "patterns/RibbonCore/pattern.json"
+    },
+    {
+      "id": "RibbonStreak",
+      "file": "patterns/RibbonStreak/pattern.json"
+    },
+    {
+      "id": "RibbonFilament",
+      "file": "patterns/RibbonFilament/pattern.json"
+    },
+    {
+      "id": "CometRibbon",
+      "file": "patterns/CometRibbon/pattern.json"
+    },
+    {
+      "id": "LightSaber",
+      "file": "patterns/LightSaber/pattern.json"
+    },
+    {
+      "id": "FlameRibbon",
+      "file": "patterns/FlameRibbon/pattern.json"
+    },
+    {
+      "id": "HazeRibbon",
+      "file": "patterns/HazeRibbon/pattern.json"
+    },
+    {
+      "id": "EmberRibbon",
+      "file": "patterns/EmberRibbon/pattern.json"
+    },
+    {
+      "id": "ScimitarRibbon",
+      "file": "patterns/ScimitarRibbon/pattern.json"
+    },
+    {
+      "id": "ClawRake",
+      "file": "patterns/ClawRake/pattern.json"
+    },
+    {
+      "id": "RibbonWave",
+      "file": "patterns/RibbonWave/pattern.json"
+    },
+    {
+      "id": "RibbonWake",
+      "file": "patterns/RibbonWake/pattern.json"
+    },
+    {
+      "id": "WindStreak",
+      "file": "patterns/WindStreak/pattern.json"
+    },
+    {
+      "id": "RibbonSpark",
+      "file": "patterns/RibbonSpark/pattern.json"
+    },
+    {
+      "id": "WebSigil",
+      "file": "patterns/WebSigil/pattern.json"
+    },
+    {
+      "id": "VortexGate",
+      "file": "patterns/VortexGate/pattern.json"
+    },
+    {
+      "id": "NaturalWood",
+      "file": "patterns/NaturalWood/pattern.json"
+    }
+  ]
+}

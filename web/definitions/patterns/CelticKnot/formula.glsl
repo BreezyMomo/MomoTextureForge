@@ -1,0 +1,23 @@
+vec2 p=q,uv=u;
+float refP0=a.x;
+float refP1=a.y;
+float refP2=a.z;
+float refP3=a.w;
+float refP4=b.x;
+float refP5=b.y;
+float refP6=b.z;
+float refP7=b.w;
+
+    vec2 q = uv * refP0;
+    vec2 ci = floor(q);
+    vec2 c = fract(q) - 0.5;
+    float h1 = step(0.5, ref_hash1(ci));
+    float h2 = step(0.5, ref_hash1(ci + 31.7));
+    vec2 c1 = mix(vec2(-0.5, -0.5), vec2(0.5, -0.5), h1);
+    vec2 c2 = mix(vec2(0.5, 0.5), vec2(-0.5, 0.5), h1);
+    float w = max(refP1, 0.01) * 0.5;
+    float d1 = abs(length(c - c1) - 0.5) - w;
+    float d2 = abs(length(c - c2) - 0.5) - w;
+    float A = ref_fillD((h2 > 0.5) ? d1 : d2, 0.004);
+    float B = ref_fillD((h2 > 0.5) ? d2 : d1, 0.004);
+    return clamp(max(A, B * (1.0 - A * 0.92)), 0.0, 1.0);

@@ -1,0 +1,58 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "PositionGradient",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "位置梯度",
+  "category": "vector",
+  "order": 256,
+  "variant": 10,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "坐标倍率",
+      "min": 0.01,
+      "max": 2,
+      "step": 0.01,
+      "default": 1
+    }
+  ],
+  "defaults": [
+    1,
+    0.12,
+    8,
+    0.015,
+    0.5,
+    0.25,
+    1,
+    0.2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "expression",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    },
+    "vector": {
+      "library": "vector-v1"
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

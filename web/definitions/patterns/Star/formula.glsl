@@ -1,0 +1,1 @@
+K>1.5?fill(r-R*(D+(1.-D)*(.5+.5*cos(angle*N))),S):fill(starDistance(q,N,R,D,K>.5?W:0.),S)

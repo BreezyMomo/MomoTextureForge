@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "RainGlass",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "雨滴玻璃",
+  "category": "natural",
+  "order": 185,
+  "variant": 38,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "雨滴数",
+      "min": 4.0,
+      "max": 24.0,
+      "step": 1.0,
+      "default": 12.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "雨滴尺寸",
+      "min": 0.01,
+      "max": 0.12,
+      "step": 0.002,
+      "default": 0.035
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "尾迹长度",
+      "min": 0.5,
+      "max": 6.0,
+      "step": 0.05,
+      "default": 2.2
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "下落速度",
+      "min": 0.0,
+      "max": 3.0,
+      "step": 0.05,
+      "default": 1.0
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "边缘亮度",
+      "min": 0.2,
+      "max": 1.2,
+      "step": 0.02,
+      "default": 0.85
+    }
+  ],
+  "defaults": [
+    12.0,
+    0.035,
+    2.2,
+    1.0,
+    0.85,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

@@ -1,0 +1,1 @@
+ribbonShape(q,a,b,c,d)

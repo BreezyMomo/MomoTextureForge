@@ -1,0 +1,25 @@
+import {readFile,writeFile} from 'node:fs/promises';
+import {BUILTIN} from '../web/definition-runtime.js';
+import {loadDefinitions} from '../web/definition-loader.js';
+import {patternFunction,extraFormulaLibraries} from '../web/definition-compiler.js';
+import {fragmentGLSL,VERTEX_GLSL,pruneGLSL} from '../web/renderer.js';
+import {patternGLSL} from '../web/patterns.js';
+const manifest=structuredClone(BUILTIN.definition);
+manifest.categories=[manifest.categories[0]];
+manifest.libraries={'math-v1':manifest.libraries['math-v1'],'example-v1':{file:'libraries/example-v1.glsl',abi:manifest.abi}};
+const paths=['formula-expression.glsl','formula-body.glsl','formula-helper-body.glsl'];
+manifest.patterns=paths.map((file,index)=>{
+  const p=structuredClone(BUILTIN.definition.patterns[0]);
+  p.id=['ExampleExpression','ExampleBody','ExampleHelperBody'][index];p.name=p.id;p.order=index;p.variant=index;
+  p.outputs.scalar={kind:index===0?'expression':'body',file:`examples/${file}`,libraries:index===2?['math-v1','example-v1']:['math-v1']};
+  return p;
+});
+const assets={...BUILTIN.sources};
+for(const file of paths) assets[`examples/${file}`]=await readFile(new URL(`fixtures/${file}`,import.meta.url),'utf8');
+assets['libraries/example-v1.glsl']=await readFile(new URL('fixtures/formula-helper.glsl',import.meta.url),'utf8');
+const registry=await loadDefinitions(manifest,file=>assets[file]);
+const fragment=fragmentGLSL([0]);
+const originalFunction=patternGLSL([0]);
+if(!fragment.includes(originalFunction))throw new Error('Pattern source insertion point missing');
+const examples=registry.catalog.map((p,index)=>({name:p.id,index,params:p.defaults,fragment:pruneGLSL(fragment.replace(originalFunction,extraFormulaLibraries(registry,[index])+'\n'+patternFunction(registry,[index])))}));
+await writeFile(process.argv[2],JSON.stringify({vertex:VERTEX_GLSL,patterns:examples},null,2));

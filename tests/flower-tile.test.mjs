@@ -1,0 +1,25 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {BY_ID,CATALOG,CATEGORIES} from '../web/catalog.js';
+import {sanitize,encodeHash,decodeHash,frameState} from '../web/state.js';
+import {effectiveArrangement} from '../web/arrangement.js';
+import {arrangeShortcut} from '../web/workspace-model.js';
+import {flowerTileSample} from '../web/authoring-samples.js';
+test('flower tile appends without moving existing IDs and preserves editable sample state',()=>{
+  const p=BY_ID.get('OgeeFlowerTile');assert.equal(p.id,'OgeeFlowerTile');
+  assert.equal(CATEGORIES.reduce((n,c)=>n+c.count,0),CATALOG.length);
+  const state=flowerTileSample().state;
+  assert.deepEqual(decodeHash(encodeHash(state)),sanitize(state));
+  assert.equal(state.stops[0].color,'#000000');assert.equal(state.stops[1].color,'#ffffff');assert.equal(state.output.alpha,false);
+  state.layers[0].mask=p.id;state.layers[0].maskParams=[...p.defaults];
+  state.animation.tracks['layers.0.params.5']=[[0,.05],[3,.15]];
+  assert.ok(Math.abs(frameState(sanitize(state),1.5).state.layers[0].params[5]-.1)<1e-6);
+  assert.equal(state.layers[0].arrange[0],4);
+  const raw=[...state.layers[0].arrange];raw[2]=5;
+  const result=effectiveArrangement(raw,true);
+  assert.equal(result[2],6);assert.equal(raw[2],5);
+  assert.equal(effectiveArrangement(raw,false)[2],5);
+  assert.equal(arrangeShortcut(raw,'fill')[0],4);
+  assert.equal(arrangeShortcut(raw,'fill')[5],.5);
+  assert.deepEqual(p.defaults,BY_ID.get(p.id).defaults);
+});

@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Plaid",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "苏格兰格纹",
+  "category": "pattern",
+  "order": 102,
+  "variant": 46,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "格数",
+      "min": 2.0,
+      "max": 16.0,
+      "step": 1.0,
+      "default": 6.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "主条宽",
+      "min": 0.05,
+      "max": 0.45,
+      "step": 0.01,
+      "default": 0.26
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "细条宽",
+      "min": 0.01,
+      "max": 0.2,
+      "step": 0.005,
+      "default": 0.055
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "细条数量",
+      "min": 1.0,
+      "max": 4.0,
+      "step": 1.0,
+      "default": 2.0
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "交织对比",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.55
+    }
+  ],
+  "defaults": [
+    6.0,
+    0.26,
+    0.055,
+    2.0,
+    0.55,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

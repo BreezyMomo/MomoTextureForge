@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "FiberPaper",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "纤维纸纹",
+  "category": "noise",
+  "order": 142,
+  "variant": 27,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "纤维密度",
+      "min": 20.0,
+      "max": 200.0,
+      "step": 5.0,
+      "default": 80.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "纤维拉伸",
+      "min": 0.0,
+      "max": 0.5,
+      "step": 0.01,
+      "default": 0.12
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "斑驳",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.4
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "亮度",
+      "min": 0.3,
+      "max": 1.2,
+      "step": 0.02,
+      "default": 0.85
+    }
+  ],
+  "defaults": [
+    80.0,
+    0.12,
+    0.4,
+    0.85,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

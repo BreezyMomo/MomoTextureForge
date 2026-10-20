@@ -1,0 +1,1 @@
+fibonacci(q,int(N*4.),R,W,S)

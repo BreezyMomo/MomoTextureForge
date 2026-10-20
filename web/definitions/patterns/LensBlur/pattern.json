@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "LensBlur",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "景深散焦",
+  "category": "radial",
+  "order": 23,
+  "variant": 23,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "光斑数量",
+      "min": 4.0,
+      "max": 28.0,
+      "step": 1.0,
+      "default": 12.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "焦内半径",
+      "min": 0.0,
+      "max": 0.7,
+      "step": 0.01,
+      "default": 0.22
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "散焦增幅",
+      "min": 0.2,
+      "max": 4.0,
+      "step": 0.05,
+      "default": 1.8
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "光圈叶片",
+      "min": 3.0,
+      "max": 12.0,
+      "step": 1.0,
+      "default": 6.0
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "亮度",
+      "min": 0.3,
+      "max": 1.4,
+      "step": 0.02,
+      "default": 0.9
+    }
+  ],
+  "defaults": [
+    12.0,
+    0.22,
+    1.8,
+    6.0,
+    0.9,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Stone",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "岩石",
+  "category": "natural",
+  "order": 158,
+  "variant": 11,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "缩放",
+      "min": 1.0,
+      "max": 20.0,
+      "step": 0.5,
+      "default": 5.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "层数",
+      "min": 1.0,
+      "max": 8.0,
+      "step": 1.0,
+      "default": 5.0
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "对比",
+      "min": 0.3,
+      "max": 6.0,
+      "step": 0.05,
+      "default": 2.0
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "阈值",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.35
+    }
+  ],
+  "defaults": [
+    5.0,
+    5.0,
+    2.0,
+    0.35,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

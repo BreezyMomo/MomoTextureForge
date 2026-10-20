@@ -1,0 +1,109 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "GearTeeth",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "直线齿条",
+  "category": "pattern",
+  "order": 94,
+  "variant": 38,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "齿数",
+      "min": 1,
+      "max": 32,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "长度",
+      "min": 0.1,
+      "max": 1.9,
+      "step": 0.01,
+      "default": 1.6
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "底座高度",
+      "min": 0.01,
+      "max": 0.8,
+      "step": 0.01,
+      "default": 0.2
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "齿高",
+      "min": 0.01,
+      "max": 0.8,
+      "step": 0.01,
+      "default": 0.2
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "齿根宽度",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.8
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "label": "齿顶宽度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "label": "羽化",
+      "min": 0,
+      "max": 0.1,
+      "step": 0.001,
+      "default": 0.003
+    }
+  ],
+  "defaults": [
+    8,
+    1.6,
+    0.2,
+    0.2,
+    0.8,
+    0.4,
+    0.003,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

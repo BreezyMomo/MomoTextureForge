@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "DuneRipple",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "沙丘波纹",
+  "category": "natural",
+  "order": 173,
+  "variant": 26,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "缩放",
+      "min": 1.0,
+      "max": 14.0,
+      "step": 0.5,
+      "default": 4.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "起伏",
+      "min": 0.0,
+      "max": 1.5,
+      "step": 0.02,
+      "default": 0.5
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "波纹密度",
+      "min": 0.5,
+      "max": 10.0,
+      "step": 0.1,
+      "default": 2.5
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "对比",
+      "min": 0.2,
+      "max": 4.0,
+      "step": 0.05,
+      "default": 1.1
+    }
+  ],
+  "defaults": [
+    4.0,
+    0.5,
+    2.5,
+    1.1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

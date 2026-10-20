@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "ArrowHead",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "箭头形",
+  "category": "shape",
+  "order": 50,
+  "variant": 25,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "头长",
+      "min": 0.15,
+      "max": 1.2,
+      "step": 0.01,
+      "default": 0.62
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "头半宽",
+      "min": 0.08,
+      "max": 0.9,
+      "step": 0.01,
+      "default": 0.42
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "杆半宽",
+      "min": 0.01,
+      "max": 0.4,
+      "step": 0.005,
+      "default": 0.12
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "杆长",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.34
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "边缘柔化",
+      "min": 0.002,
+      "max": 0.06,
+      "step": 0.001,
+      "default": 0.012
+    }
+  ],
+  "defaults": [
+    0.62,
+    0.42,
+    0.12,
+    0.34,
+    0.012,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

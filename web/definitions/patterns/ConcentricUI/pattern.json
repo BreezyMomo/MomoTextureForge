@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "ConcentricUI",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "同心仪表",
+  "category": "digital",
+  "order": 202,
+  "variant": 11,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "环数",
+      "min": 1.0,
+      "max": 8.0,
+      "step": 1.0,
+      "default": 4.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "缺口宽度",
+      "min": 0.0,
+      "max": 0.6,
+      "step": 0.01,
+      "default": 0.25
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "刻度数",
+      "min": 3.0,
+      "max": 48.0,
+      "step": 1.0,
+      "default": 12.0
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "旋转速度",
+      "min": -2.0,
+      "max": 2.0,
+      "step": 0.05,
+      "default": 0.25
+    }
+  ],
+  "defaults": [
+    4.0,
+    0.25,
+    12.0,
+    0.25,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

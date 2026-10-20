@@ -1,0 +1,20 @@
+vec2 p=q,uv=u;
+float refP0=a.x;
+float refP1=a.y;
+float refP2=a.z;
+float refP3=a.w;
+float refP4=b.x;
+float refP5=b.y;
+float refP6=b.z;
+float refP7=b.w;
+
+    vec2 q = uv * refP0 * 0.5;
+    vec2 blk = floor(q);
+    vec2 lf = fract(q);
+    float dir = mod(blk.x + blk.y, 2.0);
+    float band = (dir < 0.5) ? lf.x : lf.y;
+    float s = abs(fract(band * max(refP1, 1.0)) - 0.5) * 2.0;
+    float w = clamp(refP2, 0.05, 0.95);
+    float inner = 1.0 - ref_smoothstep(w - 0.04, w + 0.04, s);
+    float edge = min(min(lf.x, 1.0 - lf.x), min(lf.y, 1.0 - lf.y));
+    return clamp(inner * ref_smoothstep(0.0, 0.03, edge), 0.0, 1.0);

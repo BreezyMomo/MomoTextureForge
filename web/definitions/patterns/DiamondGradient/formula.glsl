@@ -1,0 +1,1 @@
+sat(1.-(abs(q.x)+abs(q.y))/R)

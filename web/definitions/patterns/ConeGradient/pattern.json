@@ -1,0 +1,91 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "ConeGradient",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "角向渐变",
+  "category": "gradient",
+  "order": 112,
+  "variant": 6,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "起始角 °",
+      "min": -360,
+      "max": 360,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "扫过角 °",
+      "min": 1,
+      "max": 360,
+      "step": 1,
+      "default": 360
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "径向扭曲",
+      "min": -6.28,
+      "max": 6.28,
+      "step": 0.01,
+      "default": 0
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "渐变幂",
+      "min": 0.1,
+      "max": 8,
+      "step": 0.1,
+      "default": 1
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "反向",
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "default": 0
+    }
+  ],
+  "defaults": [
+    0,
+    360,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Speckle",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "斑点",
+  "category": "natural",
+  "order": 167,
+  "variant": 20,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "分辨率",
+      "min": 8.0,
+      "max": 600.0,
+      "step": 4.0,
+      "default": 72.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "密度",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.22
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "点大小",
+      "min": 0.02,
+      "max": 0.45,
+      "step": 0.005,
+      "default": 0.4
+    }
+  ],
+  "defaults": [
+    72.0,
+    0.22,
+    0.4,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

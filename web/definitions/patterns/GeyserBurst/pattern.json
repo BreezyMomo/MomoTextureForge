@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "GeyserBurst",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "间歇喷发",
+  "category": "energy",
+  "order": 239,
+  "variant": 24,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "喷发周期",
+      "min": 0.5,
+      "max": 6.0,
+      "step": 0.1,
+      "default": 2.4
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "柱宽",
+      "min": 0.02,
+      "max": 0.3,
+      "step": 0.01,
+      "default": 0.1
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "上升速度",
+      "min": 0.2,
+      "max": 3.0,
+      "step": 0.05,
+      "default": 1.1
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "溅散",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.45
+    }
+  ],
+  "defaults": [
+    2.4,
+    0.1,
+    1.1,
+    0.45,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

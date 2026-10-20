@@ -1,0 +1,73 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Knit",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "针织",
+  "category": "pattern",
+  "order": 70,
+  "variant": 14,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "数量",
+      "min": 3.0,
+      "max": 30.0,
+      "step": 1.0,
+      "default": 10.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "线宽",
+      "min": 0.01,
+      "max": 0.3,
+      "step": 0.005,
+      "default": 0.06
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "行错位",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "default": 0.5
+    }
+  ],
+  "defaults": [
+    10.0,
+    0.06,
+    0.5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

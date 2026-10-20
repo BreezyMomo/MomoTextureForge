@@ -1,0 +1,64 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "Vignette",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "暗角",
+  "category": "radial",
+  "order": 3,
+  "variant": 3,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "起点",
+      "min": 0.0,
+      "max": 1.4,
+      "step": 0.01,
+      "default": 0.55
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "强度",
+      "min": 0.0,
+      "max": 2.0,
+      "step": 0.05,
+      "default": 1.0
+    }
+  ],
+  "defaults": [
+    0.55,
+    1.0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

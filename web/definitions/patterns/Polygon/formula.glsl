@@ -1,0 +1,1 @@
+fill(poly(rot(q,K*PI/180.),N,R),S)

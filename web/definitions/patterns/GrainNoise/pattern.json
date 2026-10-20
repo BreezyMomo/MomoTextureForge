@@ -1,0 +1,82 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "GrainNoise",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "胶片颗粒",
+  "category": "noise",
+  "order": 144,
+  "variant": 29,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "颗粒密度",
+      "min": 8.0,
+      "max": 200.0,
+      "step": 2.0,
+      "default": 56.0
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "强度",
+      "min": 0.1,
+      "max": 1.6,
+      "step": 0.02,
+      "default": 0.75
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "双频比",
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.02,
+      "default": 0.5
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "团块尺度",
+      "min": 0.5,
+      "max": 14.0,
+      "step": 0.5,
+      "default": 3.0
+    }
+  ],
+  "defaults": [
+    56.0,
+    0.75,
+    0.5,
+    3.0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1",
+        "reference-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  }
+}

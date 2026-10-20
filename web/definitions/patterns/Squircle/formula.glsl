@@ -1,0 +1,1 @@
+fill(pow(pow(abs(q.x),2.+D*6.)+pow(abs(q.y),2.+D*6.),1./(2.+D*6.))-R,S)
