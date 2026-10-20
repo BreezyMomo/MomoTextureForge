@@ -56,7 +56,14 @@ try{
  assert.deepEqual([...png.subarray(0,8)],[137,80,78,71,13,10,26,10]);
  assert.ok(workers.some(url=>url.startsWith('blob:')),'export must work with the embedded worker');
  const materialProject=project();materialProject.root.children=[node('shape','VolumeSmoke')];materialProject.root.children[0].postFx[1]=.3;materialProject.output.normalAlgorithm='scharr';materialProject.output.normalFlipY=true;
- await page.goto(address+'#tree='+Buffer.from(JSON.stringify(materialProject)).toString('base64'));await page.reload();await ready();await page.getByRole('combobox',{name:'预览模式',exact:true}).selectOption('material');await page.waitForFunction(()=>document.querySelector('#render-status').textContent.includes('材质采样'));await page.getByRole('combobox',{name:'预览模型'}).selectOption('2');await page.getByRole('combobox',{name:'预览模式',exact:true}).selectOption('canvas');
+ await page.goto(address+'#tree='+Buffer.from(JSON.stringify(materialProject)).toString('base64'));await page.reload();await ready();
+ const beforeChannel=await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1'));
+ await page.getByRole('combobox',{name:'预览贴图类型',exact:true}).selectOption('normal');
+ assert.equal(await page.locator('#normal-preview-settings').isVisible(),true);
+ assert.equal(await page.locator('#normal-preview-settings').getByRole('combobox',{name:'法线算法',exact:true}).inputValue(),'scharr');
+ assert.equal(await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1')),beforeChannel);
+ await page.locator('#export-now').click();assert.equal(await page.locator('#global-panel').getByRole('combobox',{name:'输出内容',exact:true}).inputValue(),'color');await page.locator('#close-global').click();
+ await page.getByRole('combobox',{name:'预览模式',exact:true}).selectOption('material');await page.waitForFunction(()=>document.querySelector('#render-status').textContent.includes('材质采样'));await page.getByRole('combobox',{name:'预览模型'}).selectOption('2');await page.getByRole('combobox',{name:'预览模式',exact:true}).selectOption('canvas');
  await page.goto(address+'?view=examples');await ready();
  assert.equal(await page.locator('a[href]').first().getAttribute('href'),address);
  await page.locator('#generate').click();

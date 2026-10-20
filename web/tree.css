@@ -187,3 +187,5 @@
 .preview-heading{gap:8px 12px}.preview-heading strong{flex:none;white-space:nowrap}
 .preview-heading #render-status{flex:1 1 170px;min-width:170px;line-height:1.5}
 .preview-actions{flex:1 1 420px}
+
+.normal-preview-settings{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;padding:8px 10px;border:1px solid #454d5c;border-radius:6px;background:#20252e}.normal-preview-settings .tree-field{margin:0;display:flex;align-items:center;gap:6px}.normal-preview-settings .tree-number-field{grid-template-columns:none}.normal-preview-settings input[type=range]{width:90px}.normal-preview-settings input[type=number]{width:62px}.normal-preview-settings .tree-check{margin:0}.normal-preview-settings .tree-note{flex-basis:100%;margin:0}

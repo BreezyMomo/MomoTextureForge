@@ -27,14 +27,27 @@ for(const channel of ['chrome','msedge']){
    for(const other of pictures)assert.notDeepEqual(picture,other,channel+' models must differ');
    pictures.push(picture);
   }
-  const bump=dialog.getByRole('slider',{name:'凹凸强度',exact:true}),relief=dialog.getByRole('slider',{name:'视差深度',exact:true});
-  assert.equal(await bump.inputValue(),'0');assert.equal(await relief.inputValue(),'0');
+  assert.equal(await dialog.getByRole('slider',{name:'凹凸强度',exact:true}).count(),0);
+  assert.equal(await dialog.getByRole('slider',{name:'视差深度',exact:true}).count(),0);
   const flat=await canvas.screenshot({path:'test-results/material-preview/'+channel+'-flat.png'});
-  await bump.fill('1');const raised=await canvas.screenshot({path:'test-results/material-preview/'+channel+'-raised.png'});
-  assert.notDeepEqual(raised,flat,channel+' explicit bump strength must change surface lighting');
-  await bump.fill('0');assert.deepEqual(await canvas.screenshot(),flat,channel+' zero bump must restore flat pattern');
-  await relief.fill('0.6');assert.notDeepEqual(await canvas.screenshot(),flat,channel+' explicit parallax must shift the pattern');
-  await relief.fill('0');assert.deepEqual(await canvas.screenshot(),flat,channel+' zero parallax must restore flat pattern');
+  const originalDraft=await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1'));
+  await page.getByRole('combobox',{name:'预览贴图类型',exact:true}).selectOption('normal');
+  await page.waitForFunction(()=>!document.querySelector('#normal-preview-settings').hidden);
+  const raised=await canvas.screenshot({path:'test-results/material-preview/'+channel+'-normal.png'});
+  assert.notDeepEqual(raised,flat,channel+' generated normals must change surface lighting');
+  assert.equal(await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1')),originalDraft,channel+' viewing a channel must not edit the project');
+  const strength=()=>page.locator('#normal-preview-settings').getByRole('spinbutton',{name:'法线强度',exact:true});
+  await strength().fill('0');await strength().press('Tab');
+  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('momo-texture-tree:draft:v1')).output.normal===0);
+  assert.notDeepEqual(await canvas.screenshot(),raised,channel+' normal generation strength must update material');
+  await page.locator('#undo').click();
+  assert.equal(await strength().inputValue(),'3');
+  await page.getByRole('combobox',{name:'预览贴图类型',exact:true}).selectOption('color');
+  await page.waitForFunction(()=>document.querySelector('#normal-preview-settings').hidden);
+  const restored=await canvas.screenshot();
+  // ANGLE may round a few recomputed generator pixels differently after undo.
+  const delta=await page.evaluate(async images=>{const arrays=[];for(const encoded of images){const blob=new Blob([Uint8Array.from(atob(encoded),c=>c.charCodeAt(0))],{type:'image/png'}),bitmap=await createImageBitmap(blob),c=document.createElement('canvas');c.width=bitmap.width;c.height=bitmap.height;const ctx=c.getContext('2d');ctx.drawImage(bitmap,0,0);arrays.push(ctx.getImageData(0,0,c.width,c.height).data);bitmap.close();}return arrays[0].reduce((sum,v,i)=>sum+Math.abs(v-arrays[1][i]),0)/arrays[0].length;},[flat.toString('base64'),restored.toString('base64')]);
+  assert.ok(delta<.01,channel+' color must restore the flat pattern: '+delta);
   await dialog.getByRole('slider',{name:'灯光方向',exact:true}).press('End');
   assert.notDeepEqual(await canvas.screenshot(),pictures[2],channel+' lighting must change');
   const bounds=await canvas.boundingBox();
@@ -77,7 +90,7 @@ for(const channel of ['chrome','msedge']){
   assert.equal(saved.output.mode,'color');assert.equal(saved.root.children[0].type,'WaterCaustics');assert.equal(saved.root.children[0].params[4],.4);
   assert.equal(saved.previewMode,undefined);assert.equal(saved.output.metallic,undefined);
   assert.deepEqual(errors,[]);
-  const report={channel,models:3,flatDefault:true,optionalBump:true,optionalParallax:true,lighting:true,orbit:true,reopen:true,liveTime:true,liveParameters:true,canvasPreserved:true,exportUnchanged:true,errors};
+  const report={channel,models:3,flatDefault:true,generatedNormalPreview:true,previewChannelIndependent:true,normalUndo:true,lighting:true,orbit:true,reopen:true,liveTime:true,liveParameters:true,canvasPreserved:true,exportUnchanged:true,errors};
   await writeFile('test-results/material-preview/'+channel+'.json',JSON.stringify(report,null,2));console.log(report);
  }finally{await browser.close();}
 }
