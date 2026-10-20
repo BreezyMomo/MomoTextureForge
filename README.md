@@ -49,6 +49,26 @@ npm start -- --port 8799
 
 详细说明：[本地图形库](LOCAL_GRAPHICS_LIBRARY.md) · [资源包格式](RESOURCE-PACK.md) · [远程图库与本地管理器](REMOTE_LIBRARIES.md)
 
+## 搭建自己的图形库
+
+图库可作为独立的静态目录维护和分享，无需动态后端。首次生成需要本仓库及 Node.js 22 或更高版本；使用生成的管理器和订阅图库无需安装 Node.js。
+
+1. 在编辑器的“图形库”中勾选资源，点击“导出资源”，保存为 ZIP 文件。这里需要工具导出的正式资源包，不能直接使用普通图片压缩包。
+2. 在本仓库根目录安装依赖并生成图库，将输入路径替换成实际导出的 ZIP：
+
+   ```sh
+   npm ci
+   node build-remote-library.mjs --input "图库.zip" --out "remote-library" --name "我的图形库"
+   ```
+
+3. 打开输出目录中的 `library-manager.html`，使用桌面 Chrome 或 Edge 选择 `remote-library` 文件夹并授权读写，即可导入更多资源、编辑分类和标签、移除资源。本地管理无需启动服务。
+4. 将整个 `remote-library` 目录部署到 HTTPS 静态网站或 CDN。服务器需为 `index.json`、资源 ZIP 和缩略图配置跨域访问；公开图库可设置 `Access-Control-Allow-Origin: *`。
+5. 在编辑器的“图形库 → 远程图库”中添加名称和目录地址，例如 `https://example.com/my-library/index.json`。使用者按需下载资源，下载后可离线使用。
+
+管理器只修改你授权的本地目录，更新后需自行推送或上传到托管服务。命令行更新应继续使用同一输出目录，以保留图库身份和已有条目；部署更新时先上传资源和缩略图，最后更新 `index.json`。
+
+多包合并、资源版本、目录格式和管理器操作见[远程图库与本地管理器](REMOTE_LIBRARIES.md)。
+
 ## 节点、排列与合成
 
 - 图形与组合均可设置位置、尺寸、旋转、轴心、UV 和不透明度；拖动节点树可调整顺序与父级。
@@ -117,3 +137,7 @@ node build-authoring-kit.mjs
 - `dist/`：生成产物；`test-results/`：本地验证输出。两者及 `node_modules/` 不纳入版本控制。
 
 PSD 编码器的依赖许可位于 `web/vendor/PSD-LICENSES.txt`。需要重新构建编码器时运行 `npm run build:psd-vendor`。
+
+## 致谢
+
+本工具的早期设计与部分图形实现参考了 [EasyCG TexForge](https://easycg-texforge.app.workbuddy.host/)，感谢其提供的创作思路与参考。
