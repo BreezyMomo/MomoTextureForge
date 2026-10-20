@@ -1,6 +1,6 @@
 {
   "schema": "momo.texture-index/v1",
-  "revision": 13,
+  "revision": 14,
   "abi": "momo-pattern/16-v1",
   "categories": [
     {
@@ -50,6 +50,10 @@
     {
       "id": "sigil",
       "name": "法阵"
+    },
+    {
+      "id": "vfx",
+      "name": "特效素材"
     }
   ],
   "libraries": {
@@ -71,6 +75,42 @@
     },
     "natural-wood-v1": {
       "file": "libraries/natural-wood-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-common-v1": {
+      "file": "libraries/generator-common-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-simplex-v1": {
+      "file": "libraries/generator-simplex-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-smoke-v1": {
+      "file": "libraries/generator-smoke-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-fog-density-v1": {
+      "file": "libraries/generator-fog-density-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-fog-color-v1": {
+      "file": "libraries/generator-fog-color-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-fire-v1": {
+      "file": "libraries/generator-fire-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-dust-v1": {
+      "file": "libraries/generator-dust-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-grain-v1": {
+      "file": "libraries/generator-grain-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-emission-v1": {
+      "file": "libraries/generator-emission-v1.glsl",
       "abi": "momo-pattern/16-v1"
     }
   },
@@ -1210,6 +1250,34 @@
     {
       "id": "NaturalWood",
       "file": "patterns/NaturalWood/pattern.json"
+    },
+    {
+      "id": "PlumeSmoke",
+      "file": "patterns/PlumeSmoke/pattern.json"
+    },
+    {
+      "id": "LayeredFog",
+      "file": "patterns/LayeredFog/pattern.json"
+    },
+    {
+      "id": "TurbulentFlame",
+      "file": "patterns/TurbulentFlame/pattern.json"
+    },
+    {
+      "id": "BallisticSparks",
+      "file": "patterns/BallisticSparks/pattern.json"
+    },
+    {
+      "id": "BranchedLightning",
+      "file": "patterns/BranchedLightning/pattern.json"
+    },
+    {
+      "id": "BokehDust",
+      "file": "patterns/BokehDust/pattern.json"
+    },
+    {
+      "id": "FilmGrain",
+      "file": "patterns/FilmGrain/pattern.json"
     }
   ]
 }

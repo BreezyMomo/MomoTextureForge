@@ -1,0 +1,344 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "PlumeSmoke",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "蓬松烟团",
+  "category": "vfx",
+  "order": 284,
+  "variant": 0,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 7872
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "variable": "style",
+      "label": "烟雾类型",
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "default": 1,
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "label": "烟柱"
+        },
+        {
+          "value": 1,
+          "label": "独立烟团"
+        },
+        {
+          "value": 2,
+          "label": "地面烟雾"
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "variable": "depth",
+      "label": "立体深度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.46
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "variable": "width",
+      "label": "宽度",
+      "min": 0.05,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.51
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "length",
+      "label": "长度",
+      "min": 0.05,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.48
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "variable": "direction",
+      "label": "方向",
+      "min": 0,
+      "max": 360,
+      "step": 1,
+      "default": 130
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "variable": "curve",
+      "label": "弯曲",
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.02
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "variable": "taper",
+      "label": "收尖",
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "default": -0.36
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "variable": "billow",
+      "label": "翻卷",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.33
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "variable": "drift",
+      "label": "侧向漂移",
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "default": -0.53
+    },
+    {
+      "slot": 10,
+      "key": "C",
+      "variable": "expansion",
+      "label": "膨胀",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.18
+    },
+    {
+      "slot": 11,
+      "key": "E",
+      "variable": "clumpiness",
+      "label": "聚团",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.37
+    },
+    {
+      "slot": 12,
+      "key": "F",
+      "variable": "count",
+      "label": "烟团数量",
+      "min": 10,
+      "max": 2000,
+      "step": 1,
+      "default": 310
+    },
+    {
+      "slot": 13,
+      "key": "G",
+      "variable": "minSize",
+      "label": "最小烟团",
+      "min": 0.005,
+      "max": 0.3,
+      "step": 0.005,
+      "default": 0.07
+    },
+    {
+      "slot": 14,
+      "key": "I",
+      "variable": "maxSize",
+      "label": "最大烟团",
+      "min": 0.01,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.13
+    },
+    {
+      "slot": 15,
+      "key": "J",
+      "variable": "puffOpacity",
+      "label": "烟团不透明度",
+      "min": 0.001,
+      "max": 0.3,
+      "step": 0.001,
+      "default": 0.075
+    },
+    {
+      "slot": 16,
+      "key": "P16",
+      "variable": "warpStrength",
+      "label": "扭曲强度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.65
+    },
+    {
+      "slot": 17,
+      "key": "P17",
+      "variable": "warpScale",
+      "label": "扭曲尺度",
+      "min": 0.5,
+      "max": 12,
+      "step": 0.1,
+      "default": 4.6
+    },
+    {
+      "slot": 18,
+      "key": "P18",
+      "variable": "warpOctaves",
+      "label": "扭曲细节",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 7
+    },
+    {
+      "slot": 19,
+      "key": "P19",
+      "variable": "flowBias",
+      "label": "流向偏移",
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.1
+    },
+    {
+      "slot": 20,
+      "key": "P20",
+      "variable": "softness",
+      "label": "柔和度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.44
+    },
+    {
+      "slot": 21,
+      "key": "P21",
+      "variable": "contrast",
+      "label": "蓬松对比",
+      "min": 0.3,
+      "max": 3,
+      "step": 0.01,
+      "default": 1.75
+    },
+    {
+      "slot": 22,
+      "key": "P22",
+      "variable": "edgeBreakup",
+      "label": "边缘破碎",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.73
+    },
+    {
+      "slot": 23,
+      "key": "P23",
+      "variable": "brightness",
+      "label": "亮度",
+      "min": 0.1,
+      "max": 3,
+      "step": 0.01,
+      "default": 1.6
+    },
+    {
+      "slot": 24,
+      "key": "P24",
+      "variable": "finalBlur",
+      "label": "最终模糊",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0
+    },
+    {
+      "slot": 25,
+      "key": "P25",
+      "variable": "tint",
+      "label": "烟雾颜色",
+      "min": 0,
+      "max": 16777215,
+      "step": 1,
+      "default": 16777215,
+      "type": "color"
+    }
+  ],
+  "defaults": [
+    7872,
+    1,
+    0.46,
+    0.51,
+    0.48,
+    130,
+    0.02,
+    -0.36,
+    0.33,
+    -0.53,
+    0.18,
+    0.37,
+    310,
+    0.07,
+    0.13,
+    0.075,
+    0.65,
+    4.6,
+    7,
+    0.1,
+    0.44,
+    1.75,
+    0.73,
+    1.6,
+    0,
+    16777215
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  },
+  "generator": {
+    "schema": "momo.generator/v1",
+    "revision": 1,
+    "effect": "smoke",
+    "scalar": "alpha",
+    "libraries": [
+      "generator-common-v1",
+      "generator-smoke-v1"
+    ],
+    "programs": {
+      "color": "generator-smoke-v1"
+    }
+  }
+}

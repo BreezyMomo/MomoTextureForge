@@ -5,6 +5,7 @@ export function patternFunction(registry, indices = null) {
     registry.catalog.flatMap((type, index) => {
       if (indices && !indices.includes(index)) return [];
       const spec = type.definition.outputs.scalar, text = formulaText(registry, spec);
+      if(type.definition.generator)return [`case ${index}:return generatedValue${index}(u);`];
       return [spec.kind === "expression" ? `case ${index}:return sat(${text});` : `case ${index}:{${text}}`];
     }).join("\n") + "\ndefault:return 0.;}}";
 }

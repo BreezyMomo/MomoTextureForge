@@ -28,6 +28,7 @@ export function pathSet(n,path,value){const parts=path.split('.');let at=n;for(c
 export const ANIMATION_ENUMS={'contour.mode':['none','outline','dilate','erode'],blend:['over','add','max','multiply','subtract','screen','difference','overlay','softlight','dodge','mask','inverseMask'],'transform.fit':['stretch','contain'],'color.mode':['inherit','own','preserve','remap'],'color.fill':['solid','gradient']};
 export const ANIMATION_BOOLS=['shapeClock.follow','enabled','transform.mirrorX','seamless','polar','invert'];
 export function animationType(n,path){
+ const generatorParameter=/^params\.(\d+)$/.exec(path);if(generatorParameter&&BY_ID.get(n.type)?.definition.generator){const spec=BY_ID.get(n.type).parameters.find(p=>p.slot===+generatorParameter[1]);if(spec?.step===1||spec?.type)return 'discrete';}
  if(path==='color.low'||path==='color.high')return 'color';
  if(ANIMATION_ENUMS[path]||ANIMATION_BOOLS.includes(path))return 'discrete';
  if(path==='params.0'&&BY_ID.get(n.type)?.parameters.find(p=>p.slot===0)?.label==='图片显示')return 'discrete';

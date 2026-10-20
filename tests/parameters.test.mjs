@@ -15,7 +15,7 @@ test("all patterns have explicit usable schemas with valid defaults and unique s
   assert.equal(Object.keys(PARAMETER_LAYOUTS).length, CATALOG.length);
   for (const type of CATALOG) {
     assert.ok(
-      type.parameters.length > 0 && type.parameters.length <= 16,
+      type.parameters.length > 0 && type.parameters.length <= (type.definition.generator?64:16),
       type.id,
     );
     assert.equal(
@@ -25,7 +25,7 @@ test("all patterns have explicit usable schemas with valid defaults and unique s
     );
     for (const p of type.parameters) {
       assert.ok(
-        p.label && p.slot >= 0 && p.slot <= 15 && p.min < p.max && p.step > 0,
+        p.label && p.slot >= 0 && p.slot < type.defaults.length && p.min < p.max && p.step > 0,
         type.id,
       );
       assert.ok(

@@ -6,8 +6,8 @@ import { defaultArrangement, effectiveArrangement } from "../web/arrangement.js"
 import { prepareSeamlessState } from "../web/seamless.js";
 
 test("new shapes append stable IDs and extended controls survive preset/hash round trip", () => {
-  assert.equal(BY_ID.get("VortexGate").index, CATALOG.length-2);
-  assert.equal(BY_ID.get("NaturalWood").index, CATALOG.length-1);
+  assert.equal(BY_ID.get("VortexGate").index, 282);
+  assert.equal(BY_ID.get("NaturalWood").index, 283);
   assert.equal(BY_ID.get("NaturalWood").zh, "自然木纹");
   const wood=defaults();wood.layers=[newLayer("NaturalWood")];
   const woodSpec=BY_ID.get("NaturalWood");assert.equal(woodSpec.parameters.length,16);

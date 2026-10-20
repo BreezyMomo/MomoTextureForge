@@ -2,7 +2,7 @@ import {BY_ID} from './catalog.js';
 import {decodeZIP} from './resource-zip.js';
 import {formulaUsesTime} from './formula-time.js';
 
-const metadata=(d,time,kind='formula')=>({id:d.id,name:d.name,kind,version:d.revision,description:d.description??'',parameters:structuredClone(d.parameters),defaults:[...d.defaults],supportsTime:time,seamless:d.seamless.kind});
+const metadata=(d,time,kind='formula')=>({id:d.id,name:d.name,kind:d.generator?'generator':kind,version:d.revision,description:d.description??'',parameters:structuredClone(d.parameters),defaults:[...d.defaults],supportsTime:time,seamless:d.seamless.kind,...(d.generator?{generator:{schema:d.generator.schema,effect:d.generator.effect},parameterKeyframes:true}:{})});
 export async function createLibraryAIContext(items,readBundle,{scope='selected',onProgress=()=>{}}={}){
  if(!items.length)throw Error('没有可导出的图形，请先选择资源或调整筛选条件。');
  const entries=[];

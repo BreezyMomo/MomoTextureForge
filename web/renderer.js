@@ -1,4 +1,5 @@
 import {imageSamplingGLSL} from './image-processing.js';
+import {GeneratorRenderer} from './generator-renderer.js';
 import {resourceRegistry,resources,bitmaps} from './resource-assets.js';
 import {patternFunction,extraFormulaLibraries,vectorCondition} from './definition-compiler.js';
 import {BUILTIN} from './definition-runtime.js';
@@ -72,6 +73,8 @@ export function fragmentGLSL(indices, mode = 0, seamMode = -1, layout = null) {
   const patternGLSL=ids=>{const code=patternFunction(registry,ids);return imageAsset?code.replace(/texture\(assetImage,/g,'sampleAssetImage('):code;},additionalPatternGLSL=ids=>extraFormulaLibraries(registry,ids),vectorTypeCondition=e=>vectorCondition(registry,e);
   const PERIODIC_PATTERNS=new Set(registry.catalog.filter(p=>p.definition.seamless.kind==='periodic').map(p=>p.id)),REPEATED_SHAPES=new Set(registry.catalog.filter(p=>p.definition.seamless.kind==='repeat').map(p=>p.id));
   const hasVector = indices.some((index) => CATALOG[index].vector);
+  const generated=indices.filter(index=>CATALOG[index].definition.generator);
+  const generatorDeclarations=generated.map(index=>`uniform sampler2D generatedTexture${index};float generatedValue${index}(vec2 p){if(any(lessThan(p,vec2(0)))||any(greaterThan(p,vec2(1))))return 0.;vec4 value=texture(generatedTexture${index},p);return ${CATALOG[index].definition.generator.scalar==='alpha'?'value.a':'clamp(dot(value.rgb,vec3(.2126,.7152,.0722))*value.a,0.,1.)'};}`).join('\n');
   const additionalLibraries = additionalPatternGLSL(indices);
   const rawIndices =
     seamMode === 0
@@ -109,6 +112,7 @@ export function fragmentGLSL(indices, mode = 0, seamMode = -1, layout = null) {
   return pruneGLSL(`#version 300 es
 precision highp float;precision highp int;
 in vec2 uv;out vec4 frag;
+${generatorDeclarations}
 ${custom&&resources.get(custom).kind==='image'?'uniform sampler2D assetImage;\n':''}uniform int types[3],masks[3],enabled[3],blendMode[3],order[3],polar[3],maskInverse[3];
 uniform vec4 params[12],maskParams[12],transformA[3],transformB[3],maskA[3],maskB[3];
 uniform vec4 arrange[12],maskArrange[12];uniform highp sampler2D sourceTextures[6];
@@ -127,6 +131,7 @@ ${periodicPatternGLSL(seamMode === 0 ? indices : [],registry)}
 vec2 transformUV(vec2 u,vec4 a,vec4 b,int p){vec2 q=u-.5;if(p==1)q=vec2(atan(q.y,q.x)/TAU,length(q)*2.)-.5;q=rot(q/max(a.x,.1),a.y+length(q)*b.z);q+=a.zw+time*b.x*vec2(cos(b.y),sin(b.y));return q+.5;}
 float rawPatternAt(int id,vec2 u,vec4 p0,vec4 p1,vec4 p2,vec4 p3,vec4 a,vec4 b,int pol){return pattern(id,transformUV(u,a,b,pol),p0,p1,p2,p3,formulaClock());}
 float patternAt(int id,vec2 u,vec4 p0,vec4 p1,vec4 p2,vec4 p3,vec4 a,vec4 b,int pol,int kind){if(seamless==0)return rawPatternAt(id,u,p0,p1,p2,p3,a,b,pol);if(kind==1)return periodicPattern(id,transformUV(u,a,b,0),p0,p1,formulaClock());u=fract(u);if(kind==2){vec2 drift=a.zw+time*b.x*vec2(cos(b.y),sin(b.y));vec2 centre=mod(rot(-drift*a.x,-a.y)+.5,1.)-.5;vec2 delta=mod(u-centre,1.)-.5;return shapePattern(id,rot(delta/a.x,a.y)+.5,p0,p1,p2,p3,formulaClock());}vec2 w=smoothstep(vec2(1.-seamBlend),vec2(1.),u);return mix(mix(rawPatternAt(id,u,p0,p1,p2,p3,a,b,pol),rawPatternAt(id,u-vec2(1,0),p0,p1,p2,p3,a,b,pol),w.x),mix(rawPatternAt(id,u-vec2(0,1),p0,p1,p2,p3,a,b,pol),rawPatternAt(id,u-1.,p0,p1,p2,p3,a,b,pol),w.x),w.y);}
+${generated.includes(layout?.types?.[0])?`vec4 generatorRaw(vec2 pos){vec2 p=transformUV(pos,transformA[0],transformB[0],polar[0]);if(any(lessThan(p,vec2(0)))||any(greaterThan(p,vec2(1))))return vec4(0);vec4 value=texture(generatedTexture${layout.types[0]},p);return vec4(value.rgb*value.a,value.a);}vec4 generatorColor(vec2 p){if(seamless==0)return generatorRaw(p);p=fract(p);vec2 weights=smoothstep(vec2(1.-seamBlend),vec2(1),p);return mix(mix(generatorRaw(p),generatorRaw(p-vec2(1,0)),weights.x),mix(generatorRaw(p-vec2(0,1)),generatorRaw(p-1.),weights.x),weights.y);}`:''}
 ${custom&&resources.get(custom).kind==='image'?`
 vec4 imageRaw(vec2 pos){vec2 p=transformUV(pos,transformA[0],transformB[0],polar[0]);vec2 size=vec2(textureSize(assetImage,0));float ratio=size.x/size.y;p=(p-.5)*vec2(max(1.,1./ratio),max(1.,ratio))+.5;if(any(lessThan(p,vec2(0)))||any(greaterThan(p,vec2(1))))return vec4(0);vec4 v=sampleAssetImage(p);return vec4(v.rgb*v.a,v.a);}
 vec4 imageColor(vec2 p){if(seamless==0)return imageRaw(p);p=fract(p);vec2 w=smoothstep(vec2(1.-seamBlend),vec2(1.),p);return mix(mix(imageRaw(p),imageRaw(p-vec2(1,0)),w.x),mix(imageRaw(p-vec2(0,1)),imageRaw(p-1.),w.x),w.y);}
@@ -142,7 +147,7 @@ float channel(int source,float h,vec3 n){if(source==0)return h;if(source==1)retu
 ${VECTOR_GLSL}
 void main(){vec2 base=gl_FragCoord.xy*sampleStep+sampleOffset;vec2 u=tile>1.?fract(base*tile):base;float h=heightAt(u);vec3 normal=${mode === 2 || mode === 3 ? "normalAt(u)" : "vec3(0,0,1)"};
 vec4 result=${mode === 5 ? "vec4(h,opacity[0]*maskAt(0,u),0.,1.)" : mode === 1 ? "vec4(vec3(h),alphaMode==1?sat(h):1.)" : mode === 2 ? "vec4(normal*.5+.5,1.)" : mode === 3 ? "vec4(channel(channelSource[0],h,normal),channel(channelSource[1],h,normal),channel(channelSource[2],h,normal),channel(channelSource[3],h,normal))" : "vec4(colorAt(h),alphaMode==1?sat(h):1.)"};
-${hasVector && mode === 0 && !layout?.arranged?.[0] ? `if(enabled[1]==0&&enabled[2]==0&&(${vectorTypeCondition("types[0]")})){float weight=opacity[0]*maskAt(0,u);result=vec4(mix(vec3(.5),vectorAt(u),weight),alphaMode==1?weight:1.);}` : ""}${custom&&resources.get(custom).kind==='image'&&mode===0?`if(params[0].x<.5){vec4 c=imageColor(u);result=vec4(c.a>0.?c.rgb/c.a:vec3(0),c.a);}`:''}frag=result;}`);
+${hasVector && mode === 0 && !layout?.arranged?.[0] ? `if(enabled[1]==0&&enabled[2]==0&&(${vectorTypeCondition("types[0]")})){float weight=opacity[0]*maskAt(0,u);result=vec4(mix(vec3(.5),vectorAt(u),weight),alphaMode==1?weight:1.);}` : ""}${custom&&resources.get(custom).kind==='image'&&mode===0?`if(params[0].x<.5){vec4 c=imageColor(u);result=vec4(c.a>0.?c.rgb/c.a:vec3(0),c.a);}`:''}${generated.includes(layout?.types?.[0])&&mode===0?`if(enabled[1]==0&&enabled[2]==0){vec4 c=generatorColor(u);result=vec4(c.a>0.?c.rgb/c.a:vec3(0),c.a);}`:''}frag=result;}`);
 }
 
 function bufferedFragmentGLSL(mode) {
@@ -297,6 +302,16 @@ export class Renderer {
         ),
       ),
     ];
+    const generatedTextures=new Map();
+    if(!heightTexture&&used.some(i=>CATALOG[i].definition.generator)){
+      this.generators??=new GeneratorRenderer(gl,{float:this.float,prune:pruneGLSL});this.generators.begin();
+      for(const i of used){const type=CATALOG[i];if(!type.definition.generator)continue;
+        const values=s.layers.flatMap(l=>l.enabled?[...(l.type===type.id?[l.params]:[]),...(l.mask===type.id?[l.maskParams]:[])]:[]);
+        if(values.some(p=>JSON.stringify(p)!==JSON.stringify(values[0])))throw Error('多组生成器参数请通过节点组合渲染');
+        const libraries=resources.has(type.id)?resources.get(type.id).libraries:BUILTIN.libraries;
+        generatedTextures.set(i,this.generators.render(type,values[0]??type.defaults,w,h,libraries));
+      }
+    }
     const entry = this.program(
       used,
       s.output.mode === 4 ? 0 : s.output.mode,
@@ -310,6 +325,7 @@ export class Renderer {
         entry.locations.set(name, gl.getUniformLocation(entry.p, name));
       return entry.locations.get(name);
     };
+    let generatorUnit=8;for(const [id,target]of generatedTextures){gl.activeTexture(gl.TEXTURE0+generatorUnit);gl.bindTexture(gl.TEXTURE_2D,target.tex);gl.uniform1i(loc('generatedTexture'+id),generatorUnit++);}
     const imageId=used.map(i=>CATALOG[i].id).find(id=>bitmaps.has(id));
     if(imageId){const bitmap=bitmaps.get(imageId);bitmap.ensureSize?.(Math.min(this.maxSize,Math.max(w,h)));this.assetTextureSizes??=new WeakMap();this.assetTextures??=new Map();const sizeKey=bitmap.width+'x'+bitmap.height;let tex=this.assetTextures.get(imageId);if(tex&&this.assetTextureSizes.get(tex)!==sizeKey){gl.deleteTexture(tex);this.assetTextures.delete(imageId);tex=null;}if(!tex){tex=gl.createTexture();gl.activeTexture(gl.TEXTURE15);gl.bindTexture(gl.TEXTURE_2D,tex);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,bitmaps.get(imageId));gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);this.assetTextures.set(imageId,tex);this.assetTextureSizes.set(tex,sizeKey);}gl.activeTexture(gl.TEXTURE15);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(loc('assetImage'),15);}
     const ints = (name, data) => gl.uniform1iv(loc(name), data),
@@ -350,11 +366,11 @@ export class Renderer {
     );
     vec4(
       "params",
-      s.layers.flatMap((l) => l.params),
+      s.layers.flatMap((l) => l.params.slice(0,16)),
     );
     vec4(
       "maskParams",
-      s.layers.flatMap((l) => l.maskParams),
+      s.layers.flatMap((l) => l.maskParams.slice(0,16)),
     );
     vec4("arrange", s.layers.flatMap((l) => l.arrange.slice(0,16)));
     vec4("spiral", s.layers.flatMap(l=>l.arrange.slice(16,20).length===4?l.arrange.slice(16,20):[137.507764,0,1,0]));
@@ -456,6 +472,7 @@ export class Renderer {
         gl.uniform1i(loc("heightTexture"), unit);
       }
       if(imageId){gl.activeTexture(gl.TEXTURE15);gl.bindTexture(gl.TEXTURE_2D,this.assetTextures.get(imageId));}
+      let generatedUnit=8;for(const target of generatedTextures.values()){gl.activeTexture(gl.TEXTURE0+generatedUnit++);gl.bindTexture(gl.TEXTURE_2D,target.tex);}
       gl.viewport(0, 0, w, h);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       let pixels = null;
@@ -571,6 +588,7 @@ export class Renderer {
     }
   }
   dispose() {
+    this.generators?.destroy();
     for (const { p } of this.programs.values()) this.gl.deleteProgram(p);
     this.programs.clear();
   }

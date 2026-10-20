@@ -1,0 +1,198 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "BokehDust",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "散景浮尘",
+  "category": "vfx",
+  "order": 289,
+  "variant": 5,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 7872
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "variable": "density",
+      "label": "密度",
+      "min": 0.05,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "variable": "size",
+      "label": "粒子大小",
+      "min": 0.1,
+      "max": 2,
+      "step": 0.01,
+      "default": 0.7
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "variable": "sizeVariation",
+      "label": "大小差异",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.8
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "softness",
+      "label": "柔和度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.65
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "variable": "softVariation",
+      "label": "柔和差异",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "variable": "fiberAmount",
+      "label": "纤维比例",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.2
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "variable": "fiberLength",
+      "label": "纤维长度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "variable": "irregularity",
+      "label": "形状不规则",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "variable": "brightness",
+      "label": "亮度",
+      "min": 0.1,
+      "max": 3,
+      "step": 0.01,
+      "default": 1.4
+    },
+    {
+      "slot": 10,
+      "key": "C",
+      "variable": "brightnessVariation",
+      "label": "亮度差异",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.7
+    },
+    {
+      "slot": 11,
+      "key": "E",
+      "variable": "opacityAmount",
+      "label": "不透明度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.8
+    },
+    {
+      "slot": 12,
+      "key": "F",
+      "variable": "warmth",
+      "label": "暖色程度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5
+    },
+    {
+      "slot": 13,
+      "key": "G",
+      "variable": "cluster",
+      "label": "聚集程度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4
+    }
+  ],
+  "defaults": [
+    7872,
+    0.4,
+    0.7,
+    0.8,
+    0.65,
+    0.4,
+    0.2,
+    0.4,
+    0.4,
+    1.4,
+    0.7,
+    0.8,
+    0.5,
+    0.4,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  },
+  "generator": {
+    "schema": "momo.generator/v1",
+    "revision": 1,
+    "effect": "dust",
+    "scalar": "alpha",
+    "libraries": [
+      "generator-common-v1",
+      "generator-dust-v1"
+    ],
+    "programs": {
+      "color": "generator-dust-v1"
+    }
+  }
+}

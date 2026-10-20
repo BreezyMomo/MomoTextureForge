@@ -1,0 +1,274 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "FilmGrain",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "胶片颗粒",
+  "category": "vfx",
+  "order": 290,
+  "variant": 6,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 7872
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "variable": "size",
+      "label": "颗粒大小",
+      "min": 0.05,
+      "max": 3,
+      "step": 0.01,
+      "default": 1
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "variable": "amount",
+      "label": "强度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.55
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "variable": "roughness",
+      "label": "粗糙度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "contrast",
+      "label": "对比度",
+      "min": 0.1,
+      "max": 3,
+      "step": 0.01,
+      "default": 1.2
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "variable": "brightness",
+      "label": "明暗偏移",
+      "min": -0.5,
+      "max": 0.5,
+      "step": 0.01,
+      "default": 0
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "variable": "monochrome",
+      "label": "颜色模式",
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "default": 1,
+      "type": "select",
+      "options": [
+        {
+          "value": 1,
+          "label": "单色"
+        },
+        {
+          "value": 0,
+          "label": "彩色"
+        }
+      ]
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "variable": "colorShift",
+      "label": "色彩差异",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "variable": "filmLook",
+      "label": "胶片结团",
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "default": 1,
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "label": "关闭"
+        },
+        {
+          "value": 1,
+          "label": "开启"
+        }
+      ]
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "variable": "clumpSize",
+      "label": "结团大小",
+      "min": 0.3,
+      "max": 5,
+      "step": 0.01,
+      "default": 1.5
+    },
+    {
+      "slot": 10,
+      "key": "C",
+      "variable": "dustAmount",
+      "label": "尘斑数量",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.1
+    },
+    {
+      "slot": 11,
+      "key": "E",
+      "variable": "dustSize",
+      "label": "尘斑大小",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4
+    },
+    {
+      "slot": 12,
+      "key": "F",
+      "variable": "dustBlur",
+      "label": "尘斑模糊",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4
+    },
+    {
+      "slot": 13,
+      "key": "G",
+      "variable": "scratches",
+      "label": "划痕数量",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.1
+    },
+    {
+      "slot": 14,
+      "key": "I",
+      "variable": "scratchVariety",
+      "label": "划痕变化",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5
+    },
+    {
+      "slot": 15,
+      "key": "J",
+      "variable": "scratchLength",
+      "label": "划痕长度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.6
+    },
+    {
+      "slot": 16,
+      "key": "P16",
+      "variable": "scratchStyle",
+      "label": "划痕类型",
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "default": 1,
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "label": "连续"
+        },
+        {
+          "value": 1,
+          "label": "断续"
+        }
+      ]
+    },
+    {
+      "slot": 17,
+      "key": "P17",
+      "variable": "vignette",
+      "label": "暗角",
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.2
+    }
+  ],
+  "defaults": [
+    7872,
+    1,
+    0.55,
+    0.5,
+    1.2,
+    0,
+    1,
+    0.4,
+    1,
+    1.5,
+    0.1,
+    0.4,
+    0.4,
+    0.1,
+    0.5,
+    0.6,
+    1,
+    0.2
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  },
+  "generator": {
+    "schema": "momo.generator/v1",
+    "revision": 1,
+    "effect": "grain",
+    "scalar": "alpha",
+    "libraries": [
+      "generator-common-v1",
+      "generator-simplex-v1",
+      "generator-grain-v1"
+    ],
+    "programs": {
+      "color": "generator-grain-v1"
+    }
+  }
+}

@@ -1,0 +1,211 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "LayeredFog",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "层叠雾气",
+  "category": "vfx",
+  "order": 285,
+  "variant": 1,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 7872
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "variable": "density",
+      "label": "密度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "variable": "scale",
+      "label": "尺度",
+      "min": 0.5,
+      "max": 15,
+      "step": 0.1,
+      "default": 5
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "variable": "turbulence",
+      "label": "湍流",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "depth",
+      "label": "立体深度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.3
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "variable": "detail",
+      "label": "噪声细节",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "variable": "warpStrength",
+      "label": "后期扭曲",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.15
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "variable": "warpScale",
+      "label": "后期扭曲尺度",
+      "min": 0.5,
+      "max": 12,
+      "step": 0.1,
+      "default": 5
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "variable": "warpOctaves",
+      "label": "后期扭曲细节",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "variable": "softness",
+      "label": "柔和度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.55
+    },
+    {
+      "slot": 10,
+      "key": "C",
+      "variable": "contrast",
+      "label": "对比度",
+      "min": 0.3,
+      "max": 3,
+      "step": 0.01,
+      "default": 1.5
+    },
+    {
+      "slot": 11,
+      "key": "E",
+      "variable": "edgeBreakup",
+      "label": "边缘破碎",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5
+    },
+    {
+      "slot": 12,
+      "key": "F",
+      "variable": "brightness",
+      "label": "亮度",
+      "min": 0.1,
+      "max": 3,
+      "step": 0.01,
+      "default": 1.2
+    },
+    {
+      "slot": 13,
+      "key": "G",
+      "variable": "finalBlur",
+      "label": "最终模糊",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.1
+    },
+    {
+      "slot": 14,
+      "key": "I",
+      "variable": "tint",
+      "label": "雾气颜色",
+      "min": 0,
+      "max": 16777215,
+      "step": 1,
+      "default": 16777215,
+      "type": "color"
+    }
+  ],
+  "defaults": [
+    7872,
+    0.5,
+    5,
+    0.4,
+    0.3,
+    5,
+    0.15,
+    5,
+    5,
+    0.55,
+    1.5,
+    0.5,
+    1.2,
+    0.1,
+    16777215,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  },
+  "generator": {
+    "schema": "momo.generator/v1",
+    "revision": 1,
+    "effect": "fog",
+    "scalar": "alpha",
+    "libraries": [
+      "generator-common-v1",
+      "generator-fog-density-v1",
+      "generator-fog-color-v1"
+    ],
+    "programs": {
+      "density": "generator-fog-density-v1",
+      "color": "generator-fog-color-v1"
+    }
+  }
+}

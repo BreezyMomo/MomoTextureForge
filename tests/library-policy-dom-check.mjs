@@ -6,13 +6,13 @@ win.HTMLCanvasElement.prototype.getContext=kind=>kind==='webgl2'?gl:{clearRect()
 const {TreeRenderer}=await import('../web/tree-renderer.js');let current,lastDraw;TreeRenderer.prototype.draw=function(p,w,h,options){current=p;lastDraw=options;this.canvas.width=w;this.canvas.height=h;this.lastMs=1;};
 const {project,node}=await import('../web/tree-model.js'),p=project();p.root.children=[node('shape','Water')];localStorage.setItem('momo-texture-tree:draft:v1',JSON.stringify(p));
 await import('../web/tree-app.js');const flush=()=>{for(const f of queue.splice(0))f(0);},$=id=>document.getElementById(id);flush();
-assert.equal(document.querySelectorAll('[data-component^="shape:"]').length,284);
+assert.equal(document.querySelectorAll('[data-component^="shape:"]').length,291);
 assert.equal(document.querySelectorAll('[data-component^="preset:"]').length,0);
 document.querySelector('[aria-label="选择 水波"]').click();flush();assert.equal(document.querySelector('[aria-label="基础图形"]').value,'Water');assert.equal(current.root.children[0].type,'Water');
 const search=value=>{$('shape-search').value=value;$('shape-search').dispatchEvent(new win.Event('input'));};search('水波');assert.ok(document.querySelector('[data-component="shape:Water"]'));assert.equal(document.querySelector('[data-component="shape:Flipbook"]'),null);
 search('蜂巢网格');assert.ok(document.querySelector('[data-component="shape:HexGrid"]'));[...document.querySelectorAll('button')].find(b=>b.textContent==='试编辑：蜂巢网格预设').click();flush();assert.equal(current.root.children[0].type,'HexGrid');assert.deepEqual(current.root.children[0].params,(await import('../web/library-policy.js')).libraryVariantNode('honeycomb').params);
 $('preview-add').click();flush();assert.equal(current.root.children[0].type,'Water');assert.equal(current.root.children[1].type,'HexGrid');assert.equal([...document.querySelector('[aria-label="基础图形"]').options].some(x=>x.value==='Flipbook'),false);
-console.log('Library cleanup DOM PASS: 284 entries, current type editable, alias search, canonical preset preview/add, picker filtering. GPU mocked.');
+console.log('Library cleanup DOM PASS: 291 entries, current type editable, alias search, canonical preset preview/add, picker filtering. GPU mocked.');
 
 const picker=document.querySelector('[aria-label="基础图形"]');picker.value='Gear';picker.dispatchEvent(new win.Event('change'));flush();
 const gearMode=document.querySelector('[aria-label="齿形模式"]');assert.ok(gearMode);gearMode.value='1';gearMode.dispatchEvent(new win.Event('change'));flush();

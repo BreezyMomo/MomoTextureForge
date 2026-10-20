@@ -1,0 +1,32 @@
+import {chromium} from 'playwright';
+import {mkdir,writeFile} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const url=process.argv[2]??'http://127.0.0.1:8799/';
+const browser=await chromium.launch({channel:'msedge',headless:true});
+try{
+ const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(url);await page.locator('#open-graphics-library').click();await page.getByPlaceholder('搜索名称、分类或标签').fill('特效素材');
+ await page.waitForFunction(()=>document.querySelectorAll('.graphics-card').length===7);
+ await mkdir('test-results/generator-ui',{recursive:true});await page.screenshot({path:'test-results/generator-ui/library.png'});
+ await page.getByRole('button',{name:'编辑 蓬松烟团',exact:true}).click();
+ let dialog=page.locator('dialog.graphic-editor-dialog');await dialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
+ assert.equal(await dialog.getByRole('slider').count(),24);
+ const before=await dialog.locator('canvas').evaluate(canvas=>canvas.toDataURL());
+ await dialog.getByRole('slider',{name:'扭曲强度滑动条',exact:true}).press('Home');
+ await page.waitForFunction(before=>document.querySelector('dialog.graphic-editor-dialog canvas')?.toDataURL()!==before,before);
+ await dialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
+ await dialog.getByRole('button',{name:'保存为新图形',exact:true}).click();await dialog.waitFor({state:'detached'});
+ const saved=page.locator('.graphics-card[data-origin="local"]');await saved.waitFor();assert.ok(await saved.innerText().then(text=>text.includes('蓬松烟团')));
+ await page.getByRole('button',{name:'编辑 湍流火焰',exact:true}).click();dialog=page.locator('dialog.graphic-editor-dialog');await dialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
+ await page.screenshot({path:'test-results/generator-ui/fire-editor.png'});
+ await dialog.locator('header .graphics-close').click();
+ // Open a real project through the regular share format, then edit an extended slot.
+ const p=await page.evaluate(async()=>{const {project,node}=await import('./tree-model.js');const p=project();p.name='生成器验证';const smoke=node('shape','PlumeSmoke');p.root.children=[smoke];return p;});
+ await page.goto(url+'#tree='+Buffer.from(JSON.stringify(p)).toString('base64'));await page.reload();
+ await page.locator('[role="treeitem"]').first().click();
+ const extended=page.getByRole('spinbutton',{name:'扭曲尺度',exact:true});await extended.waitFor();await extended.fill('6');await extended.press('Tab');
+ await page.screenshot({path:'test-results/generator-ui/node.png'});
+ const downloadPromise=page.waitForEvent('download');await page.locator('#export-now').click();await page.locator('#confirm-export').click();const download=await downloadPromise;assert.equal(await download.failure(),null);
+ assert.deepEqual(errors,[]);
+ const report={slidersLive:true,extendedNodeParameter:true,librarySave:true,nativeColor:true,pngExport:true,errors};await writeFile('test-results/generator-ui/report.json',JSON.stringify(report,null,2));console.log(report);
+}finally{await browser.close();}

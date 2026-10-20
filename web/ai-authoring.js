@@ -30,6 +30,7 @@ export function assetFromAuthoring(draft){
 export function scalarHelpers(asset){return [...new Set(asset.definition.outputs.scalar.libraries)].filter(n=>!['math-v1','vector-v1','periodic-v1'].includes(n)).map(n=>asset.libraries[n]).join('\n');}
 const number=n=>Number.isInteger(n)?n.toFixed(1):String(n);
 export function authoringFromEditor(asset,meta,source,kind,specs,helpers){
+ if(asset.definition.generator)throw Error('多步骤生成器请导出资源包，不能转换为单一公式创作文件');
  let formula={kind,source};
  if(!asset.definition.authoring?.portable){
   // Capture the old ABI locally, so external drafts need no slot numbers and retain hidden defaults.

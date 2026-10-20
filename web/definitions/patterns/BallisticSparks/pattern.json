@@ -1,0 +1,229 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "BallisticSparks",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "喷射火花",
+  "category": "vfx",
+  "order": 287,
+  "variant": 3,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 7872
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "variable": "amount",
+      "label": "火花数量",
+      "min": 0.1,
+      "max": 2,
+      "step": 0.05,
+      "default": 1
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "variable": "spread",
+      "label": "散射",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.7
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "variable": "length",
+      "label": "轨迹长度",
+      "min": 0.1,
+      "max": 1.5,
+      "step": 0.01,
+      "default": 0.8
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "gravity",
+      "label": "加速度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.3
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "variable": "glow",
+      "label": "辉光",
+      "min": 0,
+      "max": 2,
+      "step": 0.01,
+      "default": 1
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "variable": "heat",
+      "label": "温度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.9
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "variable": "chaos",
+      "label": "轨迹紊乱",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.6
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "variable": "breaks",
+      "label": "轨迹断裂",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.3
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "variable": "segments",
+      "label": "分段",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "slot": 10,
+      "key": "C",
+      "variable": "emitWidth",
+      "label": "发射口宽度",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.06
+    },
+    {
+      "slot": 11,
+      "key": "E",
+      "variable": "direction",
+      "label": "发射方向",
+      "min": 0,
+      "max": 360,
+      "step": 1,
+      "default": 90
+    },
+    {
+      "slot": 12,
+      "key": "F",
+      "variable": "dust",
+      "label": "碎屑",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.7
+    },
+    {
+      "slot": 13,
+      "key": "G",
+      "variable": "emberCount",
+      "label": "余烬数量",
+      "min": 0,
+      "max": 500,
+      "step": 1,
+      "default": 165
+    },
+    {
+      "slot": 14,
+      "key": "I",
+      "variable": "emberSize",
+      "label": "余烬大小",
+      "min": 0.1,
+      "max": 2,
+      "step": 0.01,
+      "default": 0.69
+    },
+    {
+      "slot": 15,
+      "key": "J",
+      "variable": "emberDrift",
+      "label": "余烬漂移",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.47
+    },
+    {
+      "slot": 16,
+      "key": "P16",
+      "variable": "emberHeat",
+      "label": "余烬温度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.55
+    }
+  ],
+  "defaults": [
+    7872,
+    1,
+    0.7,
+    0.8,
+    0.3,
+    1,
+    0.9,
+    0.6,
+    0.3,
+    1,
+    0.06,
+    90,
+    0.7,
+    165,
+    0.69,
+    0.47,
+    0.55
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "file": "formula.glsl",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  },
+  "generator": {
+    "schema": "momo.generator/v1",
+    "revision": 1,
+    "effect": "sparks",
+    "scalar": "luminance",
+    "libraries": [
+      "generator-common-v1",
+      "generator-emission-v1"
+    ],
+    "programs": {
+      "color": "generator-emission-v1"
+    }
+  }
+}

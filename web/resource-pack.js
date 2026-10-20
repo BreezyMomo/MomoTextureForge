@@ -7,6 +7,7 @@ import {assetFor,builtinAsset,contentHash,prepareAsset,registerAsset,unregisterA
 import {CATALOG,BY_ID} from './catalog.js';
 export const PACK_SCHEMA='momo.texture-pack/v1';
 export const ENGINE_ABI='momo-pattern/16-v1';
+export const GENERATOR_PACK_ABI='momo-pattern/16-v1+generator-v1';
 export async function finalizeResourcePack(bytes){
  const files=await decodeZIP(bytes),manifest=JSON.parse(new TextDecoder().decode(files.get('manifest.json')));
  if(!manifest.assets?.some(record=>needsImageBake(JSON.parse(new TextDecoder().decode(files.get(record.file))))))return bytes;
@@ -26,19 +27,21 @@ export async function encodeResourcePack(payload,{assets:provided=null,includeRe
   if(asset.kind==='image'){const path=`images/${hash}.${(asset.mime==='image/svg+xml'?'svg':asset.mime.split('/')[1])}`;add(path,Uint8Array.from(atob(asset.data),c=>c.charCodeAt(0)));delete descriptor.data;descriptor.file=path;}
   const path=`shapes/${hash}.json`;json(path,descriptor);records.push({id,hash,file:path});
  }
- json('content.json',document);json('manifest.json',{schema:PACK_SCHEMA,abi:ENGINE_ABI,content:'content.json',assets:records});
+ const hasGenerator=[...assets.values()].some(asset=>!!asset.definition.generator);
+ json('content.json',document);json('manifest.json',{schema:PACK_SCHEMA,abi:hasGenerator?GENERATOR_PACK_ABI:ENGINE_ABI,content:'content.json',assets:records});
  if([...entries.values()].reduce((n,b)=>n+b.length,0)>PACK_LIMIT)throw Error('资源包超过64MB');
  return encodeZIP([...entries].map(([name,data])=>({name,data})));
 }
 export async function readResourcePack(buffer){
  const files=await decodeZIP(buffer),read=path=>{safePath(path);const data=files.get(path);if(!data)throw Error('缺少资源文件：'+path);return data;},json=path=>JSON.parse(decoder.decode(read(path)));
- const manifest=json('manifest.json');if(manifest.schema!==PACK_SCHEMA||manifest.abi!==ENGINE_ABI)throw Error('资源包格式或公式接口版本不兼容');
+ const manifest=json('manifest.json');if(manifest.schema!==PACK_SCHEMA||![ENGINE_ABI,GENERATOR_PACK_ABI].includes(manifest.abi))throw Error('资源包格式或公式接口版本不兼容');
  if(!Array.isArray(manifest.assets))throw Error('资源包图形列表格式无效');
  const payload=json(manifest.content),prepared=[],mapping=new Map();
  try{for(const record of manifest.assets){if(typeof record.id!=='string'||mapping.has(record.id))throw Error('图形资源ID重复或无效');const asset=json(record.file);
    for(const [name,spec]of Object.entries(asset.libraries??{}))asset.libraries[name]=decoder.decode(read(spec.file));
    for(const spec of [asset.definition?.outputs?.scalar,asset.definition?.seamless?.source].filter(Boolean)){spec.inline=decoder.decode(read(spec.file));delete spec.file;}
    if(asset.kind==='image'){asset.data=bytes64(read(asset.file));delete asset.file;}
+   if(asset.definition?.generator&&manifest.abi!==GENERATOR_PACK_ABI)throw Error('生成器资源包缺少接口能力声明');
    validateAsset(asset);if(await contentHash(asset)!==record.hash)throw Error('图形资源内容校验失败：'+record.id);
    let id='asset_'+record.hash;try{if(await contentHash(builtinAsset(asset.definition.id))===record.hash)id=asset.definition.id;}catch{}
    mapping.set(record.id,id);if(!BY_ID.has(id)&&!prepared.some(p=>p[0]===id))prepared.push([id,asset,await prepareAsset(asset)]);

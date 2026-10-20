@@ -27,10 +27,10 @@ try{
  await page.waitForFunction(()=>document.documentElement.dataset.ready==='true',null,{timeout:120000});
  await page.locator('#open-graphics-library').click();
  await page.locator('.graphics-card[data-origin="builtin"]').first().waitFor();
- assert.equal(await page.locator('.graphics-card[data-origin="builtin"]').count(),284);
+ assert.equal(await page.locator('.graphics-card[data-origin="builtin"]').count(),291);
  await page.screenshot({path:resolve(output,'standalone-library.png')});
  assert.deepEqual(errors,[]);
- const report={seamless,shapes,exports,standalone:{builtins:284,offline:true},pageErrors:errors};
+ const report={seamless,shapes,exports,standalone:{builtins:291,offline:true},pageErrors:errors};
  await writeFile(resolve(output,'smoke.json'),JSON.stringify(report,null,2));
  console.log(JSON.stringify(report,null,2));
 }finally{await browser.close();}

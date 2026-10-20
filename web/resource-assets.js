@@ -14,6 +14,7 @@ export async function contentHash(value){return [...new Uint8Array(await crypto.
 export function builtinAsset(id){
  const p=BUILTIN.catalog.find(p=>p.id===id);if(!p)throw Error('缺少基础图形：'+id);
  const definition=structuredClone(p.definition),names=new Set(['math-v1']);
+ for(const name of definition.generator?.libraries??[])names.add(name);
  for(const spec of [definition.outputs.scalar,definition.seamless.source].filter(Boolean)){for(const n of spec.libraries)names.add(n);spec.inline=spec.inline??BUILTIN.sources[spec.file];delete spec.file;}
  if(definition.seamless.kind==='periodic')names.add('periodic-v1');if(p.vector)names.add('vector-v1');
  const libraries=Object.fromEntries([...names].map(n=>[n,BUILTIN.libraries[n]]));

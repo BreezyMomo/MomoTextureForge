@@ -10,15 +10,15 @@ const clone = () => structuredClone(BUILTIN.definition);
 const read = file => BUILTIN.sources[file];
 const readResource = file => readFile(new URL(`../web/definitions/${file}`,import.meta.url),'utf8');
 
-test("per-pattern index loads 284 independent configs, resolves local sources and bounds concurrent IO", async () => {
+test("per-pattern index loads 291 independent configs, resolves local sources and bounds concurrent IO", async () => {
   const calls=new Map();let active=0,maximum=0;
   const registry=await loadDefinitions(BUILTIN.index,async file=>{
     calls.set(file,(calls.get(file)??0)+1);active++;maximum=Math.max(maximum,active);
     try{return await readResource(file);}finally{active--;}
   });
-  assert.equal(registry.configFiles.length,284);
-  assert.equal(registry.catalog.length,284);
-  assert.equal(calls.size,589);
+  assert.equal(registry.configFiles.length,291);
+  assert.equal(registry.catalog.length,291);
+  assert.equal(calls.size,BUILTIN.configFiles.length+Object.keys(BUILTIN.sources).length);
   assert.ok([...calls.values()].every(n=>n===1));
   assert.ok(maximum>1&&maximum<=8);
   assert.equal(registry.definition.patterns[0].outputs.scalar.file,'patterns/Circle/formula.glsl');
@@ -73,7 +73,7 @@ void main(){float value=sampleValue(1.);}
 test("definition files load atomically, once per file, and reject missing/empty assets", async () => {
   const calls = new Map();
   const registry = await loadDefinitions(clone(), file => {calls.set(file,(calls.get(file)??0)+1); return read(file);});
-  assert.equal(registry.catalog.length,284);
+  assert.equal(registry.catalog.length,291);
   assert.ok([...calls.values()].every(n=>n===1));
   assert.ok(Object.isFrozen(registry.catalog[0].definition));
   const circleFile = BUILTIN.definition.patterns[0].outputs.scalar.file;
