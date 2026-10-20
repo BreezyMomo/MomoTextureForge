@@ -138,6 +138,6 @@ node build-authoring-kit.mjs
 
 PSD 编码器的依赖许可位于 `web/vendor/PSD-LICENSES.txt`。需要重新构建编码器时运行 `npm run build:psd-vendor`。
 
-## 致谢
+## 参考来源
 
-本工具的早期设计与部分图形实现参考了 [EasyCG TexForge](https://easycg-texforge.app.workbuddy.host/)，感谢其提供的创作思路与参考。
+本工具的早期设计与部分图形实现参考了 [EasyCG TexForge](https://easycg-texforge.app.workbuddy.host/)。此处仅说明参考来源，不表示该网站或其作者参与、认可或授权本项目。
