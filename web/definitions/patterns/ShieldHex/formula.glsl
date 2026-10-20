@@ -1,7 +1,6 @@
 vec2 p=q,uv=u;
 float refP0=a.x;
 float refP1=a.y;
-float refP2=a.z;
 float refP3=a.w;
 float refP4=b.x;
 float refP5=b.y;
@@ -19,5 +18,4 @@ float refP7=b.w;
     // 全息能量波纹（由中心向外扩散）
     float pulse = 0.55 + 0.45 * sin(time * max(refP3, 0.0) * 2.6 - length(p) * 7.0);
     v *= mix(1.0, pulse, clamp(refP4, 0.0, 1.0));
-    float R = max(refP2, 0.3);
-    return clamp(v * (1.0 - ref_smoothstep(R - 0.10, R, length(p))), 0.0, 1.0);
+    return clamp(v, 0.0, 1.0);

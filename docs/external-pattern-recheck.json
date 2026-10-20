@@ -1,0 +1,2993 @@
+{
+  "schema": "momo.external-pattern-recheck/v1",
+  "baseline": "ae6348135d2a6bd8c1a934f40fc395bbb3931440",
+  "scope": "初审外置 115 项的历史技术复核；现已按用户决定全部恢复原实现，当前内置 284 项；分类不再用于排除图形",
+  "decisions": {
+    "retainAllSharedLibraries": true,
+    "preserveOriginalFormulas": true,
+    "automaticCatalogChanges": false,
+    "catalogApplication": {
+      "restoredOriginals": 115,
+      "remainingExternal": 0
+    }
+  },
+  "counts": {
+    "total": 115,
+    "math": 4,
+    "ordinary": 85,
+    "recipe": 26,
+    "restoreCandidates": 89
+  },
+  "sourceEvidence": {
+    "sameIdOnReference": 115,
+    "normalizedBodyMatches": 68,
+    "verifiedSourceRedistributionLicenses": 0
+  },
+  "records": [
+    {
+      "id": "LensFlare",
+      "name": "镜头光斑",
+      "category": "径向",
+      "classification": "ordinary",
+      "reason": "圆盘与正交条带叠加，与圆形、十字和光晕属于同类遮罩构造；0.9 权重与边缘常量仍是具体实现选择",
+      "peers": [
+        "Circle",
+        "Cross",
+        "Halo"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "e23556cd3461c04ed61b09fea73db77041f3d4cdf61262e7e5918c46b8dd08fc",
+      "formulaSummary": "圆核与横竖光条的固定权重组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "LightStreak",
+      "name": "拉丝光条",
+      "category": "径向",
+      "classification": "ordinary",
+      "reason": "椭圆半径衰减与单轴指数光带取大值，属于广义高斯和椭圆遮罩组合",
+      "peers": [
+        "Ellipse",
+        "Bell",
+        "Swipe"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "a54fb25c1918f584bb4ecb66f598d1a013c733f3f28102af606c72e0804b5c2e",
+      "formulaSummary": "椭圆核与特定指数光条组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "NovaBurst",
+      "name": "星芒爆发",
+      "category": "径向",
+      "classification": "ordinary",
+      "reason": "角向周期函数控制径向长度，再加中心高斯光；不应仅因有中心光将其与星形、放射线分开处理",
+      "peers": [
+        "Star",
+        "Sunburst",
+        "Halo"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "1c0eff06de3f5af6ce40e27c89c9ea0e9ae2b4552285b37454bf0694063ae84f",
+      "formulaSummary": "角向尖芒曲线加固定高斯核心",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "RadialStreak",
+      "name": "扰动环纹",
+      "category": "径向",
+      "classification": "ordinary",
+      "reason": "FBM 扰动径向周期相位并乘圆形窗口，与径向波和等高线同类",
+      "peers": [
+        "RadialWave",
+        "ContourLines"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "fa24849ee6f72073447c2df7e193f9153a4502da73dd7e7e8639cd6e071315a8",
+      "formulaSummary": "角向FBM扰动重复径向环",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep",
+        "ref_sstepW"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Bokeh",
+      "name": "散景光斑",
+      "category": "径向",
+      "classification": "recipe",
+      "reason": "随机圆盘尺寸、分布、边缘亮圈和亮度组成散景配方，包含特定抽样偏移和固定比例",
+      "peers": [
+        "LensBlur"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "6f50ee719bb7db3cfc5ec4df201cbdcf264a6c1e335e3043853232d797652230",
+      "formulaSummary": "随机圆盘、亮边与强度组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_hash2",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "AnamorphicFlare",
+      "name": "横向耀斑",
+      "category": "径向",
+      "classification": "ordinary",
+      "reason": "水平、垂直指数衰减与高斯核心；保留功能的理由与光晕、光条一致",
+      "peers": [
+        "Halo",
+        "Swipe"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "9372fb104975ffa29737aa94df05fd29d577adc5716d9adaa6f015119aea0023",
+      "formulaSummary": "横纵指数光条与高斯核组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "GodRay",
+      "name": "体积光柱",
+      "category": "径向",
+      "classification": "recipe",
+      "reason": "固定光源锚点、扇区光束、距离淡出及噪声遮断构成完整光柱配方；不是体积散射求解器",
+      "peers": [
+        "Sunburst"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "1463e62eb7706e9a4a9f1639d79b2e91ff230c709469fabefd163375d2d360bb",
+      "formulaSummary": "顶部扇区光束、距离衰减和噪声遮断",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "LensBlur",
+      "name": "景深散焦",
+      "category": "径向",
+      "classification": "recipe",
+      "reason": "随机多边形光斑按位置模拟离焦，叠加固定亮边；不执行场景深度或真实镜头模糊",
+      "peers": [
+        "Bokeh"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "10e736cb5413c7b5cb8ee100d71d555ec01b32dcd93a3f0e223f94141a2661b0",
+      "formulaSummary": "随机多边形散景、离焦尺寸和亮边组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_ngonDist",
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "ChromaticEdge",
+      "name": "分裂光环",
+      "category": "径向",
+      "classification": "ordinary",
+      "reason": "同心环加正负径向偏移与权重，是参数化多环遮罩；实际输出单通道，不是 RGB 色散",
+      "peers": [
+        "Ring",
+        "Concentric"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "256d46aca89e605b215364a689d5ee4d8fbfd3b4ff30c7b9503e56057cba915f",
+      "formulaSummary": "三重偏移环、随半径变化的间距和权重",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "CloudShape",
+      "name": "云朵形",
+      "category": "形状",
+      "classification": "ordinary",
+      "reason": "多个圆的平滑并集；圆数、偏移和比例虽有选择，仍与 Metaballs、Splatter 的构造同类",
+      "peers": [
+        "Metaballs",
+        "Splatter"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "b22df147e3eb868119f6cb7cfbfebfb9f07eb7c3e1753a1eff028b2a8822d4d0",
+      "formulaSummary": "五个圆及中心圆的平滑并集和随机半径",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_hash1",
+        "ref_smin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Splat",
+      "name": "溅射形",
+      "category": "形状",
+      "classification": "ordinary",
+      "reason": "中心圆与随机径向胶囊的并集，属于线段距离与圆盘的参数化构造",
+      "peers": [
+        "Circle",
+        "LineSegment",
+        "Splatter"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "45a1ad6268e20ec46b9df0d937fd21e95429c4df32c225434ab1702e353820bd",
+      "formulaSummary": "随机方向、粗细的辐射胶囊组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_hash1",
+        "ref_sdSeg",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "HandDrawn",
+      "name": "手绘抖动形",
+      "category": "形状",
+      "classification": "ordinary",
+      "reason": "圆方距离插值并加噪声扰动，和 Blob、SDFShapeMask 的原理一致",
+      "peers": [
+        "Blob",
+        "SDFShapeMask"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "bda85e170ea052bcfd000a4bf64c72ff93c99b749655be415b23916d2dee1f3f",
+      "formulaSummary": "圆方插值距离叠加两类噪声",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep",
+        "ref_turb",
+        "ref_vnoise"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "FragmentChip",
+      "name": "碎片",
+      "category": "形状",
+      "classification": "ordinary",
+      "reason": "多边形距离加 FBM 切口，是受扰动的几何遮罩",
+      "peers": [
+        "Polygon",
+        "Blob"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "29ff92ecebce55dc37b2cac3f3969a8c1554901c11841980f25831e653484151",
+      "formulaSummary": "多边形距离叠加FBM切口",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_ngonDist",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "SpikeBurst",
+      "name": "尖刺爆发",
+      "category": "形状",
+      "classification": "ordinary",
+      "reason": "随机径向线段描边取并集并补中心圆，与放射刻度、线段距离同类",
+      "peers": [
+        "LineSegment",
+        "CompassTick"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "fb02bf3b4112737617f3693212d3e91861d8f02c26daa7afa7b8866825249d68",
+      "formulaSummary": "随机辐射线段、粗细及中心圆组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_hash1",
+        "ref_sdSeg",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Flower",
+      "name": "花瓣花窗",
+      "category": "形状",
+      "classification": "ordinary",
+      "reason": "角向余弦幂控制花瓣半径并叠加描边与中心圆；属于参数化玫瑰线类轮廓，原先不应只因组合而外置",
+      "peers": [
+        "Star",
+        "Thorn"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "050218686b19dc006844f4a80687149f08326d7701692d6c3eee241298e5058a",
+      "formulaSummary": "玫瑰线式花瓣、描边与中心圆的具体组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "GlintSpark",
+      "name": "星光闪烁",
+      "category": "形状",
+      "classification": "recipe",
+      "reason": "主副星芒、核心和固定闪烁相位共同组成效果；含多套半径、幂次和混合比例",
+      "peers": [
+        "Sunburst",
+        "Halo"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "b4c2a9becc75afab9f4cad7c4b8c85d6503a1f7d3cbd00bdfc76b6750636f99a",
+      "formulaSummary": "主副星芒、高斯核与时间闪烁组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "PuzzlePiece",
+      "name": "拼图纹理",
+      "category": "图案",
+      "classification": "ordinary",
+      "reason": "方形与四个凸凹圆的布尔/平滑运算并重复；常规几何拼图构造，具体比例仍需如实记录",
+      "peers": [
+        "RoundedRect",
+        "Grid"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "0979396f1abac64e0f13939193fe84603120af2311806083101de859f067562b",
+      "formulaSummary": "方块、凸圆、凹圆和平滑连接的固定拼图造型",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_smin",
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Knit",
+      "name": "针织",
+      "category": "图案",
+      "classification": "ordinary",
+      "reason": "两条线段组成 V 形后错列重复，固定三个点不等于已有独立插画资产",
+      "peers": [
+        "LineSegment",
+        "Herringbone"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "047e4b173219d7f2a2ae343b526347ca2621cbe6eed763a920f0cb3c81743daf",
+      "formulaSummary": "固定三个控制点形成V形编织",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_sdSeg",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "IslamicPattern",
+      "name": "伊斯兰几何",
+      "category": "图案",
+      "classification": "ordinary",
+      "reason": "旋转方框和菱形框的周期叠加，是几何装饰构造；名称不作为风格作品授权结论",
+      "peers": [
+        "Grid",
+        "DiamondGrid",
+        "WovenMesh"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "a325bd8546101ae69f39fadacb1321cd36a13bdf148d1cc63c5e25c38568bc8f",
+      "formulaSummary": "三方向方框与菱形框的具体叠加",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_rot2",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "CelticKnot",
+      "name": "凯尔特结",
+      "category": "图案",
+      "classification": "ordinary",
+      "reason": "随机翻转双圆弧和遮挡，和 Truchet 同类；不能承诺生成拓扑正确的凯尔特结",
+      "peers": [
+        "Truchet",
+        "Weave"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "389b795cade6c83bf83d63232146ba6df20c0b6b9e0873ca77eee7667b773632",
+      "formulaSummary": "随机双圆弧及特定遮挡权重",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_hash1",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Circuit",
+      "name": "电路走线",
+      "category": "图案",
+      "classification": "ordinary",
+      "reason": "格点随机选择横竖线与方节点，和 Maze、RandomBlocks 同类；不生成实际电路连接",
+      "peers": [
+        "Maze",
+        "RandomBlocks"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "f7fa234e7652773fa2d062f932ac9126f5a3bfff5303ce80dff97ef6ada2f935",
+      "formulaSummary": "随机横竖走线和方节点的具体组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_hash1",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Fingerprint",
+      "name": "指纹",
+      "category": "图案",
+      "classification": "ordinary",
+      "reason": "扰动的径向周期条带乘圆窗；是指纹状纹理，不是采集的个人指纹图",
+      "peers": [
+        "RadialWave",
+        "ContourLines"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "f9a3411af48a11eb515bce6c53b52e28d33df520f8b16ad396d66b7c50ba9276",
+      "formulaSummary": "FBM扰动径向条带与圆窗",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep",
+        "ref_sstepI"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "SunburstRays",
+      "name": "放射光芒",
+      "category": "图案",
+      "classification": "ordinary",
+      "reason": "单双角频调制后乘径向淡出并补核心；与已保留的 Sunburst 同类",
+      "peers": [
+        "Sunburst"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "059076bb4204a8405e1719d7e756a3b4ca490fabe6c297ed2ce064c4cad2f686",
+      "formulaSummary": "单双角频调制、淡出和中心光的具体权重",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "GridMosaic",
+      "name": "网格拼砖",
+      "category": "图案",
+      "classification": "ordinary",
+      "reason": "坐标扭曲后取细胞缝及格点明度，与 PavingStone、CrackedMud 同类",
+      "peers": [
+        "PavingStone",
+        "CrackedMud"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "b31626964eb9f2539cb31474466d3f9be54b762b2117b86b9068904864fc54b1",
+      "formulaSummary": "双FBM位移、细胞缝与随机面明度组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep",
+        "ref_voro2"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "StainedGlass",
+      "name": "彩窗铅条",
+      "category": "图案",
+      "classification": "ordinary",
+      "reason": "细胞边界窗与噪声表面相乘；与 VoronoiEdges、Gravel 同类，没有外部彩窗图片",
+      "peers": [
+        "VoronoiEdges",
+        "Gravel"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "8f06d1e0214563db3201a29f02f247f0e6e3588e4515977bc34223a36666270a",
+      "formulaSummary": "细胞缝、玻璃明度和纹理组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_hash2",
+        "ref_smoothstep",
+        "ref_vnoise",
+        "ref_voro2"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Camo",
+      "name": "迷彩",
+      "category": "图案",
+      "classification": "ordinary",
+      "reason": "噪声域扭曲、阈值映射与灰度量化，是程序纹理构造，不含具体军用迷彩图像",
+      "peers": [
+        "DomainWarp",
+        "GradientRamp"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "627b48c14d7840a4af6fbd3e2de4762a0fb0d9ca06cbe27be78e4c117f9c4c87",
+      "formulaSummary": "扭曲噪声、阈值与分级量化",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_rot2",
+        "ref_smoothstep",
+        "ref_warp"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Terrazzo",
+      "name": "水磨石",
+      "category": "图案",
+      "classification": "ordinary",
+      "reason": "邻格随机放置多边形碎粒并描边，与 Speckle、Splatter 同类",
+      "peers": [
+        "Speckle",
+        "Splatter",
+        "Polygon"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "c8b7f9c3bbbc4967feb88d123e45f5e0cbdc09b8bc8eb4f525caa832f14c0f2e",
+      "formulaSummary": "随机旋转多边形碎粒和边框组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_ngonDist",
+        "ref_rot2",
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Plaid",
+      "name": "苏格兰格纹",
+      "category": "图案",
+      "classification": "ordinary",
+      "reason": "横竖多组周期条纹及交叉权重，和 Weave、BasketWeave 同类；未据此判定任何特定格纹商标或版权",
+      "peers": [
+        "Weave",
+        "BasketWeave"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "45508a848587c008ca64aea48ab8a54888dd0ba3c8fe82d642f026d738fd32c1",
+      "formulaSummary": "横竖粗细多条纹及交叉权重的具体组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "ShapeGradient",
+      "name": "形状渐变",
+      "category": "渐变",
+      "classification": "math",
+      "reason": "按圆、方、多边形及星状半径求距离，再归一化并做幂映射；此前整项外置依据不足，星状分支的具体幂和限幅仍是代码选择",
+      "peers": [
+        "SDFShapeMask",
+        "GradientRamp"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "392ab8e4daf8c39dcec293fddb1f840f28c87b7e2133a9cad041a06096c36d7a",
+      "formulaSummary": "圆、方、星、多边形距离模式映射",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_ngonDist"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "MultiLinear",
+      "name": "多向线性",
+      "category": "渐变",
+      "classification": "math",
+      "reason": "对等分旋转方向的线性渐变取最小、最大或平均，属于线性映射和聚合",
+      "peers": [
+        "LinearGradient"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "a54e81dc41972ede21f503104c92381bc8b3d957ec5a2832586a97d1514ed111",
+      "formulaSummary": "多方向线性渐变取最小、最大或平均",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_rot2"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "ConeGradient",
+      "name": "角向渐变",
+      "category": "渐变",
+      "classification": "math",
+      "reason": "atan 极角归一化、角偏移、方向反转及径向相位偏移，是常规极坐标映射",
+      "peers": [
+        "Spiral",
+        "PolarFlow"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "ba3104e6ce934d32cc87422e8bce614b5800f29606809a899da0ec05ef510d96",
+      "formulaSummary": "极角归一化及方向、半径偏移",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "RadialSteps",
+      "name": "径向阶梯",
+      "category": "渐变",
+      "classification": "math",
+      "reason": "半径归一化后量化级数并在级间做 smoothstep，属于分段映射",
+      "peers": [
+        "RadialGradient",
+        "GradientRamp"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "6dc67c9ca0adc09b913f873714ab23360c2c72d934acc53645f57903ff17c94d",
+      "formulaSummary": "径向量化与级间平滑",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Clouds",
+      "name": "云",
+      "category": "自然材质",
+      "classification": "recipe",
+      "reason": "移动域扭曲和 Billow 乘固定上下高度窗，再做对比度整形；需确认这一整套云层配方的采用范围",
+      "peers": [
+        "Billow",
+        "DomainWarp"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "d9a5a9cabd12ff829faae66e74da77a57d17bf1d299afae8e9dd2954393a4351",
+      "formulaSummary": "扭曲翻滚噪声与高度窗口、对比度组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_billow",
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep",
+        "ref_warp"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Smoke",
+      "name": "烟",
+      "category": "自然材质",
+      "classification": "recipe",
+      "reason": "定向移动 FBM、域扭曲、圆窗和上升淡出组成烟雾配方；不代表这种通用思路本身受限制",
+      "peers": [
+        "Anisotropic",
+        "DomainWarp"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "43dc83ec640b39f2311516c3f032923c8acd3bce3aea538615e2324c3bcdd40a",
+      "formulaSummary": "定向噪声、径向窗与上升衰减组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep",
+        "ref_warp"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Fire",
+      "name": "火焰",
+      "category": "自然材质",
+      "classification": "recipe",
+      "reason": "移动扭曲噪声配合高度相关幂次和强度，形成特定火焰分布；继续记录源码来源待确认",
+      "peers": [
+        "DomainWarp",
+        "GradientRamp"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "d4df53f43d8409e5f3433857a17ffbbfc9f42b1f25378c36994527c75a3c0166",
+      "formulaSummary": "移动扭曲噪声与高度相关幂次造型",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_warp"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Rust",
+      "name": "锈蚀",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "两频噪声加权、阈值和亮度调制；与现有多尺度噪声材质同类",
+      "peers": [
+        "FBM",
+        "GrainNoise"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "25598f512d763e4079432f69950ec0f2a0cc925d63ebfde6d5160a2b0e73c547",
+      "formulaSummary": "双尺度噪声及腐蚀阈值组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "DirtGrunge",
+      "name": "污渍",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "两频 FBM 混合再做对比度与阈值映射，不能仅因固定权重整项外置",
+      "peers": [
+        "FBM",
+        "GradientRamp"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "c26995152f6d18b24ad6db0a2f362a7142591478ea46bbaf46f1f5013fff11e4",
+      "formulaSummary": "双尺度噪声加权与阈值组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Splotch",
+      "name": "水渍",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "格点随机圆的轮廓受噪声扰动，再按概率筛选；和 Blob、Speckle 同类",
+      "peers": [
+        "Blob",
+        "Speckle"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "d56da83939b1285e4ca15da14d83ac7cef9c00e5ceffaffa39f25cdd01e47693",
+      "formulaSummary": "随机圆及轮廓噪声组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Moss",
+      "name": "苔藓",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "细胞团块乘低频噪声阈值遮罩，与 CellularNoise、ErosionMask 同类",
+      "peers": [
+        "CellularNoise",
+        "ErosionMask"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "3c225b37f47c10c0ec2c59cc2f8be7ac7d3584ecf7c612cb4b5ab685a90b81aa",
+      "formulaSummary": "细胞团块和低频噪声遮罩组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep",
+        "ref_voro2"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Stone",
+      "name": "岩石",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "脊线和 FBM 混合后做灰度变换，与 Ridged、HammeredMetal 同类",
+      "peers": [
+        "Ridged",
+        "HammeredMetal"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "c1e39779cad4fb87787080e61713af48cda3abe6c382afc8aad52eb48dd3194a",
+      "formulaSummary": "脊线与FBM的特定权重组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_ridged"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Sand",
+      "name": "沙粒",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "低频域扭曲噪声和高频哈希颗粒混合，与 GrainNoise、PowderNoise 同类",
+      "peers": [
+        "GrainNoise",
+        "PowderNoise"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "c075dd57760e9b627a255801048034c913c4ad0204b937a8c0a015b1da2db812",
+      "formulaSummary": "扭曲底纹与哈希颗粒的特定权重",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_warp"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "SnowIce",
+      "name": "雪冰",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "雪模式是 Simplex 倍频与对比度；冰模式是随机旋转单元条带，属于噪声/瓷砖构造",
+      "peers": [
+        "Simplex",
+        "Crystal"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "3a3cfb51cdc758d5545589ee43e717c48a5bcf2dc067f475dae5dec6db0434e2",
+      "formulaSummary": "单纯形雪纹与随机旋转冰带两种模式",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmS",
+        "ref_hash1",
+        "ref_permute3",
+        "ref_rot2",
+        "ref_smoothstep",
+        "ref_snoise"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "FurGrass",
+      "name": "毛皮草",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "旋转、非等比缩放的 FBM 乘纵向权重，与 Anisotropic、Directional 同类",
+      "peers": [
+        "Anisotropic",
+        "Directional"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "c5a54426a46e5e6a97540c78682d7507f5da6ff99f90887dbc49f17df9711c34",
+      "formulaSummary": "旋转拉伸噪声与根部权重组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_rot2",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Leather",
+      "name": "皮革",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "细胞距离和高频噪声混合，与 CellularNoise、Gravel 同类",
+      "peers": [
+        "CellularNoise",
+        "Gravel"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "42658dfff673a582261595c77f8e666ac2a73c7a64b20adf285a9ee36ae231b1",
+      "formulaSummary": "细胞底纹与颗粒加权组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_voro2"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Paper",
+      "name": "纸张",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "拉伸 FBM 纤维与低频起伏相加，与 FiberPaper、Fibers 同类",
+      "peers": [
+        "FiberPaper",
+        "Fibers"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "5dc167c565360de427b9048df929797b991a2d82c859d803f8c42c62f237f85d",
+      "formulaSummary": "纤维噪声与低频起伏加权组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "ScaleKeratin",
+      "name": "甲壳纹",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "错行半圆鳞片加描边和径向明度，与 Scales 同类",
+      "peers": [
+        "Scales"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "dcab8ee403c3f14a2caee62b2ef7cc072d351d83960ec5f0954d108a0c6a96de",
+      "formulaSummary": "固定鳞片圆弧、边缘和明度模型",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Bark",
+      "name": "树皮",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "原始及扭曲脊线噪声混合后做幂映射，与 Ridged、DomainWarp 同类",
+      "peers": [
+        "Ridged",
+        "DomainWarp"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "c93d20e2fc64b8108d2f26ee8d3d868c1ec7112020d52be0b1531fb466ee9e5e",
+      "formulaSummary": "原始与扭曲脊线加权组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_ridged",
+        "ref_warp"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "RustPatch",
+      "name": "锈斑铁器",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "噪声阈值凹坑与颗粒调制底色，是多尺度材质映射",
+      "peers": [
+        "HammeredMetal",
+        "ErosionMask"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "d337cf3f315836726f59af751f78599a0ea208bb7f3ba53e435da60d3ce97ed9",
+      "formulaSummary": "多尺度噪声凹坑与锈斑组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "WeatheredPaint",
+      "name": "剥落漆面",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "扭曲 FBM 的阈值面与高频颗粒相加，与 DissolveNoise、GrainNoise 同类",
+      "peers": [
+        "DissolveNoise",
+        "GrainNoise"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "154b7e88fb60b4ca1c702cd691eb4fdc4caa999661bcb839d2e877e146ff26ae",
+      "formulaSummary": "双噪声位移、阈值与颗粒剥漆组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Sediment",
+      "name": "沉积层理",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "噪声位移水平分层后逐层哈希明度并加颗粒，与 DuneRipple、GrainNoise 同类",
+      "peers": [
+        "DuneRipple",
+        "GrainNoise"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "f09523e491a05e68f9d0a6c47a30f1863d23abb9cfc8d980c7c4c074171b03b7",
+      "formulaSummary": "扰动分层、逐层明度与颗粒组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "SnakeSkin",
+      "name": "蛇皮鳞纹",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "错行菱形距离窗乘逐格随机明度，与 DiamondGrid、Scales 同类",
+      "peers": [
+        "DiamondGrid",
+        "Scales"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "73142868a37d6e3410dde6156f90e8170a59774a8153044d2e7e95872631c1b6",
+      "formulaSummary": "错行菱形鳞片与随机明度",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "PebbleField",
+      "name": "卵石地",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "细胞距离窗口乘径向距离明度，与 Gravel、CellularNoise 同类",
+      "peers": [
+        "Gravel",
+        "CellularNoise"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "21905dc3a1f53596ad75f64dfa21de0f96bea029d6130a0624a0449bb66aa121",
+      "formulaSummary": "细胞卵石窗与距离阴影组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_hash2",
+        "ref_smoothstep",
+        "ref_voro2"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "CharredCoal",
+      "name": "焦炭",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "噪声等值线裂缝和湍流底色叠加，与 ContourLines、Turbulence 同类",
+      "peers": [
+        "ContourLines",
+        "Turbulence"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "4576b88d0d7a53791360325c37a78090b968f49bac31b3af54ddf55631e894d1",
+      "formulaSummary": "噪声等值裂缝与湍流底色组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmV",
+        "ref_hash1",
+        "ref_smoothstep",
+        "ref_turb",
+        "ref_vnoise"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "AshDeposit",
+      "name": "灰烬沉积",
+      "category": "自然材质",
+      "classification": "recipe",
+      "reason": "移动场、正弦积灰层和独立刷新颗粒组成效果，时间颗粒刷新不跟随同一速度参数",
+      "peers": [
+        "GrainNoise",
+        "DuneRipple"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "84cdf91faafec7d32746b2e7da1eb225433f7331bb09adf39788fa24c256601e",
+      "formulaSummary": "移动噪声、正弦积灰与时间颗粒组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmV",
+        "ref_hash1",
+        "ref_vnoise"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Snowflake",
+      "name": "雪花晶体",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "等角主臂、对称线段分枝与中心环，属于参数化径向分枝构造；与已保留的 FrostFern 应一致处理",
+      "peers": [
+        "FrostFern",
+        "LineSegment"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "f7d982a25b031f5c1a82899cb8929a37a9ecf9762b19b5ccb3049f67c87162be",
+      "formulaSummary": "多臂旋转、分枝线段和中心环组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_rot2",
+        "ref_sdSeg",
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "LensDirt",
+      "name": "镜头污渍",
+      "category": "自然材质",
+      "classification": "recipe",
+      "reason": "噪声底污渍、分组划痕、灰尘点和径向遮罩的整套配方",
+      "peers": [
+        "Scratch",
+        "Speckle"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "956201b44fe8bea605f7600c565a80908ea637510e8f10b4895e1ef517861dc1",
+      "formulaSummary": "噪声污渍、随机划痕及灰尘点组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_sdSeg",
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "RainGlass",
+      "name": "雨滴玻璃",
+      "category": "自然材质",
+      "classification": "recipe",
+      "reason": "随机下降水滴的内亮度、亮边和尾迹使用一组固定运动及混合关系",
+      "peers": [
+        "Speckle",
+        "RibbonFade"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "3afdc71c2222ba38a7658587089ae7d1eb079df8545f671bfe39581a0fc6ec62",
+      "formulaSummary": "下降水滴、亮边与尾迹的具体组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_hash2",
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "SaltFlat",
+      "name": "盐渍结晶",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "细胞距离差裂缝与最近距离颗粒的混合，与 VoronoiEdges、CellularNoise 同类",
+      "peers": [
+        "VoronoiEdges",
+        "CellularNoise"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "a799f00ee195f0eec309935a16f5bf96b0558663980ad406dfaf2afda4bc77ef",
+      "formulaSummary": "细胞裂缝与颗粒权重组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_hash2",
+        "ref_smoothstep",
+        "ref_voro2"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Feather",
+      "name": "羽绒纹理",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "主轴加沿纵向变化的双侧线段分枝，和 FrostFern 的参数化构造同类",
+      "peers": [
+        "FrostFern",
+        "LineSegment"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "8740cc344617ad5ea97f60abe31751dcd7f859935e61bc1864fe7aaf2a90773c",
+      "formulaSummary": "主轴与沿高度变化的双侧分枝",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_sdSeg",
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Asphalt",
+      "name": "沥青颗粒",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "邻格随机圆粒、亮度和噪声底层，与 Speckle、Gravel 同类",
+      "peers": [
+        "Speckle",
+        "Gravel"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "e0df2002ab1680db2cf9e67f5fdb98e20a4fd7eb3d44c2895dd4c40cb32323bb",
+      "formulaSummary": "邻域随机颗粒与噪声砂底组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Travertine",
+      "name": "洞石纹理",
+      "category": "自然材质",
+      "classification": "ordinary",
+      "reason": "扰动沉积条纹减随机椭圆孔洞，与 DuneRipple、Perforated 同类",
+      "peers": [
+        "DuneRipple",
+        "Perforated"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "cedede4c8c15d74d9d22f2dc2d3b687b70b2d0d3c21c9f342ac0c51502b046ef",
+      "formulaSummary": "沉积条纹和随机椭圆孔洞组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Glitch",
+      "name": "故障条纹",
+      "category": "数字",
+      "classification": "ordinary",
+      "reason": "按行哈希位移和时间分箱产生块门控，和随机块、像素溶解同类；并非对输入视频做故障处理",
+      "peers": [
+        "RandomBlocks",
+        "PixelDissolve"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "7a4717432cf8257731470e4b5174ba152286d4c0438abebc06746c218c997faf",
+      "formulaSummary": "随机行位移和时间块门控组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Matrix",
+      "name": "数字雨",
+      "category": "数字",
+      "classification": "ordinary",
+      "reason": "标准七段数字的矩形段编码与逐列移动尾迹；属于显示构造，无字体文件或电影图像；特定尾迹参数仍是代码选择",
+      "peers": [
+        "LedBar"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "c83f170785960a5345861fe248fea7ca8cd7dae4fe051a6969196b67a3b4f362",
+      "formulaSummary": "七段数字、按列运动与拖尾组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Hologram",
+      "name": "全息扫描",
+      "category": "数字",
+      "classification": "ordinary",
+      "reason": "正弦扫描线、高斯移动扫描带与逐行噪声相加，和 Scanlines、Halo 同类",
+      "peers": [
+        "Scanlines",
+        "Halo"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "347c28fd7404743ff99f09e5955caebb11f1750163471c461aa60c22ce9b41c4",
+      "formulaSummary": "扫描线、高斯扫描带和抖动组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "HudFrame",
+      "name": "HUD框线",
+      "category": "数字",
+      "classification": "recipe",
+      "reason": "方框、边缘刻度和多级亮度构成特定仪表布局；参数名的角段效果不能仅凭名称推定正确",
+      "peers": [
+        "Grid",
+        "CompassTick"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "52192d5e9a9da19b70235c067f75f91007b69b2e2543a652a65187565dadf70f",
+      "formulaSummary": "方框、角段和刻度组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "DataStream",
+      "name": "数据流",
+      "category": "数字",
+      "classification": "ordinary",
+      "reason": "逐行随机速度、周期线段与行门控，与 ConveyorArrows、RandomBlocks 同类",
+      "peers": [
+        "ConveyorArrows",
+        "RandomBlocks"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "32d20266323868ed2075332dd214b314bd4b1c7322fb4476d776014b666211e2",
+      "formulaSummary": "逐行随机速度、片段与门控组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "BinaryNoise",
+      "name": "二进制噪块",
+      "category": "数字",
+      "classification": "ordinary",
+      "reason": "格点随机选择圆环或竖条并按时间刷新，是基本形状的概率选择",
+      "peers": [
+        "RandomBlocks",
+        "Ring"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "881b612b7dc2463b54a80609f7c4bc2985da415be3829b104cbdcd5928f14743",
+      "formulaSummary": "随机环条形状及时间门控组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "ConcentricUI",
+      "name": "同心仪表",
+      "category": "数字",
+      "classification": "recipe",
+      "reason": "多圈固定起始半径/间隔、分段缺口和逐圈速度构成仪表配方",
+      "peers": [
+        "Concentric",
+        "CompassTick"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "98947bdc724ba517635a9936a4b13a5c76130de25096752293cb2ad45de3fbdb",
+      "formulaSummary": "分段仪表环、随机相位与速度组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "DiodeGrid",
+      "name": "LED点阵",
+      "category": "数字",
+      "classification": "ordinary",
+      "reason": "周期圆点、逐格随机点亮和行扫描调制，与 Dots、LedBar 同类",
+      "peers": [
+        "Dots",
+        "LedBar"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "25ca723076d4e6bf6ad1ad5cbff10a29499733adc261e5f9da900d6142b390d8",
+      "formulaSummary": "圆LED、随机点亮与扫描权重组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_hash1",
+        "ref_smoothstep",
+        "ref_sstepW"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "SlotVent",
+      "name": "百叶格栅",
+      "category": "数字",
+      "classification": "ordinary",
+      "reason": "周期圆角槽、纵向明度及方框描边，与 RoundedRect、Grid 同类",
+      "peers": [
+        "RoundedRect",
+        "Grid"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "7ec537cd12b8e37e7c6e6bcaa608259c1fbf6f9dd3cc10e291eb31f5123dcb44",
+      "formulaSummary": "圆角槽、明暗与框线组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_sdBox",
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "DataCode",
+      "name": "数据矩阵码",
+      "category": "数字",
+      "classification": "ordinary",
+      "reason": "随机模块加角落环标，是装饰矩阵纹样；不含数据编码或纠错，不是可扫码的二维码",
+      "peers": [
+        "QrBlocks",
+        "RandomBlocks"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "995603d9ddee5835fcf38fb14cffc6ca8bc1c620675a8c63f9c10466f63d87b1",
+      "formulaSummary": "随机方块与定位环的装饰矩阵",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_hash1"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Datamosh",
+      "name": "数据错流",
+      "category": "数字",
+      "classification": "ordinary",
+      "reason": "按行哈希门控和周期条段，属于程序故障纹样；不实现真实视频编码数据错流",
+      "peers": [
+        "RandomBlocks",
+        "PixelDissolve"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "3cc0bf65602f92d959bd3565a9b46727e96abfbf05176e5c9f32a840d0048461",
+      "formulaSummary": "逐行随机撕裂、条段和明度组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "RadarSweep",
+      "name": "雷达扫描",
+      "category": "数字",
+      "classification": "recipe",
+      "reason": "角向扫光、同心环与时间刷新的点组合成完整雷达仪表配方",
+      "peers": [
+        "ConeGradient",
+        "Concentric"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "9e040025143d0a7a6a4710a2ecf3574f15528aa06d3b609c441247178e8a9283",
+      "formulaSummary": "角向扫描、环和随机光点组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_smoothstep",
+        "ref_sstepI",
+        "ref_sstepW"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "RasterScan",
+      "name": "光栅扫描",
+      "category": "数字",
+      "classification": "ordinary",
+      "reason": "周期扫描线乘移动扫描带及噪声，和 Scanlines 的常规调制同类",
+      "peers": [
+        "Scanlines"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "a22143b3cbb89952b34fb62031b4e414b8b4613acc760779919c45b06b25a716",
+      "formulaSummary": "扫描线、扫描带和噪声组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "WaveformBar",
+      "name": "音频频谱条",
+      "category": "数字",
+      "classification": "ordinary",
+      "reason": "正弦与噪声控制逐柱高度，并用矩形窗裁切；不采样音频信号",
+      "peers": [
+        "LedBar"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "c01130df0c8ee78fb2df154b6635f0942222ba62dca74372cbafd7564d66c4aa",
+      "formulaSummary": "正弦与噪声控制的音频状条形组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "PixelSort",
+      "name": "列错位故障",
+      "category": "数字",
+      "classification": "ordinary",
+      "reason": "逐列随机位移、格点明度和二值化混合；不是对图像像素执行排序",
+      "peers": [
+        "PixelDissolve",
+        "RandomBlocks"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "b9bb9ea5981e98c60919d626a8dd49e18ef87c7466651218dc579a112bd05425",
+      "formulaSummary": "逐列随机错位、量化与明度组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_hash1"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "HexData",
+      "name": "六角数据格",
+      "category": "数字",
+      "classification": "recipe",
+      "reason": "六边框、随机中心点层及亮度组成特定数据格布局",
+      "peers": [
+        "HexGrid"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "8fd403eb82f6866bf9b79560b2306ccd4736de66fa0d39780a6b3634fab94f20",
+      "formulaSummary": "六边框和多层随机中心点组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_hexCell",
+        "ref_hexDist",
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "LightningBranch",
+      "name": "闪电分叉",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "主干噪声曲线和按主干采样产生的随机分枝，属于同类曲线图元扩展；与 Lightning 应一致考虑",
+      "peers": [
+        "Lightning"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "bc209360a305567cfa44d8cd089746f00d27d03c58d1cc7885c128c4893405c9",
+      "formulaSummary": "主干采样与随机分枝、方向、衰减组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Arc",
+      "name": "电弧",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "抛物线中心线受噪声扰动，再按时间哈希断裂，与 Lightning、Slash 同类",
+      "peers": [
+        "Lightning",
+        "Slash"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "9b2e3e54c88ab3046514f1c0a124bab8079ffbd13d99ebe45dc94ee4c3520e5f",
+      "formulaSummary": "噪声抛物线弧与随机断裂组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "ElectricField",
+      "name": "电场放射",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "极角分箱后施加噪声偏转和随机长度，是径向线段的程序构造",
+      "peers": [
+        "Lightning",
+        "CompassTick"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "c4b1ffc98f084bd4916a02f303a26d66ba290d3f3200df3b45bda583af3f594d",
+      "formulaSummary": "角向分箱噪声电弧与随机长度",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "EnergyBeam",
+      "name": "能量束",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "单轴核心、Gaussian 和外带取大值，与 Halo、LightSaber 的构造同类",
+      "peers": [
+        "Halo",
+        "Swipe"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "bed446b3b4d95437ad1f2f589e84cc8e5c90e057deddaa10eae22dc4355b17ab",
+      "formulaSummary": "核心、高斯光和外层光带组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "SpeedLines",
+      "name": "速度线",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "逐行随机起点、长度及移动的线段窗口，与 ConveyorArrows 同类",
+      "peers": [
+        "ConveyorArrows"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "4d0419430045645729c8c17cb87534f1c7c7882b52d2cde07cfbd04618f2e523",
+      "formulaSummary": "逐行随机长度、运动和强度组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "ImpactCrack",
+      "name": "冲击裂纹",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "极角分箱、噪声偏移和逐向长度产生裂纹，与 Lightning、ContourLines 同类",
+      "peers": [
+        "Lightning",
+        "ContourLines"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "b198ea2d8b844a3efdaa0bb0bd76a6ba496b52d4475a71d6fdb58feb86660e0b",
+      "formulaSummary": "角向分箱噪声裂纹与随机长度",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "ShockwaveFlat",
+      "name": "冲击波面",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "噪声位移的一维 Gaussian 加单侧尾部和端部窗，与 ShockwaveRing、Swipe 同类",
+      "peers": [
+        "ShockwaveRing",
+        "Swipe"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "32ce192c8a86db7e1ac9fe873d57be48c2f700099da3ad2b4774dd2725479ee1",
+      "formulaSummary": "噪声偏移高斯前沿和尾部组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "ExplosionSpikes",
+      "name": "爆炸尖刺",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "随机径向胶囊并集与中心圆，与 SpikeBurst、Splat 同类；重复性应在产品收录时单独评估",
+      "peers": [
+        "SpikeBurst",
+        "Splat"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "2465157dc3678e986cfb3a740d021333a14c6ad8d688c89d17df1b4946ace512",
+      "formulaSummary": "随机辐射胶囊和中心核组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_hash1",
+        "ref_sdSeg",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "SmokePuff",
+      "name": "烟团",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "噪声扰动圆轮廓乘密度场，与 Blob、FBM 同类",
+      "peers": [
+        "Blob",
+        "FBM"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "6bf5c94f9bab465b746395c67e1027e00f62b02f550f44fafe37ff0593d8c2cc",
+      "formulaSummary": "扰动圆轮廓与独立密度噪声组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "FlameShape",
+      "name": "火焰轮廓",
+      "category": "能量",
+      "classification": "recipe",
+      "reason": "高度收尖指数、移动二维噪声撕裂和顶端淡出形成特定火焰轮廓配方",
+      "peers": [
+        "Blob",
+        "RibbonTaper"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "738e99e01b19e92ee6bf0b7f509d8ff20245b2b45fe1f173e63070e6f3931cbb",
+      "formulaSummary": "高度收尖、移动噪声撕裂和顶端淡出",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "PlasmaBall",
+      "name": "等离子球",
+      "category": "能量",
+      "classification": "recipe",
+      "reason": "圆内噪声电弧、径向权重、底色和中心光组成球状特效配方",
+      "peers": [
+        "ElectricField",
+        "Halo"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "11751dde84b09b25fc2be026ecd3f7294ffb23125967a4f694c50718033935ee",
+      "formulaSummary": "球内随机电弧、中心光和边缘权重",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Portal",
+      "name": "传送门",
+      "category": "能量",
+      "classification": "recipe",
+      "reason": "角向内旋、移动噪声内填充与边环组成传送门配方",
+      "peers": [
+        "VortexGate",
+        "Ring"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "3d8ed4f03eb5260ef0e93c345aa5b583567982af42db2e6c2cd03880cbd03aea",
+      "formulaSummary": "角向扭曲噪声、内部填充与边环",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Fireflies",
+      "name": "萤火",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "邻格随机圆点的距离并集乘时间闪烁，与 BlueNoise、Speckle 同类；未模拟生物运动",
+      "peers": [
+        "BlueNoise",
+        "Speckle"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "fa4b9e1a6ce1c9a89daf31c1ea2ef27f85d69842addb2ff5b9bdbd835ef4f3bc",
+      "formulaSummary": "随机邻域圆点和闪烁组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Starfield",
+      "name": "星场",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "分层稀疏随机点与闪烁，是同一采样规则的多尺度重复；与 Speckle/GrainNoise 一致考虑",
+      "peers": [
+        "Speckle",
+        "GrainNoise"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "fca6aa8f09b2ae7f16217a8f9656aa2c8450e1ad277a3b398be9e6f39e0df639",
+      "formulaSummary": "三层随机星点和闪烁组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "MuzzleFlash",
+      "name": "枪口闪光",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "角向周期尖芒、中心圆和高斯光晕，是参数化星形与基本渐变叠加；未模拟火药燃烧",
+      "peers": [
+        "Star",
+        "Halo"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "ffb751a01b518741d38e075ff71773a1a63f37c7796ffda8e58d401d3a7f5199",
+      "formulaSummary": "角向尖芒、核心与高斯光晕",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "ChargeGather",
+      "name": "蓄能",
+      "category": "能量",
+      "classification": "recipe",
+      "reason": "极角/半径单纯形采样与独立核心、光晕、径向权重组成蓄能配方",
+      "peers": [
+        "Simplex",
+        "Halo"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "0cf91ca618c03f4f02b3d72fd8d316a9e7509ea974c1ace8ff521a87e87735a7",
+      "formulaSummary": "单纯形角向采样、核心与径向权重",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_permute3",
+        "ref_smoothstep",
+        "ref_snoise",
+        "ref_sstepI"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "IonStorm",
+      "name": "离子风暴",
+      "category": "能量",
+      "classification": "recipe",
+      "reason": "双向不同速度域扭曲、脊线和时间闪烁组成效果，具体时序关系未有分发依据",
+      "peers": [
+        "DomainWarp",
+        "Ridged"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "bdce17f44599ae15c16c1dd64360cab326d9f32c039042e8439143e9109a2b8d",
+      "formulaSummary": "双向移动域扭曲、脊线与闪烁",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmP",
+        "ref_hash1",
+        "ref_hash2",
+        "ref_hash2s",
+        "ref_perlin",
+        "ref_ridged"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "GeyserBurst",
+      "name": "间歇喷发",
+      "category": "能量",
+      "classification": "recipe",
+      "reason": "周期喷柱和五个随机粒子的不同运动关系构成喷发配方",
+      "peers": [
+        "Speckle",
+        "GradientRamp"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "38fc3fe949474aea582578720bc5a74d6a1afa71171428a7e999ec86550cc4ec",
+      "formulaSummary": "周期喷柱与五个随机运动粒子",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "AuroraVeil",
+      "name": "极光帷幕",
+      "category": "能量",
+      "classification": "recipe",
+      "reason": "两层不同尺度 Simplex 驱动帷幕相位，再做幂次与亮度调制；原理通用，但当前整套配方仍未确认",
+      "peers": [
+        "Simplex",
+        "Plasma"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "5bb09af0edec5098bac54a8ade9456676eaaf6f7be75fa9e1d607a7cfbb21450",
+      "formulaSummary": "双层移动单纯形噪声调制帷幕",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmS",
+        "ref_permute3",
+        "ref_snoise"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "AuraPulse",
+      "name": "光环脉冲",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "移动径向重复环乘圆形淡出并补中心圆，与 RingPulse 同类",
+      "peers": [
+        "RingPulse"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "a1005736c3a23319ae0bb3f5a2846b289cd5454e246694ec5800fa1f829403ba",
+      "formulaSummary": "移动径向环、淡出与中心光",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "ShieldHex",
+      "name": "能量护盾",
+      "category": "能量",
+      "classification": "recipe",
+      "reason": "六边格轮廓、面亮度、径向脉冲和圆窗构成护盾配方",
+      "peers": [
+        "HexGrid",
+        "RingPulse"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "a3fe5da46e83c397ef86a686b206ecb1d8397c83d2c48e83d9c4a7c8d0c02466",
+      "formulaSummary": "六边框、面亮度、径向脉冲与圆窗",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hexCell",
+        "ref_hexDist",
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "PyroBurst",
+      "name": "烟火爆发",
+      "category": "能量",
+      "classification": "recipe",
+      "reason": "随生命周期扩散的随机烟火头、尾和中心核具有特定时序/混合配方",
+      "peers": [
+        "Speckle",
+        "Sunburst"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "90e13adea73e791cecb0bd3cb705479f991e6cd170f0a9300a60b90dff3098af",
+      "formulaSummary": "随机角向烟火头、尾和中心光",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "TeslaCoil",
+      "name": "特斯拉线圈",
+      "category": "能量",
+      "classification": "ordinary",
+      "reason": "逐步随机游走形成折线，再用线段距离描边，是随机路径构造；没有额外线圈模型或物理求解",
+      "peers": [
+        "LineSegment",
+        "Lightning"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "330e6e73d0be31fc6dc203a3fee7aa63d5f0f39dd4185c7fcae8bd26d68e6c3b",
+      "formulaSummary": "多条随机分段电弧与时间分箱",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_sdSeg",
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "IonOrb",
+      "name": "离子球",
+      "category": "能量",
+      "classification": "recipe",
+      "reason": "外环、双层中心核和摆动径向短线组成完整离子球配方",
+      "peers": [
+        "Ring",
+        "CompassTick"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "e8e4535269cec91276e4d58f454697518c8c23f543b2eb2919428d3266fc8d97",
+      "formulaSummary": "外环、中心核和摆动径向线段",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fillD",
+        "ref_sdSeg",
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "Singularity",
+      "name": "奇点",
+      "category": "能量",
+      "classification": "recipe",
+      "reason": "扁平吸积环、角向运动、暗核和边环组成特定空间表现；不是物理黑洞渲染",
+      "peers": [
+        "Ring",
+        "Spiral"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "63ce023c0d237fb856bfa41593baee89aae0195b7ad42064198c975dca6074e6",
+      "formulaSummary": "扁平吸积环、角向波、黑核和边环",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_smoothstep",
+        "ref_strokeD"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "RibbonCore",
+      "name": "双层拖尾",
+      "category": "拖尾",
+      "classification": "ordinary",
+      "reason": "横向核心和外带乘纵向保持段/幂衰减，与 RibbonFade、RibbonTaper 同类",
+      "peers": [
+        "RibbonFade",
+        "RibbonTaper"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "979c3de5d8dbf2bbdea9e04c14313149098e5ce8fbb85083f7d6c39caf9feb0b",
+      "formulaSummary": "核心、外光带与保持段衰减组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "RibbonStreak",
+      "name": "能量流线",
+      "category": "拖尾",
+      "classification": "ordinary",
+      "reason": "周期纵线乘移动正弦与纵向幂衰减，与 Scanlines、RibbonFade 同类",
+      "peers": [
+        "Scanlines",
+        "RibbonFade"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "7ef7943004b9fb100493ba7a7c15f3cfb80594112430e80974241933d9e702ee",
+      "formulaSummary": "重复纵线、移动正弦与纵向衰减组合",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "RibbonFilament",
+      "name": "等离子丝",
+      "category": "拖尾",
+      "classification": "ordinary",
+      "reason": "随机多股噪声摆动线的距离并集乘纵向淡出，与 Lightning、RibbonFade 同类",
+      "peers": [
+        "Lightning",
+        "RibbonFade"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "5ff2d561a72b80e9c900a3959f91dcf7343606a9902d72f0e329472a9f73ed3b",
+      "formulaSummary": "随机多股噪声摆动丝线",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmV",
+        "ref_hash1",
+        "ref_smoothstep",
+        "ref_vnoise"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "CometRibbon",
+      "name": "彗星尾",
+      "category": "拖尾",
+      "classification": "recipe",
+      "reason": "端部头核、锥形尾、FBM 尘埃和哈希颗粒共同组成彗星配方",
+      "peers": [
+        "RibbonTaper",
+        "Speckle"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "e00cc580bf223b2744646cf1b206e73ceb7bfc8e1c73db6913fbc40cea293081",
+      "formulaSummary": "头核、锥尾、噪声尘埃与颗粒组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_fbmV",
+        "ref_hash1",
+        "ref_smoothstep",
+        "ref_vnoise"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "LightSaber",
+      "name": "光刃",
+      "category": "拖尾",
+      "classification": "ordinary",
+      "reason": "两级横向光带与端部淡出相乘，与 RibbonFade、EnergyBeam 同类",
+      "peers": [
+        "RibbonFade",
+        "Halo"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "2e30ea440303ea00b2818e7c5d21b34e3ba76af0ab046ac19acd0333101c684d",
+      "formulaSummary": "核心光刃、外光与端部淡出组合",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "FlameRibbon",
+      "name": "火焰拖尾",
+      "category": "拖尾",
+      "classification": "ordinary",
+      "reason": "沿纵向收尖的窗口乘流动 FBM 与幂次权重，和 RibbonTaper、Directional 同类；名称不等于物理火焰",
+      "peers": [
+        "RibbonTaper",
+        "Directional"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "9ee007f32ed5b789272116fd043f18404adb6aa9b206b04790c4b8ffba4efc0a",
+      "formulaSummary": "收尖横窗、移动噪声与高度热度",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmV",
+        "ref_hash1",
+        "ref_smoothstep",
+        "ref_vnoise"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "HazeRibbon",
+      "name": "烟雾拖尾",
+      "category": "拖尾",
+      "classification": "ordinary",
+      "reason": "纵向扩散坐标下的移动噪声阈值乘横纵羽化，和 Anisotropic、RibbonFade 同类",
+      "peers": [
+        "Anisotropic",
+        "RibbonFade"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "9093292347feffc9a41a87bb52b712ee2bfee75048629a399782bafd564af3fb",
+      "formulaSummary": "扩散坐标、移动噪声与边缘羽化",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_fbmV",
+        "ref_hash1",
+        "ref_smoothstep",
+        "ref_vnoise"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "EmberRibbon",
+      "name": "火星拖尾",
+      "category": "拖尾",
+      "classification": "ordinary",
+      "reason": "移动格点稀疏圆点乘纵向衰减，和 Speckle、RibbonFade 同类",
+      "peers": [
+        "Speckle",
+        "RibbonFade"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "40e6bcda1473c5f8a2f605c69fa01a37ee97085b1bf5574d68affef2c54c2869",
+      "formulaSummary": "移动随机火星与高度衰减",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_hash2",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "ClawRake",
+      "name": "爪痕",
+      "category": "拖尾",
+      "classification": "ordinary",
+      "reason": "多条二次弯曲、收尖的距离条带，与 Slash、RibbonTaper 同类；逐股偏移是现有代码选择",
+      "peers": [
+        "Slash",
+        "RibbonTaper"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "ae8f8cd7d8f82fea5254bb4ad39300c6310824bc49c7cab6fd461c1f071a2255",
+      "formulaSummary": "多条随机弯曲收尖爪痕",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "RibbonWave",
+      "name": "流动光带",
+      "category": "拖尾",
+      "classification": "ordinary",
+      "reason": "横向核心/外带乘移动正弦调制和纵向淡出，与 RibbonFade、Waves 同类",
+      "peers": [
+        "RibbonFade",
+        "Waves"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "ce00d816894bf5b6786ef61cd79b3c669d1936e61e69c760bfb876c2e07c80f4",
+      "formulaSummary": "核心、外层、移动波与纵向衰减",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "RibbonWake",
+      "name": "水尾迹",
+      "category": "拖尾",
+      "classification": "ordinary",
+      "reason": "两条对称斜线的距离窗、余弦波纹和纵向衰减，是参数化 V 形条带",
+      "peers": [
+        "LineSegment",
+        "RibbonFade"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "93af6062c91be80fda67ebe44512c2c5416811cacb1a33d11f21034f8673c8b4",
+      "formulaSummary": "V形尾迹、局部余弦与纵向衰减",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "WindStreak",
+      "name": "风痕",
+      "category": "拖尾",
+      "classification": "ordinary",
+      "reason": "按列随机起点、有限长度的直线窗乘纵向幂衰减，与 Speckle、RibbonFade 同类",
+      "peers": [
+        "Speckle",
+        "RibbonFade"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "095de11ff3428ca7e85e704a90330e6231a55b40dd60b98b4837bc5cd2647fc8",
+      "formulaSummary": "分列随机起点线段与纵向权重",
+      "referenceComparison": "去注释、包装和前缀后主体token相同",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    },
+    {
+      "id": "RibbonSpark",
+      "name": "火花拖尾",
+      "category": "拖尾",
+      "classification": "ordinary",
+      "reason": "格点稀疏圆点、时间门控和纵向衰减，与 Speckle、RibbonFade 同类",
+      "peers": [
+        "Speckle",
+        "RibbonFade"
+      ],
+      "proposedAction": "已撤回旧收录建议，按原实现保留",
+      "currentBuiltin": true,
+      "formulaChanged": false,
+      "formulaSha256": "9478ccf979c8cbe53f9ee3ff407f27010e6fb393db9e553e3c7d1938bbf7bc9c",
+      "formulaSummary": "随机火星、时间门控与纵向衰减",
+      "referenceComparison": "同名ID，但主体token不同；差异不证明独立创作",
+      "approvedSharedDependencies": [
+        "ref_hash1",
+        "ref_hash2",
+        "ref_smoothstep"
+      ],
+      "sourceRedistributionLicenseVerified": false,
+      "interpretation": "构造类型与产品收录建议，不是侵权判断或已获授权结论",
+      "appliedAction": "已按原实现恢复内置"
+    }
+  ]
+}

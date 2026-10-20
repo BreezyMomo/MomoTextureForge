@@ -19,6 +19,15 @@ test('selected builtins include self-contained formulas and repeatable IDs/bytes
 test('all builtin graphics export with one dependency bundle per resource',async()=>{
  const records=await Promise.all(CATALOG.filter(p=>!p.id.startsWith('asset_')&&libraryVisible(p.id)).map(meta));
  const zip=await exportGraphicsLibrary(records,()=>{}),files=await decodeZIP(zip),index=JSON.parse(new TextDecoder().decode(files.get('library.json')));
- assert.equal(index.entries.length,records.length);assert.ok(records.length>256);
+ assert.equal(index.entries.length,records.length);assert.equal(records.length,284);
  for(const entry of index.entries){const pack=await readResourcePack(files.get(entry.file));assert.ok(pack.payload.root);pack.rollback();}
+});
+
+test('resource export remains unbounded by the builtin catalog size or a 256-entry cap',async()=>{
+ const circle=await meta(CATALOG.find(p=>p.id==='Circle'));
+ const records=Array.from({length:257},(_,i)=>({...circle,resourceId:'00000000-0000-4000-8000-'+String(i+1).padStart(12,'0'),name:'circle '+i}));
+ const zip=await exportGraphicsLibrary(records,()=>{}),files=await decodeZIP(zip);
+ const index=JSON.parse(new TextDecoder().decode(files.get('library.json')));
+ assert.equal(index.entries.length,257);
+ assert.equal(new Set(index.entries.map(e=>e.file)).size,257);
 });

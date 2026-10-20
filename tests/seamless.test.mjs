@@ -88,7 +88,7 @@ test("animation is evaluated before snapping; geometry and generic modes preserv
   );
   assert.deepEqual(blend.uv, [8, 37, 2, 2, 1, 30, 2]);
   assert.equal(blend.kind, 0);
-  assert.equal(seamlessKind("Smoke"), 0);
+  assert.equal(seamlessKind("Fluid"), 0);
   assert.equal(seamlessKind("FBM"), 1);
 });
 

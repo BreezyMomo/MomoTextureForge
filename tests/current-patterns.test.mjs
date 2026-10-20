@@ -4,7 +4,8 @@ import {BY_ID} from '../web/catalog.js';
 import {BUILTIN} from '../web/definition-runtime.js';
 import {fragmentGLSL} from '../web/renderer.js';
 import {newLayer,sanitize,defaults} from '../web/state.js';
-test('branched lightning has a distinct formula from the main bolt',()=>{
+test('main and branched lightning remain distinct original builtins',()=>{
+  assert.ok(BY_ID.has('Lightning'));
   assert.ok(BY_ID.has('LightningBranch'));
   assert.notEqual(BUILTIN.sources[BY_ID.get('LightningBranch').definition.outputs.scalar.file],BUILTIN.sources[BY_ID.get('Lightning').definition.outputs.scalar.file]);
 });
@@ -29,7 +30,7 @@ test('vector and normal renders include only the required dependencies',()=>{
 });
 
 test('controls remain meaningful and arrow/fresnel silhouettes remain correct',()=>{
-  for(const [id,labels] of Object.entries({ChainArmor:['错行'],InkBleed:['墨团数'],DataCode:['定位标','模块圆角']})){
+  for(const [id,labels] of Object.entries({ChainArmor:['错行'],InkBleed:['墨团数']})){
     for(const label of labels)assert.ok(!BY_ID.get(id).parameters.some(p=>p.label===label),`${id}: ${label}`);
   }
   const formula=id=>BUILTIN.sources[BY_ID.get(id).definition.outputs.scalar.file];

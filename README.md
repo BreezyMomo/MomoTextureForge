@@ -45,6 +45,8 @@ npm start -- --port 8799
 
 资源包携带公式、图片及所需依赖，适合备份与分享。远程图库支持多个 HTTP(S) 目录订阅，远程服务需允许跨域；下载资源后可离线使用。
 
+内置图库提供 284 个基础图形、纹样、噪声与矢量资源；其他图形可从独立图库导入。内置范围和维护说明见[内置图形说明](docs/builtin-release.md)。
+
 详细说明：[本地图形库](LOCAL_GRAPHICS_LIBRARY.md) · [资源包格式](RESOURCE-PACK.md) · [远程图库与本地管理器](REMOTE_LIBRARIES.md)
 
 ## 节点、排列与合成

@@ -24,7 +24,7 @@ test('curated presets use current definitions and preserve active values through
 });
 
 test('reviewed names and data-map categories match their purpose',()=>{
- for(const [id,name,category] of [['RadialStreak','扰动环纹','radial'],['Thorn','尖峰渐变','shape'],['PuzzlePiece','拼图纹理','pattern'],['Curl','旋度流场','vector']]){
+ for(const [id,name,category] of [['Thorn','尖峰渐变','shape'],['Curl','旋度流场','vector']]){
   assert.equal(BY_ID.get(id).zh,name);assert.equal(BY_ID.get(id).definition.category,category);
  }
  const square=libraryVariantNode('square-gradient');assert.equal(square.type,'ShapeGradient');assert.deepEqual(square.params.slice(0,3),[1,.62,1]);

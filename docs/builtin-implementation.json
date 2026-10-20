@@ -1,0 +1,1739 @@
+{
+  "schema": "momo.builtin-implementation/v1",
+  "reviewBaseline": "ae6348135d2a6bd8c1a934f40fc395bbb3931440",
+  "sharedLibraries": {
+    "math-v1": {
+      "sha256": "ce1319f095031752054c919cc0752196a5e78b491850c7b200d1970dcacc1367",
+      "bytes": 14256,
+      "projectDecision": "按用户决定整库保留，保留现有署名和许可文本"
+    },
+    "natural-wood-v1": {
+      "sha256": "1ec0ceb8688c050c876f8fb69e854a07bd799b4c0bf043ab69c0e2a41a3d9522",
+      "bytes": 737,
+      "projectDecision": "按用户决定整库保留，保留现有署名和许可文本"
+    },
+    "periodic-v1": {
+      "sha256": "4c4dffbad11652c463c517341f503042771c3d3f4d508a2f113f6bec43ecf6c4",
+      "bytes": 2393,
+      "projectDecision": "按用户决定整库保留，保留现有署名和许可文本"
+    },
+    "reference-v1": {
+      "sha256": "b5753f52ad60e802e6f251b824f6f61ff95edd239786b5dcb8e31e201653173e",
+      "bytes": 14486,
+      "projectDecision": "按用户决定整库保留，保留现有署名和许可文本"
+    },
+    "vector-v1": {
+      "sha256": "9836dc80a133df901f8771986468f14380e9da22ce7ab3f613d59cf3eb669e04",
+      "bytes": 1454,
+      "projectDecision": "按用户决定整库保留，保留现有署名和许可文本"
+    }
+  },
+  "patterns": [
+    {
+      "id": "Circle",
+      "status": "retained-original",
+      "previousSha256": "e5c632661db6756e98ba949310b8dd6c89a983d7adb3a931dd8a9586a4ae4ed4",
+      "sha256": "e5c632661db6756e98ba949310b8dd6c89a983d7adb3a931dd8a9586a4ae4ed4"
+    },
+    {
+      "id": "Ring",
+      "status": "retained-original",
+      "previousSha256": "2ea7af4aba91222b101a0d848f431f9086086345ec1803a8024a0704c5b913f3",
+      "sha256": "2ea7af4aba91222b101a0d848f431f9086086345ec1803a8024a0704c5b913f3"
+    },
+    {
+      "id": "RadialGradient",
+      "status": "retained-original",
+      "previousSha256": "73b47538abf41b3e55126df2720ad15f1bd3a307a5600b4811612e60eba3768d",
+      "sha256": "73b47538abf41b3e55126df2720ad15f1bd3a307a5600b4811612e60eba3768d"
+    },
+    {
+      "id": "Vignette",
+      "status": "retained-original",
+      "previousSha256": "ba6e00ea92b77ae91717f9158f85e532a2211e01b08a7d4b8a764e23a83cc8de",
+      "sha256": "ba6e00ea92b77ae91717f9158f85e532a2211e01b08a7d4b8a764e23a83cc8de"
+    },
+    {
+      "id": "Sunburst",
+      "status": "retained-original",
+      "previousSha256": "aa1ebfb21f932c49e89bb41628736a5bb6c1e1ccded4655256f6dfcf7428bc03",
+      "sha256": "aa1ebfb21f932c49e89bb41628736a5bb6c1e1ccded4655256f6dfcf7428bc03"
+    },
+    {
+      "id": "Concentric",
+      "status": "retained-original",
+      "previousSha256": "165c9d970379ce544a120d7eb8aebf976389872f0aec3b418d24b1ed20105654",
+      "sha256": "165c9d970379ce544a120d7eb8aebf976389872f0aec3b418d24b1ed20105654"
+    },
+    {
+      "id": "Spiral",
+      "status": "retained-original",
+      "previousSha256": "42407cf4c0a368e0e7586c41894813694eeb02c5d589f65718e6688c4bff5501",
+      "sha256": "42407cf4c0a368e0e7586c41894813694eeb02c5d589f65718e6688c4bff5501"
+    },
+    {
+      "id": "LensFlare",
+      "status": "retained-original",
+      "previousSha256": "e23556cd3461c04ed61b09fea73db77041f3d4cdf61262e7e5918c46b8dd08fc",
+      "sha256": "e23556cd3461c04ed61b09fea73db77041f3d4cdf61262e7e5918c46b8dd08fc"
+    },
+    {
+      "id": "ShockwaveRing",
+      "status": "retained-original",
+      "previousSha256": "c81c15795b6749893ddd938bac91af150545323c809ba36601daf075b25df81f",
+      "sha256": "c81c15795b6749893ddd938bac91af150545323c809ba36601daf075b25df81f"
+    },
+    {
+      "id": "LightStreak",
+      "status": "retained-original",
+      "previousSha256": "a54fb25c1918f584bb4ecb66f598d1a013c733f3f28102af606c72e0804b5c2e",
+      "sha256": "a54fb25c1918f584bb4ecb66f598d1a013c733f3f28102af606c72e0804b5c2e"
+    },
+    {
+      "id": "ArcRing",
+      "status": "retained-original",
+      "previousSha256": "8d400ff54ade531f05de9df4203b1fffe7133803354c6d8cc77214797e1e8fd4",
+      "sha256": "8d400ff54ade531f05de9df4203b1fffe7133803354c6d8cc77214797e1e8fd4"
+    },
+    {
+      "id": "PieSlice",
+      "status": "retained-original",
+      "previousSha256": "59e5cf5eef4f33c83b4157d74b0f123c2bc7463ad14b02022606191843547359",
+      "sha256": "59e5cf5eef4f33c83b4157d74b0f123c2bc7463ad14b02022606191843547359"
+    },
+    {
+      "id": "NovaBurst",
+      "status": "retained-original",
+      "previousSha256": "1c0eff06de3f5af6ce40e27c89c9ea0e9ae2b4552285b37454bf0694063ae84f",
+      "sha256": "1c0eff06de3f5af6ce40e27c89c9ea0e9ae2b4552285b37454bf0694063ae84f"
+    },
+    {
+      "id": "RadialStreak",
+      "status": "retained-original",
+      "previousSha256": "fa24849ee6f72073447c2df7e193f9153a4502da73dd7e7e8639cd6e071315a8",
+      "sha256": "fa24849ee6f72073447c2df7e193f9153a4502da73dd7e7e8639cd6e071315a8"
+    },
+    {
+      "id": "IrisBlades",
+      "status": "retained-original",
+      "previousSha256": "efb66c4fccb0f7adc7fcc10999615f5d086bc9644a9fbe1bad2d088d4eb43ae0",
+      "sha256": "efb66c4fccb0f7adc7fcc10999615f5d086bc9644a9fbe1bad2d088d4eb43ae0"
+    },
+    {
+      "id": "RingPulse",
+      "status": "retained-original",
+      "previousSha256": "b23a97c35cd0f408151d8311ef3533a465785e5d5e3e27002dff98c6b66a98ee",
+      "sha256": "b23a97c35cd0f408151d8311ef3533a465785e5d5e3e27002dff98c6b66a98ee"
+    },
+    {
+      "id": "Halo",
+      "status": "retained-original",
+      "previousSha256": "f1873f0816a7780f95aeac99cadc3d89de95e62c47f12b575c1ccf8ab06f8e48",
+      "sha256": "f1873f0816a7780f95aeac99cadc3d89de95e62c47f12b575c1ccf8ab06f8e48"
+    },
+    {
+      "id": "CompassTick",
+      "status": "retained-original",
+      "previousSha256": "4a27fb7e73832a10e9eefa815f56b9a4df68cbd7674bf485e572657ef849d230",
+      "sha256": "4a27fb7e73832a10e9eefa815f56b9a4df68cbd7674bf485e572657ef849d230"
+    },
+    {
+      "id": "RadialBlurMask",
+      "status": "retained-original",
+      "previousSha256": "f3b741958b75e2b797122069a240523ada0fff71a348d02bf5905ac0f189697f",
+      "sha256": "f3b741958b75e2b797122069a240523ada0fff71a348d02bf5905ac0f189697f"
+    },
+    {
+      "id": "Bokeh",
+      "status": "retained-original",
+      "previousSha256": "6f50ee719bb7db3cfc5ec4df201cbdcf264a6c1e335e3043853232d797652230",
+      "sha256": "6f50ee719bb7db3cfc5ec4df201cbdcf264a6c1e335e3043853232d797652230"
+    },
+    {
+      "id": "AnamorphicFlare",
+      "status": "retained-original",
+      "previousSha256": "9372fb104975ffa29737aa94df05fd29d577adc5716d9adaa6f015119aea0023",
+      "sha256": "9372fb104975ffa29737aa94df05fd29d577adc5716d9adaa6f015119aea0023"
+    },
+    {
+      "id": "GodRay",
+      "status": "retained-original",
+      "previousSha256": "1463e62eb7706e9a4a9f1639d79b2e91ff230c709469fabefd163375d2d360bb",
+      "sha256": "1463e62eb7706e9a4a9f1639d79b2e91ff230c709469fabefd163375d2d360bb"
+    },
+    {
+      "id": "RadialWave",
+      "status": "retained-original",
+      "previousSha256": "35f302eb7b0d2ca2d55c327ef22bb8406b5da4713bbec6a973ec9e041ebdd1ef",
+      "sha256": "35f302eb7b0d2ca2d55c327ef22bb8406b5da4713bbec6a973ec9e041ebdd1ef"
+    },
+    {
+      "id": "LensBlur",
+      "status": "retained-original",
+      "previousSha256": "10e736cb5413c7b5cb8ee100d71d555ec01b32dcd93a3f0e223f94141a2661b0",
+      "sha256": "10e736cb5413c7b5cb8ee100d71d555ec01b32dcd93a3f0e223f94141a2661b0"
+    },
+    {
+      "id": "ChromaticEdge",
+      "status": "retained-original",
+      "previousSha256": "256d46aca89e605b215364a689d5ee4d8fbfd3b4ff30c7b9503e56057cba915f",
+      "sha256": "256d46aca89e605b215364a689d5ee4d8fbfd3b4ff30c7b9503e56057cba915f"
+    },
+    {
+      "id": "Polygon",
+      "status": "retained-original",
+      "previousSha256": "a27c0f2f81ac318ab0d4e43073621e161e13bbc93ad6870a1fb45044d01d17fe",
+      "sha256": "a27c0f2f81ac318ab0d4e43073621e161e13bbc93ad6870a1fb45044d01d17fe"
+    },
+    {
+      "id": "Star",
+      "status": "retained-original",
+      "previousSha256": "9c02129c0c973bde5573fa38598ac3d1219dc4ecc3a01ec0ad77eafb30cbe00f",
+      "sha256": "9c02129c0c973bde5573fa38598ac3d1219dc4ecc3a01ec0ad77eafb30cbe00f"
+    },
+    {
+      "id": "RoundedRect",
+      "status": "retained-original",
+      "previousSha256": "99d52c86df05f4b36fe3a2605a0a570b7932602ace7c395177d8c372339c87ac",
+      "sha256": "99d52c86df05f4b36fe3a2605a0a570b7932602ace7c395177d8c372339c87ac"
+    },
+    {
+      "id": "Cross",
+      "status": "retained-original",
+      "previousSha256": "46f309d49a0f7735cc73548cd52938d3816645df44d18b9d3bb0322c95a12fed",
+      "sha256": "46f309d49a0f7735cc73548cd52938d3816645df44d18b9d3bb0322c95a12fed"
+    },
+    {
+      "id": "Crescent",
+      "status": "retained-original",
+      "previousSha256": "d9bf690af6db18100a516329cc424cea903def668935ce88444013834d26b15b",
+      "sha256": "d9bf690af6db18100a516329cc424cea903def668935ce88444013834d26b15b"
+    },
+    {
+      "id": "Gear",
+      "status": "retained-original",
+      "previousSha256": "6777a4f40f727a2fe2d277eb83ecb962d41a2f0b4cb625118c349bcfd361bbcc",
+      "sha256": "6777a4f40f727a2fe2d277eb83ecb962d41a2f0b4cb625118c349bcfd361bbcc"
+    },
+    {
+      "id": "Ellipse",
+      "status": "retained-original",
+      "previousSha256": "ca62928fae5a56701cfd4d7dcd4f35e54ed31ed2cb1e1f0ed4c32c20c9234bd1",
+      "sha256": "ca62928fae5a56701cfd4d7dcd4f35e54ed31ed2cb1e1f0ed4c32c20c9234bd1"
+    },
+    {
+      "id": "Capsule",
+      "status": "retained-original",
+      "previousSha256": "61df81af6327b6bcbe9ab51f95c8275ffed97443b28f6cc38c9f7d8c1fe901da",
+      "sha256": "61df81af6327b6bcbe9ab51f95c8275ffed97443b28f6cc38c9f7d8c1fe901da"
+    },
+    {
+      "id": "RoundedPolygon",
+      "status": "retained-original",
+      "previousSha256": "57b1d8ff44bc80b45342232108a3b549d5634bb8fa75159e5904055edbdc1008",
+      "sha256": "57b1d8ff44bc80b45342232108a3b549d5634bb8fa75159e5904055edbdc1008"
+    },
+    {
+      "id": "Squircle",
+      "status": "retained-original",
+      "previousSha256": "1312f24c66936027c3d68cd335dc26f5e1e3937e43f90034c40fb4cd1e318959",
+      "sha256": "1312f24c66936027c3d68cd335dc26f5e1e3937e43f90034c40fb4cd1e318959"
+    },
+    {
+      "id": "Bell",
+      "status": "retained-original",
+      "previousSha256": "00a1aeebbbef90e7b18023e86c7f6d94bb655ee5aba42bfc3037e63632e53fe5",
+      "sha256": "00a1aeebbbef90e7b18023e86c7f6d94bb655ee5aba42bfc3037e63632e53fe5"
+    },
+    {
+      "id": "ConeParaboloid",
+      "status": "retained-original",
+      "previousSha256": "b52942e60e29f6cbf0660039f2fd207cee780401749d6019157c73818b6aceaf",
+      "sha256": "b52942e60e29f6cbf0660039f2fd207cee780401749d6019157c73818b6aceaf"
+    },
+    {
+      "id": "Thorn",
+      "status": "retained-original",
+      "previousSha256": "e14a9ae3f26c95dca14a90febade57ce16d16be641466a95b0318f27cd0845c0",
+      "sha256": "e14a9ae3f26c95dca14a90febade57ce16d16be641466a95b0318f27cd0845c0"
+    },
+    {
+      "id": "Blob",
+      "status": "retained-original",
+      "previousSha256": "fe9f3780f762d6d767ddd4ff93cc0fc8214b61fca513945d2e98859cb7ddd34f",
+      "sha256": "fe9f3780f762d6d767ddd4ff93cc0fc8214b61fca513945d2e98859cb7ddd34f"
+    },
+    {
+      "id": "CloudShape",
+      "status": "retained-original",
+      "previousSha256": "b22df147e3eb868119f6cb7cfbfebfb9f07eb7c3e1753a1eff028b2a8822d4d0",
+      "sha256": "b22df147e3eb868119f6cb7cfbfebfb9f07eb7c3e1753a1eff028b2a8822d4d0"
+    },
+    {
+      "id": "Splat",
+      "status": "retained-original",
+      "previousSha256": "45a1ad6268e20ec46b9df0d937fd21e95429c4df32c225434ab1702e353820bd",
+      "sha256": "45a1ad6268e20ec46b9df0d937fd21e95429c4df32c225434ab1702e353820bd"
+    },
+    {
+      "id": "HandDrawn",
+      "status": "retained-original",
+      "previousSha256": "bda85e170ea052bcfd000a4bf64c72ff93c99b749655be415b23916d2dee1f3f",
+      "sha256": "bda85e170ea052bcfd000a4bf64c72ff93c99b749655be415b23916d2dee1f3f"
+    },
+    {
+      "id": "HeartLeafTeardrop",
+      "status": "retained-original",
+      "previousSha256": "867cfd25eb3512ee0d5fedda64928c9160601168a28a8f55c21b4f42e68cee9e",
+      "sha256": "867cfd25eb3512ee0d5fedda64928c9160601168a28a8f55c21b4f42e68cee9e"
+    },
+    {
+      "id": "BeveledShape",
+      "status": "retained-original",
+      "previousSha256": "50253b95b44b793afcf5c72e827b0d87b761153640075e78727c966c5f06020a",
+      "sha256": "50253b95b44b793afcf5c72e827b0d87b761153640075e78727c966c5f06020a"
+    },
+    {
+      "id": "FragmentChip",
+      "status": "retained-original",
+      "previousSha256": "29ff92ecebce55dc37b2cac3f3969a8c1554901c11841980f25831e653484151",
+      "sha256": "29ff92ecebce55dc37b2cac3f3969a8c1554901c11841980f25831e653484151"
+    },
+    {
+      "id": "TrapezoidArc",
+      "status": "retained-original",
+      "previousSha256": "acc099bd4c0dd3745597d5124de66bfbb6d6adb4fb34d589269bdd8c3c04efc7",
+      "sha256": "acc099bd4c0dd3745597d5124de66bfbb6d6adb4fb34d589269bdd8c3c04efc7"
+    },
+    {
+      "id": "SpikeBurst",
+      "status": "retained-original",
+      "previousSha256": "fb02bf3b4112737617f3693212d3e91861d8f02c26daa7afa7b8866825249d68",
+      "sha256": "fb02bf3b4112737617f3693212d3e91861d8f02c26daa7afa7b8866825249d68"
+    },
+    {
+      "id": "Metaballs",
+      "status": "retained-original",
+      "previousSha256": "e594ddcabe418808855f85d3563697007f0829c5e2152eb8581cdc00b15a6e1b",
+      "sha256": "e594ddcabe418808855f85d3563697007f0829c5e2152eb8581cdc00b15a6e1b"
+    },
+    {
+      "id": "Flower",
+      "status": "retained-original",
+      "previousSha256": "050218686b19dc006844f4a80687149f08326d7701692d6c3eee241298e5058a",
+      "sha256": "050218686b19dc006844f4a80687149f08326d7701692d6c3eee241298e5058a"
+    },
+    {
+      "id": "GlintSpark",
+      "status": "retained-original",
+      "previousSha256": "b4c2a9becc75afab9f4cad7c4b8c85d6503a1f7d3cbd00bdfc76b6750636f99a",
+      "sha256": "b4c2a9becc75afab9f4cad7c4b8c85d6503a1f7d3cbd00bdfc76b6750636f99a"
+    },
+    {
+      "id": "ArrowHead",
+      "status": "retained-original",
+      "previousSha256": "b1ea205aacc429ebac28db88bb6dece88ce4befc2de9929b0fe699c4348dedaf",
+      "sha256": "b1ea205aacc429ebac28db88bb6dece88ce4befc2de9929b0fe699c4348dedaf"
+    },
+    {
+      "id": "PuzzlePiece",
+      "status": "retained-original",
+      "previousSha256": "0979396f1abac64e0f13939193fe84603120af2311806083101de859f067562b",
+      "sha256": "0979396f1abac64e0f13939193fe84603120af2311806083101de859f067562b"
+    },
+    {
+      "id": "Teardrop",
+      "status": "retained-original",
+      "previousSha256": "6151218fcfa5690f0839b80bf8a8aa7ab8e6900da28e835e46ebd5c36f4fef5a",
+      "sha256": "6151218fcfa5690f0839b80bf8a8aa7ab8e6900da28e835e46ebd5c36f4fef5a"
+    },
+    {
+      "id": "Leaf",
+      "status": "retained-original",
+      "previousSha256": "7fa8b2c469186489fd8365632241814104008d7e3fcd7a51a6435707021a41b8",
+      "sha256": "7fa8b2c469186489fd8365632241814104008d7e3fcd7a51a6435707021a41b8"
+    },
+    {
+      "id": "BezierRibbon",
+      "status": "retained-original",
+      "previousSha256": "b0620339b13f01422a41eaedc26b24896dcddf1a77e4041d7475b53872bbca60",
+      "sha256": "b0620339b13f01422a41eaedc26b24896dcddf1a77e4041d7475b53872bbca60"
+    },
+    {
+      "id": "OgeeFlowerTile",
+      "status": "retained-original",
+      "previousSha256": "8445d6619970c2bcae494103e890ef0f42bb8c8c2291ca9b5e3107a8162805de",
+      "sha256": "8445d6619970c2bcae494103e890ef0f42bb8c8c2291ca9b5e3107a8162805de"
+    },
+    {
+      "id": "LineSegment",
+      "status": "retained-original",
+      "previousSha256": "6aa735831a89cd5166257b507832afe04ac69a998f2225b523dad639e641898f",
+      "sha256": "6aa735831a89cd5166257b507832afe04ac69a998f2225b523dad639e641898f"
+    },
+    {
+      "id": "Stripes",
+      "status": "retained-original",
+      "previousSha256": "1c3a42814a3c7e70d4eb5dc33f10c5aa6715a06bd462d14ed9d93ab46be543cd",
+      "sha256": "1c3a42814a3c7e70d4eb5dc33f10c5aa6715a06bd462d14ed9d93ab46be543cd"
+    },
+    {
+      "id": "Checker",
+      "status": "retained-original",
+      "previousSha256": "2c51790e95d9f0ddbf2794833958d2b09556d323c73bdd57e8f1b7ab23dc7678",
+      "sha256": "2c51790e95d9f0ddbf2794833958d2b09556d323c73bdd57e8f1b7ab23dc7678"
+    },
+    {
+      "id": "Dots",
+      "status": "retained-original",
+      "previousSha256": "a63b47763d2b799dde4f47227a5c8e212db099c61d2f6d6979c2b38213db4501",
+      "sha256": "a63b47763d2b799dde4f47227a5c8e212db099c61d2f6d6979c2b38213db4501"
+    },
+    {
+      "id": "Grid",
+      "status": "retained-original",
+      "previousSha256": "f0076a6816d52afb688f1d069486fc39370435f9ce0aeac0fa08c10c0d77ae70",
+      "sha256": "f0076a6816d52afb688f1d069486fc39370435f9ce0aeac0fa08c10c0d77ae70"
+    },
+    {
+      "id": "HexGrid",
+      "status": "retained-original",
+      "previousSha256": "4f6db74ac5a9ee9f599474a2aa08a50fc7f0fb6372c11ce19559f6f448ea53c2",
+      "sha256": "4f6db74ac5a9ee9f599474a2aa08a50fc7f0fb6372c11ce19559f6f448ea53c2"
+    },
+    {
+      "id": "Waves",
+      "status": "retained-original",
+      "previousSha256": "568a09de061a74167b2165006e990e9af70237fda4cece1faf1e9dcdc0bb5b3c",
+      "sha256": "568a09de061a74167b2165006e990e9af70237fda4cece1faf1e9dcdc0bb5b3c"
+    },
+    {
+      "id": "Zigzag",
+      "status": "retained-original",
+      "previousSha256": "8b3709ef478099c78f7ba1b24fbbe6fe64e11719c91cfa76834f5ce190b6ec7c",
+      "sha256": "8b3709ef478099c78f7ba1b24fbbe6fe64e11719c91cfa76834f5ce190b6ec7c"
+    },
+    {
+      "id": "Ripple",
+      "status": "retained-original",
+      "previousSha256": "6a4dcabcdb9ef351e85a98c63fdd9b636fa780f8ed64003e39988c40020b8d33",
+      "sha256": "6a4dcabcdb9ef351e85a98c63fdd9b636fa780f8ed64003e39988c40020b8d33"
+    },
+    {
+      "id": "Brick",
+      "status": "retained-original",
+      "previousSha256": "264206407e1a56682fb15b7c57fbdd190af00966fec229c7e193e5c63f21f28c",
+      "sha256": "264206407e1a56682fb15b7c57fbdd190af00966fec229c7e193e5c63f21f28c"
+    },
+    {
+      "id": "Herringbone",
+      "status": "retained-original",
+      "previousSha256": "339f2bc07423124399bf4d5799ff8f59ec069cd98391e042b8aa1f014caa86dd",
+      "sha256": "339f2bc07423124399bf4d5799ff8f59ec069cd98391e042b8aa1f014caa86dd"
+    },
+    {
+      "id": "BasketWeave",
+      "status": "retained-original",
+      "previousSha256": "c0d79fbcd3f15e385f867d9b7b60276137e5d3d512b07c6d9f6f0b6772cdabbd",
+      "sha256": "c0d79fbcd3f15e385f867d9b7b60276137e5d3d512b07c6d9f6f0b6772cdabbd"
+    },
+    {
+      "id": "Parquet",
+      "status": "retained-original",
+      "previousSha256": "5917ab03efbec93a90763bffe1017aa995e0aa01d97bfe6c314f85615f6c0f46",
+      "sha256": "5917ab03efbec93a90763bffe1017aa995e0aa01d97bfe6c314f85615f6c0f46"
+    },
+    {
+      "id": "Scales",
+      "status": "retained-original",
+      "previousSha256": "1d00e6ea3fb5f88eaf24a21591644575d13a40589582be5edc34397a25021fbd",
+      "sha256": "1d00e6ea3fb5f88eaf24a21591644575d13a40589582be5edc34397a25021fbd"
+    },
+    {
+      "id": "Knit",
+      "status": "retained-original",
+      "previousSha256": "047e4b173219d7f2a2ae343b526347ca2621cbe6eed763a920f0cb3c81743daf",
+      "sha256": "047e4b173219d7f2a2ae343b526347ca2621cbe6eed763a920f0cb3c81743daf"
+    },
+    {
+      "id": "Chainmail",
+      "status": "retained-original",
+      "previousSha256": "69d2b247209e1011601e997fbbacae65a2d774d6497927ef851b73913a034758",
+      "sha256": "69d2b247209e1011601e997fbbacae65a2d774d6497927ef851b73913a034758"
+    },
+    {
+      "id": "Weave",
+      "status": "retained-original",
+      "previousSha256": "5c2b65198004fc7c54c615163be95813539b06fd7954924902188054040d46d3",
+      "sha256": "5c2b65198004fc7c54c615163be95813539b06fd7954924902188054040d46d3"
+    },
+    {
+      "id": "Truchet",
+      "status": "retained-original",
+      "previousSha256": "b431e2bdb98084f3881c895008d1bb3419832ff425a336637f702ede84a79e79",
+      "sha256": "b431e2bdb98084f3881c895008d1bb3419832ff425a336637f702ede84a79e79"
+    },
+    {
+      "id": "TriangleGrid",
+      "status": "retained-original",
+      "previousSha256": "61cd8ede33937a31e12112311ba227ae11e8f86a2d8310c3cb9cf1d1db08ab8e",
+      "sha256": "61cd8ede33937a31e12112311ba227ae11e8f86a2d8310c3cb9cf1d1db08ab8e"
+    },
+    {
+      "id": "DiamondGrid",
+      "status": "retained-original",
+      "previousSha256": "1240b90b8a67278f1cdb81b6a5f79580ea7ee196d22d1c86bd4dc1f21c874ff6",
+      "sha256": "1240b90b8a67278f1cdb81b6a5f79580ea7ee196d22d1c86bd4dc1f21c874ff6"
+    },
+    {
+      "id": "RoofTiles",
+      "status": "retained-original",
+      "previousSha256": "080134e617a5cb361c1ea213ccb476f2986cde1e3f0ca3babfa13028e5c4ece8",
+      "sha256": "080134e617a5cb361c1ea213ccb476f2986cde1e3f0ca3babfa13028e5c4ece8"
+    },
+    {
+      "id": "PavingStone",
+      "status": "retained-original",
+      "previousSha256": "3d1dd60659642793a3a2d5c1624f04c7d431d7301b647def7629d0d2b8e691a9",
+      "sha256": "3d1dd60659642793a3a2d5c1624f04c7d431d7301b647def7629d0d2b8e691a9"
+    },
+    {
+      "id": "CrossHatch",
+      "status": "retained-original",
+      "previousSha256": "64775d3890bf59df4247850647314bc7cb135a851d36fef04e2685fdea3416a8",
+      "sha256": "64775d3890bf59df4247850647314bc7cb135a851d36fef04e2685fdea3416a8"
+    },
+    {
+      "id": "Halftone",
+      "status": "retained-original",
+      "previousSha256": "35646f0d076e221a4f2028b99345b2325fa1fbfeb365239a3fd52ae17f4dfb4a",
+      "sha256": "35646f0d076e221a4f2028b99345b2325fa1fbfeb365239a3fd52ae17f4dfb4a"
+    },
+    {
+      "id": "IslamicPattern",
+      "status": "retained-original",
+      "previousSha256": "a325bd8546101ae69f39fadacb1321cd36a13bdf148d1cc63c5e25c38568bc8f",
+      "sha256": "a325bd8546101ae69f39fadacb1321cd36a13bdf148d1cc63c5e25c38568bc8f"
+    },
+    {
+      "id": "CelticKnot",
+      "status": "retained-original",
+      "previousSha256": "389b795cade6c83bf83d63232146ba6df20c0b6b9e0873ca77eee7667b773632",
+      "sha256": "389b795cade6c83bf83d63232146ba6df20c0b6b9e0873ca77eee7667b773632"
+    },
+    {
+      "id": "Circuit",
+      "status": "retained-original",
+      "previousSha256": "f7fa234e7652773fa2d062f932ac9126f5a3bfff5303ce80dff97ef6ada2f935",
+      "sha256": "f7fa234e7652773fa2d062f932ac9126f5a3bfff5303ce80dff97ef6ada2f935"
+    },
+    {
+      "id": "FibonacciDot",
+      "status": "retained-original",
+      "previousSha256": "8956534097e3fa52fa0e5e4ee31e5f3e48df2b89476b39e3272732f3488fac62",
+      "sha256": "8956534097e3fa52fa0e5e4ee31e5f3e48df2b89476b39e3272732f3488fac62"
+    },
+    {
+      "id": "CrackedTiles",
+      "status": "retained-original",
+      "previousSha256": "62a0d7ae46b79f611d3e2617de97c20baaaf702915560a2714dc9fc013caba87",
+      "sha256": "62a0d7ae46b79f611d3e2617de97c20baaaf702915560a2714dc9fc013caba87"
+    },
+    {
+      "id": "WovenMesh",
+      "status": "retained-original",
+      "previousSha256": "9619226955b9534b31040f61e6ce2b5249487029e76c2dbcd2d4a8d6c3712d3c",
+      "sha256": "9619226955b9534b31040f61e6ce2b5249487029e76c2dbcd2d4a8d6c3712d3c"
+    },
+    {
+      "id": "Perforated",
+      "status": "retained-original",
+      "previousSha256": "595346132162125233f9b4847b9e92886d34cf8949c8522043254b8eb5e98e53",
+      "sha256": "595346132162125233f9b4847b9e92886d34cf8949c8522043254b8eb5e98e53"
+    },
+    {
+      "id": "SnakeDots",
+      "status": "retained-original",
+      "previousSha256": "322b2f14bcabecc7539cc4449e263e5887a480e6d1ff5f4e48e8f283e370405b",
+      "sha256": "322b2f14bcabecc7539cc4449e263e5887a480e6d1ff5f4e48e8f283e370405b"
+    },
+    {
+      "id": "Moire",
+      "status": "retained-original",
+      "previousSha256": "c44ef335a56b0f3f6e491ba6cd722ae2cf50ef3cd9d2b00c431fddd73d9e78d6",
+      "sha256": "c44ef335a56b0f3f6e491ba6cd722ae2cf50ef3cd9d2b00c431fddd73d9e78d6"
+    },
+    {
+      "id": "Fingerprint",
+      "status": "retained-original",
+      "previousSha256": "f9a3411af48a11eb515bce6c53b52e28d33df520f8b16ad396d66b7c50ba9276",
+      "sha256": "f9a3411af48a11eb515bce6c53b52e28d33df520f8b16ad396d66b7c50ba9276"
+    },
+    {
+      "id": "DottedWave",
+      "status": "retained-original",
+      "previousSha256": "a2669feda32149669c9a4053c5f4981e6204bd158cf1b5dad1da8138f463bab1",
+      "sha256": "a2669feda32149669c9a4053c5f4981e6204bd158cf1b5dad1da8138f463bab1"
+    },
+    {
+      "id": "ChainArmor",
+      "status": "retained-original",
+      "previousSha256": "c9aabea63adaa44d802ceb3003abda3474f16261949cea974f373142466b4fe9",
+      "sha256": "c9aabea63adaa44d802ceb3003abda3474f16261949cea974f373142466b4fe9"
+    },
+    {
+      "id": "ConveyorArrows",
+      "status": "retained-original",
+      "previousSha256": "830ce2f1b8812b13e69605d8ec1a9b14ee5d9bc57e080d10f8dc9c8a63f0c36a",
+      "sha256": "830ce2f1b8812b13e69605d8ec1a9b14ee5d9bc57e080d10f8dc9c8a63f0c36a"
+    },
+    {
+      "id": "SunburstRays",
+      "status": "retained-original",
+      "previousSha256": "059076bb4204a8405e1719d7e756a3b4ca490fabe6c297ed2ce064c4cad2f686",
+      "sha256": "059076bb4204a8405e1719d7e756a3b4ca490fabe6c297ed2ce064c4cad2f686"
+    },
+    {
+      "id": "GearTeeth",
+      "status": "retained-original",
+      "previousSha256": "5eaa0aea35b6c01db6b0dd7df432de3c80d103ac26882ef2aa5dd5d7094de346",
+      "sha256": "5eaa0aea35b6c01db6b0dd7df432de3c80d103ac26882ef2aa5dd5d7094de346"
+    },
+    {
+      "id": "ContourLines",
+      "status": "retained-original",
+      "previousSha256": "440ed6e36563eacee18848aed1d33637dc7f180e6357af1e55c0ca9988e89542",
+      "sha256": "440ed6e36563eacee18848aed1d33637dc7f180e6357af1e55c0ca9988e89542"
+    },
+    {
+      "id": "GridMosaic",
+      "status": "retained-original",
+      "previousSha256": "b31626964eb9f2539cb31474466d3f9be54b762b2117b86b9068904864fc54b1",
+      "sha256": "b31626964eb9f2539cb31474466d3f9be54b762b2117b86b9068904864fc54b1"
+    },
+    {
+      "id": "Kaleido",
+      "status": "retained-original",
+      "previousSha256": "74c6d865ca5f9932fd972e10b1f92357ed7a58acd7e3edbfb4088fd25a869b07",
+      "sha256": "74c6d865ca5f9932fd972e10b1f92357ed7a58acd7e3edbfb4088fd25a869b07"
+    },
+    {
+      "id": "StainedGlass",
+      "status": "retained-original",
+      "previousSha256": "8f06d1e0214563db3201a29f02f247f0e6e3588e4515977bc34223a36666270a",
+      "sha256": "8f06d1e0214563db3201a29f02f247f0e6e3588e4515977bc34223a36666270a"
+    },
+    {
+      "id": "Camo",
+      "status": "retained-original",
+      "previousSha256": "627b48c14d7840a4af6fbd3e2de4762a0fb0d9ca06cbe27be78e4c117f9c4c87",
+      "sha256": "627b48c14d7840a4af6fbd3e2de4762a0fb0d9ca06cbe27be78e4c117f9c4c87"
+    },
+    {
+      "id": "Sierpinski",
+      "status": "retained-original",
+      "previousSha256": "32e5a62d720483164163a9cb0b0cabf3a497e33fbc8e9694a9de18dd3cd83300",
+      "sha256": "32e5a62d720483164163a9cb0b0cabf3a497e33fbc8e9694a9de18dd3cd83300"
+    },
+    {
+      "id": "Terrazzo",
+      "status": "retained-original",
+      "previousSha256": "c8b7f9c3bbbc4967feb88d123e45f5e0cbdc09b8bc8eb4f525caa832f14c0f2e",
+      "sha256": "c8b7f9c3bbbc4967feb88d123e45f5e0cbdc09b8bc8eb4f525caa832f14c0f2e"
+    },
+    {
+      "id": "Plaid",
+      "status": "retained-original",
+      "previousSha256": "45508a848587c008ca64aea48ab8a54888dd0ba3c8fe82d642f026d738fd32c1",
+      "sha256": "45508a848587c008ca64aea48ab8a54888dd0ba3c8fe82d642f026d738fd32c1"
+    },
+    {
+      "id": "Seigaiha",
+      "status": "retained-original",
+      "previousSha256": "42d61df93e4930df60ac6b8009ca85853537aa7043ccac8e830c47342c2b3b53",
+      "sha256": "42d61df93e4930df60ac6b8009ca85853537aa7043ccac8e830c47342c2b3b53"
+    },
+    {
+      "id": "Maze",
+      "status": "retained-original",
+      "previousSha256": "c215631b3c71ea5775e109b3658bd78fcea98224216818172fb175ad192fd0bc",
+      "sha256": "c215631b3c71ea5775e109b3658bd78fcea98224216818172fb175ad192fd0bc"
+    },
+    {
+      "id": "Guilloche",
+      "status": "retained-original",
+      "previousSha256": "e99dc0fd657cf09fda5afff8a1d1d10aeea9babdac41efa6f74441607a25a8b0",
+      "sha256": "e99dc0fd657cf09fda5afff8a1d1d10aeea9babdac41efa6f74441607a25a8b0"
+    },
+    {
+      "id": "LinearGradient",
+      "status": "retained-original",
+      "previousSha256": "a3bee28f2a79d6d4c2cbc2d8a8ed311a146afa3d167a0e82caf212711f3af7ec",
+      "sha256": "a3bee28f2a79d6d4c2cbc2d8a8ed311a146afa3d167a0e82caf212711f3af7ec"
+    },
+    {
+      "id": "DiamondGradient",
+      "status": "retained-original",
+      "previousSha256": "6cf532bdc690e8d81cf6589e81cf771c54f7598b60ff54693212bf451d235122",
+      "sha256": "6cf532bdc690e8d81cf6589e81cf771c54f7598b60ff54693212bf451d235122"
+    },
+    {
+      "id": "ShapeGradient",
+      "status": "retained-original",
+      "previousSha256": "392ab8e4daf8c39dcec293fddb1f840f28c87b7e2133a9cad041a06096c36d7a",
+      "sha256": "392ab8e4daf8c39dcec293fddb1f840f28c87b7e2133a9cad041a06096c36d7a"
+    },
+    {
+      "id": "SphericalGradient",
+      "status": "retained-original",
+      "previousSha256": "b53241a2e760c7a3d3de27787637e9594fd57c85ef47366e91a3674e047dbf52",
+      "sha256": "b53241a2e760c7a3d3de27787637e9594fd57c85ef47366e91a3674e047dbf52"
+    },
+    {
+      "id": "RingGradient",
+      "status": "retained-original",
+      "previousSha256": "4d44047814e98fdc769be2dbd3b7145a36416e5f9315d82c3280a28becf627de",
+      "sha256": "4d44047814e98fdc769be2dbd3b7145a36416e5f9315d82c3280a28becf627de"
+    },
+    {
+      "id": "MultiLinear",
+      "status": "retained-original",
+      "previousSha256": "a54e81dc41972ede21f503104c92381bc8b3d957ec5a2832586a97d1514ed111",
+      "sha256": "a54e81dc41972ede21f503104c92381bc8b3d957ec5a2832586a97d1514ed111"
+    },
+    {
+      "id": "ConeGradient",
+      "status": "retained-original",
+      "previousSha256": "ba3104e6ce934d32cc87422e8bce614b5800f29606809a899da0ec05ef510d96",
+      "sha256": "ba3104e6ce934d32cc87422e8bce614b5800f29606809a899da0ec05ef510d96"
+    },
+    {
+      "id": "RadialSteps",
+      "status": "retained-original",
+      "previousSha256": "6dc67c9ca0adc09b913f873714ab23360c2c72d934acc53645f57903ff17c94d",
+      "sha256": "6dc67c9ca0adc09b913f873714ab23360c2c72d934acc53645f57903ff17c94d"
+    },
+    {
+      "id": "ValueNoise",
+      "status": "retained-original",
+      "previousSha256": "75e3738ca2fe40a65212c51f762abc0e0d0d74a3de573d9134c406c07caba257",
+      "sha256": "75e3738ca2fe40a65212c51f762abc0e0d0d74a3de573d9134c406c07caba257"
+    },
+    {
+      "id": "FBM",
+      "status": "retained-original",
+      "previousSha256": "695ed86f7ad875c6efcb82eead1008b9c0e4ace9bb1af66f74a44d1dd7c43ba6",
+      "sha256": "695ed86f7ad875c6efcb82eead1008b9c0e4ace9bb1af66f74a44d1dd7c43ba6"
+    },
+    {
+      "id": "Turbulence",
+      "status": "retained-original",
+      "previousSha256": "68b67dd25d3fd56c57305525319b4ccaeff727ab4e9a3615906d9762d349c9d3",
+      "sha256": "68b67dd25d3fd56c57305525319b4ccaeff727ab4e9a3615906d9762d349c9d3"
+    },
+    {
+      "id": "VoronoiCells",
+      "status": "retained-original",
+      "previousSha256": "524e6c40dfb5abee6b3bdd4d4a6a75a7daa64db903b34fb21692cd7f785e30c0",
+      "sha256": "524e6c40dfb5abee6b3bdd4d4a6a75a7daa64db903b34fb21692cd7f785e30c0"
+    },
+    {
+      "id": "VoronoiEdges",
+      "status": "retained-original",
+      "previousSha256": "9c7859112d4b317ff02a404c2807f739e7534693e84e3778e89f51016e333abf",
+      "sha256": "9c7859112d4b317ff02a404c2807f739e7534693e84e3778e89f51016e333abf"
+    },
+    {
+      "id": "Perlin",
+      "status": "retained-original",
+      "previousSha256": "5e1bb88ea42556433b4cb0306234336acfdeda81cc308cd7e940a3fbc57b720b",
+      "sha256": "5e1bb88ea42556433b4cb0306234336acfdeda81cc308cd7e940a3fbc57b720b"
+    },
+    {
+      "id": "Simplex",
+      "status": "retained-original",
+      "previousSha256": "c5dcbd428a312f0b215903389be6abc8bdadcf272770b89f030e76d702ca3923",
+      "sha256": "c5dcbd428a312f0b215903389be6abc8bdadcf272770b89f030e76d702ca3923"
+    },
+    {
+      "id": "Ridged",
+      "status": "retained-original",
+      "previousSha256": "5a66e0544d89419ac1194fd1e48886d8b74c79151d611b5fdf8b5144578488ca",
+      "sha256": "5a66e0544d89419ac1194fd1e48886d8b74c79151d611b5fdf8b5144578488ca"
+    },
+    {
+      "id": "Billow",
+      "status": "retained-original",
+      "previousSha256": "efa237c9b475f2967627ce1281fab40a16fa718bb921d0228aeeddef32b7a94d",
+      "sha256": "efa237c9b475f2967627ce1281fab40a16fa718bb921d0228aeeddef32b7a94d"
+    },
+    {
+      "id": "Curl",
+      "status": "retained-original",
+      "previousSha256": "ad5f651a2f29294a526f95fe2487a48bcd76beb72df409707a22ae1409457311",
+      "sha256": "ad5f651a2f29294a526f95fe2487a48bcd76beb72df409707a22ae1409457311"
+    },
+    {
+      "id": "Swirl",
+      "status": "retained-original",
+      "previousSha256": "b47db07997bb8daa47fe0ffff254997f4f16e08c0717393b31a18f26b6e571fa",
+      "sha256": "b47db07997bb8daa47fe0ffff254997f4f16e08c0717393b31a18f26b6e571fa"
+    },
+    {
+      "id": "Anisotropic",
+      "status": "retained-original",
+      "previousSha256": "ba8e0b398688a19e789364d36157364b46dfcd96df0e5f09145bbcbd2047c568",
+      "sha256": "ba8e0b398688a19e789364d36157364b46dfcd96df0e5f09145bbcbd2047c568"
+    },
+    {
+      "id": "Directional",
+      "status": "retained-original",
+      "previousSha256": "c4359d04002452f336a370a4eb86ad325b4ce13a58fd4f8b6ce45447bb11de63",
+      "sha256": "c4359d04002452f336a370a4eb86ad325b4ce13a58fd4f8b6ce45447bb11de63"
+    },
+    {
+      "id": "WhiteNoise",
+      "status": "retained-original",
+      "previousSha256": "7a33bd364a38f51ee936b08469aa0b14d8d552da7d4e5db6f27fedde4f631f5f",
+      "sha256": "7a33bd364a38f51ee936b08469aa0b14d8d552da7d4e5db6f27fedde4f631f5f"
+    },
+    {
+      "id": "BlueNoise",
+      "status": "retained-original",
+      "previousSha256": "6778022751f75775b2dba0aadf83d32880f5825a584d74e9ce53c346f9afb48f",
+      "sha256": "6778022751f75775b2dba0aadf83d32880f5825a584d74e9ce53c346f9afb48f"
+    },
+    {
+      "id": "WorleyRidge",
+      "status": "retained-original",
+      "previousSha256": "b8819886e89ddc12647368f624c8fe6b9ac979da9c83979bf344b4a04e7273f2",
+      "sha256": "b8819886e89ddc12647368f624c8fe6b9ac979da9c83979bf344b4a04e7273f2"
+    },
+    {
+      "id": "WorleyBorder",
+      "status": "retained-original",
+      "previousSha256": "9518e9bca5b94797e0313ab9f9f6a953c7773c596ea99cdbbcde729e21ac1c4f",
+      "sha256": "9518e9bca5b94797e0313ab9f9f6a953c7773c596ea99cdbbcde729e21ac1c4f"
+    },
+    {
+      "id": "Gabor",
+      "status": "retained-original",
+      "previousSha256": "b116fe17f35e7aa591e0ccf2eb91b54673792b96a9a31a69e316cdd2eefb9944",
+      "sha256": "b116fe17f35e7aa591e0ccf2eb91b54673792b96a9a31a69e316cdd2eefb9944"
+    },
+    {
+      "id": "Crystal",
+      "status": "retained-original",
+      "previousSha256": "0290725520a45352124385b3b43427cbb51e29db3b2519c4d2cf18c7fae28e43",
+      "sha256": "0290725520a45352124385b3b43427cbb51e29db3b2519c4d2cf18c7fae28e43"
+    },
+    {
+      "id": "Creased",
+      "status": "retained-original",
+      "previousSha256": "5c35135d58d05a26fee041bc61790c79dff41706ebd50cbd6d0364d423848187",
+      "sha256": "5c35135d58d05a26fee041bc61790c79dff41706ebd50cbd6d0364d423848187"
+    },
+    {
+      "id": "Fluid",
+      "status": "retained-original",
+      "previousSha256": "f94751fe1234602946713299d74da990830cca98fc2d8d408106b6bb48c5e92b",
+      "sha256": "f94751fe1234602946713299d74da990830cca98fc2d8d408106b6bb48c5e92b"
+    },
+    {
+      "id": "Plasma",
+      "status": "retained-original",
+      "previousSha256": "d9c06363abb5d87dcc6c10beba9febb1d378d1e7fe41c091b385c6fb215d3fef",
+      "sha256": "d9c06363abb5d87dcc6c10beba9febb1d378d1e7fe41c091b385c6fb215d3fef"
+    },
+    {
+      "id": "ReactionDiffusion",
+      "status": "retained-original",
+      "previousSha256": "f85441453c2ca27d4bee81dc1ec4d738bb73a61b3469141d2af34d87c0789015",
+      "sha256": "f85441453c2ca27d4bee81dc1ec4d738bb73a61b3469141d2af34d87c0789015"
+    },
+    {
+      "id": "DomainWarp",
+      "status": "retained-original",
+      "previousSha256": "64b42be10b39ccb4e0e67829b7dc1b16704f2c136da04f9926e3bc253d5948cf",
+      "sha256": "64b42be10b39ccb4e0e67829b7dc1b16704f2c136da04f9926e3bc253d5948cf"
+    },
+    {
+      "id": "Silk",
+      "status": "retained-original",
+      "previousSha256": "0c6242c1f755557c17d897104618bcf380ba248cfc44e7a89c180aa241086c89",
+      "sha256": "0c6242c1f755557c17d897104618bcf380ba248cfc44e7a89c180aa241086c89"
+    },
+    {
+      "id": "LavaVeins",
+      "status": "retained-original",
+      "previousSha256": "fcb6b43f3995464410b93aca0fcd9341b9cea246dac1ca30986ad3947b5c462d",
+      "sha256": "fcb6b43f3995464410b93aca0fcd9341b9cea246dac1ca30986ad3947b5c462d"
+    },
+    {
+      "id": "Vapor",
+      "status": "retained-original",
+      "previousSha256": "934d733e45f567b60a549a6705cd6f589d4dfacaf47d6b2d170a2f82858d1565",
+      "sha256": "934d733e45f567b60a549a6705cd6f589d4dfacaf47d6b2d170a2f82858d1565"
+    },
+    {
+      "id": "AnisoBrushed",
+      "status": "retained-original",
+      "previousSha256": "f11d52aa4c0f8440c64766a999ee1a4d6c50fdfb96da40df72d040ffc829f2c5",
+      "sha256": "f11d52aa4c0f8440c64766a999ee1a4d6c50fdfb96da40df72d040ffc829f2c5"
+    },
+    {
+      "id": "FiberPaper",
+      "status": "retained-original",
+      "previousSha256": "11aad61ce53c94c11dcf5d993e7b00389af64ef5a443c6cd94a9893dd24a2544",
+      "sha256": "11aad61ce53c94c11dcf5d993e7b00389af64ef5a443c6cd94a9893dd24a2544"
+    },
+    {
+      "id": "InkBleed",
+      "status": "retained-original",
+      "previousSha256": "b6a2ae6d724bc878b595f27717662c87383213bf78576670efc4ece85c465429",
+      "sha256": "b6a2ae6d724bc878b595f27717662c87383213bf78576670efc4ece85c465429"
+    },
+    {
+      "id": "GrainNoise",
+      "status": "retained-original",
+      "previousSha256": "94982f4dff3a388c83e423663edc54cb7e2857af7e31e28f2d5a4bb5c01cb4ce",
+      "sha256": "94982f4dff3a388c83e423663edc54cb7e2857af7e31e28f2d5a4bb5c01cb4ce"
+    },
+    {
+      "id": "CellularNoise",
+      "status": "retained-original",
+      "previousSha256": "090d266997c7eb977fb317c1dde79bc432c34e68137d76df8ca89e793dc7a7db",
+      "sha256": "090d266997c7eb977fb317c1dde79bc432c34e68137d76df8ca89e793dc7a7db"
+    },
+    {
+      "id": "PowderNoise",
+      "status": "retained-original",
+      "previousSha256": "149ca09ee2951752eb443bcfda5553ff056e51ad1b10530e5704169beca7a1f8",
+      "sha256": "149ca09ee2951752eb443bcfda5553ff056e51ad1b10530e5704169beca7a1f8"
+    },
+    {
+      "id": "Clouds",
+      "status": "retained-original",
+      "previousSha256": "d9a5a9cabd12ff829faae66e74da77a57d17bf1d299afae8e9dd2954393a4351",
+      "sha256": "d9a5a9cabd12ff829faae66e74da77a57d17bf1d299afae8e9dd2954393a4351"
+    },
+    {
+      "id": "Smoke",
+      "status": "retained-original",
+      "previousSha256": "43dc83ec640b39f2311516c3f032923c8acd3bce3aea538615e2324c3bcdd40a",
+      "sha256": "43dc83ec640b39f2311516c3f032923c8acd3bce3aea538615e2324c3bcdd40a"
+    },
+    {
+      "id": "Fire",
+      "status": "retained-original",
+      "previousSha256": "d4df53f43d8409e5f3433857a17ffbbfc9f42b1f25378c36994527c75a3c0166",
+      "sha256": "d4df53f43d8409e5f3433857a17ffbbfc9f42b1f25378c36994527c75a3c0166"
+    },
+    {
+      "id": "Water",
+      "status": "retained-original",
+      "previousSha256": "8d5dda796ab8d0d98e99714f779ed8e95961c23601caa5e44e2b772439ecbf24",
+      "sha256": "8d5dda796ab8d0d98e99714f779ed8e95961c23601caa5e44e2b772439ecbf24"
+    },
+    {
+      "id": "Caustics",
+      "status": "retained-original",
+      "previousSha256": "ffdf1f39d82d8a805061cfbb3fea96c2f86b5144332c5bf4d8dc43ea92e20e4d",
+      "sha256": "ffdf1f39d82d8a805061cfbb3fea96c2f86b5144332c5bf4d8dc43ea92e20e4d"
+    },
+    {
+      "id": "Wood",
+      "status": "retained-original",
+      "previousSha256": "de84c616641b14d7816b842e51337133836d2cdb301c4b664dc5ee4e4a3e74e5",
+      "sha256": "de84c616641b14d7816b842e51337133836d2cdb301c4b664dc5ee4e4a3e74e5"
+    },
+    {
+      "id": "Marble",
+      "status": "retained-original",
+      "previousSha256": "b635c8f1cd79eac53c3e70a03da6555d86a65aedb4ecbecf6ba5284586243841",
+      "sha256": "b635c8f1cd79eac53c3e70a03da6555d86a65aedb4ecbecf6ba5284586243841"
+    },
+    {
+      "id": "Rust",
+      "status": "retained-original",
+      "previousSha256": "25598f512d763e4079432f69950ec0f2a0cc925d63ebfde6d5160a2b0e73c547",
+      "sha256": "25598f512d763e4079432f69950ec0f2a0cc925d63ebfde6d5160a2b0e73c547"
+    },
+    {
+      "id": "DirtGrunge",
+      "status": "retained-original",
+      "previousSha256": "c26995152f6d18b24ad6db0a2f362a7142591478ea46bbaf46f1f5013fff11e4",
+      "sha256": "c26995152f6d18b24ad6db0a2f362a7142591478ea46bbaf46f1f5013fff11e4"
+    },
+    {
+      "id": "Splotch",
+      "status": "retained-original",
+      "previousSha256": "d56da83939b1285e4ca15da14d83ac7cef9c00e5ceffaffa39f25cdd01e47693",
+      "sha256": "d56da83939b1285e4ca15da14d83ac7cef9c00e5ceffaffa39f25cdd01e47693"
+    },
+    {
+      "id": "Moss",
+      "status": "retained-original",
+      "previousSha256": "3c225b37f47c10c0ec2c59cc2f8be7ac7d3584ecf7c612cb4b5ab685a90b81aa",
+      "sha256": "3c225b37f47c10c0ec2c59cc2f8be7ac7d3584ecf7c612cb4b5ab685a90b81aa"
+    },
+    {
+      "id": "Stone",
+      "status": "retained-original",
+      "previousSha256": "c1e39779cad4fb87787080e61713af48cda3abe6c382afc8aad52eb48dd3194a",
+      "sha256": "c1e39779cad4fb87787080e61713af48cda3abe6c382afc8aad52eb48dd3194a"
+    },
+    {
+      "id": "Gravel",
+      "status": "retained-original",
+      "previousSha256": "580694eb97418e0bf0f42fc1329a5cd24a4fe8ac28c49e0b4b960e1f53b0d7d1",
+      "sha256": "580694eb97418e0bf0f42fc1329a5cd24a4fe8ac28c49e0b4b960e1f53b0d7d1"
+    },
+    {
+      "id": "Sand",
+      "status": "retained-original",
+      "previousSha256": "c075dd57760e9b627a255801048034c913c4ad0204b937a8c0a015b1da2db812",
+      "sha256": "c075dd57760e9b627a255801048034c913c4ad0204b937a8c0a015b1da2db812"
+    },
+    {
+      "id": "SnowIce",
+      "status": "retained-original",
+      "previousSha256": "3a3cfb51cdc758d5545589ee43e717c48a5bcf2dc067f475dae5dec6db0434e2",
+      "sha256": "3a3cfb51cdc758d5545589ee43e717c48a5bcf2dc067f475dae5dec6db0434e2"
+    },
+    {
+      "id": "FurGrass",
+      "status": "retained-original",
+      "previousSha256": "c5a54426a46e5e6a97540c78682d7507f5da6ff99f90887dbc49f17df9711c34",
+      "sha256": "c5a54426a46e5e6a97540c78682d7507f5da6ff99f90887dbc49f17df9711c34"
+    },
+    {
+      "id": "Fibers",
+      "status": "retained-original",
+      "previousSha256": "518d0d4651411b13eedec046eb03fb3cb6525a9813cee020863ee02c57c63197",
+      "sha256": "518d0d4651411b13eedec046eb03fb3cb6525a9813cee020863ee02c57c63197"
+    },
+    {
+      "id": "Leather",
+      "status": "retained-original",
+      "previousSha256": "42658dfff673a582261595c77f8e666ac2a73c7a64b20adf285a9ee36ae231b1",
+      "sha256": "42658dfff673a582261595c77f8e666ac2a73c7a64b20adf285a9ee36ae231b1"
+    },
+    {
+      "id": "Paper",
+      "status": "retained-original",
+      "previousSha256": "5dc167c565360de427b9048df929797b991a2d82c859d803f8c42c62f237f85d",
+      "sha256": "5dc167c565360de427b9048df929797b991a2d82c859d803f8c42c62f237f85d"
+    },
+    {
+      "id": "Scratch",
+      "status": "retained-original",
+      "previousSha256": "468c8ea59dc1e206eeeda6615ad4da7a65a2a856065ef3369e1b605def0d4de2",
+      "sha256": "468c8ea59dc1e206eeeda6615ad4da7a65a2a856065ef3369e1b605def0d4de2"
+    },
+    {
+      "id": "Speckle",
+      "status": "retained-original",
+      "previousSha256": "39295d79452622fd41e1cf1fb0d4bebc4d4482bb4c28b0909b9d05e8cbd90bdd",
+      "sha256": "39295d79452622fd41e1cf1fb0d4bebc4d4482bb4c28b0909b9d05e8cbd90bdd"
+    },
+    {
+      "id": "Splatter",
+      "status": "retained-original",
+      "previousSha256": "980869a7ceed99ad882bd3f7f88b00128a01410bd38ad4bc2a31989defbf3194",
+      "sha256": "980869a7ceed99ad882bd3f7f88b00128a01410bd38ad4bc2a31989defbf3194"
+    },
+    {
+      "id": "ScaleKeratin",
+      "status": "retained-original",
+      "previousSha256": "dcab8ee403c3f14a2caee62b2ef7cc072d351d83960ec5f0954d108a0c6a96de",
+      "sha256": "dcab8ee403c3f14a2caee62b2ef7cc072d351d83960ec5f0954d108a0c6a96de"
+    },
+    {
+      "id": "Tendril",
+      "status": "retained-original",
+      "previousSha256": "c094488586605f6811365bc0739a22f052eeff55d971317f6a450589be6f4d76",
+      "sha256": "c094488586605f6811365bc0739a22f052eeff55d971317f6a450589be6f4d76"
+    },
+    {
+      "id": "CrackedMud",
+      "status": "retained-original",
+      "previousSha256": "7d4321a0d0a12a1ea131e8eac3000da02dffcb6fd4ef471388437edeac8302fc",
+      "sha256": "7d4321a0d0a12a1ea131e8eac3000da02dffcb6fd4ef471388437edeac8302fc"
+    },
+    {
+      "id": "Coral",
+      "status": "retained-original",
+      "previousSha256": "7b1bba31dbe31c33b66e8ba0b33fd512cc50a773df8b7d3fa2d1863e17e26801",
+      "sha256": "7b1bba31dbe31c33b66e8ba0b33fd512cc50a773df8b7d3fa2d1863e17e26801"
+    },
+    {
+      "id": "DuneRipple",
+      "status": "retained-original",
+      "previousSha256": "16f61933e6600aa6d37ffdec9c13f2a8d3c9ff5a2c36919734dfab401cc58933",
+      "sha256": "16f61933e6600aa6d37ffdec9c13f2a8d3c9ff5a2c36919734dfab401cc58933"
+    },
+    {
+      "id": "Bark",
+      "status": "retained-original",
+      "previousSha256": "c93d20e2fc64b8108d2f26ee8d3d868c1ec7112020d52be0b1531fb466ee9e5e",
+      "sha256": "c93d20e2fc64b8108d2f26ee8d3d868c1ec7112020d52be0b1531fb466ee9e5e"
+    },
+    {
+      "id": "RustPatch",
+      "status": "retained-original",
+      "previousSha256": "d337cf3f315836726f59af751f78599a0ea208bb7f3ba53e435da60d3ce97ed9",
+      "sha256": "d337cf3f315836726f59af751f78599a0ea208bb7f3ba53e435da60d3ce97ed9"
+    },
+    {
+      "id": "WeatheredPaint",
+      "status": "retained-original",
+      "previousSha256": "154b7e88fb60b4ca1c702cd691eb4fdc4caa999661bcb839d2e877e146ff26ae",
+      "sha256": "154b7e88fb60b4ca1c702cd691eb4fdc4caa999661bcb839d2e877e146ff26ae"
+    },
+    {
+      "id": "Sediment",
+      "status": "retained-original",
+      "previousSha256": "f09523e491a05e68f9d0a6c47a30f1863d23abb9cfc8d980c7c4c074171b03b7",
+      "sha256": "f09523e491a05e68f9d0a6c47a30f1863d23abb9cfc8d980c7c4c074171b03b7"
+    },
+    {
+      "id": "FrostFern",
+      "status": "retained-original",
+      "previousSha256": "d34adaf176942b87feef26cda0ad0355a56aa313ebedb720e9ebfee9570b1ab2",
+      "sha256": "d34adaf176942b87feef26cda0ad0355a56aa313ebedb720e9ebfee9570b1ab2"
+    },
+    {
+      "id": "SnakeSkin",
+      "status": "retained-original",
+      "previousSha256": "73142868a37d6e3410dde6156f90e8170a59774a8153044d2e7e95872631c1b6",
+      "sha256": "73142868a37d6e3410dde6156f90e8170a59774a8153044d2e7e95872631c1b6"
+    },
+    {
+      "id": "PebbleField",
+      "status": "retained-original",
+      "previousSha256": "21905dc3a1f53596ad75f64dfa21de0f96bea029d6130a0624a0449bb66aa121",
+      "sha256": "21905dc3a1f53596ad75f64dfa21de0f96bea029d6130a0624a0449bb66aa121"
+    },
+    {
+      "id": "CharredCoal",
+      "status": "retained-original",
+      "previousSha256": "4576b88d0d7a53791360325c37a78090b968f49bac31b3af54ddf55631e894d1",
+      "sha256": "4576b88d0d7a53791360325c37a78090b968f49bac31b3af54ddf55631e894d1"
+    },
+    {
+      "id": "AshDeposit",
+      "status": "retained-original",
+      "previousSha256": "84cdf91faafec7d32746b2e7da1eb225433f7331bb09adf39788fa24c256601e",
+      "sha256": "84cdf91faafec7d32746b2e7da1eb225433f7331bb09adf39788fa24c256601e"
+    },
+    {
+      "id": "Snowflake",
+      "status": "retained-original",
+      "previousSha256": "f7d982a25b031f5c1a82899cb8929a37a9ecf9762b19b5ccb3049f67c87162be",
+      "sha256": "f7d982a25b031f5c1a82899cb8929a37a9ecf9762b19b5ccb3049f67c87162be"
+    },
+    {
+      "id": "LensDirt",
+      "status": "retained-original",
+      "previousSha256": "956201b44fe8bea605f7600c565a80908ea637510e8f10b4895e1ef517861dc1",
+      "sha256": "956201b44fe8bea605f7600c565a80908ea637510e8f10b4895e1ef517861dc1"
+    },
+    {
+      "id": "RainGlass",
+      "status": "retained-original",
+      "previousSha256": "3afdc71c2222ba38a7658587089ae7d1eb079df8545f671bfe39581a0fc6ec62",
+      "sha256": "3afdc71c2222ba38a7658587089ae7d1eb079df8545f671bfe39581a0fc6ec62"
+    },
+    {
+      "id": "HammeredMetal",
+      "status": "retained-original",
+      "previousSha256": "4b5802359f5deddbb022cf3d4067dfa0bbd805104a59d19fa717ed714eb294b7",
+      "sha256": "4b5802359f5deddbb022cf3d4067dfa0bbd805104a59d19fa717ed714eb294b7"
+    },
+    {
+      "id": "SaltFlat",
+      "status": "retained-original",
+      "previousSha256": "a799f00ee195f0eec309935a16f5bf96b0558663980ad406dfaf2afda4bc77ef",
+      "sha256": "a799f00ee195f0eec309935a16f5bf96b0558663980ad406dfaf2afda4bc77ef"
+    },
+    {
+      "id": "Feather",
+      "status": "retained-original",
+      "previousSha256": "8740cc344617ad5ea97f60abe31751dcd7f859935e61bc1864fe7aaf2a90773c",
+      "sha256": "8740cc344617ad5ea97f60abe31751dcd7f859935e61bc1864fe7aaf2a90773c"
+    },
+    {
+      "id": "Asphalt",
+      "status": "retained-original",
+      "previousSha256": "e0df2002ab1680db2cf9e67f5fdb98e20a4fd7eb3d44c2895dd4c40cb32323bb",
+      "sha256": "e0df2002ab1680db2cf9e67f5fdb98e20a4fd7eb3d44c2895dd4c40cb32323bb"
+    },
+    {
+      "id": "Travertine",
+      "status": "retained-original",
+      "previousSha256": "cedede4c8c15d74d9d22f2dc2d3b687b70b2d0d3c21c9f342ac0c51502b046ef",
+      "sha256": "cedede4c8c15d74d9d22f2dc2d3b687b70b2d0d3c21c9f342ac0c51502b046ef"
+    },
+    {
+      "id": "Scanlines",
+      "status": "retained-original",
+      "previousSha256": "ba635b79b9246daf641b6c395210b8a57da89089cde7fe861fa02536c1690550",
+      "sha256": "ba635b79b9246daf641b6c395210b8a57da89089cde7fe861fa02536c1690550"
+    },
+    {
+      "id": "PixelGrid",
+      "status": "retained-original",
+      "previousSha256": "5d4be3e695c5d8b26cf73e4ebeab4c4336d903d3ff16e2759e9fd27fc78f564e",
+      "sha256": "5d4be3e695c5d8b26cf73e4ebeab4c4336d903d3ff16e2759e9fd27fc78f564e"
+    },
+    {
+      "id": "Glitch",
+      "status": "retained-original",
+      "previousSha256": "7a4717432cf8257731470e4b5174ba152286d4c0438abebc06746c218c997faf",
+      "sha256": "7a4717432cf8257731470e4b5174ba152286d4c0438abebc06746c218c997faf"
+    },
+    {
+      "id": "Matrix",
+      "status": "retained-original",
+      "previousSha256": "c83f170785960a5345861fe248fea7ca8cd7dae4fe051a6969196b67a3b4f362",
+      "sha256": "c83f170785960a5345861fe248fea7ca8cd7dae4fe051a6969196b67a3b4f362"
+    },
+    {
+      "id": "Hologram",
+      "status": "retained-original",
+      "previousSha256": "347c28fd7404743ff99f09e5955caebb11f1750163471c461aa60c22ce9b41c4",
+      "sha256": "347c28fd7404743ff99f09e5955caebb11f1750163471c461aa60c22ce9b41c4"
+    },
+    {
+      "id": "HudFrame",
+      "status": "retained-original",
+      "previousSha256": "52192d5e9a9da19b70235c067f75f91007b69b2e2543a652a65187565dadf70f",
+      "sha256": "52192d5e9a9da19b70235c067f75f91007b69b2e2543a652a65187565dadf70f"
+    },
+    {
+      "id": "DataStream",
+      "status": "retained-original",
+      "previousSha256": "32d20266323868ed2075332dd214b314bd4b1c7322fb4476d776014b666211e2",
+      "sha256": "32d20266323868ed2075332dd214b314bd4b1c7322fb4476d776014b666211e2"
+    },
+    {
+      "id": "Barcode",
+      "status": "retained-original",
+      "previousSha256": "f66f0de3026f4665ad680faa9df04c3078015d846c8b1ef52991a3a9e48e9877",
+      "sha256": "f66f0de3026f4665ad680faa9df04c3078015d846c8b1ef52991a3a9e48e9877"
+    },
+    {
+      "id": "PerspectiveGrid",
+      "status": "retained-original",
+      "previousSha256": "0e0645eaf835a7298266334fbd5caee440df016a12b8f79dabf5619442e7104f",
+      "sha256": "0e0645eaf835a7298266334fbd5caee440df016a12b8f79dabf5619442e7104f"
+    },
+    {
+      "id": "RandomBlocks",
+      "status": "retained-original",
+      "previousSha256": "648e65886d9a9bc4f6ad05863131c1adbef871f480ae602a6a0b95f7ffce3923",
+      "sha256": "648e65886d9a9bc4f6ad05863131c1adbef871f480ae602a6a0b95f7ffce3923"
+    },
+    {
+      "id": "BinaryNoise",
+      "status": "retained-original",
+      "previousSha256": "881b612b7dc2463b54a80609f7c4bc2985da415be3829b104cbdcd5928f14743",
+      "sha256": "881b612b7dc2463b54a80609f7c4bc2985da415be3829b104cbdcd5928f14743"
+    },
+    {
+      "id": "ConcentricUI",
+      "status": "retained-original",
+      "previousSha256": "98947bdc724ba517635a9936a4b13a5c76130de25096752293cb2ad45de3fbdb",
+      "sha256": "98947bdc724ba517635a9936a4b13a5c76130de25096752293cb2ad45de3fbdb"
+    },
+    {
+      "id": "PixelDissolve",
+      "status": "retained-original",
+      "previousSha256": "552573651721c38bff4169188559e091483db14d95d57f1fc1557b75d9fc64c7",
+      "sha256": "552573651721c38bff4169188559e091483db14d95d57f1fc1557b75d9fc64c7"
+    },
+    {
+      "id": "DiodeGrid",
+      "status": "retained-original",
+      "previousSha256": "25ca723076d4e6bf6ad1ad5cbff10a29499733adc261e5f9da900d6142b390d8",
+      "sha256": "25ca723076d4e6bf6ad1ad5cbff10a29499733adc261e5f9da900d6142b390d8"
+    },
+    {
+      "id": "SlotVent",
+      "status": "retained-original",
+      "previousSha256": "7ec537cd12b8e37e7c6e6bcaa608259c1fbf6f9dd3cc10e291eb31f5123dcb44",
+      "sha256": "7ec537cd12b8e37e7c6e6bcaa608259c1fbf6f9dd3cc10e291eb31f5123dcb44"
+    },
+    {
+      "id": "DataCode",
+      "status": "retained-original",
+      "previousSha256": "995603d9ddee5835fcf38fb14cffc6ca8bc1c620675a8c63f9c10466f63d87b1",
+      "sha256": "995603d9ddee5835fcf38fb14cffc6ca8bc1c620675a8c63f9c10466f63d87b1"
+    },
+    {
+      "id": "Datamosh",
+      "status": "retained-original",
+      "previousSha256": "3cc0bf65602f92d959bd3565a9b46727e96abfbf05176e5c9f32a840d0048461",
+      "sha256": "3cc0bf65602f92d959bd3565a9b46727e96abfbf05176e5c9f32a840d0048461"
+    },
+    {
+      "id": "RadarSweep",
+      "status": "retained-original",
+      "previousSha256": "9e040025143d0a7a6a4710a2ecf3574f15528aa06d3b609c441247178e8a9283",
+      "sha256": "9e040025143d0a7a6a4710a2ecf3574f15528aa06d3b609c441247178e8a9283"
+    },
+    {
+      "id": "QrBlocks",
+      "status": "retained-original",
+      "previousSha256": "8b14bd5ddfbdc2fc7c64f6849821860ffcc2b5c3a0130cbc001c133c417ed4fa",
+      "sha256": "8b14bd5ddfbdc2fc7c64f6849821860ffcc2b5c3a0130cbc001c133c417ed4fa"
+    },
+    {
+      "id": "RasterScan",
+      "status": "retained-original",
+      "previousSha256": "a22143b3cbb89952b34fb62031b4e414b8b4613acc760779919c45b06b25a716",
+      "sha256": "a22143b3cbb89952b34fb62031b4e414b8b4613acc760779919c45b06b25a716"
+    },
+    {
+      "id": "LedBar",
+      "status": "retained-original",
+      "previousSha256": "8abc27770d07213615fd6e8d5d11698bdff96ddad86aaa69b92a629dac36abef",
+      "sha256": "8abc27770d07213615fd6e8d5d11698bdff96ddad86aaa69b92a629dac36abef"
+    },
+    {
+      "id": "WaveformBar",
+      "status": "retained-original",
+      "previousSha256": "c01130df0c8ee78fb2df154b6635f0942222ba62dca74372cbafd7564d66c4aa",
+      "sha256": "c01130df0c8ee78fb2df154b6635f0942222ba62dca74372cbafd7564d66c4aa"
+    },
+    {
+      "id": "PixelSort",
+      "status": "retained-original",
+      "previousSha256": "b9bb9ea5981e98c60919d626a8dd49e18ef87c7466651218dc579a112bd05425",
+      "sha256": "b9bb9ea5981e98c60919d626a8dd49e18ef87c7466651218dc579a112bd05425"
+    },
+    {
+      "id": "HexData",
+      "status": "retained-original",
+      "previousSha256": "8fd403eb82f6866bf9b79560b2306ccd4736de66fa0d39780a6b3634fab94f20",
+      "sha256": "8fd403eb82f6866bf9b79560b2306ccd4736de66fa0d39780a6b3634fab94f20"
+    },
+    {
+      "id": "Lightning",
+      "status": "retained-original",
+      "previousSha256": "257fbb8000b5be455d2f52b39fdc91edbb0aab6e5679c3abcd5c810357a1fa5e",
+      "sha256": "257fbb8000b5be455d2f52b39fdc91edbb0aab6e5679c3abcd5c810357a1fa5e"
+    },
+    {
+      "id": "LightningBranch",
+      "status": "retained-original",
+      "previousSha256": "bc209360a305567cfa44d8cd089746f00d27d03c58d1cc7885c128c4893405c9",
+      "sha256": "bc209360a305567cfa44d8cd089746f00d27d03c58d1cc7885c128c4893405c9"
+    },
+    {
+      "id": "Arc",
+      "status": "retained-original",
+      "previousSha256": "9b2e3e54c88ab3046514f1c0a124bab8079ffbd13d99ebe45dc94ee4c3520e5f",
+      "sha256": "9b2e3e54c88ab3046514f1c0a124bab8079ffbd13d99ebe45dc94ee4c3520e5f"
+    },
+    {
+      "id": "ElectricField",
+      "status": "retained-original",
+      "previousSha256": "c4b1ffc98f084bd4916a02f303a26d66ba290d3f3200df3b45bda583af3f594d",
+      "sha256": "c4b1ffc98f084bd4916a02f303a26d66ba290d3f3200df3b45bda583af3f594d"
+    },
+    {
+      "id": "EnergyBeam",
+      "status": "retained-original",
+      "previousSha256": "bed446b3b4d95437ad1f2f589e84cc8e5c90e057deddaa10eae22dc4355b17ab",
+      "sha256": "bed446b3b4d95437ad1f2f589e84cc8e5c90e057deddaa10eae22dc4355b17ab"
+    },
+    {
+      "id": "SpeedLines",
+      "status": "retained-original",
+      "previousSha256": "4d0419430045645729c8c17cb87534f1c7c7882b52d2cde07cfbd04618f2e523",
+      "sha256": "4d0419430045645729c8c17cb87534f1c7c7882b52d2cde07cfbd04618f2e523"
+    },
+    {
+      "id": "ImpactCrack",
+      "status": "retained-original",
+      "previousSha256": "b198ea2d8b844a3efdaa0bb0bd76a6ba496b52d4475a71d6fdb58feb86660e0b",
+      "sha256": "b198ea2d8b844a3efdaa0bb0bd76a6ba496b52d4475a71d6fdb58feb86660e0b"
+    },
+    {
+      "id": "Shatter",
+      "status": "retained-original",
+      "previousSha256": "005d62b1d3cb6ac36bd898e507d8285c3af5c3d3a2d58fe9afa9bbec80c6a420",
+      "sha256": "005d62b1d3cb6ac36bd898e507d8285c3af5c3d3a2d58fe9afa9bbec80c6a420"
+    },
+    {
+      "id": "ShockwaveFlat",
+      "status": "retained-original",
+      "previousSha256": "32ce192c8a86db7e1ac9fe873d57be48c2f700099da3ad2b4774dd2725479ee1",
+      "sha256": "32ce192c8a86db7e1ac9fe873d57be48c2f700099da3ad2b4774dd2725479ee1"
+    },
+    {
+      "id": "Slash",
+      "status": "retained-original",
+      "previousSha256": "d1cacbf9db7e2e694c52cb2199470dd895ae19154c94584e91646a8d2451b7aa",
+      "sha256": "d1cacbf9db7e2e694c52cb2199470dd895ae19154c94584e91646a8d2451b7aa"
+    },
+    {
+      "id": "Swipe",
+      "status": "retained-original",
+      "previousSha256": "a64b797d6c5ca9366113ea4553167877cfeee645be3e4727fc14613418314531",
+      "sha256": "a64b797d6c5ca9366113ea4553167877cfeee645be3e4727fc14613418314531"
+    },
+    {
+      "id": "ExplosionSpikes",
+      "status": "retained-original",
+      "previousSha256": "2465157dc3678e986cfb3a740d021333a14c6ad8d688c89d17df1b4946ace512",
+      "sha256": "2465157dc3678e986cfb3a740d021333a14c6ad8d688c89d17df1b4946ace512"
+    },
+    {
+      "id": "SmokePuff",
+      "status": "retained-original",
+      "previousSha256": "6bf5c94f9bab465b746395c67e1027e00f62b02f550f44fafe37ff0593d8c2cc",
+      "sha256": "6bf5c94f9bab465b746395c67e1027e00f62b02f550f44fafe37ff0593d8c2cc"
+    },
+    {
+      "id": "FlameShape",
+      "status": "retained-original",
+      "previousSha256": "738e99e01b19e92ee6bf0b7f509d8ff20245b2b45fe1f173e63070e6f3931cbb",
+      "sha256": "738e99e01b19e92ee6bf0b7f509d8ff20245b2b45fe1f173e63070e6f3931cbb"
+    },
+    {
+      "id": "PlasmaBall",
+      "status": "retained-original",
+      "previousSha256": "11751dde84b09b25fc2be026ecd3f7294ffb23125967a4f694c50718033935ee",
+      "sha256": "11751dde84b09b25fc2be026ecd3f7294ffb23125967a4f694c50718033935ee"
+    },
+    {
+      "id": "Portal",
+      "status": "retained-original",
+      "previousSha256": "3d8ed4f03eb5260ef0e93c345aa5b583567982af42db2e6c2cd03880cbd03aea",
+      "sha256": "3d8ed4f03eb5260ef0e93c345aa5b583567982af42db2e6c2cd03880cbd03aea"
+    },
+    {
+      "id": "DissolveNoise",
+      "status": "retained-original",
+      "previousSha256": "0a03ec14db1e47e0728c2b8eee996b4d4f4bcf2f3fb7a09d00b810b3cc8e77a5",
+      "sha256": "0a03ec14db1e47e0728c2b8eee996b4d4f4bcf2f3fb7a09d00b810b3cc8e77a5"
+    },
+    {
+      "id": "Fireflies",
+      "status": "retained-original",
+      "previousSha256": "fa4b9e1a6ce1c9a89daf31c1ea2ef27f85d69842addb2ff5b9bdbd835ef4f3bc",
+      "sha256": "fa4b9e1a6ce1c9a89daf31c1ea2ef27f85d69842addb2ff5b9bdbd835ef4f3bc"
+    },
+    {
+      "id": "Starfield",
+      "status": "retained-original",
+      "previousSha256": "fca6aa8f09b2ae7f16217a8f9656aa2c8450e1ad277a3b398be9e6f39e0df639",
+      "sha256": "fca6aa8f09b2ae7f16217a8f9656aa2c8450e1ad277a3b398be9e6f39e0df639"
+    },
+    {
+      "id": "EnergyRing",
+      "status": "retained-original",
+      "previousSha256": "18e053791c58cd83ef2e9a575776d1e2b1b70e326b86ffe135979c23a9564f7d",
+      "sha256": "18e053791c58cd83ef2e9a575776d1e2b1b70e326b86ffe135979c23a9564f7d"
+    },
+    {
+      "id": "VortexSpiral",
+      "status": "retained-original",
+      "previousSha256": "8588cf25d037eb2c4d2c109dcb485000f996c73bc8895df87678902b76636a47",
+      "sha256": "8588cf25d037eb2c4d2c109dcb485000f996c73bc8895df87678902b76636a47"
+    },
+    {
+      "id": "MuzzleFlash",
+      "status": "retained-original",
+      "previousSha256": "ffb751a01b518741d38e075ff71773a1a63f37c7796ffda8e58d401d3a7f5199",
+      "sha256": "ffb751a01b518741d38e075ff71773a1a63f37c7796ffda8e58d401d3a7f5199"
+    },
+    {
+      "id": "ChargeGather",
+      "status": "retained-original",
+      "previousSha256": "0cf91ca618c03f4f02b3d72fd8d316a9e7509ea974c1ace8ff521a87e87735a7",
+      "sha256": "0cf91ca618c03f4f02b3d72fd8d316a9e7509ea974c1ace8ff521a87e87735a7"
+    },
+    {
+      "id": "IonStorm",
+      "status": "retained-original",
+      "previousSha256": "bdce17f44599ae15c16c1dd64360cab326d9f32c039042e8439143e9109a2b8d",
+      "sha256": "bdce17f44599ae15c16c1dd64360cab326d9f32c039042e8439143e9109a2b8d"
+    },
+    {
+      "id": "GeyserBurst",
+      "status": "retained-original",
+      "previousSha256": "38fc3fe949474aea582578720bc5a74d6a1afa71171428a7e999ec86550cc4ec",
+      "sha256": "38fc3fe949474aea582578720bc5a74d6a1afa71171428a7e999ec86550cc4ec"
+    },
+    {
+      "id": "AuroraVeil",
+      "status": "retained-original",
+      "previousSha256": "5bb09af0edec5098bac54a8ade9456676eaaf6f7be75fa9e1d607a7cfbb21450",
+      "sha256": "5bb09af0edec5098bac54a8ade9456676eaaf6f7be75fa9e1d607a7cfbb21450"
+    },
+    {
+      "id": "AuraPulse",
+      "status": "retained-original",
+      "previousSha256": "a1005736c3a23319ae0bb3f5a2846b289cd5454e246694ec5800fa1f829403ba",
+      "sha256": "a1005736c3a23319ae0bb3f5a2846b289cd5454e246694ec5800fa1f829403ba"
+    },
+    {
+      "id": "ShieldHex",
+      "status": "modified",
+      "previousSha256": "a3fe5da46e83c397ef86a686b206ecb1d8397c83d2c48e83d9c4a7c8d0c02466",
+      "sha256": "ff1da6460bf670bf9e0b1ce99306667f24b5d69df083d5dfd8337b990a65fbb9",
+      "revision": 2,
+      "reason": "按用户要求移除圆形边界遮罩，六边形护盾铺满图形区域，并移除无效的护盾半径参数"
+    },
+    {
+      "id": "PyroBurst",
+      "status": "retained-original",
+      "previousSha256": "90e13adea73e791cecb0bd3cb705479f991e6cd170f0a9300a60b90dff3098af",
+      "sha256": "90e13adea73e791cecb0bd3cb705479f991e6cd170f0a9300a60b90dff3098af"
+    },
+    {
+      "id": "TeslaCoil",
+      "status": "retained-original",
+      "previousSha256": "330e6e73d0be31fc6dc203a3fee7aa63d5f0f39dd4185c7fcae8bd26d68e6c3b",
+      "sha256": "330e6e73d0be31fc6dc203a3fee7aa63d5f0f39dd4185c7fcae8bd26d68e6c3b"
+    },
+    {
+      "id": "IonOrb",
+      "status": "retained-original",
+      "previousSha256": "e8e4535269cec91276e4d58f454697518c8c23f543b2eb2919428d3266fc8d97",
+      "sha256": "e8e4535269cec91276e4d58f454697518c8c23f543b2eb2919428d3266fc8d97"
+    },
+    {
+      "id": "Singularity",
+      "status": "retained-original",
+      "previousSha256": "63ce023c0d237fb856bfa41593baee89aae0195b7ad42064198c975dca6074e6",
+      "sha256": "63ce023c0d237fb856bfa41593baee89aae0195b7ad42064198c975dca6074e6"
+    },
+    {
+      "id": "FlowMap",
+      "status": "retained-original",
+      "previousSha256": "1ff45b664c4df2465905a1df4f01e4d7bed976aa2b67421e6b1e1f45bf138e23",
+      "sha256": "1ff45b664c4df2465905a1df4f01e4d7bed976aa2b67421e6b1e1f45bf138e23"
+    },
+    {
+      "id": "TurbulenceMap",
+      "status": "retained-original",
+      "previousSha256": "a1601059276b420b46cc7f327f70e903ff306b06baf2670ee008942cb4aa1fb3",
+      "sha256": "a1601059276b420b46cc7f327f70e903ff306b06baf2670ee008942cb4aa1fb3"
+    },
+    {
+      "id": "RadialFlow",
+      "status": "retained-original",
+      "previousSha256": "8120d1b2fe8a569f76d242f51308349d632c8f772aca3ce69dbf446b3b1b32d2",
+      "sha256": "8120d1b2fe8a569f76d242f51308349d632c8f772aca3ce69dbf446b3b1b32d2"
+    },
+    {
+      "id": "VortexFlow",
+      "status": "retained-original",
+      "previousSha256": "d297792f6955a7d2d380f90065dbf1aba488e8ddb15aba45317c2fbf3719ef64",
+      "sha256": "d297792f6955a7d2d380f90065dbf1aba488e8ddb15aba45317c2fbf3719ef64"
+    },
+    {
+      "id": "DirectionalFlow",
+      "status": "retained-original",
+      "previousSha256": "3ddcd386b75ec6950a2c3af27fef9282b123ee8d55e3213f4b935e5a845c6db6",
+      "sha256": "3ddcd386b75ec6950a2c3af27fef9282b123ee8d55e3213f4b935e5a845c6db6"
+    },
+    {
+      "id": "PolarFlow",
+      "status": "retained-original",
+      "previousSha256": "5ca93144944f2c9e86ad1eed603bfd22bc3f3a3e21bf0de8b6dea0c10afaf46b",
+      "sha256": "5ca93144944f2c9e86ad1eed603bfd22bc3f3a3e21bf0de8b6dea0c10afaf46b"
+    },
+    {
+      "id": "HeightNormal",
+      "status": "retained-original",
+      "previousSha256": "c8cf2b24dedf863677466c860fff219ef6f787b9a3f43405fdb243aae4c98264",
+      "sha256": "c8cf2b24dedf863677466c860fff219ef6f787b9a3f43405fdb243aae4c98264"
+    },
+    {
+      "id": "VectorWarp",
+      "status": "retained-original",
+      "previousSha256": "c381b9bebdf9e3837188ecc3f1acfa0db63307dbbe37d6be63526d73120ca0e8",
+      "sha256": "c381b9bebdf9e3837188ecc3f1acfa0db63307dbbe37d6be63526d73120ca0e8"
+    },
+    {
+      "id": "Displacement",
+      "status": "retained-original",
+      "previousSha256": "b7d1873b580dda7b9b2ca02f889ae78c224233509cdf3be81b46a2d5061e6057",
+      "sha256": "b7d1873b580dda7b9b2ca02f889ae78c224233509cdf3be81b46a2d5061e6057"
+    },
+    {
+      "id": "PositionGradient",
+      "status": "retained-original",
+      "previousSha256": "81a8be665e3f457dc6b0911926ad8e09fc6d552e762184926dbe0ed4f7ce92e9",
+      "sha256": "81a8be665e3f457dc6b0911926ad8e09fc6d552e762184926dbe0ed4f7ce92e9"
+    },
+    {
+      "id": "ErosionMask",
+      "status": "retained-original",
+      "previousSha256": "eadeb107022d885a890f5d5d038414bd4c252f4864091b7d7e5527f56a96c313",
+      "sha256": "eadeb107022d885a890f5d5d038414bd4c252f4864091b7d7e5527f56a96c313"
+    },
+    {
+      "id": "RadialErosion",
+      "status": "retained-original",
+      "previousSha256": "664880bcd6ac7ab0cc33d7429db31fa96be0d48bce68a43aa02eeab48d989f88",
+      "sha256": "664880bcd6ac7ab0cc33d7429db31fa96be0d48bce68a43aa02eeab48d989f88"
+    },
+    {
+      "id": "DissolveEdge",
+      "status": "retained-original",
+      "previousSha256": "0f3c7021cc5ee04d8595823840f8db5d4a1383d9e6a640478a8decd582f287c2",
+      "sha256": "0f3c7021cc5ee04d8595823840f8db5d4a1383d9e6a640478a8decd582f287c2"
+    },
+    {
+      "id": "SDFShapeMask",
+      "status": "retained-original",
+      "previousSha256": "3afa5c6b89081c32eb8ef098262d8a42990db2cd828c8dc8a2f2ba560b608a02",
+      "sha256": "3afa5c6b89081c32eb8ef098262d8a42990db2cd828c8dc8a2f2ba560b608a02"
+    },
+    {
+      "id": "EdgeMask",
+      "status": "retained-original",
+      "previousSha256": "aa0f42e1ece7e091d886669040cfc421d15ea278f02f571aacb8477404af7e19",
+      "sha256": "aa0f42e1ece7e091d886669040cfc421d15ea278f02f571aacb8477404af7e19"
+    },
+    {
+      "id": "ThicknessMask",
+      "status": "retained-original",
+      "previousSha256": "fe950eb72343943aa9d35e627841c7aaaf7408a880fbfc55ff1ec67ec6898827",
+      "sha256": "fe950eb72343943aa9d35e627841c7aaaf7408a880fbfc55ff1ec67ec6898827"
+    },
+    {
+      "id": "FresnelMask",
+      "status": "retained-original",
+      "previousSha256": "f24c263f1fdf8a46c9976da673537231af092e85b36d5e7a2f4b24f1263ad446",
+      "sha256": "f24c263f1fdf8a46c9976da673537231af092e85b36d5e7a2f4b24f1263ad446"
+    },
+    {
+      "id": "GradientRamp",
+      "status": "retained-original",
+      "previousSha256": "dccffe3dedfb2f70dea834770d9d7caaac516118b8e0f32a2c7907b821e4e099",
+      "sha256": "dccffe3dedfb2f70dea834770d9d7caaac516118b8e0f32a2c7907b821e4e099"
+    },
+    {
+      "id": "RibbonFade",
+      "status": "retained-original",
+      "previousSha256": "966f0e48c84bdee4d0f4ddaffb2123b11190fa05976551addab9c9c4c896eb66",
+      "sha256": "966f0e48c84bdee4d0f4ddaffb2123b11190fa05976551addab9c9c4c896eb66"
+    },
+    {
+      "id": "RibbonTaper",
+      "status": "retained-original",
+      "previousSha256": "c172fc05f1245178bda55c0f0517f50b1c1bbdafc5f64f064101c6dc981df705",
+      "sha256": "c172fc05f1245178bda55c0f0517f50b1c1bbdafc5f64f064101c6dc981df705"
+    },
+    {
+      "id": "RibbonCore",
+      "status": "retained-original",
+      "previousSha256": "979c3de5d8dbf2bbdea9e04c14313149098e5ce8fbb85083f7d6c39caf9feb0b",
+      "sha256": "979c3de5d8dbf2bbdea9e04c14313149098e5ce8fbb85083f7d6c39caf9feb0b"
+    },
+    {
+      "id": "RibbonStreak",
+      "status": "retained-original",
+      "previousSha256": "7ef7943004b9fb100493ba7a7c15f3cfb80594112430e80974241933d9e702ee",
+      "sha256": "7ef7943004b9fb100493ba7a7c15f3cfb80594112430e80974241933d9e702ee"
+    },
+    {
+      "id": "RibbonFilament",
+      "status": "retained-original",
+      "previousSha256": "5ff2d561a72b80e9c900a3959f91dcf7343606a9902d72f0e329472a9f73ed3b",
+      "sha256": "5ff2d561a72b80e9c900a3959f91dcf7343606a9902d72f0e329472a9f73ed3b"
+    },
+    {
+      "id": "CometRibbon",
+      "status": "retained-original",
+      "previousSha256": "e00cc580bf223b2744646cf1b206e73ceb7bfc8e1c73db6913fbc40cea293081",
+      "sha256": "e00cc580bf223b2744646cf1b206e73ceb7bfc8e1c73db6913fbc40cea293081"
+    },
+    {
+      "id": "LightSaber",
+      "status": "retained-original",
+      "previousSha256": "2e30ea440303ea00b2818e7c5d21b34e3ba76af0ab046ac19acd0333101c684d",
+      "sha256": "2e30ea440303ea00b2818e7c5d21b34e3ba76af0ab046ac19acd0333101c684d"
+    },
+    {
+      "id": "FlameRibbon",
+      "status": "retained-original",
+      "previousSha256": "9ee007f32ed5b789272116fd043f18404adb6aa9b206b04790c4b8ffba4efc0a",
+      "sha256": "9ee007f32ed5b789272116fd043f18404adb6aa9b206b04790c4b8ffba4efc0a"
+    },
+    {
+      "id": "HazeRibbon",
+      "status": "retained-original",
+      "previousSha256": "9093292347feffc9a41a87bb52b712ee2bfee75048629a399782bafd564af3fb",
+      "sha256": "9093292347feffc9a41a87bb52b712ee2bfee75048629a399782bafd564af3fb"
+    },
+    {
+      "id": "EmberRibbon",
+      "status": "retained-original",
+      "previousSha256": "40e6bcda1473c5f8a2f605c69fa01a37ee97085b1bf5574d68affef2c54c2869",
+      "sha256": "40e6bcda1473c5f8a2f605c69fa01a37ee97085b1bf5574d68affef2c54c2869"
+    },
+    {
+      "id": "ScimitarRibbon",
+      "status": "retained-original",
+      "previousSha256": "ddded1c423dee414fab3d1942a89c49d9032e83e105afdf793ba0131e972dfc4",
+      "sha256": "ddded1c423dee414fab3d1942a89c49d9032e83e105afdf793ba0131e972dfc4"
+    },
+    {
+      "id": "ClawRake",
+      "status": "retained-original",
+      "previousSha256": "ae8f8cd7d8f82fea5254bb4ad39300c6310824bc49c7cab6fd461c1f071a2255",
+      "sha256": "ae8f8cd7d8f82fea5254bb4ad39300c6310824bc49c7cab6fd461c1f071a2255"
+    },
+    {
+      "id": "RibbonWave",
+      "status": "retained-original",
+      "previousSha256": "ce00d816894bf5b6786ef61cd79b3c669d1936e61e69c760bfb876c2e07c80f4",
+      "sha256": "ce00d816894bf5b6786ef61cd79b3c669d1936e61e69c760bfb876c2e07c80f4"
+    },
+    {
+      "id": "RibbonWake",
+      "status": "retained-original",
+      "previousSha256": "93af6062c91be80fda67ebe44512c2c5416811cacb1a33d11f21034f8673c8b4",
+      "sha256": "93af6062c91be80fda67ebe44512c2c5416811cacb1a33d11f21034f8673c8b4"
+    },
+    {
+      "id": "WindStreak",
+      "status": "retained-original",
+      "previousSha256": "095de11ff3428ca7e85e704a90330e6231a55b40dd60b98b4837bc5cd2647fc8",
+      "sha256": "095de11ff3428ca7e85e704a90330e6231a55b40dd60b98b4837bc5cd2647fc8"
+    },
+    {
+      "id": "RibbonSpark",
+      "status": "retained-original",
+      "previousSha256": "9478ccf979c8cbe53f9ee3ff407f27010e6fb393db9e553e3c7d1938bbf7bc9c",
+      "sha256": "9478ccf979c8cbe53f9ee3ff407f27010e6fb393db9e553e3c7d1938bbf7bc9c"
+    },
+    {
+      "id": "WebSigil",
+      "status": "retained-original",
+      "previousSha256": "d463214c067317afe908949ba32f784b03e4943f2693a202115e8709ba279f27",
+      "sha256": "d463214c067317afe908949ba32f784b03e4943f2693a202115e8709ba279f27"
+    },
+    {
+      "id": "VortexGate",
+      "status": "retained-original",
+      "previousSha256": "5580ba6e1ee5d0630740a8838e2536a8e02881c79e7c0e6f955862de21fbcaf0",
+      "sha256": "5580ba6e1ee5d0630740a8838e2536a8e02881c79e7c0e6f955862de21fbcaf0"
+    },
+    {
+      "id": "NaturalWood",
+      "status": "retained-original",
+      "previousSha256": "657cfa0ee8b8b21efaeef730cd5dae4167c80d7bf5480698ca667933b6532b43",
+      "sha256": "657cfa0ee8b8b21efaeef730cd5dae4167c80d7bf5480698ca667933b6532b43"
+    }
+  ]
+}

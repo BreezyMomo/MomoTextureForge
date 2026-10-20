@@ -32,7 +32,7 @@ export async function checkSeamless(renderer, progress = () => {}) {
       for (const type of [
         ...PERIODIC_PATTERNS,
         ...REPEATED_SHAPES,
-        "Smoke",
+        "Fluid",
         "LinearGradient",
       ]) {
         const s = defaults();
@@ -91,7 +91,7 @@ export async function checkSeamless(renderer, progress = () => {}) {
       );
       for (const [slot, value] of [
         [0, 1],
-        [4, 0.8],
+        [2, 0.8],
       ]) {
         const changed = structuredClone(s);
         changed.layers[0].params[slot] = value;

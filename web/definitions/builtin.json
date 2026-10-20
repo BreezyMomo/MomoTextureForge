@@ -1,6 +1,6 @@
 {
   "schema": "momo.texture-index/v1",
-  "revision": 10,
+  "revision": 13,
   "abi": "momo-pattern/16-v1",
   "categories": [
     {
