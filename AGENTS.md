@@ -1,8 +1,8 @@
 # Momo Texture Forge
 
-本仓库是独立网页工具的后续开发目录，不再修改 Momo 框架内的旧工具副本。
+本仓库维护 Momo Texture Forge 网页图形与纹理创作工具。
 
-- 运行不依赖 Unity 或 Momo 框架，命令均从仓库根目录执行。
+- 命令均从仓库根目录执行，使用 Node.js 安装依赖、运行测试和构建。
 - 本次保留全部图形，资源删除与发布范围由后续任务决定。
 - 编辑器入口：web/tree-app.js；内置图形：web/definitions。
 - Skill 源文件在 skills/，修改后运行 node build-authoring-kit.mjs，同步生成文件。
