@@ -20,7 +20,7 @@ test('seven generator types append with explicit capability versions and extende
   assert.equal(type.definition.generator.schema,'momo.generator/v1');
   assert.ok(type.parameters.length>=13&&type.parameters.length<=64);
   assert.equal(type.parameters[0].label,'随机种子');
-  assert.equal(type.definition.revision,1);
+  assert.equal(type.definition.revision,id==='TurbulentFlame'?2:1);
   const p=project();p.root.children=[node('shape',id)];
   for(const parameter of type.parameters)p.root.children[0].params[parameter.slot]=parameter.max;
   assert.deepEqual(sanitizeTree(JSON.parse(JSON.stringify(p))).root.children[0].params,p.root.children[0].params);

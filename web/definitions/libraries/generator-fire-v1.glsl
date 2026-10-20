@@ -26,10 +26,7 @@ vec4 generate(vec2 uv){
  float textureValue=.45+gTurb(warped*2.+vec2(17.3,53.1),max(3,int(octaves)-1))*1.1;
  vec3 emitted=fireRamp(heat)*mix(1.,textureValue,density*(1.-smoothstep(.25,.85,normalizedX))*(1.-h*.55)*.72)*intensity;
  float alpha=smoothstep(0.,.04,density);
- float smokeH=clamp((uv.y-baseY-height*.5)/max(1.-baseY-height*.3,.01),0.,1.);
- float smoke=max(0.,1.-abs(p.x)/max(smokeSpread+smokeH*.3,.01))*smokeH*smokeDensity*smoothstep(0.,.3,smokeH);
- smoke=clamp(smoke*(1.+gFbm(uv*warpScale*1.5+first*.5,int(octaves))*.2),0.,1.)*smokeRise*smokeMix;
- emitted=emitted*alpha+vec3(.18,.15,.12)*smoke;alpha=max(alpha,smoke*.6);
+ emitted*=alpha;
  float bed=(1.-smoothstep(-.03,.08,h))*(1.-smoothstep(0.,width*1.6,abs(p.x)))*width*3.5;
  bed*=1.+abs(gFbm(vec2(p.x*18.,seed*3.),3))*.5;emitted+=vec3(1,.5,.1)*bed*intensity*.6;alpha=max(alpha,bed*.6);
  float fogField=fbm(vec2(p.x*warpScale*1.3,p.y*warpScale*.55)+first*.45+seed*.03);
@@ -38,5 +35,23 @@ vec4 generate(vec2 uv){
  float sparkZone=smoothstep(.1,.5,h)*(1.-smoothstep(.6,1.4,h))*(1.-smoothstep(0.,width*2.5,abs(p.x)));
  float specks=smoothstep(.7,.95,gSigned(p*vec2(55,60)+seed+first*4.))*sparkZone;
  emitted+=vec3(1,.6,.15)*specks*intensity;alpha=max(alpha,specks*.9);
- alpha=clamp(alpha,0.,1.);return vec4(alpha>.00001?emitted/alpha:vec3(0),alpha);
+ // Smoke has its own rising, widening volume behind the emissive flame.
+ // Height and spread change the plume silhouette rather than multiplying opacity.
+ float smokeStart=baseY+height*.28;
+ float smokeHeight=max((1.-smokeStart)*mix(.2,1.,clamp(smokeRise,0.,1.)),.01);
+ float smokeT=(uv.y-smokeStart)/smokeHeight;
+ vec2 smokeCoord=vec2(p.x*warpScale*1.6,smokeT*2.8);
+ vec2 smokeWarp=gWarp(smokeCoord, int(octaves));
+ float drift=smokeWarp.x*(.04+.12*clamp(smokeT,0.,1.));
+ float smokeWidth=.035+width*.1+smokeSpread*.23+clamp(smokeT,0.,1.)*(.04+smokeSpread*.25);
+ float smokeX=abs(p.x-drift)/max(smokeWidth,.01);
+ float plume=1.-smoothstep(.25,1.,smokeX);
+ plume*=smoothstep(0.,.12,smokeT)*(1.-smoothstep(.55,1.,smokeT));
+ float billows=clamp(.6+gFbm(smokeCoord+smokeWarp*3.,int(octaves))*1.3,.12,1.);
+ float smoke=clamp(smokeMix,0.,1.)*(1.-exp(-max(smokeDensity,0.)*plume*billows*3.));
+ alpha=clamp(alpha,0.,1.);
+ float smokeBehind=smoke*(1.-alpha);
+ emitted+=mix(vec3(.22,.20,.18),vec3(.42,.39,.35),billows)*smokeBehind;
+ alpha+=smokeBehind;
+ return vec4(alpha>.00001?emitted/alpha:vec3(0),alpha);
 }
