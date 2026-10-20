@@ -2,6 +2,8 @@
 
 网页图形与纹理创作工具，支持公式、图片和 SVG 资源、节点组合、程序动画与多格式导出。编辑和渲染在浏览器中完成，可通过本地服务使用，也可构建为离线 HTML。
 
+**在线访问：[Momo Texture Forge](https://breezymomo.github.io/MomoTextureForge/)**（首次完成 GitHub Pages 部署后可用）。
+
 ## 快速开始
 
 开发环境需要 Node.js 22 或更高版本，浏览器推荐桌面 Chrome 或 Edge，需支持 WebGL2。
@@ -121,6 +123,23 @@ npm run build:standalone
 
 分享可编辑作品时，同时提供保存的项目文件；浏览器本地存储不能代替文件备份。
 
+## GitHub Pages 在线访问
+
+生成可部署的单文件网页：
+
+```sh
+npm ci
+npm run build:pages
+```
+
+命令会生成离线 HTML，并同步复制到仓库根目录的 `site/index.html`。`site/` 不在忽略列表中，可以随 Git 提交；每次更新网页前重新运行此命令。将 `site/` 作为网站根目录部署。页面已内嵌脚本、样式、内置图形和导出 Worker，无需部署 Node.js 服务；也兼容 GitHub Pages 的仓库子路径。
+
+本仓库提供 `.github/workflows/pages.yml`。首次使用时，在 GitHub 仓库的 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**。将配置推送到 `main` 后会自动检查、构建和部署；也可在 **Actions → Deploy GitHub Pages → Run workflow** 手动触发。站点地址以成功部署后的 Actions 输出为准。
+
+公开仓库可使用 GitHub Free 的 Pages；私有仓库需要支持 Pages 的套餐，详见 [GitHub Pages 官方说明](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages)。发布网页后，访问者可以获取页面中内嵌的代码和图形资源；仓库私有不代表网页内容私有。
+
+在线版的图库、图形列表和草稿仍保存在访问者自己的浏览器中，不上传到 GitHub，也不与 localhost 或离线 HTML 共享存储。远程图库需另行部署并允许跨域访问。
+
 ## 开发
 
 ```sh
@@ -134,6 +153,7 @@ node build-authoring-kit.mjs
 - `skills/`：两个 Skill 的维护源；修改后运行 `node build-authoring-kit.mjs` 同步下载包与嵌入内容。
 - `tests/`：自动化与浏览器验证工具；浏览器渲染验证独立于 Node.js 单元测试。
 - `library-manager/`：本地图库管理页面与逻辑。
+- `site/`：可提交的单文件网页及 `.nojekyll` 标记，运行 `npm run build:pages` 更新，由 GitHub Actions 部署。
 - `dist/`：生成产物；`test-results/`：本地验证输出。两者及 `node_modules/` 不纳入版本控制。
 
 PSD 编码器的依赖许可位于 `web/vendor/PSD-LICENSES.txt`。需要重新构建编码器时运行 `npm run build:psd-vendor`。

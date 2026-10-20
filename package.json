@@ -8,6 +8,7 @@
     "test": "node --test tests/*.test.mjs",
     "validate:definitions": "node validate-definitions.mjs",
     "build:standalone": "node build-standalone.mjs",
+    "build:pages": "node build-pages.mjs",
     "build:psd-vendor": "node build-psd-vendor.mjs",
     "build:remote-library": "node build-remote-library.mjs",
     "build:library-manager": "node build-library-manager.mjs"

@@ -10,5 +10,5 @@
 - Skill 源文件在 skills/，修改后运行 node build-authoring-kit.mjs，同步生成文件。
 - AI 上下文仅从图形库导出，不恢复选中节点上下文或固定图形清单。
 - 安装：npm ci。验证：npm test、npm run validate:definitions。构建：npm run build:standalone。
-- 测试输出放在 test-results/，产物放在 dist/，不提交依赖目录和浏览器用户数据。
+- 测试输出放在 test-results/，离线产物放在 dist/；npm run build:pages 将网页同步到可提交的 site/ 目录供静态部署。不提交依赖目录和浏览器用户数据。
 - 提交、推送与发布按用户指令执行。

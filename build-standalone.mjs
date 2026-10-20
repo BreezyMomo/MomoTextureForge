@@ -18,7 +18,7 @@ const [indexHTML,examplesHTML,validationHTML,css]=await Promise.all([read("index
 const body=html=>{
   const content=html.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1];
   if(!content)throw new Error("Page body missing");
-  return content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,"");
+  return content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,"").replace(/^[\t ]+$/gm,"");
 };
 const examplesStyle=examplesHTML.match(/<style>([\s\S]*?)<\/style>/i)?.[1];
 if(!examplesStyle)throw new Error("Examples style missing");
