@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "FilmGrain",
-  "revision": 1,
+  "revision": 2,
   "abi": "momo-pattern/16-v1",
   "name": "胶片颗粒",
   "category": "vfx",
@@ -220,6 +220,16 @@
       "max": 1,
       "step": 0.01,
       "default": 0.2
+    },
+    {
+      "slot": 18,
+      "key": "P18",
+      "variable": "motionSpeed",
+      "label": "动画速度",
+      "min": 0,
+      "max": 3,
+      "step": 0.01,
+      "default": 1
     }
   ],
   "defaults": [
@@ -240,7 +250,8 @@
     0.5,
     0.6,
     1,
-    0.2
+    0.2,
+    1
   ],
   "outputs": {
     "scalar": {
@@ -269,6 +280,7 @@
     ],
     "programs": {
       "color": "generator-grain-v1"
-    }
+    },
+    "usesTime": true
   }
 }

@@ -28,10 +28,10 @@ export async function editGenerator(asset,{item,embedded,ui,onSave,onClose}={}){
   const file=el('input',{type:'file',accept:'.json,application/json','aria-label':'生成器文件'});
   file.onchange=async()=>{const f=file.files[0];if(!f||busy||saving)return;loading=true;try{if(f.size>GENERATOR_AUTHORING_LIMIT)throw Error('生成器文件超过2MB');const text=await f.text();if(disposed)return;const next=parseGeneratorAuthoring(text);name.value=next.name;category.value=next.category;description.value=next.description;code.value=JSON.stringify(next,null,2);sourceDirty=true;schedule();}catch(error){status.textContent=error.message;}finally{loading=false;file.value='';if(disposed)cleanup();}};
   code.oninput=()=>{sourceDirty=true;controls.inert=true;schedule(300);};
-  form.append(el('p',{className:'tree-note',text:'粘贴或导入生成器JSON，自行定义参数和GLSL渲染步骤。每步返回vec4原色与透明度，可用input0～input2读取前面步骤。最多64个参数、16个步骤；固定种子生成静态图，可用参数关键帧制作变化。'}),labelled('生成器文件',file),labelled('生成器JSON',code));
+  form.append(el('p',{className:'tree-note',text:'粘贴或导入生成器JSON，自行定义参数和GLSL渲染步骤。每步返回vec4原色与透明度，可用input0～input2读取前面步骤。最多64个参数、16个步骤；固定种子可复现；GLSL 的 time 为秒，可制作动态序列。'}),labelled('生成器文件',file),labelled('生成器JSON',code));
  }
  refreshControls();form.append(controls);
- right.append(canvas,status);layout.append(form,right);body.append(layout);
+ const clock=el('input',{type:'range',min:0,max:10,step:.01,value:0,'aria-label':'生成器预览时间'}),clockLabel=labelled('预览时间（秒）',clock);clock.oninput=()=>schedule();right.append(canvas,clockLabel,status);layout.append(form,right);body.append(layout);
  async function preview(){
   timer=null;if(disposed||!active||busy||saving||loading)return;busy=true;const started=revision;let id,registered=false;
   try{
@@ -39,7 +39,7 @@ export async function editGenerator(asset,{item,embedded,ui,onSave,onClose}={}){
    const candidate=structuredClone(draft);candidate.definition.name=name.value.trim()||draft.definition.name;id='asset_'+await contentHash(candidate);
    if(disposed)return;
    if(!BY_ID.has(id)){registerAsset(id,candidate);registered=true;}
-   const p=project();p.root.children=[node('shape',id)];const pixels=renderer.draw(p,320,320,{quality:1,read:custom});if(custom&&!pixels.every(Number.isFinite))throw Error('生成器输出含非有限数，请检查除零、sqrt、pow等运算');const ctx=canvas.getContext('2d');ctx.clearRect(0,0,320,320);if(custom){const image=ctx.createImageData(320,320);for(let i=0;i<pixels.length;i++)image.data[i]=Math.round(Math.min(1,Math.max(0,pixels[i]))*255);ctx.putImageData(image,0,0);}else ctx.drawImage(renderSurface,0,0);lastGood={revision:started,asset:candidate,thumbnail:canvas.toDataURL()};status.textContent='预览成功 · 多步骤生成器 · '+draft.definition.parameters.length+' 个参数';
+   const p=project();p.root.children=[node('shape',id)];const pixels=renderer.draw(p,320,320,{quality:1,read:custom,formulaSeconds:Number(clock.value)});if(custom&&!pixels.every(Number.isFinite))throw Error('生成器输出含非有限数，请检查除零、sqrt、pow等运算');const ctx=canvas.getContext('2d');ctx.clearRect(0,0,320,320);if(custom){const image=ctx.createImageData(320,320);for(let i=0;i<pixels.length;i++)image.data[i]=Math.round(Math.min(1,Math.max(0,pixels[i]))*255);ctx.putImageData(image,0,0);}else ctx.drawImage(renderSurface,0,0);clockLabel.hidden=!BY_ID.get(id)?.usesTime;lastGood={revision:started,asset:candidate,thumbnail:canvas.toDataURL()};status.textContent='预览成功 · 多步骤生成器 · '+draft.definition.parameters.length+' 个参数';
   }catch(error){lastGood=null;status.textContent=error.message+'；保留上次正常预览，修复后才能保存。';}finally{if(registered)unregisterAsset(id);busy=false;if(disposed)cleanup();else if(active&&started!==revision)timer=setTimeout(preview,0);}
  }
  async function save(updateExisting=false){

@@ -309,7 +309,7 @@ export class Renderer {
         const values=s.layers.flatMap(l=>l.enabled?[...(l.type===type.id?[l.params]:[]),...(l.mask===type.id?[l.maskParams]:[])]:[]);
         if(values.some(p=>JSON.stringify(p)!==JSON.stringify(values[0])))throw Error('多组生成器参数请通过节点组合渲染');
         const libraries=resources.has(type.id)?resources.get(type.id).libraries:BUILTIN.libraries;
-        generatedTextures.set(i,this.generators.render(type,values[0]??type.defaults,w,h,libraries));
+        generatedTextures.set(i,this.generators.render(type,values[0]??type.defaults,w,h,libraries,Number.isFinite(formulaTime)?formulaTime:evaluated.time));
       }
     }
     const entry = this.program(

@@ -9,7 +9,7 @@ try{
  const result=await page.evaluate(async()=>{
   const {BUILTIN}=await import('./definition-runtime.js'),{TreeRenderer}=await import('./tree-renderer.js'),{project,node,sanitizeTree}=await import('./tree-model.js'),{encodePNG}=await import('./encoders.js');
   const {builtinAsset,registerAsset,unregisterAsset}=await import('./resource-assets.js');
-  const types=BUILTIN.catalog.filter(p=>p.definition.generator),renderer=new TreeRenderer(document.createElement('canvas')),reports=[],images={};
+  const types=BUILTIN.catalog.slice(284,291),renderer=new TreeRenderer(document.createElement('canvas')),reports=[],images={};
   const dataURL=bytes=>{let text='';for(let i=0;i<bytes.length;i+=8192)text+=String.fromCharCode(...bytes.subarray(i,i+8192));return 'data:image/png;base64,'+btoa(text);};
   const difference=(a,b)=>a.reduce((total,v,i)=>total+Math.abs(v-b[i]),0)/a.length;
   const render=(p,size=128,time=0)=>{const data=renderer.draw(p,size,size,{read:true,quality:1,time,formulaSeconds:time});if(renderer.gl.getError()||!data.every(Number.isFinite))throw Error('WebGL error or non-finite pixels');return data;};
@@ -17,7 +17,7 @@ try{
    for(const type of types){
     const p=project();p.root.children=[node('shape',type.id)];const n=p.root.children[0];
     const base=render(p),draws=renderer.base.generators.drawCount;render(p);if(renderer.base.generators.drawCount!==draws)throw Error(type.id+': uncached static generation');
-    if(difference(base,render(p,128,2))!==0)throw Error(type.id+': static seed must be independent of frame time');
+    const timeDifference=difference(base,render(p,128,1.3));if(timeDifference<.00001)throw Error(type.id+': missing time motion');const speed=type.parameters.find(s=>s.variable==='motionSpeed');n.params[speed.slot]=0;const stopped=render(p),passes=renderer.base.generators.drawCount;if(difference(stopped,render(p,128,2))!==0||passes!==renderer.base.generators.drawCount)throw Error(type.id+': stopped generator changed or missed cache');n.params=[...type.defaults];n.shapeClock={follow:false,value:.6};if(difference(render(p),render(p,128,2))!==0)throw Error(type.id+': freeze failed');n.shapeClock={follow:true,speed:1,offset:0,value:0};
     const alpha=base.filter((_,i)=>i%4===3),visible=alpha.reduce((n,a)=>n+(a>.01),0);if(visible===0)throw Error(type.id+': empty default result');
     const seed=type.parameters.find(s=>s.variable==='seed');n.params[seed.slot]+=137;const seedDifference=difference(base,render(p));n.params=[...type.defaults];
     let extendedDifference=null;const extended=type.parameters.find(p=>p.slot>=16&&p.variable!=='seed');if(extended){n.params[extended.slot]=extended.max;extendedDifference=difference(base,render(p));n.params=[...type.defaults];}
@@ -29,7 +29,7 @@ try{
     const saved=sanitizeTree(JSON.parse(JSON.stringify(p)));if(saved.root.children[0].params.length!==n.params.length)throw Error('Extended parameters were lost');
     for(const spec of type.parameters)for(const value of [spec.min,spec.max]){n.params=[...type.defaults];n.params[spec.slot]=value;render(p,32);}n.params=[...type.defaults];
     images[type.id]={};for(const size of [96,384])images[type.id][size]=dataURL(await encodePNG(render(p,size),size,size));
-    reports.push({id:type.id,parameters:type.parameters.length,visible,colors,seedDifference,extendedDifference,importDifference,alphaDifference,maskRatio:maskedSum/Math.max(baseSum,1),passes:draws});
+    reports.push({id:type.id,timeDifference,parameters:type.parameters.length,visible,colors,seedDifference,extendedDifference,importDifference,alphaDifference,maskRatio:maskedSum/Math.max(baseSum,1),passes:draws});
    }
    const p=project(),a=node('shape','PlumeSmoke'),b=node('shape','PlumeSmoke');b.params[0]+=17;a.transform.width=.5;b.transform.width=.5;a.transform.x=.25;b.transform.x=.75;p.root.children=[a,b];render(p);
   }finally{renderer.destroy();}

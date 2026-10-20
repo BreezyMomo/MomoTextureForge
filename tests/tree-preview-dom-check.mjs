@@ -57,7 +57,7 @@ assert.deepEqual(JSON.parse(localStorage.getItem('momo-texture-tree:draft:v1')).
 dragKey.onpointerup({clientX:25,pointerId:1});flush();
 assert.deepEqual(JSON.parse(localStorage.getItem('momo-texture-tree:draft:v1')).root.children[0].tracks.opacity.keys.map(k=>k[0]),[0,.25]);
 document.getElementById('undo').click();flush();assert.deepEqual(JSON.parse(localStorage.getItem('momo-texture-tree:draft:v1')).root.children[0].tracks.opacity.keys.map(k=>k[0]),[0,.75]);
-document.querySelector('[aria-label="返回作品时间"]').click();flush();assert.equal(lastRoot.children[0].timing.frozen,false);
+document.querySelector('[aria-label="返回画布时间"]').click();flush();assert.equal(lastRoot.children[0].timing.frozen,false);
 document.getElementById('export-now').click();
 const kind=document.querySelector('[aria-label="导出类型"]');kind.value='frames';kind.dispatchEvent(new win.Event('change'));
 const fps=document.querySelector('[aria-label="每秒帧数（FPS）"]');assert.ok(fps);fps.value='24';fps.dispatchEvent(new win.Event('change'));flush();
@@ -76,7 +76,7 @@ window.confirm=()=>true;document.getElementById('preview-update').click();flush(
 document.getElementById('preview-undo-update').click();assert.equal(localStorage.getItem('momo-texture-tree:presets:v1'),presetsBeforeUpdate);document.getElementById('return-work').click();flush();
 document.querySelector('[aria-label="查看 脉冲环"]').click();flush();
 assert.equal(document.querySelector('[aria-label="选择 组件试编辑"]'),null);
-assert.ok(document.getElementById('component-nav').textContent.includes('返回作品'));
+assert.ok(document.getElementById('component-nav').textContent.includes('返回画布'));
 document.getElementById('node-tree').click();flush();assert.equal(document.getElementById('selected-heading').textContent,'未选择节点');assert.equal(document.querySelectorAll('#inspector input').length,0);
 document.getElementById('add-group').click();flush();assert.equal(lastRoot.children.length,2);
 document.getElementById('preview-save').click();const forest=JSON.parse(localStorage.getItem('momo-texture-tree:presets:v1')).at(-1);assert.equal(forest.forest,true);assert.equal(forest.root.children.length,2);
@@ -89,7 +89,7 @@ const draggedLeaf=lastRoot.children[0].children[0].id,oldCount=lastRoot.children
 const dragRow=document.querySelector(`[data-node-id="${draggedLeaf}"]`),dropTarget=document.querySelector('.tree-root-drop');
 dragRow.ondragstart({dataTransfer:{setData(){}},preventDefault(){}});dropTarget.ondrop({preventDefault(){}});flush();assert.equal(lastRoot.children.length,oldCount+1);assert.equal(lastRoot.children.at(-1).id,draggedLeaf);
 document.getElementById('undo').click();flush();assert.equal(lastRoot.children.length,oldCount);assert.equal(lastRoot.children[0].children[0].id,draggedLeaf);document.getElementById('return-work').click();flush();
-assert.equal(document.querySelector('[aria-label="选择 作品"]'),null);document.getElementById('node-tree').click();flush();assert.equal(document.getElementById('selected-heading').textContent,'未选择节点');assert.equal(document.querySelectorAll('#inspector input').length,0);
+assert.equal(document.querySelector('[aria-label="选择 画布"]'),null);document.getElementById('node-tree').click();flush();assert.equal(document.getElementById('selected-heading').textContent,'未选择节点');assert.equal(document.querySelectorAll('#inspector input').length,0);
 // Adding while a group is selected still appends a sibling at the top level.
 document.getElementById('add-group').click();flush();const groupId=lastRoot.children.at(-1).id,beforeAddCount=lastRoot.children.length;
 document.querySelector('[aria-label="添加 圆形"]').click();flush();assert.equal(lastRoot.children.length,beforeAddCount+1);assert.equal(lastRoot.children.find(n=>n.id===groupId).children.length,0);

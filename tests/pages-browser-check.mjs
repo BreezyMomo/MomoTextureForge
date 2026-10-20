@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {BUILTIN} from '../web/definition-runtime.js';
 import {GENERATOR_EXAMPLE} from '../web/generator-authoring.js';
+import {project,node} from '../web/tree-model.js';
 
 const html=await readFile(new URL('../site/index.html',import.meta.url));
 const prefix='/MomoTextureForge/';
@@ -33,6 +34,11 @@ try{
  const generatorDialog=page.locator('dialog.graphic-editor-dialog');await generatorDialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
  const generatorColors=await generatorDialog.locator('canvas').evaluate(canvas=>{const data=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;let colors=0;for(let i=0;i<data.length;i+=4)if(data[i+3]>8&&data[i]>data[i+2]+20)colors++;return colors;});assert.ok(generatorColors>0,'embedded generator retains fire colors');
  await generatorDialog.locator('header .graphics-close').click();
+ await page.getByPlaceholder('搜索名称、分类或标签').fill('跃动篝火');await page.getByRole('button',{name:'编辑 跃动篝火',exact:true}).click();
+ const dynamicDialog=page.locator('dialog.graphic-editor-dialog');await dynamicDialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
+ const beforeMotion=await dynamicDialog.locator('canvas').evaluate(c=>c.toDataURL());await dynamicDialog.getByRole('slider',{name:'预览时间（秒）',exact:true}).press('End');
+ await page.waitForFunction(before=>document.querySelector('dialog.graphic-editor-dialog canvas')?.toDataURL()!==before,beforeMotion);
+ await dynamicDialog.locator('header .graphics-close').click();
  await page.getByPlaceholder('搜索名称、分类或标签').fill('');
  await page.getByRole('button',{name:'创建资源',exact:true}).click();const customDialog=page.locator('dialog.resource-create-dialog');await customDialog.getByRole('tab',{name:'生成器',exact:true}).click();
  await customDialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();await customDialog.getByRole('textbox',{name:'生成器JSON',exact:true}).fill(JSON.stringify(GENERATOR_EXAMPLE));
@@ -49,6 +55,8 @@ try{
  const png=await readFile(await download.path());
  assert.deepEqual([...png.subarray(0,8)],[137,80,78,71,13,10,26,10]);
  assert.ok(workers.some(url=>url.startsWith('blob:')),'export must work with the embedded worker');
+ const materialProject=project();materialProject.root.children=[node('shape','VolumeSmoke')];materialProject.root.children[0].postFx[1]=.3;materialProject.output.normalAlgorithm='scharr';materialProject.output.normalFlipY=true;
+ await page.goto(address+'#tree='+Buffer.from(JSON.stringify(materialProject)).toString('base64'));await page.reload();await ready();await page.getByRole('combobox',{name:'预览模式',exact:true}).selectOption('material');await page.waitForFunction(()=>document.querySelector('#render-status').textContent.includes('材质采样'));await page.getByRole('combobox',{name:'预览模型'}).selectOption('2');await page.getByRole('combobox',{name:'预览模式',exact:true}).selectOption('canvas');
  await page.goto(address+'?view=examples');await ready();
  assert.equal(await page.locator('a[href]').first().getAttribute('href'),address);
  await page.locator('#generate').click();
@@ -73,7 +81,7 @@ try{
  assert.ok(await page.locator('#composite').count());
  assert.deepEqual(errors,[]);
  assert.ok(requests.every(request=>request.type==='document'&&new URL(request.url).pathname===prefix),JSON.stringify(requests));
- const report={builtins:BUILTIN.catalog.length,views:['editor','examples','validate'],emptyNewProject:true,undoNewProject:true,pngExport:png.length,embeddedWorker:true,embeddedGenerator:true,customGenerator:true,customPixels,generatorColors,externalAssets:0,errors};
+ const report={builtins:BUILTIN.catalog.length,views:['editor','examples','validate'],emptyNewProject:true,undoNewProject:true,pngExport:png.length,embeddedWorker:true,embeddedGenerator:true,dynamicGenerator:true,materialPreview:true,customGenerator:true,customPixels,generatorColors,externalAssets:0,errors};
  await mkdir(new URL('../test-results/pages/',import.meta.url),{recursive:true});
  await writeFile(new URL('../test-results/pages/report.json',import.meta.url),JSON.stringify(report,null,2));
  console.log(JSON.stringify(report,null,2));

@@ -52,8 +52,8 @@ export function convertTrack(n,path,mode){const track=n.tracks[path];if(!track)r
  const factor=(oldMode==='multiply'?base:1)/(mode==='multiply'?base:1);if(track.segments)for(const s of Object.values(track.segments))for(const k of ['in','out'])if(s[k]!==undefined)s[k]*=factor;
  track.keys=values;track.mode=mode;
 }
-export function animatablePaths(n){const paths=['shapeClock.value','shapeClock.speed','shapeClock.offset','contour.radius','opacity','transform.x','transform.y','transform.width','transform.height','transform.rotation','transform.pivotX','transform.pivotY',...ANIMATION_BOOLS,...Object.keys(ANIMATION_ENUMS),'color.low','color.high','instancePhase',...Array.from({length:7},(_,i)=>'uv.'+i),...Array.from({length:7},(_,i)=>'post.'+i)];
- for(let i=0;i<16;i++)if(fieldSpec(n,'params.'+i)&&n.kind==='shape')paths.push('params.'+i);for(let i=0;i<59;i++)if(fieldSpec(n,'arrange.'+i))paths.push('arrange.'+i);return paths.filter(p=>!p.startsWith('shapeClock.')||n.kind==='shape'&&CLOCK_TYPES.get(n.type)?.usesTime);
+export function animatablePaths(n){const paths=['shapeClock.value','shapeClock.speed','shapeClock.offset','contour.radius','opacity','transform.x','transform.y','transform.width','transform.height','transform.rotation','transform.pivotX','transform.pivotY',...ANIMATION_BOOLS,...Object.keys(ANIMATION_ENUMS),'color.low','color.high','instancePhase',...Array.from({length:7},(_,i)=>'uv.'+i),...Array.from({length:7},(_,i)=>'post.'+i),...Array.from({length:7},(_,i)=>'postFx.'+i)];
+ for(let i=0;i<(CLOCK_TYPES.get(n.type)?.defaults.length??16);i++)if(fieldSpec(n,'params.'+i)&&n.kind==='shape')paths.push('params.'+i);for(let i=0;i<59;i++)if(fieldSpec(n,'arrange.'+i))paths.push('arrange.'+i);return paths.filter(p=>!p.startsWith('shapeClock.')||n.kind==='shape'&&CLOCK_TYPES.get(n.type)?.usesTime);
 }
 export const ANIMATION_TEMPLATES=[['pulse','呼吸缩放'],['fade','淡入淡出'],['rotate','旋转一周'],['pop','弹出'],['slide','横向进入'],['uv','UV滚动']];
 export function templateTracks(n,name){const absolute=(keys,ease='smooth')=>({mode:'absolute',ease,keys}),w=n.transform.width,h=n.transform.height;

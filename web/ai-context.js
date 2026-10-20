@@ -23,5 +23,5 @@ export async function createLibraryAIContext(items,readBundle,{scope='selected',
   }catch(error){entry.detailsUnavailable=error.message;}
   entries.push(entry);onProgress(entries.length,items.length);
  }
- return {schema:'momo.ai-library-context/v1',scope,purpose:'供AI了解当前图形库、推荐图形与操作步骤，不是可导入资源包',notes:['只含目录与参数元数据，不含作品节点、图片像素或公式源码。','definitions是资源自身及依赖的图形定义，组合资源可能包含多个定义。','detailsUnavailable表示详细信息未知，不可猜测参数；空间无缝不代表动画首尾衔接。'],entries};
+ return {schema:'momo.ai-library-context/v1',scope,purpose:'供AI了解当前图形库、推荐图形与操作步骤，不是可导入资源包',notes:['只含目录与参数元数据，不含画布节点、图片像素或公式源码。','definitions是资源自身及依赖的图形定义，组合资源可能包含多个定义。','detailsUnavailable表示详细信息未知，不可猜测参数；空间无缝不代表动画首尾衔接。'],entries};
 }

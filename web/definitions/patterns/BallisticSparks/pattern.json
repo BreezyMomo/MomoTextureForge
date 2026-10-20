@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "BallisticSparks",
-  "revision": 1,
+  "revision": 2,
   "abi": "momo-pattern/16-v1",
   "name": "喷射火花",
   "category": "vfx",
@@ -177,6 +177,16 @@
       "max": 1,
       "step": 0.01,
       "default": 0.55
+    },
+    {
+      "slot": 17,
+      "key": "P17",
+      "variable": "motionSpeed",
+      "label": "动画速度",
+      "min": 0,
+      "max": 3,
+      "step": 0.01,
+      "default": 1
     }
   ],
   "defaults": [
@@ -196,7 +206,8 @@
     165,
     0.69,
     0.47,
-    0.55
+    0.55,
+    1
   ],
   "outputs": {
     "scalar": {
@@ -224,6 +235,7 @@
     ],
     "programs": {
       "color": "generator-emission-v1"
-    }
+    },
+    "usesTime": true
   }
 }

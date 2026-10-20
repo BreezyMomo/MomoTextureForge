@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "BokehDust",
-  "revision": 1,
+  "revision": 2,
   "abi": "momo-pattern/16-v1",
   "name": "散景浮尘",
   "category": "vfx",
@@ -147,6 +147,16 @@
       "max": 1,
       "step": 0.01,
       "default": 0.4
+    },
+    {
+      "slot": 14,
+      "key": "I",
+      "variable": "motionSpeed",
+      "label": "动画速度",
+      "min": 0,
+      "max": 3,
+      "step": 0.01,
+      "default": 1
     }
   ],
   "defaults": [
@@ -164,7 +174,7 @@
     0.8,
     0.5,
     0.4,
-    0,
+    1,
     0
   ],
   "outputs": {
@@ -193,6 +203,7 @@
     ],
     "programs": {
       "color": "generator-dust-v1"
-    }
+    },
+    "usesTime": true
   }
 }

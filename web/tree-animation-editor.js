@@ -15,8 +15,8 @@ export function createAnimationEditor(host,{getNode,getProgress,seek,change,labe
   const n=getNode(),tracks=Object.entries(n.tracks),sig=JSON.stringify([n.id,n.name,n.tracks,selection,isLocal()]);
   if(!dragging&&(force||signature!==sig)){
    signature=sig;host.replaceChildren();host.className='animation-dopesheet';
-   const toolbar=el('div',{class:'animation-tools'});toolbar.append(el('strong',{},'节点动画 · '+n.name),el('span',{},isLocal()?'局部预览（不写入项目）':'跟随作品播放'));
-   const cursor=el('input',{type:'number',min:0,max:1,step:.001,'aria-label':'节点动画进度'});cursor.value=getProgress();cursor.onchange=()=>seek(Math.max(0,Math.min(1,+cursor.value||0)));toolbar.append(cursor,button('返回作品时间','返回作品时间',returnWork));host.append(toolbar);
+   const toolbar=el('div',{class:'animation-tools'});toolbar.append(el('strong',{},'节点动画 · '+n.name),el('span',{},isLocal()?'局部预览（不写入项目）':'跟随画布播放'));
+   const cursor=el('input',{type:'number',min:0,max:1,step:.001,'aria-label':'节点动画进度'});cursor.value=getProgress();cursor.onchange=()=>seek(Math.max(0,Math.min(1,+cursor.value||0)));toolbar.append(cursor,button('返回画布时间','返回画布时间',returnWork));host.append(toolbar);
    const grid=el('div',{class:'animation-tracks'});host.append(grid);
    function row(title,keys,path=null){
     const r=el('div',{class:'animation-track'}),name=el('div',{class:'animation-track-name'},title),lane=el('div',{class:'animation-lane','aria-label':title+'轨道'});r.append(name,lane);grid.append(r);

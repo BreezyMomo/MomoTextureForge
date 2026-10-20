@@ -7,6 +7,12 @@ test('intrinsic time detection ignores static vector wrappers and supports impor
  const asset=builtinAsset('Spiral');registerAsset('asset_time_probe',asset);try{assert.equal(BY_ID.get('asset_time_probe').usesTime,true);}finally{unregisterAsset('asset_time_probe');}
  assert.equal(formulaUsesTime({outputs:{scalar:{inline:'// time\nreturn 1.;'}}},{}),false);
 });
+test('generator time detection inspects passes and helpers while ignoring comments and unrelated libraries',()=>{
+ const definition={generator:{effect:'pipeline',helpers:['shared'],passes:[{program:'result'}]}};
+ assert.equal(formulaUsesTime(definition,{}, {shared:'// time\nfloat helper(){return 1.;}',result:'vec4 generate(vec2 uv){return vec4(1.);}',unused:'float clock(){return time;}'}),false);
+ assert.equal(formulaUsesTime(definition,{}, {shared:'float helper(){return sin(time);}',result:'vec4 generate(vec2 uv){return vec4(helper());}'}),true);
+ for(const id of ['FlowingWater','WaterCaustics','Bonfire','AnimatedLightning','VolumeFlame','VolumeExplosion','VolumeSmoke'])assert.equal(BY_ID.get(id).usesTime,true);
+});
 test('manual formula clock survives serialization and keyframe evaluation without mutating authorship',()=>{
  const p=project(),n=node('shape','Spiral');p.root.children=[n];assert.equal(formulaTime(n,.75),.75);
  n.shapeClock={follow:false,value:2};n.tracks['shapeClock.value']={mode:'absolute',ease:'linear',keys:[[0,3],[1,-1]]};

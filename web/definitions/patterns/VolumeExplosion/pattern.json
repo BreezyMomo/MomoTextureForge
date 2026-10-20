@@ -1,0 +1,168 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "VolumeExplosion",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "体积爆炸",
+  "category": "vfx",
+  "order": 296,
+  "variant": 12,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 237
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "variable": "speed",
+      "label": "演化速度",
+      "min": 0.1,
+      "max": 3,
+      "step": 0.01,
+      "default": 1
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "variable": "scale",
+      "label": "细节密度",
+      "min": 1,
+      "max": 12,
+      "step": 0.1,
+      "default": 4
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "variable": "radius",
+      "label": "体积范围",
+      "min": 0.2,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.8
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "density",
+      "label": "密度",
+      "min": 0.1,
+      "max": 6,
+      "step": 0.01,
+      "default": 2.5
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "variable": "turbulence",
+      "label": "湍流",
+      "min": 0,
+      "max": 2,
+      "step": 0.01,
+      "default": 1.1
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "variable": "lightDirection",
+      "label": "光源方向",
+      "min": -3.14,
+      "max": 3.14,
+      "step": 0.01,
+      "default": 0.8
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "variable": "lightStrength",
+      "label": "光照强度",
+      "min": 0,
+      "max": 3,
+      "step": 0.01,
+      "default": 1
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "variable": "temperature",
+      "label": "温度",
+      "min": 0.1,
+      "max": 2,
+      "step": 0.01,
+      "default": 1.3
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "variable": "quality",
+      "label": "采样步数",
+      "min": 24,
+      "max": 96,
+      "step": 1,
+      "default": 56
+    }
+  ],
+  "defaults": [
+    237,
+    1,
+    4,
+    0.8,
+    2.5,
+    1.1,
+    0.8,
+    1,
+    1.3,
+    56,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "inline": "return 0.;",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  },
+  "generator": {
+    "schema": "momo.generator/v1",
+    "revision": 1,
+    "effect": "pipeline",
+    "scalar": "luminance",
+    "libraries": [
+      "generator-motion-v1",
+      "generator-volume-v1",
+      "generator-volume-explosion-v1"
+    ],
+    "helpers": [
+      "generator-motion-v1",
+      "generator-volume-v1"
+    ],
+    "passes": [
+      {
+        "id": "result",
+        "inputs": [],
+        "scale": 1,
+        "program": "generator-volume-explosion-v1"
+      }
+    ]
+  }
+}

@@ -173,3 +173,17 @@
 @media(max-width:1250px){.tree-brand strong span{display:none}.tree-header{gap:14px}.tree-brand{gap:10px}}
 @media(max-width:950px){.tree-brand strong{display:none}.tree-header{gap:8px;grid-template-columns:minmax(80px,1fr) auto auto;padding:10px}.tree-header #project-name{width:120px}.tree-canvas-actions,.tree-tool-actions{gap:2px}}
 @media(max-width:650px){.tree-header{grid-template-columns:minmax(0,1fr) auto;gap:8px}.tree-canvas-actions{grid-column:1/-1;grid-row:2;justify-content:flex-start}.tree-tool-actions{grid-column:2;grid-row:1}.tree-brand{grid-column:1;grid-row:1}.tree-header #project-name{width:160px}}
+
+/* The central preview switches view without changing canvas data or export settings. */
+.preview-mode-label{display:flex;align-items:center;gap:6px;white-space:nowrap;font-size:12px;color:#aab3c3}
+.tree-editor #canvas-stage.material-mode{padding:0;overflow:hidden;background:#171d26}
+#material-preview{width:100%;height:100%;min-width:0;min-height:0;display:flex}
+.material-preview-canvas{display:block;width:100%;height:100%;min-width:0;min-height:0;touch-action:none;cursor:grab}
+.material-preview-canvas:active{cursor:grabbing}
+.material-controls{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:0 0 10px}
+.material-controls label{display:flex;align-items:center;gap:6px;white-space:nowrap;color:#aab3c3;font-size:12px}
+.material-controls input{width:95px;min-width:60px;padding:0}
+.material-controls button,.material-controls select{padding:5px}
+.preview-heading{gap:8px 12px}.preview-heading strong{flex:none;white-space:nowrap}
+.preview-heading #render-status{flex:1 1 170px;min-width:170px;line-height:1.5}
+.preview-actions{flex:1 1 420px}

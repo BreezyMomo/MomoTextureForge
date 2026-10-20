@@ -1,3 +1,5 @@
+import {NORMAL_GLSL,setNormalUniforms} from './normal-map.js';
+import {FX_GLSL,applyPostFx} from './post-fx.js';
 import {resources} from './resource-assets.js';
 import {formulaTime} from './formula-time.js';
 import {contourPasses} from './contour.js';
@@ -24,6 +26,7 @@ if(max(length(dx*size),length(dy*size))>1.01){c=vec4(0);h=0.;for(int y=0;y<2;y++
 else if(any(lessThan(p,vec2(0)))||any(greaterThanEqual(p,vec2(1)))){c=vec4(0);h=0.;}else{c=filtered(srcColor,p);h=filtered(srcHeight,p).r;}}
 vec4 blendColor(vec4 dst,vec4 src,int mode){float a=src.a+dst.a*(1.-src.a);if(mode==0)return vec4(src.rgb+dst.rgb*(1.-src.a),a);vec3 d=dst.a>0.?dst.rgb/dst.a:vec3(0),s=src.a>0.?src.rgb/src.a:vec3(0);if(mode==10)return dst*src.a;if(mode==11)return dst*(1.-src.a);vec3 b=mode==6?abs(d-s):mode==7?mix(2.*d*s,1.-2.*(1.-d)*(1.-s),step(vec3(.5),d)):mode==8?(1.-2.*s)*d*d+2.*s*d:mode==9?min(vec3(1),d/max(vec3(.00001),1.-s)):mode==1?d+s:mode==2?max(d,s):mode==3?d*s:mode==4?max(d-s,0.):1.-(1.-d)*(1.-s);return vec4((1.-src.a)*dst.rgb+(1.-dst.a)*src.rgb+src.a*dst.a*b,a);}
 float blendHeight(float d,float s,float a,int mode){if(mode==0)return s+d*(1.-a);if(mode==1)return d+s;if(mode==2)return max(d,s);if(mode==3)return mix(d,d*(a>0.?s/a:0.),a);if(mode==4)return max(d-s,0.);if(mode==6)return abs(d-s);if(mode==7)return d<.5?2.*d*s:1.-2.*(1.-d)*(1.-s);if(mode==8)return (1.-2.*s)*d*d+2.*s*d;if(mode==9)return min(1.,d/max(.00001,1.-s));if(mode==10)return d*a;if(mode==11)return d*(1.-a);return 1.-(1.-d)*(1.-s);}
+${FX_GLSL}
 void main(){vec4 c=vec4(0);float h=0.;
  if(operation==0){h=texture(srcHeight,uv).r;float a=clamp(h,0.,1.);c=vec4(ramp(h)*a,a);}
  if(operation==9){h=texture(srcHeight,uv).r;vec4 p=texture(srcColor,uv);c=vec4((recolor==1?ramp(h):p.rgb)*p.a,p.a);}
@@ -39,13 +42,15 @@ void main(){vec4 c=vec4(0);float h=0.;
  if((inverted==0&&sc.a>c.a)||(inverted==1&&sc.a<c.a)){c=sc;h=sh;}}
  }
  if(operation==8){c=texture(srcColor,uv);h=texture(srcHeight,uv).r;float a=max(0.,c.a-texture(dstColor,uv).a),ratio=c.a>0.?a/c.a:0.;c*=ratio;h*=ratio;}
+ if(operation>=10)applyFx(c,h);
  colorOut=c;heightOut=vec4(h,c.a,0,c.a);
 }`;
 const FINAL=`#version 300 es
 precision highp float;in vec2 uv;out vec4 frag;uniform sampler2D srcColor,srcHeight;uniform int outputMode,transparent,channels[4];uniform vec3 background;uniform float strength;uniform vec2 pixel;
 float channel(int s,float v,vec3 n,float a){if(s==0)return v;if(s==1)return 1.-v;if(s==2)return n.x*.5+.5;if(s==3)return n.y*.5+.5;if(s==4)return n.z*.5+.5;if(s==5)return 0.;if(s==6)return 1.;if(s==7)return .5;if(s==9)return clamp(length(n.xy),0.,1.);return a;}
 float h(vec2 p){return texture(srcHeight,clamp(p,vec2(0),vec2(1))).r;}
-void main(){vec4 c=texture(srcColor,uv);float v=h(uv);float gx=(h(uv+pixel*vec2(-1,-1))+2.*h(uv+pixel*vec2(-1,0))+h(uv+pixel*vec2(-1,1))-h(uv+pixel*vec2(1,-1))-2.*h(uv+pixel*vec2(1,0))-h(uv+pixel*vec2(1,1)));float gy=(h(uv+pixel*vec2(-1,-1))+2.*h(uv+pixel*vec2(0,-1))+h(uv+pixel*vec2(1,-1))-h(uv+pixel*vec2(-1,1))-2.*h(uv+pixel*vec2(0,1))-h(uv+pixel*vec2(1,1)));vec3 n=normalize(vec3(gx*strength,gy*strength,1));
+${NORMAL_GLSL}
+void main(){vec4 c=texture(srcColor,uv);float v=h(uv);vec3 n=vec3(0,0,1);if(outputMode==2||outputMode==3)n=surfaceNormal(uv);
  if(outputMode==1)frag=vec4(vec3(v),transparent==1?c.a:1.);else if(outputMode==2)frag=vec4(n*.5+.5,1.);else if(outputMode==3)frag=vec4(channel(channels[0],v,n,c.a),channel(channels[1],v,n,c.a),channel(channels[2],v,n,c.a),channel(channels[3],v,n,c.a));else frag=vec4(transparent==1?(c.a>0.?c.rgb/c.a:vec3(0)):c.rgb+background*(1.-c.a),transparent==1?c.a:1.);
 }`;
 function fitted(t,w,h){if(t.fit!=='contain')return [t.width,t.height];const side=Math.min(t.width*w,t.height*h);return [side/w,side/h];}
@@ -75,12 +80,12 @@ export class TreeRenderer{
   const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{...options,source:src,dest:out});this.consumed(src);this.release(out);return next;
  }
  clearCache(){for(const t of this.cache.values())this.release(t);this.cache.clear();this.trimPool();}
- pass(target,{source=null,dest=null,mask=null,op=3,box=[.5,.5,1,1],axis=[.5,.5,0,1],repeat=false,opacity=1,blend='over',palette=['#000000','#ffffff'],recolor=false,post=[0,1,1,0,1,0,1],inverted=false,contourStep=[0,0],table=null,count=0,inPlace=false}={}){
+ pass(target,{source=null,dest=null,mask=null,op=3,box=[.5,.5,1,1],axis=[.5,.5,0,1],repeat=false,opacity=1,blend='over',palette=['#000000','#ffffff'],recolor=false,post=[0,1,1,0,1,0,1],inverted=false,contourStep=[0,0],table=null,count=0,inPlace=false,fxAmount=0,fxThreshold=0}={}){
  const gl=this.gl,p=this.program();gl.useProgram(p);const loc=n=>this.location(p,n);gl.bindFramebuffer(gl.FRAMEBUFFER,target.fb);gl.drawBuffers([gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1]);gl.viewport(0,0,target.w,target.h);gl.disable(gl.BLEND);
  const fallback=source?.textures[0]??dest?.textures[0]??mask?.textures[0];if(!fallback)return;
  const textures=[source?.textures[0],source?.textures[1],dest?.textures[0],dest?.textures[1],mask?.textures[1],table];
  ['srcColor','srcHeight','dstColor','dstHeight','maskTex','tableTex'].forEach((name,i)=>{gl.activeTexture(gl.TEXTURE0+i);gl.bindTexture(gl.TEXTURE_2D,textures[i]??fallback);gl.uniform1i(loc(name),i);});
- gl.uniform2fv(loc('physicalMetric'),[target.aspect,1]);gl.uniform2fv(loc('contourStep'),contourStep);gl.uniform1i(loc('inverted'),+inverted);gl.uniform4fv(loc('postA'),post.slice(0,4));gl.uniform3fv(loc('postB'),post.slice(4));const stops=palette.stops??[];gl.uniform1i(loc('stopCount'),stops.length);const stopData=new Float32Array(32);stops.forEach((s,i)=>stopData.set([...rgb(s.color),s.position],i*4));gl.uniform4fv(loc('stops[0]'),stopData);
+ gl.uniform1f(loc('fxAmount'),fxAmount);gl.uniform1f(loc('fxThreshold'),fxThreshold);gl.uniform2fv(loc('physicalMetric'),[target.aspect,1]);gl.uniform2fv(loc('contourStep'),contourStep);gl.uniform1i(loc('inverted'),+inverted);gl.uniform4fv(loc('postA'),post.slice(0,4));gl.uniform3fv(loc('postB'),post.slice(4));const stops=palette.stops??[];gl.uniform1i(loc('stopCount'),stops.length);const stopData=new Float32Array(32);stops.forEach((s,i)=>stopData.set([...rgb(s.color),s.position],i*4));gl.uniform4fv(loc('stops[0]'),stopData);
  gl.uniform1i(loc('hasDest'),dest?1:0);gl.uniform1i(loc('operation'),op);gl.uniform1i(loc('repeatNode'),+repeat);gl.uniform1i(loc('blendMode'),blendIds[blend]);gl.uniform1i(loc('recolor'),+recolor);gl.uniform1i(loc('recordCount'),count);gl.uniform1f(loc('opacity'),opacity);gl.uniform4fv(loc('placement'),box);gl.uniform4fv(loc('pivotTurn'),axis);gl.uniform3fv(loc('lowColor'),rgb(palette[0]));gl.uniform3fv(loc('highColor'),rgb(palette[1]));if(inPlace){gl.enable(gl.BLEND);gl.blendEquation(gl.FUNC_ADD);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);if(!repeat){const c=Math.cos(axis[2]),s=Math.sin(axis[2]),corners=[0,1].flatMap(x=>[0,1].map(y=>{const dx=(x-axis[0])*axis[3]*box[2],dy=(y-axis[1])*box[3];return [box[0]+c*dx-s*dy/target.aspect,box[1]+s*dx*target.aspect+c*dy];})),x0=Math.max(0,Math.floor(Math.min(...corners.map(p=>p[0]))*target.w)-2),y0=Math.max(0,Math.floor(Math.min(...corners.map(p=>p[1]))*target.h)-2),x1=Math.min(target.w,Math.ceil(Math.max(...corners.map(p=>p[0]))*target.w)+2),y1=Math.min(target.h,Math.ceil(Math.max(...corners.map(p=>p[1]))*target.h)+2);gl.enable(gl.SCISSOR_TEST);gl.scissor(x0,y0,Math.max(0,x1-x0),Math.max(0,y1-y0));}}gl.drawArrays(gl.TRIANGLES,0,3);
  const err=gl.getError();gl.disable(gl.BLEND);gl.disable(gl.SCISSOR_TEST);if(err)throw Error('节点渲染错误 '+err);
  }
@@ -172,6 +177,7 @@ export class TreeRenderer{
   if(n.contour.mode==='outline'){const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{source:out,dest:original,op:8});this.release(out);out=next;}
   if(out!==original)this.release(original);
  }
+ out=applyPostFx(this,out,n);
  // Cache only finished subtrees; all cached resources remain valid during a draw.
  out.layoutCounts=new Map();walk(original,x=>{if(this.lastCounts.has(x.id))out.layoutCounts.set(x.id,this.lastCounts.get(x.id));});if(!this.streaming)this.cache.set(key,out);return out;
  }
@@ -187,7 +193,7 @@ export class TreeRenderer{
   const aspect=project.canvas.ratio,e=evaluateNode(root,parentTime),t=e.node.transform,[rw,rh]=fitted(t,aspect,1),src=this.renderNode(root,parentTime,w,h,undefined,aspect*rw/rh);this.clearStreamSources();const identity=stream&&t.x===.5&&t.y===.5&&t.width===1&&t.height===1&&t.pivotX===.5&&t.pivotY===.5&&t.rotation===0&&!t.mirrorX&&e.node.opacity===1,placed=identity?src:this.target(w,h,false,aspect);
   if(!identity){this.pass(placed,{source:src,op:1,box:[t.x,t.y,...fitted(t,aspect,1)],axis:[t.pivotX,t.pivotY,t.rotation*Math.PI/180,t.mirrorX?-1:1],opacity:e.node.opacity});this.consumed(src);}
   const gl=this.gl,p=this.program(true),loc=n=>this.location(p,n);if(!(read&&stream)){if(this.canvas.width!==w)this.canvas.width=w;if(this.canvas.height!==h)this.canvas.height=h;}let target=null;if(read)target=this.target(w,h,true,aspect);gl.bindFramebuffer(gl.FRAMEBUFFER,target?.fb??null);gl.drawBuffers(target?[gl.COLOR_ATTACHMENT0]:[gl.BACK]);gl.useProgram(p);gl.viewport(0,0,w,h);
-  placed.textures.forEach((tex,i)=>{gl.activeTexture(gl.TEXTURE0+i);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(loc(i?'srcHeight':'srcColor'),i);});gl.uniform1i(loc('outputMode'),['color','height','normal','rgba'].indexOf(project.output.mode));gl.uniform1i(loc('transparent'),+project.output.alpha);gl.uniform1iv(loc('channels'),project.output.channels);gl.uniform3fv(loc('background'),rgb(project.output.background??'#000000'));gl.uniform1f(loc('strength'),project.output.normal);gl.uniform2f(loc('pixel'),1/w,1/h);gl.drawArrays(gl.TRIANGLES,0,3);
+  placed.textures.forEach((tex,i)=>{gl.activeTexture(gl.TEXTURE0+i);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(loc(i?'srcHeight':'srcColor'),i);});gl.uniform1i(loc('outputMode'),['color','height','normal','rgba'].indexOf(project.output.mode));gl.uniform1i(loc('transparent'),+project.output.alpha);gl.uniform1iv(loc('channels'),project.output.channels);gl.uniform3fv(loc('background'),rgb(project.output.background??'#000000'));gl.uniform1f(loc('strength'),project.output.normal);setNormalUniforms(gl,loc,project.output);gl.uniform2f(loc('pixel'),1/w,1/h);gl.drawArrays(gl.TRIANGLES,0,3);
   let pixels=null;if(read){const raw=this.float?new Float32Array(w*h*4):new Uint8Array(w*h*4);gl.readBuffer(gl.COLOR_ATTACHMENT0);gl.readPixels(0,0,w,h,gl.RGBA,this.float?gl.FLOAT:gl.UNSIGNED_BYTE,raw);if(stream&&this.float){pixels=raw;const row=new Float32Array(w*4);for(let y=0;y<Math.floor(h/2);y++){const a=y*w*4,b=(h-y-1)*w*4;row.set(raw.subarray(a,a+w*4));raw.copyWithin(a,b,b+w*4);raw.set(row,b);}}else{pixels=new Float32Array(raw.length);for(let y=0;y<h;y++)for(let x=0;x<w*4;x++)pixels[y*w*4+x]=raw[(h-y-1)*w*4+x]/(this.float?1:255);}}
   if(gl.getError())throw Error('浏览器或显卡未能完成当前尺寸的输出，请关闭其他图形程序后重试');this.release(target);this.release(placed);this.lastMs=performance.now()-start;return pixels;
  }catch(error){this.clearCache();throw error;}finally{this.clearStreamSources();this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,null);for(const [key,t]of this.cache)if(!this.usedKeys.has(key)){this.release(t);this.cache.delete(key);}const cached=new Set(this.cache.values());for(const t of [...this.live])if(!cached.has(t))this.release(t);this.trimPool(128*1024*1024);while(this.allocated>128*1024*1024&&this.cache.size){const key=this.cache.keys().next().value;this.release(this.cache.get(key));this.cache.delete(key);this.trimPool(128*1024*1024);}this.trimPool(128*1024*1024);this.streaming=false;this.budget=384*1024*1024;}

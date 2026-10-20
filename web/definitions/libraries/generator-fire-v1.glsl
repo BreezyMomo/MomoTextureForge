@@ -4,16 +4,16 @@ vec3 fireRamp(float temperature){
  low=mix(low,orange,smoothstep(.08,.32,temperature));low=mix(low,yellow,smoothstep(.32,.72,temperature));return mix(low,hot,smoothstep(.72,1.,temperature));
 }
 vec4 generate(vec2 uv){
- float height=max(flameHeight,.01);float h=(uv.y-baseY)/height;vec2 p=vec2(uv.x-.5,uv.y-baseY);
+ float motion=time*motionSpeed;float height=max(flameHeight,.01);float h=(uv.y-baseY)/height;vec2 p=vec2(uv.x-.5,uv.y-baseY);
  float normalizedX=abs(p.x)/max(width*(1.-clamp(h,0.,1.)*taper*.8),.01);
- vec2 stretched=p*warpScale*vec2(3.,1.)-vec2(0.,h*7.);
+ vec2 stretched=p*warpScale*vec2(3.,1.)-vec2(0.,h*7.)+vec2(motion*.13,-motion*1.8);
  vec2 first=vec2(gFbm(stretched*.7,int(octaves)),gFbm(stretched*.7+vec2(5.2,1.3),int(octaves)))*warp*1.5;
  vec2 second=vec2(gFbm(stretched+first*4.+vec2(1.7,9.2),int(octaves)),gFbm(stretched+first*4.+vec2(8.3,2.8),int(octaves)))*warp*.85;
  vec2 fine=vec2(gSigned((stretched+first+second)*3.5+vec2(13.1,7.4)),gSigned((stretched+first+second)*3.5+vec2(3.7,11.2)))*warp*.4*(1.+smoothstep(.3,.9,normalizedX)*2.);
  vec2 warped=stretched+first+second+fine;
  float turbulence=gRidged(warped,int(octaves))*1.6+gTurb(warped*2.+vec2(30,70),max(2,int(octaves)-1))*.5+gTurb(warped*5.+vec2(50,20),max(2,int(octaves)-2))*.15+abs(gSigned(warped*10.+vec2(77,33)))*.06;
- float channels=.35+.65*(gRidged(vec2(p.x*warpScale*3.6+seed*.3,h*.4),3)+gRidged(vec2(p.x*warpScale*7.5+50.+seed*.7,h*.6),2)*.4);
- float tongueHeight=gRidged(vec2(p.x*6.+seed*.5,0),2)*disparity;
+ float channels=.35+.65*(gRidged(vec2(p.x*warpScale*3.6+seed*.3,h*.4-motion*.15),3)+gRidged(vec2(p.x*warpScale*7.5+50.+seed*.7,h*.6-motion*.2),2)*.4);
+ float tongueHeight=gRidged(vec2(p.x*6.+seed*.5,motion*.3),2)*disparity;
  float tips=1.-smoothstep(tongueHeight,tongueHeight+.3,h);
  float fuel=.2+fillAmount*.8-h*(1.2+max(h,0.)*.5)+turbulence*(.8+fillAmount*.2);
  float silhouette=1.-smoothstep(.3,1.05,normalizedX);
@@ -40,7 +40,7 @@ vec4 generate(vec2 uv){
  float smokeStart=baseY+height*.28;
  float smokeHeight=max((1.-smokeStart)*mix(.2,1.,clamp(smokeRise,0.,1.)),.01);
  float smokeT=(uv.y-smokeStart)/smokeHeight;
- vec2 smokeCoord=vec2(p.x*warpScale*1.6,smokeT*2.8);
+ vec2 smokeCoord=vec2(p.x*warpScale*1.6,smokeT*2.8-motion*.5);
  vec2 smokeWarp=gWarp(smokeCoord, int(octaves));
  float drift=smokeWarp.x*(.04+.12*clamp(smokeT,0.,1.));
  float smokeWidth=.035+width*.1+smokeSpread*.23+clamp(smokeT,0.,1.)*(.04+smokeSpread*.25);

@@ -1,3 +1,4 @@
+import {FX_SPECS,fxDefaults} from './post-fx.js';
 import {interpolateKeys,timeKey} from './animation-values.js';
 import { BY_ID } from './catalog.js';
 import { sanitizeArrangement } from './arrangement.js';
@@ -17,9 +18,9 @@ export function node(kind='shape',type='Circle'){
  color:{mode:kind==='group'?'preserve':'inherit',fill:'gradient',low:'#000000',high:'#ffffff'},
  arrange:sanitizeArrangement([0,...Array(58).fill(undefined)]),arrangeFit:'contain',imageFit:'contain',instancePhase:0,instanceContent:'all',scatterAvoidOverlap:false,scatterGap:0,
  timing:{start:0,end:1,from:0,to:1,cycles:1,loop:false,pingpong:false,ease:'linear',outside:'hold',frozen:false,at:0,offset:0,curve:[]},
- shapeClock:{follow:true,speed:1,offset:0,value:0},contour:{mode:'none',radius:.01},animationEnabled:true,post:POST_SPECS.map(p=>p[3]),invert:false,maskInvert:false,tracks:{},children:[],mask:null};
+ shapeClock:{follow:true,speed:1,offset:0,value:0},contour:{mode:'none',radius:.01},animationEnabled:true,post:POST_SPECS.map(p=>p[3]),postFx:fxDefaults(),invert:false,maskInvert:false,tracks:{},children:[],mask:null};
 }
-export function project(){const root=node('group');root.name='作品';root.children=[node()];return {schema:TREE_SCHEMA,name:'未命名作品',root,projectResources:[],canvas:{ratio:1},output:{width:512,height:512,mode:'color',alpha:true,depth:8,seconds:3,fps:30,frames:90,columns:8,loopExport:true,exrZip:true,background:'#000000',normal:3,channels:[0,2,3,8]}};}
+export function project(){const root=node('group');root.name='画布';root.children=[node()];return {schema:TREE_SCHEMA,name:'未命名画布',root,projectResources:[],canvas:{ratio:1},output:{width:512,height:512,mode:'color',alpha:true,depth:8,seconds:3,fps:30,frames:90,columns:8,loopExport:true,exrZip:true,background:'#000000',normal:3,normalAlgorithm:'sobel',normalFlipX:false,normalFlipY:false,normalInvert:false,normalSmooth:0,channels:[0,2,3,8]}};}
 export function walk(root,fn,parent=null,depth=0){fn(root,parent,depth);for(const c of root.children)walk(c,fn,root,depth+1);if(root.mask)walk(root.mask,fn,root,depth+1);}
 export function find(root,id){let found=null;walk(root,(n,p,d)=>{if(n.id===id)found={node:n,parent:p,depth:d};});return found;}
 export function cloneNode(n){const c=structuredClone(n);walk(c,x=>x.id=uid());return c;}
@@ -39,6 +40,7 @@ export function animationType(n,path){
 export function fieldSpec(n,path){
  if(ANIMATION_BOOLS.includes(path)||ANIMATION_ENUMS[path]||path==='color.low'||path==='color.high')return [0,1];
  const fixed={'shapeClock.speed':[-10,10],'shapeClock.offset':[-600,600],'shapeClock.value':[-36000,36000],'contour.radius':[0,.1],opacity:[0,1],instancePhase:[-1,1],'transform.x':[-2,2],'transform.y':[-2,2],'transform.width':[0,1],'transform.height':[0,1],'transform.rotation':[-3600,3600],'transform.pivotX':[0,1],'transform.pivotY':[0,1]};
+ const fx=/^postFx\.([0-6])$/.exec(path);if(fx)return FX_SPECS[+fx[1]].slice(1,3);
  const post=/^post\.([0-6])$/.exec(path);if(post)return POST_SPECS[+post[1]].slice(1,3);
  if(fixed[path])return fixed[path];
  const uv=/^uv\.([0-6])$/.exec(path);if(uv)return [[.1,8],[-360,360],[-2,2],[-2,2],[-2,2],[-360,360],[-6.28,6.28]][+uv[1]];
@@ -70,6 +72,7 @@ export function sanitizeTree(raw,{component=false}={}){
   for(const key of ['low','high'])n.color[key]=/^#[0-9a-f]{6}$/i.test(r.color?.[key])?r.color[key]:n.color[key];
   n.shapeClock={follow:r.shapeClock?.follow!==false,speed:num(r.shapeClock?.speed,1,-10,10),offset:num(r.shapeClock?.offset,0,-600,600),value:num(r.shapeClock?.value,0,-36000,36000)};
   n.contour={mode:ANIMATION_ENUMS['contour.mode'].includes(r.contour?.mode)?r.contour.mode:'none',radius:num(r.contour?.radius,.01,0,.1)};
+  n.postFx=FX_SPECS.map((p,i)=>num(r.postFx?.[i],p[3],p[1],p[2]));n.postFx[6]=Math.round(n.postFx[6]);
   n.animationEnabled=r.animationEnabled!==false;n.post=POST_SPECS.map((p,i)=>num(r.post?.[i],p[3],p[1],p[2]));n.invert=!!r.invert;n.maskInvert=!!r.maskInvert;
   if(Array.isArray(r.color?.stops))n.color.stops=r.color.stops.slice(0,8).filter(s=>/^#[0-9a-f]{6}$/i.test(s.color)).map(s=>({color:s.color,position:num(s.position,0,0,1)})).sort((a,b)=>a.position-b.position);
   n.uv=n.uv.map((v,i)=>num(r.uv?.[i],v,...fieldSpec(n,'uv.'+i)));n.polar=!!r.polar;
@@ -108,6 +111,7 @@ export function sanitizeTree(raw,{component=false}={}){
 if(!component)p.root=canvasRoot(p.root);p.name=String(raw.name??p.name).slice(0,80);
  for(const [key,min,max] of [['width',1,4096],['height',1,4096],['columns',1,32],['depth',8,16],['seconds',.05,600],['normal',0,20]])p.output[key]=num(raw.output?.[key],p.output[key],min,max);
  for(const key of ['width','height','columns'])p.output[key]=Math.round(p.output[key]);p.output.depth=p.output.depth===16?16:8;
+ p.output.normalAlgorithm=raw.output?.normalAlgorithm==='scharr'?'scharr':'sobel';for(const k of ['normalFlipX','normalFlipY','normalInvert'])p.output[k]=raw.output?.[k]===true;p.output.normalSmooth=num(raw.output?.normalSmooth,0,0,8);
  p.output.channels=Array.from({length:4},(_,i)=>Math.round(num(raw.output?.channels?.[i],p.output.channels[i],0,9)));
  if(/^#[0-9a-f]{6}$/i.test(raw.output?.background))p.output.background=raw.output.background;
  p.canvas.ratio=num(raw.canvas?.ratio,p.output.width/p.output.height,1/8,8);
@@ -127,10 +131,10 @@ export function localClock(timing,parentTime){
  return {local,progress:t.from+(t.to-t.from)*p,visible};
 }
 export const keyValue=interpolateKeys;
-export function evaluateNode(n,parentTime,progressOverride){const clock=localClock(n.timing,parentTime);if(progressOverride!==undefined)clock.progress=progressOverride;const out={...n,transform:{...n.transform},color:{...n.color},contour:{...n.contour},shapeClock:{follow:true,speed:1,offset:0,value:0,...n.shapeClock},post:[...n.post],params:[...n.params],uv:[...n.uv],arrange:[...n.arrange]};for(const [path,track]of Object.entries(n.animationEnabled===false?{}:n.tracks)){const v=keyValue(track,clock.progress),bounds=fieldSpec(n,path);if(track.muted||v===null||!bounds)continue;if(animationType(n,path)!=='number'){pathSet(out,path,v);continue;}const base=pathGet(n,path);pathSet(out,path,clamp(track.mode==='add'?base+v:track.mode==='multiply'?base*v:v,...bounds));}out.arrange=sanitizeArrangement(out.arrange);return {node:out,...clock,visible:clock.visible&&out.enabled&&out.transform.width>0&&out.transform.height>0};}
+export function evaluateNode(n,parentTime,progressOverride){const clock=localClock(n.timing,parentTime);if(progressOverride!==undefined)clock.progress=progressOverride;const out={...n,transform:{...n.transform},color:{...n.color},contour:{...n.contour},shapeClock:{follow:true,speed:1,offset:0,value:0,...n.shapeClock},post:[...n.post],postFx:[...(n.postFx??fxDefaults())],params:[...n.params],uv:[...n.uv],arrange:[...n.arrange]};for(const [path,track]of Object.entries(n.animationEnabled===false?{}:n.tracks)){const v=keyValue(track,clock.progress),bounds=fieldSpec(n,path);if(track.muted||v===null||!bounds)continue;if(animationType(n,path)!=='number'){pathSet(out,path,v);continue;}const base=pathGet(n,path);pathSet(out,path,clamp(track.mode==='add'?base+v:track.mode==='multiply'?base*v:v,...bounds));}out.arrange=sanitizeArrangement(out.arrange);return {node:out,...clock,visible:clock.visible&&out.enabled&&out.transform.width>0&&out.transform.height>0};}
 export function nodeClock(root,id,time){let result=null;function visit(n,t){const e=evaluateNode(n,t);if(n.id===id)result=e;for(const c of n.children)visit(c,e.progress);if(n.mask)visit(n.mask,e.progress);}visit(root,time);return result;}
 export function moveNode(root,id,parentId,index=Infinity){const source=find(root,id),target=find(root,parentId);if(!source?.parent||!target||target.node.kind!=='group')throw Error('请选择可移动节点和目标组合');if(find(source.node,parentId))throw Error('不能移入自身或后代');if(source.parent.mask===source.node)source.parent.mask=null;else source.parent.children.splice(source.parent.children.indexOf(source.node),1);target.node.children.splice(Math.min(index,target.node.children.length),0,source.node);}
-export function removeNode(root,id){const x=find(root,id);if(!x?.parent)throw Error('不能删除作品根节点');if(x.parent.mask===x.node)x.parent.mask=null;else x.parent.children.splice(x.parent.children.indexOf(x.node),1);}
+export function removeNode(root,id){const x=find(root,id);if(!x?.parent)throw Error('不能删除画布根节点');if(x.parent.mask===x.node)x.parent.mask=null;else x.parent.children.splice(x.parent.children.indexOf(x.node),1);}
 export const scatterOptions=(n,aspect=1)=>({avoidOverlap:n.scatterAvoidOverlap===true,gap:n.scatterGap??0,wrap:!!n.seamless,aspect,fit:n.arrangeFit??'contain'});
 export function placements(a,n={},_time=0,_original=n,aspect=1){const records=rawPlacements(a,n,aspect);return a[0]?fitInstances(records,aspect,n.arrangeFit??'contain'):records;}
 function rawPlacements(a,n={},aspect=1){
@@ -152,9 +156,9 @@ export function instanceChildren(n,index){
  return [pool[Math.floor(h/4294967296*pool.length)]];
 }
 export function expandInstances(root,id,time,records){const entry=find(root,id);if(!entry)throw Error('节点不存在');const n=entry.node,e=nodeClock(root,id,time);if(!n.arrange[0])throw Error('节点没有排列');
- const points=records??placements(e.node.arrange,e.node),content=cloneNode(n);content.transform=node().transform;content.opacity=1;content.blend='over';content.arrange[0]=0;content.seamless=n.seamless;if(content.color.mode==='remap')content.color.mode='own';content.instancePhase=0;content.mask=null;content.post=POST_SPECS.map(p=>p[3]);content.contour=node().contour;content.invert=false;content.maskInvert=false;content.timing=node().timing;
- for(const path of Object.keys(content.tracks))if(path.startsWith('arrange.')||path.startsWith('transform.')||path==='opacity'||path.startsWith('post.')||path.startsWith('contour.'))delete content.tracks[path];
- const result=node('group');Object.assign(result,{id:n.id,name:n.name,transform:n.transform,opacity:n.opacity,blend:n.blend,seamless:n.seamless,seamMode:n.seamMode,seamBlend:n.seamBlend,timing:n.timing,animationEnabled:n.animationEnabled,mask:n.mask,maskInvert:n.maskInvert,post:n.post,contour:n.contour,invert:n.invert,color:n.color});result.tracks=Object.fromEntries(Object.entries(n.tracks).filter(([p])=>p.startsWith('transform.')||p==='opacity'||p.startsWith('post.')||p.startsWith('contour.')));
+ const points=records??placements(e.node.arrange,e.node),content=cloneNode(n);content.transform=node().transform;content.opacity=1;content.blend='over';content.arrange[0]=0;content.seamless=n.seamless;if(content.color.mode==='remap')content.color.mode='own';content.instancePhase=0;content.mask=null;content.post=POST_SPECS.map(p=>p[3]);content.postFx=fxDefaults();content.contour=node().contour;content.invert=false;content.maskInvert=false;content.timing=node().timing;
+ for(const path of Object.keys(content.tracks))if(path.startsWith('arrange.')||path.startsWith('transform.')||path==='opacity'||(path.startsWith('post.')||path.startsWith('postFx.'))||path.startsWith('contour.'))delete content.tracks[path];
+ const result=node('group');Object.assign(result,{id:n.id,name:n.name,transform:n.transform,opacity:n.opacity,blend:n.blend,seamless:n.seamless,seamMode:n.seamMode,seamBlend:n.seamBlend,timing:n.timing,animationEnabled:n.animationEnabled,mask:n.mask,maskInvert:n.maskInvert,post:n.post,postFx:n.postFx,contour:n.contour,invert:n.invert,color:n.color});result.tracks=Object.fromEntries(Object.entries(n.tracks).filter(([p])=>p.startsWith('transform.')||p==='opacity'||(p.startsWith('post.')||p.startsWith('postFx.'))||p.startsWith('contour.')));
  let size=0;walk(root,()=>size++);walk(n,()=>size--);walk(result,()=>size++);
  for(let i=0;i<points.length;i++){size++;for(const c of instanceChildren(e.node,i))walk(c,()=>size++);if(size>LIMITS.nodes)throw Error('展开后超出256节点限制');}
  result.children=points.map((p,i)=>{const c=cloneNode({...content,children:instanceChildren(e.node,i)});c.instanceContent='all';c.name=`${n.name} ${i+1}`;c.transform={...c.transform,x:p.x,y:p.y,width:p.width,height:p.height,rotation:p.turn*180/Math.PI};c.transform.mirrorX=p.mirror<0;c.timing.offset=i*e.node.instancePhase%1;return c;});

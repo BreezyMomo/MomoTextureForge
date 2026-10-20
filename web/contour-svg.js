@@ -9,6 +9,6 @@ export function contourDocumentSVG({width,height,children}){
  }
  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+number(width)+'" height="'+number(height)+'" viewBox="0 0 '+number(width)+' '+number(height)+'">'+children.map(layer).join('')+'</svg>';
  const bytes=new TextEncoder().encode(svg).length;
- if(bytes>2*1024*1024)throw Error('当前SVG约 '+(Math.ceil(bytes/1048576*100)/100).toFixed(2)+' MB（上限 2.00 MB）。请降低采样尺寸、降低细节保留或开启平滑。如果原图分辨率已满足使用需求，可关闭“转为 SVG 路径”，直接使用图片；作品导出可改选 PNG。');return svg;
+ if(bytes>2*1024*1024)throw Error('当前SVG约 '+(Math.ceil(bytes/1048576*100)/100).toFixed(2)+' MB（上限 2.00 MB）。请降低采样尺寸、降低细节保留或开启平滑。如果原图分辨率已满足使用需求，可关闭“转为 SVG 路径”，直接使用图片；画布导出可改选 PNG。');return svg;
 }
 export async function exportContourSVG(project,options={}){const document=await buildContourDocument(project,options);options.stage?.('正在生成 SVG 文件…');return {svg:contourDocumentSVG(document),stats:document.stats,warnings:document.warnings};}

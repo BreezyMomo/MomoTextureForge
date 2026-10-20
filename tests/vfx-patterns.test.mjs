@@ -11,16 +11,16 @@ import {authoringFromEditor} from '../web/ai-authoring.js';
 
 const ids=['PlumeSmoke','LayeredFog','TurbulentFlame','BallisticSparks','BranchedLightning','BokehDust','FilmGrain'];
 test('seven generator types append with explicit capability versions and extended parameters',()=>{
- assert.deepEqual(CATALOG.slice(-7).map(p=>p.id),ids);
- assert.equal(CATALOG[CATALOG.length-8].id,'NaturalWood');
+ assert.deepEqual(CATALOG.slice(284,291).map(p=>p.id),ids);
+ assert.equal(CATALOG[283].id,'NaturalWood');
  for(const id of ids){
   const type=BY_ID.get(id);
   assert.equal(type.categoryName,'特效素材');
-  assert.equal(type.usesTime,false);
+  assert.equal(type.usesTime,true);
   assert.equal(type.definition.generator.schema,'momo.generator/v1');
   assert.ok(type.parameters.length>=13&&type.parameters.length<=64);
   assert.equal(type.parameters[0].label,'随机种子');
-  assert.equal(type.definition.revision,id==='TurbulentFlame'?2:1);
+  assert.equal(type.definition.revision,id==='TurbulentFlame'?3:2);
   const p=project();p.root.children=[node('shape',id)];
   for(const parameter of type.parameters)p.root.children[0].params[parameter.slot]=parameter.max;
   assert.deepEqual(sanitizeTree(JSON.parse(JSON.stringify(p))).root.children[0].params,p.root.children[0].params);
@@ -32,11 +32,11 @@ test('generator resource packs preserve extended keyframes and every shader depe
  const p=project();p.root.children=[node('shape','PlumeSmoke')];const n=p.root.children[0];n.type='custom_generator';n.params[17]=6;
  n.tracks['params.17']={mode:'absolute',ease:'linear',keys:[[0,2],[1,10]]};
  const pack=await readResourcePack(await encodeResourcePack(p,{assets:new Map([['custom_generator',asset]])}));
- try{pack.register();const restored=sanitizeTree(pack.payload).root.children[0];assert.equal(restored.params.length,26);assert.equal(restored.params[17],6);assert.equal(evaluateNode(restored,.5).node.params[17],6);assert.equal(animationType(restored,'params.0'),'discrete');const imported=pack.prepared[0][1];assert.deepEqual(imported.definition.generator,asset.definition.generator);assert.deepEqual(imported.libraries,asset.libraries);}finally{pack.rollback();}
+ try{pack.register();const restored=sanitizeTree(pack.payload).root.children[0];assert.equal(restored.params.length,27);assert.equal(restored.params[17],6);assert.equal(evaluateNode(restored,.5).node.params[17],6);assert.equal(animationType(restored,'params.0'),'discrete');const imported=pack.prepared[0][1];assert.deepEqual(imported.definition.generator,asset.definition.generator);assert.deepEqual(imported.libraries,asset.libraries);}finally{pack.rollback();}
 });
 
 test('unknown generator capabilities and duplicate bindings fail before rendering',()=>{
- for(const mutate of [a=>a.definition.generator.revision=99,a=>a.definition.generator.programs.color='missing',a=>a.definition.parameters[1].variable='seed',a=>a.definition.generator.schema='unknown']){const asset=builtinAsset('PlumeSmoke');mutate(asset);assert.throws(()=>validateAsset(asset));}
+ for(const mutate of [a=>a.definition.generator.revision=99,a=>a.definition.generator.programs.color='missing',a=>a.definition.parameters[1].variable='seed',a=>a.definition.generator.schema='unknown',a=>a.definition.generator.usesTime='true']){const asset=builtinAsset('PlumeSmoke');mutate(asset);assert.throws(()=>validateAsset(asset));}
  assert.throws(()=>authoringFromEditor(builtinAsset('PlumeSmoke')),/资源包/);
  assert.ok(!fragmentGLSL([BY_ID.get('Circle').index]).includes('generatedTexture'));
 });

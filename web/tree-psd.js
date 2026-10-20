@@ -1,9 +1,10 @@
+import {hasPostFx} from './post-fx.js';
 import {canvasRoot,evaluateNode} from './tree-model.js';
 import {writePsdUint8Array} from './vendor/psd-writer.js';
 
 const POST=[0,1,1,0,1,0,1];
 const same=(a,b)=>a.length===b.length&&a.every((v,i)=>v===b[i]);
-const neutralGroup=n=>n.kind==='group'&&!n.mask&&!n.seamless&&!n.arrange[0]&&!n.invert&&(!n.contour||n.contour.mode==='none'||n.contour.radius===0)&&same(n.post,POST)&&n.opacity===1&&['preserve','inherit'].includes(n.color.mode)&&
+const neutralGroup=n=>n.kind==='group'&&!hasPostFx(n)&&!n.mask&&!n.seamless&&!n.arrange[0]&&!n.invert&&(!n.contour||n.contour.mode==='none'||n.contour.radius===0)&&same(n.post,POST)&&n.opacity===1&&['preserve','inherit'].includes(n.color.mode)&&
  n.transform.x===.5&&n.transform.y===.5&&n.transform.width===1&&n.transform.height===1&&n.transform.rotation===0&&!n.transform.mirrorX&&n.transform.pivotX===.5&&n.transform.pivotY===.5&&n.transform.fit==='stretch';
 
 // PSD paths use document pixel coordinates, y down; GLSL UV uses y up.
@@ -19,7 +20,7 @@ function ellipsePath(rx,ry,transform,width,height,operation='combine'){
 }
 
 export function shapeVector(n,width,height){
- if(n.kind!=='shape'||!['Circle','Ring','Ellipse'].includes(n.type)||n.mask||n.seamless||n.arrange[0]||n.polar||n.invert||n.contour?.mode!=='none'&&n.contour?.radius>0||!same(n.post,POST)||!same(n.uv,[1,0,0,0,0,0,0])||n.params[3]!==0)return null;
+ if(hasPostFx(n)||n.kind!=='shape'||!['Circle','Ring','Ellipse'].includes(n.type)||n.mask||n.seamless||n.arrange[0]||n.polar||n.invert||n.contour?.mode!=='none'&&n.contour?.radius>0||!same(n.post,POST)||!same(n.uv,[1,0,0,0,0,0,0])||n.params[3]!==0)return null;
  // A scalar gradient is not generally a Photoshop spatial gradient. Only a
  // solid color is exported as a fill; all other color models remain pixels.
  if(n.color.mode!=='own'||n.color.fill!=='solid')return null;

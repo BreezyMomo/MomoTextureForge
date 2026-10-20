@@ -7,6 +7,7 @@ export function validateGenerator(spec,libraries){
  if(!spec)return;
  if(spec.schema!==GENERATOR_SCHEMA||!['smoke','fog','fire','sparks','lightning','dust','grain','pipeline'].includes(spec.effect)||spec.revision!==1)throw Error('生成器版本或类型不受支持，请更新工具');
  if(!['alpha','luminance'].includes(spec.scalar))throw Error('生成器标量输出无效');
+ if(spec.usesTime!==undefined&&typeof spec.usesTime!=='boolean')throw Error('生成器时间标记必须为布尔值');
  if(!Array.isArray(spec.libraries)||!spec.libraries.length||spec.libraries.some(name=>!Object.hasOwn(libraries,name)))throw Error('生成器缺少着色器依赖');
  if(spec.effect==='pipeline'){
   if(!Array.isArray(spec.passes)||!spec.passes.length||spec.passes.length>GENERATOR_PASS_LIMIT)throw Error('自定义生成器需要1～16个渲染步骤');

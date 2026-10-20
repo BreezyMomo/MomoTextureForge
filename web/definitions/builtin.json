@@ -1,6 +1,6 @@
 {
   "schema": "momo.texture-index/v1",
-  "revision": 14,
+  "revision": 17,
   "abi": "momo-pattern/16-v1",
   "categories": [
     {
@@ -111,6 +111,42 @@
     },
     "generator-emission-v1": {
       "file": "libraries/generator-emission-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-water-v1": {
+      "file": "libraries/generator-water-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-caustics-v1": {
+      "file": "libraries/generator-caustics-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-bonfire-v1": {
+      "file": "libraries/generator-bonfire-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-animated-lightning-v1": {
+      "file": "libraries/generator-animated-lightning-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-motion-v1": {
+      "file": "libraries/generator-motion-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-volume-flame-v1": {
+      "file": "libraries/generator-volume-flame-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-volume-explosion-v1": {
+      "file": "libraries/generator-volume-explosion-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-volume-smoke-v1": {
+      "file": "libraries/generator-volume-smoke-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-volume-v1": {
+      "file": "libraries/generator-volume-v1.glsl",
       "abi": "momo-pattern/16-v1"
     }
   },
@@ -1278,6 +1314,34 @@
     {
       "id": "FilmGrain",
       "file": "patterns/FilmGrain/pattern.json"
+    },
+    {
+      "id": "FlowingWater",
+      "file": "patterns/FlowingWater/pattern.json"
+    },
+    {
+      "id": "WaterCaustics",
+      "file": "patterns/WaterCaustics/pattern.json"
+    },
+    {
+      "id": "Bonfire",
+      "file": "patterns/Bonfire/pattern.json"
+    },
+    {
+      "id": "AnimatedLightning",
+      "file": "patterns/AnimatedLightning/pattern.json"
+    },
+    {
+      "id": "VolumeFlame",
+      "file": "patterns/VolumeFlame/pattern.json"
+    },
+    {
+      "id": "VolumeExplosion",
+      "file": "patterns/VolumeExplosion/pattern.json"
+    },
+    {
+      "id": "VolumeSmoke",
+      "file": "patterns/VolumeSmoke/pattern.json"
     }
   ]
 }

@@ -1,0 +1,116 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "WaterCaustics",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "动态焦散",
+  "category": "vfx",
+  "order": 292,
+  "variant": 8,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 123
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "variable": "speed",
+      "label": "流动速度",
+      "min": -3,
+      "max": 3,
+      "step": 0.01,
+      "default": 1
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "variable": "scale",
+      "label": "焦散密度",
+      "min": 0.2,
+      "max": 5,
+      "step": 0.01,
+      "default": 1.2
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "variable": "sharpness",
+      "label": "焦散锐度",
+      "min": 2,
+      "max": 12,
+      "step": 0.1,
+      "default": 7
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "intensity",
+      "label": "亮度",
+      "min": 0.1,
+      "max": 4,
+      "step": 0.01,
+      "default": 1
+    }
+  ],
+  "defaults": [
+    123,
+    1,
+    1.2,
+    7,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "inline": "return 0.;",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  },
+  "generator": {
+    "schema": "momo.generator/v1",
+    "revision": 1,
+    "effect": "pipeline",
+    "scalar": "luminance",
+    "libraries": [
+      "generator-motion-v1",
+      "generator-caustics-v1"
+    ],
+    "helpers": [
+      "generator-motion-v1"
+    ],
+    "passes": [
+      {
+        "id": "result",
+        "inputs": [],
+        "scale": 1,
+        "program": "generator-caustics-v1"
+      }
+    ]
+  }
+}

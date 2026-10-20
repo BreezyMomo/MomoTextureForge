@@ -1,8 +1,9 @@
 vec4 generate(vec2 uv){
- vec2 warped=uv+gWarp(uv*warpScale,int(warpOctaves))*warpStrength;
+ vec2 flow=vec2(.12,-.18)*time*motionSpeed;
+ vec2 warped=uv+gWarp(uv*warpScale+flow,int(warpOctaves))*warpStrength;
  float value=texture(input0,clamp(warped,0.,1.)).r;
  float edge=smoothstep(0.,.4,value);
- float breakup=.5+.5*gFbm(uv*warpScale*3.5,int(warpOctaves));
+ float breakup=.5+.5*gFbm(uv*warpScale*3.5+flow*2.,int(warpOctaves));
  value*=mix(1.,mix(breakup,1.,edge),edgeBreakup);
  if(finalBlur>0.){float blurred=0.;for(int i=0;i<8;i++){float turn=float(i)*TAU/8.;blurred+=texture(input0,clamp(warped+vec2(cos(turn),sin(turn))*finalBlur*.02,0.,1.)).r;}value=mix(value,blurred/8.,finalBlur);}
  value=pow(max(value,0.),1./max(contrast,.01))*brightness;

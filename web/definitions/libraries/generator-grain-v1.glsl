@@ -1,6 +1,6 @@
 float filmNoise(vec2 uv,float z,int octaves,float rough){float amplitude=.5,total=0.,value=0.,gain=exp2(-mix(1.2,.3,rough));for(int i=0;i<8;i++){if(i>=octaves)break;float n=snoise(vec3(uv,z+float(i)*31.7));value+=mix(n,abs(n)*2.-1.,rough*.4)*amplitude;total+=amplitude;uv=rot(uv,.64)*2.02;amplitude*=gain;}return value/max(total,.001);}
 vec4 generate(vec2 uv){
- float z=seed*.137+3.7,frequency=80./max(size,.05);int octaves=2+int(roughness*5.);
+ float z=seed*.137+3.7+time*motionSpeed*7.,frequency=80./max(size,.05);int octaves=2+int(roughness*5.);
  float mono=filmNoise(uv*frequency,z,octaves,roughness)*.5+.5;
  if(filmLook>.5){float distance=gWorley(uv*frequency/max(clumpSize,.3),z);float mask=smoothstep(0.,.6,distance);mask*=.75+.25*snoise(vec3(uv*frequency/max(clumpSize,.3)*.7,z+100.));mono=mix(mono,mono*(.3+mask*1.4),.7);}
  mono=clamp((mono-.5)*contrast+.5+brightness,0.,1.);

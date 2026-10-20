@@ -16,4 +16,4 @@ float dustLayer(vec2 uv,float cellSize,float sizeScale,float densityScale,float 
  }
  return total;
 }
-vec4 generate(vec2 uv){float value=dustLayer(uv,.031,.5,1.,0.,false)+dustLayer(uv+vec2(.1731,.4197),.063,1.2,.65,41.71,true)+dustLayer(uv+vec2(.5193,.2371),.11,2.2,.3,89.31,false);float alpha=clamp(value*opacityAmount,0.,1.);return vec4(mix(vec3(1),vec3(1,.92,.78),warmth*.5),alpha);}
+vec4 generate(vec2 uv){uv+=vec2(.012,-.022)*time*motionSpeed;float value=dustLayer(uv,.031,.5,1.,0.,false)+dustLayer(uv+vec2(.1731,.4197),.063,1.2,.65,41.71,true)+dustLayer(uv+vec2(.5193,.2371),.11,2.2,.3,89.31,false);float alpha=clamp(value*opacityAmount,0.,1.);return vec4(mix(vec3(1),vec3(1,.92,.78),warmth*.5),alpha);}

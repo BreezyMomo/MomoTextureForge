@@ -21,5 +21,5 @@ test('loaded formula sources match the current files and pattern versions are va
 test('portable authoring bundle contains all current formula files',async()=>{
  const {default:runtime}=await import('../web/authoring-kit-runtime.js');
  const cli=runtime['scripts/texforge.mjs'];
- for(const p of BUILTIN.catalog)assert.ok(cli.includes(p.definition.outputs.scalar.file),p.id);
+ for(const p of BUILTIN.catalog){assert.ok(cli.includes(p.id),p.id);const spec=p.definition.outputs.scalar;if(spec.file)assert.ok(cli.includes(spec.file),p.id);else assert.ok(cli.includes(spec.inline),p.id);}
 });

@@ -88,14 +88,14 @@ npm test
 
 校验器检查 schema/ABI、顺序/ID/分类、索引与配置的 ID 一致性、参数绑定/范围/default、能力、依赖、源文件内容与路径，加载成功前不发布目录。先读取独立配置再读取公式，两个阶段各最多 8 个并发，每个文件只读一次；注册记录冻结。301 份配置与 310 份 GLSL 文件均经过实际读取，CLI 单独报告 configurationFiles/sourceFiles。CLI 校验结构与文件，不替代 GPU 编译。
 
-图案库去重已删除11份定义，并连续重排全局和分类索引。用户明确不要求旧作品兼容，迁移前的固定快照及其测试已移除；不保留旧ID重定向。当前验证覆盖定义加载/路径/资源完整性、预设保存读取、节点运算与实际GPU渲染。公式本身更改应调整相应revision并重新验证。
+图案库去重已删除11份定义，并连续重排全局和分类索引。用户明确不要求旧画布兼容，迁移前的固定快照及其测试已移除；不保留旧ID重定向。当前验证覆盖定义加载/路径/资源完整性、预设保存读取、节点运算与实际GPU渲染。公式本身更改应调整相应revision并重新验证。
 
 OgeeFlowerTile 只绘制居中单体，使用body公式文件；周期复制由通用斜向网格排列器负责。该图案由独立Node与GPU周期/参数回归覆盖。
 
 
 ## 内置公式
 
-当前注册 291 个图形，实际目录以 `web/definitions/builtin.json` 为准。参数由各图形的定义文件声明，支持灰度、蒙版、法线及部分图形的矢量输出；无缝行为按定义选择周期、重复或边缘融合。
+当前注册 298 个图形，实际目录以 `web/definitions/builtin.json` 为准。参数由各图形的定义文件声明，支持灰度、蒙版、法线及部分图形的矢量输出；无缝行为按定义选择周期、重复或边缘融合。
 
 ### 特效素材
 
@@ -107,7 +107,7 @@ OgeeFlowerTile 只绘制居中单体，使用body公式文件；周期复制由�
 
 含生成器的资源包声明 `momo-pattern/16-v1+generator-v1` 接口版本，使旧工具拒绝导入而非显示空图。普通公式资源包继续使用原来的接口版本。底层三图层 `Renderer` 不合并同 ID 的多套生成器参数，调用方应使用节点 `TreeRenderer` 分别生成再合成；工作台已经使用该通路。
 
-这七项按种子生成静态结果，不声明连续时间动画；可以通过节点关键帧改变参数。相同种子、参数和尺寸可复现输出。无缝平铺使用通用边缘融合，不宣称原生周期或动画首尾循环。胶片颗粒使用 Ashima Arts/Stefan Gustavson 的 MIT simplex 噪声实现，声明与许可随对应 GLSL 依赖分发。
+这七项提供动画速度和秒数时间驱动，也可通过节点关键帧改变参数。速度设为 0 时静止；相同种子、参数、时间和尺寸可复现输出。无缝平铺使用通用边缘融合，不宣称原生周期或动画首尾循环。胶片颗粒使用 Ashima Arts/Stefan Gustavson 的 MIT simplex 噪声实现，声明与许可随对应 GLSL 依赖分发。
 
 ### 自定义生成器
 
@@ -115,4 +115,10 @@ OgeeFlowerTile 只绘制居中单体，使用body公式文件；周期复制由�
 
 资源内部使用 `generator.effect: pipeline`，`passes` 每项声明 `id`、`program`、`inputs` 和 `scale`，`program` 引用携带的 GLSL 库；`helpers` 为辅助函数库名数组。输入只能引用前面的步骤，最多三个，按顺序绑定到 input0～input2。最后一步为全尺寸输出；运行时在后续步骤不再使用中间纹理时回收。它仍使用 `momo.generator/v1` 能力及生成器资源包 ABI，旧版本不认识 pipeline 时明确拒绝加载。
 
-用户 GLSL 在浏览器 WebGL2 中执行，不运行用户 JavaScript 或任意 CPU 轨迹代码。当前没有跨帧反馈或内置 time，可通过参数关键帧改变生成结果。相同参数与尺寸的结果会缓存；编辑器保存、节点组合和导出继续使用同一生成器通路。
+用户 GLSL 在浏览器 WebGL2 中执行，不运行用户 JavaScript 或任意 CPU 轨迹代码。GLSL 提供 `time`（秒），随节点时钟及导出帧时间传入；检测到实际代码读取 time 时，缓存键包含时间，静态生成器继续复用缓存。内置几何生成器可通过可选布尔字段 `generator.usesTime` 声明宿主几何阶段使用时间；旧资源未声明且着色器不读取 time 时仍保持静态。没有跨帧反馈。编辑器保存、节点组合和导出继续使用同一生成器通路。
+
+### 动态与体积生成器
+
+`FlowingWater`、`WaterCaustics`、`Bonfire`、`AnimatedLightning`、`VolumeFlame`、`VolumeExplosion`、`VolumeSmoke` 使用 pipeline 与 time。体积效果使用24～96步有界采样，支持密度、湍流、光照和采样步数；爆炸按演化速度周期重启。连续流动效果不保证导出首尾相同。焦散核心改编自 pixy.js，MIT 许可随 GLSL 分发。
+
+节点 `postFx` 数组依次为模糊半径、Bloom强度、Bloom半径、Bloom阈值、锐化、色散距离、卡通阶数；默认值 `[0,0,16,0.6,0,0,0]`。组合先合成后处理；PSD 遇到启用滤镜的组合会合成为像素。`output` 内的 `normalAlgorithm`、`normalFlipX`、`normalFlipY`、`normalInvert` 和 `normalSmooth` 同时作用于法线与RGBA法线通道。旧画布缺省采用原来的 Sobel 输出。

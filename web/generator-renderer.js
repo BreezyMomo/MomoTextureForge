@@ -4,11 +4,17 @@ const vertex=`#version 300 es
 out vec2 uv;void main(){vec2 p=vec2(float((gl_VertexID<<1)&2),float(gl_VertexID&2));uv=p;gl_Position=vec4(p*2.-1.,0,1);}`;
 const geometryVertex=`#version 300 es
 precision highp float;precision highp int;layout(location=0) in vec4 start;layout(location=1) in vec4 end;layout(location=2) in vec4 tint;
-uniform vec2 resolution;uniform int cloud;out vec2 local;out vec4 shade;
+uniform vec2 resolution;uniform int cloud,motionKind;uniform float geometryTime;out vec2 local;out vec4 shade;
+vec2 movingPoint(vec2 p){
+ if(geometryTime==0.)return p;
+ if(motionKind==1)p.x+=(sin(p.y*14.+geometryTime*3.)-sin(p.y*14.))*.018*clamp(p.y+.12,0.,1.);
+ if(motionKind==2){float envelope=sin(clamp((p.y-.1)/.82,0.,1.)*3.141593);p.x+=(sin(p.y*27.+geometryTime*13.)-sin(p.y*27.))*.028*envelope;p.y+=(sin(p.x*37.+geometryTime*19.)-sin(p.x*37.))*.004*envelope;}
+ return p;
+}
 void main(){vec2 corners[6]=vec2[6](vec2(-1,-1),vec2(1,-1),vec2(1,1),vec2(-1,-1),vec2(1,1),vec2(-1,1));vec2 corner=corners[gl_VertexID];float t=corner.x*.5+.5;float aspect=resolution.x/resolution.y;vec2 p;
  if(cloud==1||tint.w<0.){p=start.xy+corner*start.z;local=corner;shade=vec4(tint.rgb*start.w,cloud==1?tint.w:-1.);}
  else{vec2 delta=(end.xy-start.xy)*vec2(aspect,1),tangent=length(delta)>.000001?normalize(delta):vec2(1,0);vec2 perpendicular=vec2(-tangent.y,tangent.x)/vec2(aspect,1);float width=mix(start.z,end.z,t);p=mix(start.xy,end.xy,t)+perpendicular*corner.y*width*3.;local=vec2(0,corner.y*3.);shade=vec4(tint.rgb*mix(start.w,end.w,t),tint.w);}
- gl_Position=vec4(p*2.-1.,0,1);}`;
+ p=movingPoint(p);if(motionKind>0&&geometryTime!=0.){float ramp=1.-exp(-abs(geometryTime)*6.);float pulse=motionKind==1?.2+1.3*pow(.5+.5*sin(geometryTime*9.-start.y*32.),5.):.55+.45*cos(geometryTime*23.+start.y*2.);shade.rgb*=mix(1.,pulse,ramp);}gl_Position=vec4(p*2.-1.,0,1);}`;
 const geometryFragment=`#version 300 es
 precision highp float;precision highp int;in vec2 local;in vec4 shade;uniform int cloud;out vec4 result;
 void main(){float distance=dot(local,local);float falloff=cloud==1?exp(-distance*mix(8.,2.,shade.a)):shade.a<0.?exp(-distance*4.):exp(-local.y*local.y*5.)+exp(-local.y*local.y)*.12;result=vec4(shade.rgb*falloff,falloff);}`;
@@ -40,28 +46,28 @@ export class GeneratorRenderer{
  bind(target){const gl=this.gl;gl.bindFramebuffer(gl.FRAMEBUFFER,target.fb);gl.drawBuffers([gl.COLOR_ATTACHMENT0]);gl.viewport(0,0,target.w,target.h);gl.disable(gl.SCISSOR_TEST);gl.disable(gl.BLEND);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);}
  fullscreen(target,body,common,parameters,inputs=[],extra={}){
   const gl=this.gl,defines=parameters.specs.map(p=>'#define '+p.variable+' gp['+p.slot+']').join('\n');
-  const source=`#version 300 es\nprecision highp float;precision highp int;in vec2 uv;out vec4 outputValue;uniform float gp[64];uniform float generatorSeed;uniform vec2 generatorResolution;uniform sampler2D input0,input1,input2;uniform vec2 blurDirection,bloomStrengths;uniform float blurRadius,emissionIntensity;\n${common}\n${defines}\n${body}\nvoid main(){outputValue=generate(uv);}`;
+  const source=`#version 300 es\nprecision highp float;precision highp int;in vec2 uv;out vec4 outputValue;uniform float gp[64];uniform float generatorSeed,time;uniform vec2 generatorResolution;uniform sampler2D input0,input1,input2;uniform vec2 blurDirection,bloomStrengths;uniform float blurRadius,emissionIntensity;\n${common}\n${defines}\n${body}\nvoid main(){outputValue=generate(uv);}`;
   const program=this.program(source);this.bind(target);gl.useProgram(program.p);gl.bindVertexArray(this.vao);
   const data=new Float32Array(64);data.set(parameters.values);const activeCount=program.sizes.get('gp[0]');if(activeCount)gl.uniform1fv(this.location(program,'gp[0]'),data.subarray(0,activeCount));
   gl.uniform1f(this.location(program,'generatorSeed'),parameters.values[parameters.specs.find(p=>p.variable==='seed')?.slot??0]);
-  gl.uniform2f(this.location(program,'generatorResolution'),target.w,target.h);
+  gl.uniform2f(this.location(program,'generatorResolution'),target.w,target.h);gl.uniform1f(this.location(program,'time'),parameters.time??0);
   // Do not leave a render target bound to an unused input sampler.
   for(let index=0;index<3;index++){gl.activeTexture(gl.TEXTURE0+index);gl.bindTexture(gl.TEXTURE_2D,inputs[index]?.tex??null);gl.uniform1i(this.location(program,'input'+index),index);}
   if(extra.direction)gl.uniform2fv(this.location(program,'blurDirection'),extra.direction);if(extra.radius!==undefined)gl.uniform1f(this.location(program,'blurRadius'),extra.radius);
   if(extra.bloom)gl.uniform2fv(this.location(program,'bloomStrengths'),extra.bloom);if(extra.intensity!==undefined)gl.uniform1f(this.location(program,'emissionIntensity'),extra.intensity);
   gl.drawArrays(gl.TRIANGLES,0,3);this.drawCount++;gl.bindVertexArray(null);const error=gl.getError();if(error)throw Error('生成器全屏渲染错误 '+error);
  }
- geometry(target,effect,settings){
+ geometry(target,effect,settings,time=0){
   const gl=this.gl,rows=generatorGeometry(effect,settings),program=this.program(geometryFragment,geometryVertex);this.bind(target);gl.useProgram(program.p);gl.bindVertexArray(this.vao);gl.bindBuffer(gl.ARRAY_BUFFER,this.instances);gl.bufferData(gl.ARRAY_BUFFER,rows,gl.DYNAMIC_DRAW);
   for(let i=0;i<3;i++){gl.enableVertexAttribArray(i);gl.vertexAttribPointer(i,4,gl.FLOAT,false,48,i*16);gl.vertexAttribDivisor(i,1);}
-  gl.uniform2f(this.location(program,'resolution'),target.w,target.h);gl.uniform1i(this.location(program,'cloud'),effect==='smoke'?1:0);gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE);gl.drawArraysInstanced(gl.TRIANGLES,0,6,rows.length/12);this.drawCount++;gl.disable(gl.BLEND);
+  gl.uniform2f(this.location(program,'resolution'),target.w,target.h);gl.uniform1i(this.location(program,'cloud'),effect==='smoke'?1:0);gl.uniform1i(this.location(program,'motionKind'),effect==='sparks'?1:effect==='lightning'?2:0);gl.uniform1f(this.location(program,'geometryTime'),time);gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE);gl.drawArraysInstanced(gl.TRIANGLES,0,6,rows.length/12);this.drawCount++;gl.disable(gl.BLEND);
   for(let i=0;i<3;i++){gl.vertexAttribDivisor(i,0);gl.disableVertexAttribArray(i);}gl.bindVertexArray(null);const error=gl.getError();if(error)throw Error('生成器几何渲染错误 '+error);
  }
- render(type,values,w,h,libraries){
-  const definition=type.definition,spec=definition.generator,key=JSON.stringify([type.id,spec,values,w,h]);this.pinned.add(key);
+ render(type,values,w,h,libraries,time=0){
+  const definition=type.definition,spec=definition.generator,clock=spec.usesTime&&definition.parameters.some(p=>p.variable==='motionSpeed'&&values[p.slot]===0)?0:time,key=JSON.stringify([type.id,spec,values,w,h,type.usesTime?clock:0]);this.pinned.add(key);
   if(this.cache.has(key)){const cached=this.cache.get(key);this.cache.delete(key);this.cache.set(key,cached);return cached;}
   const common=['math-v1',...(spec.effect==='pipeline'?spec.helpers??[]:spec.libraries.filter(n=>n.includes('common')||n.includes('simplex')))].map(name=>libraries[name]).join('\n');
-  const parameters={specs:definition.parameters,values},settings=Object.fromEntries(definition.parameters.map(p=>[p.variable,values[p.slot]]));
+  const parameters={specs:definition.parameters,values,time:clock},settings=Object.fromEntries(definition.parameters.map(p=>[p.variable,values[p.slot]]));
   const targets=[],allocate=(scalar=false,blend=false)=>{const target=this.target(w,h,{scalar,blend});targets.push(target);return target;};
   let output;
   try{
@@ -83,7 +89,7 @@ export class GeneratorRenderer{
     density=blurred(density,Math.min(settings.softness*8*h/1024,15),true);
     this.fullscreen(output,libraries[spec.programs.color],common,parameters,[density]);
    }else if(spec.effect==='sparks'||spec.effect==='lightning'){
-    const sharp=allocate(false,true);this.geometry(sharp,spec.effect,settings);
+    const sharp=allocate(false,true);this.geometry(sharp,spec.effect,settings,spec.usesTime?clock*(settings.motionSpeed??1):0);
     const radius=settings.glowSize??(1+settings.glow*3),small=blurred(sharp,radius*h/1024),large=blurred(sharp,radius*4*h/1024);
     this.fullscreen(output,libraries[spec.programs.color],common,parameters,[sharp,small,large],{bloom:spec.effect==='lightning'?[settings.coreGlow*.25,settings.outerGlow*.2]:[settings.glow*.6,settings.glow*.2],intensity:settings.intensity??1});
    }else this.fullscreen(output,libraries[spec.programs.color],common,parameters);

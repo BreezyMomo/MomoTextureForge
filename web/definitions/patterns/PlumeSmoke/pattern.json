@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "PlumeSmoke",
-  "revision": 1,
+  "revision": 2,
   "abi": "momo-pattern/16-v1",
   "name": "蓬松烟团",
   "category": "vfx",
@@ -283,6 +283,16 @@
       "step": 1,
       "default": 16777215,
       "type": "color"
+    },
+    {
+      "slot": 26,
+      "key": "P26",
+      "variable": "motionSpeed",
+      "label": "动画速度",
+      "min": 0,
+      "max": 3,
+      "step": 0.01,
+      "default": 1
     }
   ],
   "defaults": [
@@ -311,7 +321,8 @@
     0.73,
     1.6,
     0,
-    16777215
+    16777215,
+    1
   ],
   "outputs": {
     "scalar": {
@@ -339,6 +350,7 @@
     ],
     "programs": {
       "color": "generator-smoke-v1"
-    }
+    },
+    "usesTime": true
   }
 }
