@@ -126,7 +126,12 @@ try{
   await page.locator('dialog').last().locator('header .graphics-close').click();await page.getByPlaceholder('搜索名称、分类或标签').fill('星形');await page.getByRole('button',{name:'导出 AI 图形目录',exact:true}).click();await page.getByRole('button',{name:'生成目录',exact:true}).click();await page.waitForFunction(()=>[...document.querySelectorAll('dialog textarea')].some(e=>e.value.includes('schema')));await shot('ai-catalog');
  });
  await run('help',async()=>{
-  await load(spell);await page.locator('.header-help > summary').click();await shot('help-menu',null,{x:1050,y:0,width:550,height:400});
+  await load(spell);await page.locator('#startup-screen').waitFor({state:'detached'});
+  const entries=await page.locator('.tree-tool-actions > button,.tree-tool-actions > details > summary').allTextContents();
+  if(entries.join('|')!=='图形库|组合示例|布局|投币支持|帮助')throw Error('Unexpected header order: '+entries.join('|'));
+  await page.locator('#support-project').click();await page.getByRole('dialog',{name:'投币支持',exact:true}).waitFor();await page.getByRole('button',{name:'关闭投币支持',exact:true}).click();
+  if(!await page.locator('#support-project').evaluate(e=>e===document.activeElement))throw Error('Support button focus not restored');
+  await page.locator('.header-help > summary').click();await shot('help-menu',null,{x:950,y:0,width:650,height:400});
  });
  await run('manager',async()=>{
   await load(water);
