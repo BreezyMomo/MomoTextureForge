@@ -1,3 +1,4 @@
+import {ARRANGEMENT_LIMITS as LIMITS} from './arrangement-limits.js';
 import { effectiveArrangement, ringCounts } from "./arrangement.js";
 import {visibleScatter} from './scatter-footprints.js';
 const TAU=Math.PI*2, DEG=Math.PI/180;
@@ -10,7 +11,7 @@ function arcSamples(point,start,end,count,spacing=0){
  const table=[{p:point(start),distance:0,t:start}];
  for(let i=1;i<=256;i++){const t=start+(end-start)*i/256,p=point(t),last=table.at(-1);table.push({p,t,distance:last.distance+Math.hypot(p[0]-last.p[0],p[1]-last.p[1])});}
  const length=table.at(-1).distance;
- if(spacing>0) count=Math.min(256,Math.floor(length/spacing)+1);
+ if(spacing>0) count=Math.min(LIMITS.instances,Math.floor(length/spacing)+1);
  if(length<1e-8)return [{x:table[0].p[0],y:table[0].p[1],angle:0,t:0}];
  let j=1;return Array.from({length:count},(_,i)=>{
   const distance=spacing>0?i*spacing:length*(count===1?.5:i/(count-1));
@@ -30,16 +31,16 @@ export function densitySampler(pixels,size){
  };
 }
 export function generateArrangement(values,{seamless=false,density=()=>1,avoidOverlap=false,gap=0,wrap=seamless,footprint=null,aspect=1,fit='contain'}={}){
- const a=effectiveArrangement(values,seamless),mode=a[0],count=Math.min(a[3],mode===10?Math.floor(256/(1+a[37])):256),radius=a[5],rng=random(a[11]);
+ const a=effectiveArrangement(values,seamless),mode=a[0],count=Math.min(a[3],mode===10?Math.floor(LIMITS.instances/(1+a[37])):LIMITS.instances),radius=a[5],rng=random(a[11]);
  if([7,12].includes(mode)&&(footprint&&avoidOverlap||aspect!==1))return visibleScatter(a,{density,footprint:footprint??(()=>({x:0,y:0,radius:avoidOverlap?Math.SQRT1_2:0,empty:!avoidOverlap})),gap:avoidOverlap?gap:0,wrap:seamless||wrap,aspect,fit});
  let points=[];
  if(mode===6){const p=a.slice(20,28).map(v=>v*radius);points=arcSamples(t=>cubicPoint(p,t),a[28],a[29],count,a[30]?a[31]:0);}
  if(mode===9)points=arcSamples(t=>{const angle=t*TAU*a[35],r=radius*(a[36]+(1-a[36])*t);return [Math.cos(angle)*r,Math.sin(angle)*r];},0,1,count);
- if(mode===8){const counts=ringCounts(a);for(let ring=0;ring<a[33];ring++)for(let i=0;i<counts[ring]&&points.length<256;i++){
+ if(mode===8){const counts=ringCounts(a);for(let ring=0;ring<a[33];ring++)for(let i=0;i<counts[ring]&&points.length<LIMITS.instances;i++){
    const t=a[33]===1?1:ring/(a[33]-1),r=radius*(a[36]+(1-a[36])*t),angle=TAU*i/counts[ring]*a[15]+ring*a[34]*DEG;
    points.push({x:Math.cos(angle)*r,y:Math.sin(angle)*r,angle,t});
  }}
- if(mode===10){for(let i=0;i<count&&points.length<256;i++)for(let side=0;side<=a[37]&&points.length<256;side++){
+ if(mode===10){for(let i=0;i<count&&points.length<LIMITS.instances;i++)for(let side=0;side<=a[37]&&points.length<LIMITS.instances;side++){
    const angle=TAU*i/count+(side?-1:1)*a[34]*DEG;
    points.push({x:Math.cos(angle)*radius,y:Math.sin(angle)*radius,angle,t:0,mirror:!!side});
  }}
@@ -72,7 +73,7 @@ export function generateArrangement(values,{seamless=false,density=()=>1,avoidOv
   }
  }
  const spin=a[6]*DEG;
- return points.slice(0,256).map(p=>{
+ return points.slice(0,LIMITS.instances).map(p=>{
   // Scatter layouts already satisfy their spacing rule: no position jitter afterwards.
   const jitter=[7,12].includes(mode)?0:a[8]*radius;
   let [x,y]=rotate(p.x+(rng()*2-1)*jitter,p.y+(rng()*2-1)*jitter,spin);

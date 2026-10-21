@@ -25,7 +25,7 @@ test('Poisson scatter is deterministic and keeps minimum distance including rota
 });
 test('rings, mirrored pairs, regular spiral and hex lattice geometry',()=>{
  const rings=config(8);rings[33]=3;rings[58]=0;rings[3]=8;assert.equal(generateArrangement(rings).length,24);
- rings[3]=256;assert.equal(generateArrangement(rings).length,255);
+ rings[3]=256;assert.equal(generateArrangement(rings).length,510);
  const symmetry=config(10);symmetry[3]=5;const pairs=generateArrangement(symmetry);assert.equal(pairs.length,10);assert.equal(pairs[0].mirror,1);assert.equal(pairs[1].mirror,-1);assert.ok(Math.abs(pairs[0].y+pairs[1].y-1)<1e-6);
  const spiral=config(9);spiral[3]=30;const ps=generateArrangement(spiral);assert.equal(ps.length,30);assert.ok(Math.abs(Math.hypot(ps.at(-1).x-.5,ps.at(-1).y-.5)-spiral[5])<1e-6);
  const hex=config(11);hex[1]=3;hex[2]=3;const hs=generateArrangement(hex);assert.equal(hs.length,9);assert.ok(Math.abs(dist(hs[0],hs[1])-dist(hs[0],hs[3]))<1e-6);

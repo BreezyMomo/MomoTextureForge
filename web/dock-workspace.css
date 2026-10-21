@@ -18,7 +18,7 @@
 .dock-panel-body{flex:1;min-height:0;min-width:0;overflow:hidden;position:relative}
 .dock-panel-body[hidden]{display:none!important}
 .dock-panel-body>.tree-left,.dock-panel-body>.tree-inspector{height:100%;max-height:none;overflow:auto;padding:12px;border:0}
-.dock-nodes-content>.pane-title,.dock-library-content>.pane-title{font-size:12px;color:#8ca1b6;margin-bottom:7px}
+.tree-node-count{margin-left:auto;align-self:center;color:#8ca1b6;font-size:11px;white-space:nowrap}
 .dock-panel-body>.tree-preview{height:100%;min-height:0;max-height:none;overflow:hidden;padding:10px}
 .dock-workspace .preview-heading{flex-wrap:wrap;gap:7px;margin-bottom:8px}
 .dock-workspace .preview-heading strong{font-size:15px}

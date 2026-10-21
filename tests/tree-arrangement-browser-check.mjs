@@ -26,6 +26,16 @@ try{
     const expanded=structuredClone(p);expandInstances(expanded.root,n.id,.3,records);const delta=diff(a,draw(expanded,w,h));if(delta>.012)throw Error(sample.name+' expansion changed '+delta+' at '+w+'x'+h);
     results.push({name:sample.name,w,h,count:records.length,roundtrip,stream,expansion:delta});
    }
+   for(const [mode,count]of [[1,256],[5,512],[7,512],[13,512],[15,512],[16,256]]){
+    const p=project(),n=mode===16?cloneNode(treeSamples().find(s=>s.root.arrange[0]===16).root):node();
+    Object.assign(n.arrange,{0:mode,1:mode===15?8:16,2:mode===15?8:16,3:512,4:.025,11:99999,32:0});p.root.children=[n];
+    const saved=sanitizeTree(JSON.parse(JSON.stringify(p))),pixels=draw(saved,256,256),restored=saved.root.children[0];
+    if(!pixels.some((v,i)=>i%4===3&&v>.01))throw Error('Empty dense layout '+mode);
+    const records=renderer.records(evaluateNode(restored,.3).node,.3,{original:restored,aspect:1});
+    if(records.length!==count)throw Error('Dense layout truncated '+mode+': '+records.length);
+    if(diff(pixels,draw(saved,256,256,.3,true))>1e-5)throw Error('Dense streaming differs '+mode);
+    results.push({mode,count,dense:true});
+   }
    // Lookup-table opacity must affect both rendered color and alpha.
    const p=project(),n=node();n.arrange[0]=1;n.arrange[1]=2;n.arrange[2]=1;Object.assign(n.arrangeExtra,{gradient:'index',opacityFrom:0,opacityTo:1});p.root.children=[n];const a=draw(p,128,128);let left=0,right=0;for(let y=0;y<128;y++)for(let x=0;x<128;x++){if(x<64)left+=a[(y*128+x)*4+3];else right+=a[(y*128+x)*4+3];}if(left>right*.001||right<10)throw Error('Per-instance opacity ignored');
    const contour=treeSamples().find(s=>s.name==='星形轮廓光点').root;p.root.children=[contour];draw(p,128,128);const lo=renderer.records(contour,.3);draw(p,512,512);const hi=renderer.records(contour,.3);if(JSON.stringify(lo)!==JSON.stringify(hi))throw Error('Contour layout depends on render resolution');
@@ -41,6 +51,9 @@ try{
  await modes.selectOption('15');await page.getByRole('combobox',{name:'编排样式',exact:true}).selectOption('basket');assert.equal((await saved()).arrangeExtra.weave,'basket');
  await page.evaluate(()=>history.replaceState(null,'',location.pathname));await page.reload();await page.locator('[role=treeitem]').first().click();await page.getByRole('button',{name:'变换/排列',exact:true}).click();assert.equal(await page.getByRole('combobox',{name:'编排样式',exact:true}).inputValue(),'basket');
  await page.getByRole('combobox',{name:'排列方式',exact:true}).selectOption('16');await page.getByText('图块接口配置',{exact:true}).click();assert.ok(await page.getByRole('combobox',{name:/接口$/}).count()>=2);
+ for(const label of ['网格列数','网格行数']){const input=page.getByRole('spinbutton',{name:label,exact:true});assert.equal(await input.getAttribute('max'),'16');await input.fill('16');await input.press('Tab');}
+ const seed=page.getByRole('spinbutton',{name:'拼接种子',exact:true});await seed.fill('99999');await seed.press('Tab');assert.deepEqual((await saved()).arrange.slice(1,3),[16,16]);assert.equal((await saved()).arrange[11],99999);
+ await page.reload();assert.deepEqual((await saved()).arrange.slice(1,3),[16,16]);
  await page.goto(origin+'/examples.html');await page.waitForFunction(count=>document.querySelector('#status')?.textContent.includes(count+' 种'),treeSamples().length,{timeout:180000});await page.getByRole('combobox',{name:'示例分类',exact:true}).selectOption('arrangement');assert.equal(await page.locator('#samples article:visible').count(),7);
  assert.deepEqual(errors,[]);console.log({uiPersistence:true,sevenExamples:true,errors});
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

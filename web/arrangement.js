@@ -1,25 +1,26 @@
 import { CATALOG } from "./catalog.js";
+import {ARRANGEMENT_LIMITS as LIMITS} from './arrangement-limits.js';
 // Numeric fields share the same keyframe/undo contract as pattern parameters.
 export const ARRANGEMENT_SPECS = [
   ["排列方式", 0, 12, 1, 0],
-  ["网格列数", 1, 8, 1, 4],
-  ["网格行数", 1, 8, 1, 4],
-  ["实例数量", 1, 64, 1, 12],
+  ["网格列数", 1, LIMITS.grid, 1, 4],
+  ["网格行数", 1, LIMITS.grid, 1, 4],
+  ["实例数量", 1, LIMITS.simpleInstances, 1, 12],
   ["实例尺寸", 0.01, 2, 0.01, 0.22],
-  ["布局半径", 0.02, 1.5, 0.01, 0.38],
+  ["布局半径", 0.02, 2, 0.01, 0.38],
   ["整体旋转 °", -360, 360, 1, 0],
   ["环形朝外", 0, 1, 1, 1],
   ["位置随机", 0, 1, 0.01, 0],
   ["尺寸随机", 0, 0.9, 0.01, 0],
   ["旋转随机 °", 0, 180, 1, 0],
-  ["排列种子", 1, 999, 1, 1],
+  ["排列种子", 1, LIMITS.seed, 1, 1],
   ["网格行错位", 0, 1, 0.01, 0],
   ["排列中心 X", -1.5, 1.5, 0.01, 0],
   ["排列中心 Y", -1.5, 1.5, 0.01, 0],
   ["环覆盖比例", 0.05, 1, 0.01, 1],
   ["发散角 °", 0, 360, 0.001, 137.507764],
   ["中心留空", 0, 0.95, 0.01, 0],
-  ["外圈尺寸倍率", 0.1, 3, 0.01, 1],
+  ["外圈尺寸倍率", 0.1, 4, 0.01, 1],
   ["螺旋朝向", 0, 2, 1, 0],
   ["路径起点 X", -1.5, 1.5, .01, -.8],
   ["路径起点 Y", -1.5, 1.5, .01, -.5],
@@ -34,9 +35,9 @@ export const ARRANGEMENT_SPECS = [
   ["路径采样方式", 0, 1, 1, 0],
   ["沿线间距", .005, 1, .005, .06],
   ["最小中心距离", 0, 1, .005, .06],
-  ["圈数", 1, 16, 1, 3],
+  ["圈数", 1, 32, 1, 3],
   ["圈间错位 / 对称偏角 °", -180, 180, 1, 15],
-  ["螺旋圈数", .1, 12, .1, 3],
+  ["螺旋圈数", .1, 24, .1, 3],
   ["内半径比例", 0, 1, .01, .15],
   ["镜像成对", 0, 1, 1, 1],
   ["六角方向", 0, 1, 1, 0],
@@ -54,7 +55,7 @@ export function arrangementSpec(mode, slot, values) {
   if (slot>=42&&slot<58) { const p=CATALOG[Math.min(CATALOG.length-1,Math.max(0,Math.round(Number(values?.[39])||0)))]??CATALOG[0];
     const field=p.parameters.find(p=>p.slot===slot-42);
     return field?{...field,slot,label:"密度 · "+field.label}:{...spec,min:p.defaults[slot-42]??0,max:p.defaults[slot-42]??0,default:p.defaults[slot-42]??0}; }
-  return slot === 3 && Number(mode) >= 5 ? {...spec, max:256} : spec;
+  return slot === 3 && Number(mode) >= 5 ? {...spec, max:LIMITS.instances} : spec;
 }
 export const defaultArrangement = () => ARRANGEMENT_SPECS.slice(0,16).map((s) => s.default);
 export function sanitizeArrangement(values) {
@@ -78,17 +79,17 @@ export const arrangementFamily = mode => [1,4,11].includes(mode)?1:[3,7,12].incl
 export function ringCounts(a){
  const radii=Array.from({length:a[33]},(_,i)=>a[36]+(1-a[36])*(a[33]===1?1:i/(a[33]-1)));
  const counts=radii.map(r=>r===0?1:Math.max(1,Math.round(a[3]*(a[58]===0?1:r))));
- if(a[58]===0)return counts.map(n=>Math.min(n,Math.floor(256/a[33])));
+ if(a[58]===0)return counts.map(n=>Math.min(n,Math.floor(LIMITS.instances/a[33])));
  const total=counts.reduce((x,y)=>x+y,0);
- if(total>256){const ideal=counts.map(n=>n*256/total);for(let i=0;i<counts.length;i++)counts[i]=Math.max(1,Math.floor(ideal[i]));let remaining=256-counts.reduce((x,y)=>x+y,0);while(remaining<0){let best=counts.findIndex(n=>n>1);for(let i=0;i<counts.length;i++)if(counts[i]>1&&counts[i]-ideal[i]>counts[best]-ideal[best])best=i;counts[best]--;remaining++;}while(remaining>0){let best=0;for(let i=1;i<counts.length;i++)if(ideal[i]-counts[i]>ideal[best]-counts[best])best=i;counts[best]++;remaining--;}}
+ if(total>LIMITS.instances){const ideal=counts.map(n=>n*LIMITS.instances/total);for(let i=0;i<counts.length;i++)counts[i]=Math.max(1,Math.floor(ideal[i]));let remaining=LIMITS.instances-counts.reduce((x,y)=>x+y,0);while(remaining<0){let best=counts.findIndex(n=>n>1);for(let i=0;i<counts.length;i++)if(counts[i]>1&&counts[i]-ideal[i]>counts[best]-ideal[best])best=i;counts[best]--;remaining++;}while(remaining>0){let best=0;for(let i=1;i<counts.length;i++)if(ideal[i]-counts[i]>ideal[best]-counts[best])best=i;counts[best]++;remaining--;}}
  return counts;
 }
 export function arrangementDescription(values, seamless) {
   const a = effectiveArrangement(values, seamless);
   let count = [1,4,11].includes(a[0]) ? a[1]*a[2] : a[3];
   if(a[0]===8)count=ringCounts(a).reduce((sum,n)=>sum+n,0);
-  if(a[0]===10)count=Math.min(count,Math.floor(256/(1+a[37])))*(1+a[37]);
-  const amount=a[0]===6&&a[30]?`按间距 ${a[31].toFixed(3)}（最多256）`:`${[7,12].includes(a[0])?"目标 ":""}${count} 个`;
+  if(a[0]===10)count=Math.min(count,Math.floor(LIMITS.instances/(1+a[37])))*(1+a[37]);
+  const amount=a[0]===6&&a[30]?`按间距 ${a[31].toFixed(3)}（最多${LIMITS.instances}）`:`${[7,12].includes(a[0])?"目标 ":""}${count} 个`;
   const name=[7,12].includes(a[0])?`随机散布${a[0]===12?" · 密度图案":""}${a[32]>0?" · 限制间距":""}`:a[0]===8?"环形排列":`${ARRANGEMENT_NAMES[a[0]]}排列`;
   return `${name} · ${amount}${a[0]===4?` · ${a[1]}列×${a[2]}行 · 隔行半格`:""} · 实际尺寸 ${a[4].toFixed(2)}${seamless ? " · 跨边缘重复" : ""}`;
 }

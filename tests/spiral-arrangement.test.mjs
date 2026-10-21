@@ -22,15 +22,15 @@ test('spiral footprint bounds outer growth and fill remains centered',()=>{
  assert.equal(sanitizeArrangement([99]).length,59);
 });
 
-test('spiral supports 256 instances, independent mask counts and count animation',()=>{
+test('spiral supports 512 instances, independent mask counts and count animation',()=>{
  const s=defaults(),l=s.layers[0];l.arrange[0]=5;l.arrange[3]=999;l.mask='Circle';l.maskArrange[0]=5;l.maskArrange[3]=256;
  s.animation.tracks={'layers.0.arrange.3':[[0,64],[3,256]],'layers.0.maskArrange.3':[[0,256],[3,128]]};
- const clean=sanitize(s);assert.equal(clean.layers[0].arrange[3],256);assert.equal(clean.layers[0].maskArrange[3],256);
+ const clean=sanitize(s);assert.equal(clean.layers[0].arrange[3],512);assert.equal(clean.layers[0].maskArrange[3],256);
  assert.deepEqual(decodeHash(encodeHash(clean)),clean);
  const at=frameState(clean,1.5).state;assert.equal(at.layers[0].arrange[3],160);assert.equal(at.layers[0].maskArrange[3],192);
  clean.layers[0].arrange[0]=2;
  clean.animation.tracks['layers.0.arrange.0']=[[0,2],[3,5]];
  assert.equal(frameState(clean,0).state.layers[0].arrange[3],64);
  assert.equal(frameState(clean,3).state.layers[0].arrange[3],256);
- for(const mode of [1,2,3,4]) { const a=[...l.arrange];a[0]=mode;assert.equal(effectiveArrangement(a,false)[3],64); }
+ for(const mode of [1,2,3,4]) { const a=[...l.arrange];a[0]=mode;assert.equal(effectiveArrangement(a,false)[3],128); }
 });

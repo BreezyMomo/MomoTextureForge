@@ -1,12 +1,13 @@
 import {sanitizeArrangement} from './arrangement.js';
+import {ARRANGEMENT_LIMITS as LIMITS} from './arrangement-limits.js';
 
 export const EXTRA_LAYOUTS=[[13,'边框排列'],[14,'沿图形轮廓'],[15,'人字 / 编织'],[16,'规则拼接']];
 export const EXTRA_SPECS={
  width:['边框宽',.05,1,.01,.84],height:['边框高',.05,1,.01,.68],corner:['圆角半径',0,.5,.005,.08],
  offset:['沿线偏移',-1,1,.01,0],threshold:['轮廓透明度阈值',.01,.99,.01,.5],contourOffset:['轮廓法向偏移',-.2,.2,.005,0],
- scaleFrom:['起始尺寸倍率',.01,3,.01,1],scaleTo:['结束尺寸倍率',.01,3,.01,1],opacityFrom:['起始透明度',0,1,.01,1],opacityTo:['结束透明度',0,1,.01,1],
+ scaleFrom:['起始尺寸倍率',.01,4,.01,1],scaleTo:['结束尺寸倍率',.01,4,.01,1],opacityFrom:['起始透明度',0,1,.01,1],opacityTo:['结束透明度',0,1,.01,1],
  rotationFrom:['起始旋转 °',-360,360,1,0],rotationTo:['结束旋转 °',-360,360,1,0],
- flowAmount:['流场幅度',-.5,.5,.005,.05],flowFrequency:['波浪次数',1,12,1,2],flowPhase:['流场相位 °',-3600,3600,1,0],
+ flowAmount:['流场幅度',-.5,.5,.005,.05],flowFrequency:['波浪次数',1,24,1,2],flowPhase:['流场相位 °',-3600,3600,1,0],
 };
 export const EXTRA_ENUMS={gradient:['none','x','y','radial','index'],flow:['none','wave','vortex'],weave:['herringbone','basket']};
 export const EXTRA_BOOLS=['reverse','flowTurn','showSource'];
@@ -15,12 +16,12 @@ const metric=aspect=>aspect>=1?[aspect,1]:[1,1/aspect];
 export function extraDefaults(){return {...Object.fromEntries(Object.entries(EXTRA_SPECS).map(([key,s])=>[key,s[4]])),gradient:'none',flow:'none',weave:'herringbone',reverse:false,flowTurn:true,showSource:false};}
 export function sanitizeExtra(raw){const result=extraDefaults();for(const [key,s]of Object.entries(EXTRA_SPECS)){const v=Number(raw?.[key]);if(Number.isFinite(v))result[key]=s[3]===1?Math.round(clamp(v,s[1],s[2])):clamp(v,s[1],s[2]);}for(const [key,options]of Object.entries(EXTRA_ENUMS))if(options.includes(raw?.[key]))result[key]=raw[key];for(const key of EXTRA_BOOLS)if(typeof raw?.[key]==='boolean')result[key]=raw[key];return result;}
 // New tree layouts do not alter the legacy scalar-pattern arrangement ABI.
-export function sanitizeTreeArrangement(raw){const a=sanitizeArrangement(raw),mode=Number(raw?.[0]);a[0]=Number.isFinite(mode)?Math.round(clamp(mode,0,16)):0;if(a[0]===15){a[1]=Math.min(4,a[1]);a[2]=Math.min(4,a[2]);}return a;}
+export function sanitizeTreeArrangement(raw){const a=sanitizeArrangement(raw),mode=Number(raw?.[0]);a[0]=Number.isFinite(mode)?Math.round(clamp(mode,0,16)):0;if(a[0]===15){a[1]=Math.min(LIMITS.weaveBlocks,a[1]);a[2]=Math.min(LIMITS.weaveBlocks,a[2]);}return a;}
 
 function distances(points,aspect){const [mx,my]=metric(aspect),segments=[];let length=0;for(let i=0;i<points.length;i++){const a=points[i],b=points[(i+1)%points.length],dx=(b[0]-a[0])*mx,dy=(b[1]-a[1])*my,l=Math.hypot(dx,dy);if(l>1e-8){segments.push({a,b,dx,dy,start:length,length:l});length+=l;}}return {segments,length};}
 export function sampleOutline(loops,a,extra,aspect=1){
  const paths=loops.map(points=>distances(points,aspect)).filter(p=>p.length>1e-6),total=paths.reduce((sum,p)=>sum+p.length,0);if(!total)return [];
- const count=a[30]?Math.min(256,Math.max(1,Math.floor(total/a[31]))):Math.max(1,Math.min(256,a[3])),[mx,my]=metric(aspect),records=[];
+ const count=a[30]?Math.min(LIMITS.instances,Math.max(1,Math.floor(total/a[31]))):Math.max(1,Math.min(LIMITS.instances,a[3])),[mx,my]=metric(aspect),records=[];
  for(let i=0;i<count;i++){
   const phase=i/count+extra.offset;let distance=(phase-Math.floor(phase))*total,path=paths[0];for(const candidate of paths){path=candidate;if(distance<candidate.length-total*1e-12)break;distance=Math.max(0,distance-candidate.length);}
   const segment=path.segments.find(s=>distance<=s.start+s.length)??path.segments.at(-1),t=clamp((distance-segment.start)/segment.length),angle=Math.atan2(segment.dy,segment.dx),size=a[4];

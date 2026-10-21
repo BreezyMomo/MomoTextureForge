@@ -1,3 +1,4 @@
+import {ARRANGEMENT_LIMITS as LIMITS} from './arrangement-limits.js';
 // Fixed-resolution alpha geometry. Coordinates are normalized bottom-left UVs.
 export function alphaFootprint(pixels,width,height,{threshold=1/255,margin=2}={}){
  const scale=pixels instanceof Uint8Array||pixels instanceof Uint8ClampedArray?1/255:1;
@@ -14,7 +15,7 @@ export function alphaFootprint(pixels,width,height,{threshold=1/255,margin=2}={}
 export function visibleScatter(a,{density=()=>1,footprint,gap=0,wrap=false,aspect=1,fit='contain'}){
  let seed=a[11]>>>0;const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
  const metric=aspect>=1?[aspect,1]:[1,1/aspect];
- const points=[],circles=[],spin=a[6]*Math.PI/180,cos=Math.cos(spin),sin=Math.sin(spin),padding=Math.max(0,Math.min(.5,Number(gap)||0)),min=a[32],count=Math.min(256,a[3]);
+ const points=[],circles=[],spin=a[6]*Math.PI/180,cos=Math.cos(spin),sin=Math.sin(spin),padding=Math.max(0,Math.min(.5,Number(gap)||0)),min=a[32],count=Math.min(LIMITS.instances,a[3]);
  for(let attempt=0;attempt<count*128&&points.length<count;attempt++){
   const px=(rng()*2-1)*a[5],py=(rng()*2-1)*a[5];
   if(a[0]===12){const w=density(px/(2*a[5]),py/(2*a[5]));if(w<=a[40]||rng()>Math.pow(Math.max(0,Math.min(1,(w-a[40])/Math.max(1e-9,1-a[40]))),a[41]))continue;}

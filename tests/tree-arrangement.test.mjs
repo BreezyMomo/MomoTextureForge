@@ -9,7 +9,7 @@ test('tree arrangements preserve the scalar ABI and roundtrip typed extra animat
  const p=project(),n=p.root.children[0];n.arrange[0]=15;n.arrange[1]=8;n.arrangeExtra.weave='basket';n.arrangeExtra.flow='wave';n.tileEdges=7;
  n.tracks['arrangeExtra.flowPhase']={mode:'absolute',ease:'linear',keys:[[0,0],[1,360]]};
  const copy=sanitizeTree(JSON.parse(JSON.stringify(p))).root.children[0];
- assert.equal(copy.arrange[0],15);assert.equal(copy.arrange[1],4);assert.equal(copy.arrange.length,59);
+ assert.equal(copy.arrange[0],15);assert.equal(copy.arrange[1],8);assert.equal(copy.arrange.length,59);
  assert.equal(copy.arrangeExtra.weave,'basket');assert.equal(copy.tileEdges,7);assert.equal(evaluateNode(copy,.5).node.arrangeExtra.flowPhase,180);
  assert.equal(sanitizeArrangement(n.arrange)[0],12);assert.equal(sanitizeTreeArrangement([16])[0],16);
 });
@@ -20,6 +20,19 @@ test('rectangular borders use physical perimeter and a closed uniform phase',()=
  for(const p of a)assert.ok(Math.abs(Math.abs(p.x-.5)-.4)<1e-8||Math.abs(Math.abs(p.y-.5)-.2)<1e-8);
  n.arrangeExtra.offset=1/12;const shifted=advancedRecords(n,2);assert.ok(Math.hypot((shifted[0].x-a[1].x)*2,shifted[0].y-a[1].y)<1e-8);
  n.arrangeExtra.corner=.1;assert.ok(advancedRecords(n,2).every(p=>Number.isFinite(p.turn)));
+});
+
+test('larger populations survive saving and animation through actual placement generation',()=>{
+ for(const [mode,expected]of [[1,256],[4,256],[5,512],[6,512],[7,512],[9,512],[10,512],[11,256],[12,512],[13,512],[15,512]]){
+  const p=project(),n=p.root.children[0];Object.assign(n.arrange,{0:mode,1:mode===15?8:16,2:mode===15?8:16,3:512,4:.01,11:99999,32:0});
+  n.tracks['arrange.3']={mode:'absolute',ease:'linear',keys:[[0,300],[1,512]]};
+  const saved=sanitizeTree(JSON.parse(JSON.stringify(p))).root.children[0],evaluated=evaluateNode(saved,1).node;
+  assert.equal(evaluated.arrange[3],mode<5?128:512);assert.equal(evaluated.arrange[11],99999);
+  const records=placements(evaluated.arrange,evaluated);assert.equal(records.length,expected,'mode '+mode);
+  assert.ok(records.every(r=>[r.x,r.y,r.width,r.height,r.turn].every(Number.isFinite)));
+ }
+ const p=project(),n=p.root.children[0];n.arrange[0]=15;n.arrange[1]=16;n.arrange[2]=16;
+ const saved=sanitizeTree(p).root.children[0];assert.equal(saved.arrange[1],8);assert.equal(saved.arrange[2],8);
 });
 
 test('herringbone and basket cover a periodic lattice exactly at all canvas aspects',()=>{
@@ -46,7 +59,7 @@ test('outline spacing includes multiple closed loops and preserves opposite hole
 
 function tiles(wrap,cols=6,rows=5){const n=node('group');n.arrange[0]=16;n.arrange[1]=cols;n.arrange[2]=rows;n.arrange[11]=17;n.seamless=wrap;n.children=Array.from({length:16},(_,mask)=>Object.assign(node(),{tileEdges:mask}));return n;}
 test('rule tiles match all interior and periodic edge ports and select the chosen child',()=>{
- for(const wrap of [false,true])for(const [cols,rows]of [[6,5],[1,1],[1,4],[4,1]]){
+ for(const wrap of [false,true])for(const [cols,rows]of [[6,5],[1,1],[1,4],[4,1],[16,16]]){
   const n=tiles(wrap,cols,rows),records=matchedTiles(n),m=records.map((r,i)=>{assert.equal(instanceChildren(n,i,r)[0],n.children[r.childIndex]);return n.children[r.childIndex].tileEdges;});
   assert.deepEqual(matchedTiles(n),records);assert.equal(records.length,cols*rows);
   for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){const a=m[y*cols+x];

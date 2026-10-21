@@ -56,7 +56,7 @@ test("curve extension and independent arrangement keyframes interpolate and clam
   };
   const clean = sanitize(s), at = frameState(clean,1.5).state;
   assert.equal(clean.layers[0].arrange[0],12);
-  assert.equal(clean.layers[0].arrange[1]*clean.layers[0].arrange[2],64);
+  assert.equal(clean.layers[0].arrange[1]*clean.layers[0].arrange[2],256);
   assert.equal(at.layers[0].params[11],.5);
   assert.equal(at.layers[0].params[12],1);
   assert.equal(at.layers[0].arrange[3],33);
