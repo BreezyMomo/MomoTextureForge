@@ -44,10 +44,10 @@ try{
   }
  });
  await run('combinations',async()=>{
-  await page.setViewportSize({width:1400,height:3100});await page.goto(url+'examples.html');
-  await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('15 种组合示例已生成'));
+  await page.setViewportSize({width:1400,height:5000});await page.goto(url+'examples.html');
+  await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('22 种组合示例已生成'),null,{timeout:120000});
   await page.locator('#samples img').evaluateAll(images=>Promise.all(images.map(image=>image.decode())));
-  await shot('composition-examples');await page.setViewportSize({width:1600,height:1050});
+  await shot('composition-examples');await page.getByRole('combobox',{name:'示例分类',exact:true}).selectOption('arrangement');await page.setViewportSize({width:1400,height:2200});await shot('arrangement-examples');await page.setViewportSize({width:1600,height:1050});
  });
  await run('workspace',async()=>{
   await load(spell);await page.getByRole('button',{name:'选择 环形星光',exact:true}).click();await shot('workspace');

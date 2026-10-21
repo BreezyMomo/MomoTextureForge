@@ -35,6 +35,7 @@ export const annotations={
  'library-manager':[role('button','导入资源 ZIP','导入已有资源'),role('button','编辑信息','编辑资源目录信息')],
  'library-manager-edit':[css('#edit-dialog input','修改资源名称'),role('button','保存信息','保存目录信息')],
  'composition-examples':[role('link','在画布中编辑','打开可编辑的组合示例')],
+ 'arrangement-examples':[field('示例分类','筛选新增排列'),role('link','在画布中编辑','打开排列示例')],
 };
 
 export async function syncScreenshotCaptions(root){

@@ -1,9 +1,9 @@
 import {FX_SPECS,fxDefaults} from './post-fx.js';
 import {interpolateKeys,timeKey} from './animation-values.js';
 import { BY_ID } from './catalog.js';
-import { sanitizeArrangement } from './arrangement.js';
 import { generateArrangement } from './arrangement-layouts.js';
 import {fitInstances} from './instance-geometry.js';
+import {EXTRA_SPECS,EXTRA_ENUMS,EXTRA_BOOLS,extraDefaults,sanitizeExtra,sanitizeTreeArrangement,advancedRecords,modifyRecords} from './tree-arrangement.js';
 export const TREE_SCHEMA='momo.texture-tree/v1', PRESET_SCHEMA='momo.texture-subtree/v1';
 export const POST_SPECS=[['亮度',-.6,.6,0],['对比度',.1,3,1],['伽马',.1,4,1],['输入低',-.5,.95,0],['输入高',.05,1.5,1],['输出低',0,.9,0],['输出高',.1,1.6,1]];
 export const LIMITS={nodes:256,depth:12,tracks:64,frames:128};
@@ -16,7 +16,7 @@ export function node(kind='shape',type='Circle'){
  transform:{x:.5,y:.5,width:1,height:1,rotation:0,mirrorX:false,pivotX:.5,pivotY:.5,fit:'stretch',lockAspect:false},opacity:1,blend:'over',seamless:false,seamMode:0,seamBlend:.2,
  uv:[1,0,0,0,0,0,0],polar:false,
  color:{mode:kind==='group'?'preserve':'inherit',fill:'gradient',low:'#000000',high:'#ffffff'},
- arrange:sanitizeArrangement([0,...Array(58).fill(undefined)]),arrangeFit:'contain',imageFit:'contain',instancePhase:0,instanceContent:'all',scatterAvoidOverlap:false,scatterGap:0,
+ arrange:sanitizeTreeArrangement([0,...Array(58).fill(undefined)]),arrangeExtra:extraDefaults(),tileEdges:0,arrangeFit:'contain',imageFit:'contain',instancePhase:0,instanceContent:'all',scatterAvoidOverlap:false,scatterGap:0,
  timing:{start:0,end:1,from:0,to:1,cycles:1,loop:false,pingpong:false,ease:'linear',outside:'hold',frozen:false,at:0,offset:0,curve:[]},
  shapeClock:{follow:true,speed:1,offset:0,value:0},contour:{mode:'none',radius:.01},animationEnabled:true,post:POST_SPECS.map(p=>p[3]),postFx:fxDefaults(),invert:false,maskInvert:false,tracks:{},children:[],mask:null};
 }
@@ -27,11 +27,13 @@ export function cloneNode(n){const c=structuredClone(n);walk(c,x=>x.id=uid());re
 export function pathGet(n,path){return path.split('.').reduce((x,k)=>x?.[k],n);}
 export function pathSet(n,path,value){const parts=path.split('.');let at=n;for(const k of parts.slice(0,-1))at=at[k];at[parts.at(-1)]=value;}
 export const ANIMATION_ENUMS={'contour.mode':['none','outline','dilate','erode'],blend:['over','add','max','multiply','subtract','screen','difference','overlay','softlight','dodge','mask','inverseMask'],'transform.fit':['stretch','contain'],'color.mode':['inherit','own','preserve','remap'],'color.fill':['solid','gradient']};
-export const ANIMATION_BOOLS=['shapeClock.follow','enabled','transform.mirrorX','seamless','polar','invert'];
+Object.assign(ANIMATION_ENUMS,Object.fromEntries(Object.entries(EXTRA_ENUMS).map(([key,values])=>['arrangeExtra.'+key,values])));
+export const ANIMATION_BOOLS=['shapeClock.follow','enabled','transform.mirrorX','seamless','polar','invert',...EXTRA_BOOLS.map(key=>'arrangeExtra.'+key)];
 export function animationType(n,path){
  const generatorParameter=/^params\.(\d+)$/.exec(path);if(generatorParameter&&BY_ID.get(n.type)?.definition.generator){const spec=BY_ID.get(n.type).parameters.find(p=>p.slot===+generatorParameter[1]);if(spec?.step===1||spec?.type)return 'discrete';}
  if(path==='color.low'||path==='color.high')return 'color';
  if(ANIMATION_ENUMS[path]||ANIMATION_BOOLS.includes(path))return 'discrete';
+ if(path==='tileEdges'||path==='arrangeExtra.flowFrequency')return 'discrete';
  if(path==='params.0'&&BY_ID.get(n.type)?.parameters.find(p=>p.slot===0)?.label==='图片显示')return 'discrete';
  if(n.type==='Gear'&&path==='params.8'||n.type==='Halftone'&&path==='params.4'||n.type==='RingPulse'&&path==='params.4'||n.type==='ConeGradient'&&path==='params.4'||n.type==='LineSegment'&&path==='params.5')return 'discrete';
  if(/^arrange\.(0|7|19|30|37|38|39|58)$/.test(path)||n.type==='Star'&&path==='params.5'||n.type==='BezierRibbon'&&path==='params.12')return 'discrete';
@@ -39,6 +41,9 @@ export function animationType(n,path){
 }
 export function fieldSpec(n,path){
  if(ANIMATION_BOOLS.includes(path)||ANIMATION_ENUMS[path]||path==='color.low'||path==='color.high')return [0,1];
+ if(path==='tileEdges')return [0,15];
+ if(path.startsWith('arrangeExtra.')){const spec=EXTRA_SPECS[path.slice(13)];return spec?spec.slice(1,3):null;}
+ if(path==='arrange.0')return [0,16];
  const fixed={'shapeClock.speed':[-10,10],'shapeClock.offset':[-600,600],'shapeClock.value':[-36000,36000],'contour.radius':[0,.1],opacity:[0,1],instancePhase:[-1,1],'transform.x':[-2,2],'transform.y':[-2,2],'transform.width':[0,1],'transform.height':[0,1],'transform.rotation':[-3600,3600],'transform.pivotX':[0,1],'transform.pivotY':[0,1]};
  const fx=/^postFx\.([0-6])$/.exec(path);if(fx)return FX_SPECS[+fx[1]].slice(1,3);
  const post=/^post\.([0-6])$/.exec(path);if(post)return POST_SPECS[+post[1]].slice(1,3);
@@ -77,7 +82,7 @@ export function sanitizeTree(raw,{component=false}={}){
   if(Array.isArray(r.color?.stops))n.color.stops=r.color.stops.slice(0,8).filter(s=>/^#[0-9a-f]{6}$/i.test(s.color)).map(s=>({color:s.color,position:num(s.position,0,0,1)})).sort((a,b)=>a.position-b.position);
   n.uv=n.uv.map((v,i)=>num(r.uv?.[i],v,...fieldSpec(n,'uv.'+i)));n.polar=!!r.polar;
   n.params=n.params.map((v,i)=>{const p=BY_ID.get(n.type)?.parameters.find(p=>p.slot===i);return p?num(r.params?.[i],v,p.label==='羽化'?0:p.min,p.max):v;});
-  n.arrange=sanitizeArrangement(Array.from({length:59},(_,i)=>r.arrange?.[i]));n.arrangeFit=r.arrangeFit==='stretch'?'stretch':'contain';n.imageFit=r.imageFit==='stretch'?'stretch':'contain';n.instancePhase=num(r.instancePhase,0,-1,1);n.instanceContent=n.kind==='group'&&['random-child','cycle-child'].includes(r.instanceContent)?r.instanceContent:'all';n.scatterAvoidOverlap=r.scatterAvoidOverlap===true;n.scatterGap=num(r.scatterGap,0,0,.5);
+  n.arrange=sanitizeTreeArrangement(Array.from({length:59},(_,i)=>r.arrange?.[i]));n.arrangeExtra=sanitizeExtra(r.arrangeExtra);n.tileEdges=Math.round(num(r.tileEdges,0,0,15));n.arrangeFit=r.arrangeFit==='stretch'?'stretch':'contain';n.imageFit=r.imageFit==='stretch'?'stretch':'contain';n.instancePhase=num(r.instancePhase,0,-1,1);n.instanceContent=n.kind==='group'&&['random-child','cycle-child'].includes(r.instanceContent)?r.instanceContent:'all';n.scatterAvoidOverlap=r.scatterAvoidOverlap===true;n.scatterGap=num(r.scatterGap,0,0,.5);
   for(const key of ['start','end','from','to','at'])n.timing[key]=num(r.timing?.[key],n.timing[key],0,1);
   if(n.timing.end<n.timing.start)throw Error('时间区间结束不能早于开始');
   n.timing.curve=Array.isArray(r.timing?.curve)?r.timing.curve.filter(k=>Array.isArray(k)&&k.length===2&&k.every(Number.isFinite)).slice(0,128).map(k=>k.map(v=>clamp(v,0,1))).sort((a,b)=>a[0]-b[0]):[];
@@ -131,13 +136,14 @@ export function localClock(timing,parentTime){
  return {local,progress:t.from+(t.to-t.from)*p,visible};
 }
 export const keyValue=interpolateKeys;
-export function evaluateNode(n,parentTime,progressOverride){const clock=localClock(n.timing,parentTime);if(progressOverride!==undefined)clock.progress=progressOverride;const out={...n,transform:{...n.transform},color:{...n.color},contour:{...n.contour},shapeClock:{follow:true,speed:1,offset:0,value:0,...n.shapeClock},post:[...n.post],postFx:[...(n.postFx??fxDefaults())],params:[...n.params],uv:[...n.uv],arrange:[...n.arrange]};for(const [path,track]of Object.entries(n.animationEnabled===false?{}:n.tracks)){const v=keyValue(track,clock.progress),bounds=fieldSpec(n,path);if(track.muted||v===null||!bounds)continue;if(animationType(n,path)!=='number'){pathSet(out,path,v);continue;}const base=pathGet(n,path);pathSet(out,path,clamp(track.mode==='add'?base+v:track.mode==='multiply'?base*v:v,...bounds));}out.arrange=sanitizeArrangement(out.arrange);return {node:out,...clock,visible:clock.visible&&out.enabled&&out.transform.width>0&&out.transform.height>0};}
+export function evaluateNode(n,parentTime,progressOverride){const clock=localClock(n.timing,parentTime);if(progressOverride!==undefined)clock.progress=progressOverride;const out={...n,transform:{...n.transform},color:{...n.color},contour:{...n.contour},shapeClock:{follow:true,speed:1,offset:0,value:0,...n.shapeClock},post:[...n.post],postFx:[...(n.postFx??fxDefaults())],arrangeExtra:{...extraDefaults(),...n.arrangeExtra},params:[...n.params],uv:[...n.uv],arrange:[...n.arrange]};for(const [path,track]of Object.entries(n.animationEnabled===false?{}:n.tracks)){const v=keyValue(track,clock.progress),bounds=fieldSpec(n,path);if(track.muted||v===null||!bounds)continue;if(animationType(n,path)!=='number'){pathSet(out,path,v);continue;}const base=pathGet(n,path);pathSet(out,path,clamp(track.mode==='add'?base+v:track.mode==='multiply'?base*v:v,...bounds));}out.arrange=sanitizeTreeArrangement(out.arrange);out.arrangeExtra=sanitizeExtra(out.arrangeExtra);return {node:out,...clock,visible:clock.visible&&out.enabled&&out.transform.width>0&&out.transform.height>0};}
 export function nodeClock(root,id,time){let result=null;function visit(n,t){const e=evaluateNode(n,t);if(n.id===id)result=e;for(const c of n.children)visit(c,e.progress);if(n.mask)visit(n.mask,e.progress);}visit(root,time);return result;}
 export function moveNode(root,id,parentId,index=Infinity){const source=find(root,id),target=find(root,parentId);if(!source?.parent||!target||target.node.kind!=='group')throw Error('请选择可移动节点和目标组合');if(find(source.node,parentId))throw Error('不能移入自身或后代');if(source.parent.mask===source.node)source.parent.mask=null;else source.parent.children.splice(source.parent.children.indexOf(source.node),1);target.node.children.splice(Math.min(index,target.node.children.length),0,source.node);}
 export function removeNode(root,id){const x=find(root,id);if(!x?.parent)throw Error('不能删除画布根节点');if(x.parent.mask===x.node)x.parent.mask=null;else x.parent.children.splice(x.parent.children.indexOf(x.node),1);}
 export const scatterOptions=(n,aspect=1)=>({avoidOverlap:n.scatterAvoidOverlap===true,gap:n.scatterGap??0,wrap:!!n.seamless,aspect,fit:n.arrangeFit??'contain'});
-export function placements(a,n={},_time=0,_original=n,aspect=1){const records=rawPlacements(a,n,aspect);return a[0]?fitInstances(records,aspect,n.arrangeFit??'contain'):records;}
+export function placements(a,n={},_time=0,_original=n,aspect=1){const records=rawPlacements(a,n,aspect),fitted=a[0]&&!([15,16].includes(a[0]))?fitInstances(records,aspect,n.arrangeFit??'contain'):records;return modifyRecords(fitted,{...n,arrange:a},aspect);}
 function rawPlacements(a,n={},aspect=1){
+ if(a[0]>=13)return advancedRecords({...n,arrange:a},aspect);
  if(!a[0])return [{x:.5,y:.5,width:1,height:1,turn:0,mirror:1}];
  if([1,4].includes(a[0])){let seed=a[11]>>>0;const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};const points=[];for(let y=0;y<a[2];y++)for(let x=0;x<a[1];x++){
  const jx=(rng()*2-1)*a[8]/a[1],jy=(rng()*2-1)*a[8]/a[2],size=1+(rng()*2-1)*a[9],spin=a[6]*Math.PI/180,turn=spin+(rng()*2-1)*a[10]*Math.PI/180;
@@ -147,9 +153,11 @@ function rawPlacements(a,n={},aspect=1){
  return generateArrangement(a,scatterOptions(n,aspect)).map(p=>({...p,width:Math.min(1,p.size),height:Math.min(1,p.size),turn:-p.turn}));
 }
 // Stable per-slot hash: choices survive cloning, serialization and animation sampling.
-export function instanceChildren(n,index){
- if(n.kind!=='group'||!['random-child','cycle-child'].includes(n.instanceContent))return n.children;
- const pool=n.children.filter(c=>c.enabled);if(!pool.length)return [];
+export function instanceChildren(n,index,record){
+ if(n.arrange[0]===16)return record?.childIndex===undefined?[]:n.children[record.childIndex]?.enabled?[n.children[record.childIndex]]:[];
+ const children=n.arrange[0]===14?n.children.slice(1):n.children;
+ if(n.kind!=='group'||!['random-child','cycle-child'].includes(n.instanceContent))return children;
+ const pool=children.filter(c=>c.enabled);if(!pool.length)return [];
  if(n.instanceContent==='cycle-child')return [pool[index%pool.length]];
  let h=((n.arrange[11]>>>0)^Math.imul(index+1,0x9e3779b9))>>>0;
  h=Math.imul(h^(h>>>16),0x21f0aaad);h=Math.imul(h^(h>>>15),0x735a2d97);h=(h^(h>>>15))>>>0;
@@ -157,11 +165,12 @@ export function instanceChildren(n,index){
 }
 export function expandInstances(root,id,time,records){const entry=find(root,id);if(!entry)throw Error('节点不存在');const n=entry.node,e=nodeClock(root,id,time);if(!n.arrange[0])throw Error('节点没有排列');
  const points=records??placements(e.node.arrange,e.node),content=cloneNode(n);content.transform=node().transform;content.opacity=1;content.blend='over';content.arrange[0]=0;content.seamless=n.seamless;if(content.color.mode==='remap')content.color.mode='own';content.instancePhase=0;content.mask=null;content.post=POST_SPECS.map(p=>p[3]);content.postFx=fxDefaults();content.contour=node().contour;content.invert=false;content.maskInvert=false;content.timing=node().timing;
- for(const path of Object.keys(content.tracks))if(path.startsWith('arrange.')||path.startsWith('transform.')||path==='opacity'||(path.startsWith('post.')||path.startsWith('postFx.'))||path.startsWith('contour.'))delete content.tracks[path];
+ for(const path of Object.keys(content.tracks))if(path.startsWith('arrange.')||path.startsWith('arrangeExtra.')||path.startsWith('transform.')||path==='opacity'||(path.startsWith('post.')||path.startsWith('postFx.'))||path.startsWith('contour.'))delete content.tracks[path];
  const result=node('group');Object.assign(result,{id:n.id,name:n.name,transform:n.transform,opacity:n.opacity,blend:n.blend,seamless:n.seamless,seamMode:n.seamMode,seamBlend:n.seamBlend,timing:n.timing,animationEnabled:n.animationEnabled,mask:n.mask,maskInvert:n.maskInvert,post:n.post,postFx:n.postFx,contour:n.contour,invert:n.invert,color:n.color});result.tracks=Object.fromEntries(Object.entries(n.tracks).filter(([p])=>p.startsWith('transform.')||p==='opacity'||(p.startsWith('post.')||p.startsWith('postFx.'))||p.startsWith('contour.')));
+ if(e.node.arrange[0]===14&&e.node.arrangeExtra.showSource)result.children=[cloneNode(n.children[0])];
  let size=0;walk(root,()=>size++);walk(n,()=>size--);walk(result,()=>size++);
- for(let i=0;i<points.length;i++){size++;for(const c of instanceChildren(e.node,i))walk(c,()=>size++);if(size>LIMITS.nodes)throw Error('展开后超出256节点限制');}
- result.children=points.map((p,i)=>{const c=cloneNode({...content,children:instanceChildren(e.node,i)});c.instanceContent='all';c.name=`${n.name} ${i+1}`;c.transform={...c.transform,x:p.x,y:p.y,width:p.width,height:p.height,rotation:p.turn*180/Math.PI};c.transform.mirrorX=p.mirror<0;c.timing.offset=i*e.node.instancePhase%1;return c;});
+ for(let i=0;i<points.length;i++){size++;for(const c of instanceChildren(e.node,i,points[i]))walk(c,()=>size++);if(size>LIMITS.nodes)throw Error('展开后超出256节点限制');}
+ result.children.push(...points.map((p,i)=>{const c=cloneNode({...content,children:instanceChildren(e.node,i,p)});c.instanceContent='all';c.arrangeExtra=extraDefaults();c.opacity=p.opacity??1;c.name=`${n.name} ${i+1}`;c.transform={...c.transform,x:p.x,y:p.y,width:p.width,height:p.height,rotation:p.turn*180/Math.PI};c.transform.mirrorX=p.mirror<0;c.timing.offset=i*e.node.instancePhase%1;return c;}));
  walk(result,(_n,_p,d)=>{if(d+entry.depth>LIMITS.depth)throw Error('展开后超出节点深度限制');});
  if(!entry.parent)return result;if(entry.parent.mask===n)entry.parent.mask=result;else entry.parent.children[entry.parent.children.indexOf(n)]=result;return root;
 }

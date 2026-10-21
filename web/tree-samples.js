@@ -74,6 +74,30 @@ function uiSamples(){
   {root:dots,description:'用于信息面板和科技卡片：细点阵叠加稀疏十字，适合作为文字下方的背景。可调整点径与网格密度。'},
  ].map(sample=>({...sample,tags:['UI 底纹','无缝平铺','静态 PNG'],output:{mode:'color',alpha:false,background:'#1b2638'}}));
 }
+function arrangementExamples(){
+ const border=group('圆角边框灯带');border.arrange[0]=13;border.arrange[3]=64;border.arrange[4]=.035;border.arrange[19]=1;border.arrangeExtra.width=.86;border.arrangeExtra.height=.62;border.arrangeExtra.corner=.1;
+ const dash=shape('LineSegment','沿边框的短线',1,'#8cecff');Object.assign(dash.params,{0:0,1:-.7,2:0,3:.7,4:.14,5:1});border.children=[dash,shape('Circle','灯芯',.18,'#ffffff')];
+ const outline=group('星形轮廓光点');outline.arrange[0]=14;outline.arrange[3]=72;outline.arrange[4]=.035;outline.arrangeExtra.showSource=true;
+ const source=shape('Star','轮廓来源：星形',.82,'#293c55');source.params[0]=.82;source.params[2]=5;
+ const marker=shape('Circle','沿轮廓的光点',1,'#8cecff');marker.params[0]=.65;outline.children=[source,marker];
+ const woven=kind=>{const n=group(kind==='herringbone'?'人字镶嵌底纹':'篮式编织底纹');n.arrange[0]=15;n.arrange[1]=n.arrange[2]=2;n.arrangeExtra.weave=kind;n.seamless=true;n.instanceContent='cycle-child';n.children=['#42627e','#2d435c'].map((tint,i)=>{const brick=shape('RoundedRect','长砖 '+(i+1),1,tint);brick.params[0]=brick.params[5]=.94;brick.params[4]=.02;return brick;});return n;};
+ const herringbone=woven('herringbone'),basket=woven('basket');
+ const gradient=group('渐隐装饰点阵');gradient.arrange[0]=1;gradient.arrange[1]=gradient.arrange[2]=8;Object.assign(gradient.arrangeExtra,{gradient:'x',scaleFrom:.15,scaleTo:1.2,opacityFrom:.1,opacityTo:1});
+ const dot=shape('Circle','渐变圆点',1,'#84d6ec');dot.params[0]=.5;const ring=shape('Ring','圆点细环',1,'#a4e9f5');ring.params[0]=.74;ring.params[1]=.025;ring.opacity=.3;gradient.children=[ring,dot];
+ const flow=group('波浪流场线阵');flow.arrange[0]=1;flow.arrange[1]=8;flow.arrange[2]=4;Object.assign(flow.arrangeExtra,{flow:'wave',flowAmount:.08,flowFrequency:1,flowPhase:0,flowTurn:true});
+ const line=shape('LineSegment','流动短线',1,'#63b8dd');Object.assign(line.params,{0:-.7,1:0,2:.7,3:0,4:.035,5:1});const tip=shape('Circle','流向标记',.12,'#d1f6ff');tip.transform.x=.84;flow.children=[line,tip];track(flow,'arrangeExtra.flowPhase',[[0,0],[1,360]]);
+ const pipes=group('接口匹配管线');pipes.arrange[0]=16;pipes.arrange[1]=pipes.arrange[2]=6;pipes.arrange[11]=17;pipes.seamless=true;
+ pipes.children=Array.from({length:16},(_,mask)=>{const tile=group(mask?'连接块 '+mask:'空白块');tile.tileEdges=mask;for(const [bit,x,y]of [[1,1,0],[2,0,1],[4,-1,0],[8,0,-1]])if(mask&bit){const segment=shape('LineSegment','接口线',1,'#72c9df');Object.assign(segment.params,{0:0,1:0,2:x,3:y,4:.055,5:1});tile.children.push(segment);}return tile;});
+ return [
+  {root:border,description:'沿圆角矩形周长等距放置灯点，短线跟随切线转向。调整边框宽高、圆角和数量，适合弹窗与卡牌装饰。',tags:['边框排列','UI 装饰']},
+  {root:outline,description:'第一个子节点提供星形轮廓，第二个子节点作为重复光点。可换成其他图形、组合或有透明轮廓的图片。',tags:['沿图形轮廓','自动等距']},
+  {root:herringbone,description:'2:1 长砖按人字规则交替转向，深浅两种图块顺序混排。调整重复块数和长砖外观制作可平铺背景。',tags:['人字排列','无缝平铺']},
+  {root:basket,description:'长砖横竖交替组成篮式编织。与人字纹共用编排入口，可修改颜色和单元留缝。',tags:['编织排列','无缝平铺']},
+  {root:gradient,description:'同一网格从左到右逐渐变大、变亮；渐变可叠加到现有排列，也可改成径向或按实例顺序变化。',tags:['渐变排列','UI 底纹']},
+  {root:flow,description:'规则网格沿波浪偏移并跟随局部方向转向。播放相位动画查看流动；也可切换旋涡扭转。',tags:['波浪／流场','循环动画'],output:{seconds:3,frames:90,loopExport:true}},
+  {root:pipes,description:'候选图块声明上、下、左、右接口，种子控制选择，相邻及跨边缘接口保持匹配。可拆解每块连接线或替换图块。',tags:['规则拼接','接口匹配']},
+ ].map(sample=>({...sample,category:'arrangement',output:{mode:'color',alpha:false,background:'#182438',...sample.output}}));
+}
 
 export function treeSamples(){
  const summon=buildSamples()[2].root;
@@ -88,12 +112,12 @@ export function treeSamples(){
  const shieldMask=shape('Circle','圆形护盾遮罩',.96,'#ffffff');shieldMask.params[0]=.9;shieldMask.params[3]=.001;cells.mask=shieldMask;shield.children=[cells,halo(.96,'#b2f6ff')];
  const flame=group('火焰法阵'),flames=node('shape','Bonfire');flames.name='中心火焰';flames.transform.width=flames.transform.height=.7;
  const fireStars=turn(shape('Star','旋转火星',1,'#ffc175'),-180);radial(fireStars,10,.4,.075);flame.children=[flames,halo(.91,'#ff9c52'),halo(.78,'#ffd385'),fireStars];
- return [...vfxSamples(),...uiSamples(),
+ return [...vfxSamples().map(s=>({...s,category:'vfx'})),...uiSamples().map(s=>({...s,category:'ui'})),...arrangementExamples(),
   {root:summon,description:'同心脉冲圆环、旋转星阵与逐渐淡出的冲击波。',tags:['嵌套组合','关键帧']},
   {root:radar,description:'三层同心环搭配绕中心运动的目标点，可拆解环形排列与旋转。',tags:['环形排列','旋转动画']},
   {root:flower,description:'椭圆花瓣沿圆周朝外排列，叠加花蕊和外框制作徽章。',tags:['环形朝向','分层配色']},
   {root:galaxy,description:'两种星尘交替铺成黄金角螺旋，整组缓慢旋转。',tags:['黄金角螺旋','子节点混排']},
   {root:shield,description:'描边六边形铺成错列晶格，用圆形遮罩裁切在外围光环内。',tags:['六角网格','圆形遮罩','轮廓描边']},
   {root:flame,description:'动态火焰生成器与几何圆环、旋转火星组合成完整特效。',tags:['生成器合成','旋转动画']},
- ].map(sample=>({...sample,name:sample.root.name}));
+ ].map(sample=>({...sample,name:sample.root.name,category:sample.category??'composition'}));
 }

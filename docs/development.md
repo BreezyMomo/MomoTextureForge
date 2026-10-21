@@ -55,6 +55,10 @@ node tests/pages-browser-check.mjs
 
 `skills/texture-forge-effects/` 是效果指导 Skill 的维护源。创作 Skill 的一部分文本和随附 CLI 由构建脚本生成，修改相应源文件后运行 `build-authoring-kit.mjs`。生成文件不要只手改嵌入内容。
 
+排列相关回归：`node tests/tree-arrangement-browser-check.mjs`（七种示例、三种画布比例、展开/导出一致性、界面保存与分类）和 `node tests/examples-browser-check.mjs`；单文件静态版再加 `--standalone` 运行后者。法线交互回归：`node tests/normal-strength-browser-check.mjs`。
+
+节点树排列在 `web/tree-arrangement.js` 扩展：`arrange[0]` 的 13/14/15/16 分别为边框、透明轮廓、人字/编织、接口拼接；`arrangeExtra` 保存扩展设置，候选子节点的 `tileEdges` 用右1、上2、左4、下8 的位组合声明接口。旧标量公式的 59 项排列 ABI 和 0～12 模式保持兼容。实例记录附带 `opacity` 与规则选择的 `childIndex`，GPU、选区与展开均需使用同一记录。
+
 按改动范围运行浏览器检查；Node 单元测试不等于已检查实际 WebGL 画面。
 
 图库卡片使用 `web/builtin-thumbnails.js` 中预先生成的缩略图。修改内置图形的视觉公式后，先更新对应缩略图，再构建静态网站。例如更新“流动水纹”：
@@ -86,7 +90,7 @@ node tools/capture-docs.mjs resources animation normal export remote-ai manager
 | 组 | 画面 |
 | --- | --- |
 | examples | 通过真实“打开项目”入口检查四个示例 |
-| combinations | 15 种特效、UI 底纹与几何组合示例、编辑入口 |
+| combinations | 22 种组合总览、七种新增排列的分类截图与编辑入口 |
 | workspace | 总览、排列、合成和文件菜单 |
 | library | 图库、生成器参数、图形列表 |
 | resources | 图片原图/去背景、公式、生成器 JSON、导入文件 |

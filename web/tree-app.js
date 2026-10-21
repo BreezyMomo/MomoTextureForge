@@ -29,6 +29,7 @@ import {pageHref} from './distribution.js';
 import {createCurveEditor} from './curve-editor.js';
 import {TreeRenderer} from './tree-renderer.js';
 import {ARRANGEMENT_FAMILIES,arrangementFamily,arrangementSpec,sanitizeArrangement} from './arrangement.js';
+import {EXTRA_LAYOUTS,EXTRA_SPECS} from './tree-arrangement.js';
 import {download} from './encoders.js';
 import {planPSD} from './tree-psd.js';
 import {planContourPSD} from './tree-psd-contours.js';
@@ -122,7 +123,7 @@ function assignAnimated(n,path,value){
 }
 function animationValue(n,path){return animationEditMode==='base'?pathGet(n,path):pathGet(animationClock(n.id).node,path);}
 function decorateAnimated(input,n,path){input.dataset.animationPath=path;input.dataset.animationNode=n.id;input.disabled=animationEditMode==='normal'&&!!n.tracks[path]&&!n.tracks[path].muted&&n.animationEnabled!==false;}
-function inspectorVariantKey(n){return JSON.stringify([n.id,n.arrange[0],n.arrange[30],n.arrange[33]>1,n.arrange[39],n.color.mode,n.color.fill,n.shapeClock?.follow,n.type==='Star'?n.params[5]:n.type==='Gear'?n.params[8]:null,n.seamless]);}
+function inspectorVariantKey(n){return JSON.stringify([n.id,n.arrange[0],n.arrange[30],n.arrange[33]>1,n.arrange[39],n.color.mode,n.color.fill,n.shapeClock?.follow,n.type==='Star'?n.params[5]:n.type==='Gear'?n.params[8]:null,n.seamless,n.arrangeExtra.gradient,n.arrangeExtra.flow,n.arrangeExtra.weave]);}
 function syncAnimatedFields(){const n=current(),value=animationEditMode==='base'?n:animationClock(n.id).node,progress=animationClock(n.id).progress;if(!previewDragging&&inspectorVariant!==inspectorVariantKey(value))inspector();
  for(const input of $('inspector').querySelectorAll('[data-animation-path]')){if(document.activeElement===input)continue;const path=input.dataset.animationPath,v=pathGet(value,path);if(input.type==='checkbox')input.checked=!!v;else input.value=String(input.dataset.animationFamily?arrangementFamily(v):v);}
  for(const b of $('inspector').querySelectorAll('[data-key-path]')){const path=b.dataset.keyPath,track=n.tracks[path],here=track?.keys.some(k=>sameTime(k[0],progress));b.textContent=here?'◆':track?'◈':'◇';b.classList.toggle('key-at-cursor',!!here);b.title=here?'当前位置已有关键帧，点击更新':track?'参数已有动画，点击在当前位置记录':'添加此参数动画';}
@@ -228,6 +229,35 @@ function field(label,path,min,max,step=.01,{target=current(),key=true}={}){
  if(animatable){if(target.tracks[path]){line.classList.add('animated-field');line.querySelector('label').textContent=label+(animationEditMode==='base'?' · 基础值':animationEditMode==='record'?' · 录制':' · 动画值');}line.append(keyButton(target,path,label));}controls().append(line);
 }
 function enumField(label,path,options){const n=current(),spec=fieldSpec(n,path);field(label,path,spec?.[0]??0,spec?.[1]??1,1);const row=controls().lastElementChild;row.querySelector('input[type=range]').remove();row.querySelector('input[type=number]').remove();const select=el('select',{'aria-label':label},options.map(([v,t])=>el('option',{value:v,text:t})));select.value=String(animationValue(n,path));decorateAnimated(select,n,path);select.onchange=()=>edit(()=>assignAnimated(current(),path,+select.value));row.insertBefore(select,row.children[1]);}
+function extraField(key){const [label,min,max,step]=EXTRA_SPECS[key];field(label,'arrangeExtra.'+key,min,max,step);}
+function extraLayoutControls(n,m){
+ if([13,14].includes(m)){
+  enumField('沿线采样方式','arrange.30',[[0,'按数量等距'],[1,'按间距']]);if(n.arrange[30])field('沿线间距','arrange.31',.005,1,.005);else field('实例数量','arrange.3',1,256,1);
+  field('实例尺寸','arrange.4',.01,.5,.005);enumField('实例朝向','arrange.19',[[0,'保持方向'],[1,'沿轮廓切线（纵轴）'],[2,'垂直轮廓（纵轴）']]);extraField('offset');
+  if(m===13)for(const key of ['width','height','corner'])extraField(key);
+  else{extraField('threshold');extraField('contourOffset');animatedCheck('显示轮廓来源','arrangeExtra.showSource');note('组合的第一个子节点是轮廓来源，其余子节点是装饰。读取来源的透明度轮廓（固定256像素采样）；不透明图片可先切为亮度遮罩。可沿多个闭合轮廓和孔洞排列。');}
+   if(n.kind==='group'){choice('实例内容',n.instanceContent,[['all','整个装饰组合'],['random-child','随机一个装饰'],['cycle-child','按顺序循环装饰']],v=>edit(()=>n.instanceContent=v));if(n.instanceContent==='random-child')field('杂排种子','arrange.11',1,999,1);}
+  field('整体旋转 °','arrange.6',-360,360,1);field('排列中心 X','arrange.13',-1.5,1.5,.01);field('排列中心 Y','arrange.14',-1.5,1.5,.01);
+ }else if(m===15){
+   animatedChoice('编排样式','arrangeExtra.weave',[['herringbone','人字纹'],['basket','篮式编织']]);field('重复块列数','arrange.1',1,4,1);field('重复块行数','arrange.2',1,4,1);field('整体旋转 °','arrange.6',-360,360,1);note('每块由4×4格组成，单元按2:1长砖铺排，最多128份。内容随长砖区域拉伸；开无缝重复可跨边缘接续。');
+   if(n.kind==='group'){choice('实例内容',n.instanceContent,[['all','整个组合'],['random-child','随机一个子节点'],['cycle-child','按顺序循环（取模）']],v=>edit(()=>n.instanceContent=v));if(n.instanceContent==='random-child')field('杂排种子','arrange.11',1,999,1);}
+ }else{
+  field('网格列数','arrange.1',1,8,1);field('网格行数','arrange.2',1,8,1);field('拼接种子','arrange.11',1,999,1);
+  note('组合的直接子节点是候选图块。声明每块连接哪几边，系统只选择相邻接口匹配的组合；开启无缝重复时也匹配首尾边。图块内容随格子拉伸，接口需画在边的中点。无解时会提示补充图块。');
+  if(n.kind==='group')advanced('图块接口配置',()=>{for(const child of n.children){const options=Array.from({length:16},(_,mask)=>[mask,mask?[[1,'右'],[2,'上'],[4,'左'],[8,'下']].filter(([bit])=>mask&bit).map(([,name])=>name).join(' + '):'无接口 / 空白']);choice(child.name+'接口',child.tileEdges,options,v=>edit(()=>child.tileEdges=+v));}});
+ }
+}
+function layoutModifiers(n,m){
+ if(m===16)return;
+ advanced('排列变化：渐变与流场',()=>{
+  if([7,12].includes(m)&&n.scatterAvoidOverlap){note('防堆叠开启时暂不应用渐变与流场，避免尺寸或位置变化破坏间距；关闭防堆叠后恢复设置。');return;}
+  animatedChoice('渐变分布','arrangeExtra.gradient',[['none','关闭'],['x','从左到右'],['y','从下到上'],['radial','从中心向外'],['index','按实例顺序']]);
+  if(n.arrangeExtra.gradient!=='none'){animatedCheck('反向渐变','arrangeExtra.reverse');for(const key of ['scaleFrom','scaleTo','opacityFrom','opacityTo','rotationFrom','rotationTo'])extraField(key);}
+  animatedChoice('流场方式','arrangeExtra.flow',[['none','关闭'],['wave','波浪偏移'],['vortex','旋涡扭转']]);
+  if(n.arrangeExtra.flow!=='none'){extraField('flowAmount');if(n.arrangeExtra.flow==='wave')extraField('flowFrequency');extraField('flowPhase');animatedCheck('跟随流场转向','arrangeExtra.flowTurn');}
+  note('作用于每个排列实例；相位可录制关键帧。位置渐变跨平铺边界可能出现节奏突变。');
+ });
+}
 
 function advanced(label,build){const parent=formTarget,details=el('details',{class:'arrangement-advanced'},[el('summary',{text:label})]);details.open=advancedOpen.has(label);const remember=()=>{if(details.open)advancedOpen.add(label);else advancedOpen.delete(label);};details.ontoggle=()=>{if(details.isConnected)remember();};details.firstElementChild.onclick=event=>{event.preventDefault();details.open=!details.open;remember();};controls().append(details);formTarget=details;try{build();}finally{formTarget=parent;}}
 function curveControl(n,field,start){let before;const id=n.id;controls().append(createCurveEditor(()=>find(state.root,id).node[field].slice(start,start+8),{canEdit:()=>!busy,begin:()=>{before=structuredClone(state);},point:(i,x,y)=>{const target=find(state.root,id).node;try{assignAnimated(target,field+'.'+(start+i*2),x);assignAnimated(target,field+'.'+(start+i*2+1),y);requestRender();}catch(e){notify(e.message);}},end:()=>{if(before){recordHistory(before);future=[];before=null;persist();refresh();}}}));}
@@ -265,13 +295,14 @@ function inspector(){const n=current();inspectorVariant=inspectorVariantKey(anim
   animatedCheck('水平镜像','transform.mirrorX');
   animatedChoice('区域适配','transform.fit',[['stretch','随区域拉伸'],['contain','保持比例']]);}
   animatedCheck('节点无缝重复','seamless');if(n.seamless&&n.kind==='shape'){choice('图形接缝处理',n.seamMode,[[0,'自动：周期 / 形状重复'],[1,'通用：边缘融合']],v=>edit(()=>n.seamMode=+v));note(seamlessDescription(n,n.seamMode));if(seamlessKind(n.type,n.seamMode)===0)field('融合宽度','seamBlend',.05,.45,.01,{key:false});}else if(n.seamless)note('重复组合结果；子节点的接缝处理需要分别开启。');
-  heading('区域内的内容排列');note('排列重复整个节点内容；网格先分配单元格，再在每格绘制图形或子树。');const layoutSelect=choice('排列方式',arrangementFamily(animationValue(n,'arrange.0')),ARRANGEMENT_FAMILIES,v=>edit(()=>{assignAnimated(n,'arrange.0',+v);if(+v===8)assignAnimated(n,'arrange.33',1);}));decorateAnimated(layoutSelect,n,'arrange.0');layoutSelect.dataset.animationFamily='true';layoutSelect.parentElement.append(keyButton(n,'arrange.0','排列方式'));const m=animationValue(n,'arrange.0');
+  heading('区域内的内容排列');note('排列重复整个节点内容；网格先分配单元格，再在每格绘制图形或子树。');const layoutSelect=choice('排列方式',arrangementFamily(animationValue(n,'arrange.0')),[...ARRANGEMENT_FAMILIES,...EXTRA_LAYOUTS],v=>edit(()=>{if([14,16].includes(+v)&&n.kind!=='group')throw Error('请先创建组合，再选择沿轮廓或规则拼接');assignAnimated(n,'arrange.0',+v);if(+v===8)assignAnimated(n,'arrange.33',1);if([13,14].includes(+v)){n.arrange[3]=48;n.arrange[4]=.04;n.arrange[19]=1;}if(+v===14){if(!n.children.length)n.children.push(node('shape','Star'));if(n.children.length===1){const marker=node('shape','Circle');marker.name='轮廓装饰';n.children.push(marker);}}if(+v===15)n.arrange[1]=n.arrange[2]=2;}));decorateAnimated(layoutSelect,n,'arrange.0');layoutSelect.dataset.animationFamily='true';layoutSelect.parentElement.append(keyButton(n,'arrange.0','排列方式'));const m=animationValue(n,'arrange.0');
   if(m===8)enumField('数量分布','arrange.58',[[1,'按间距均匀分布'],[0,'每圈等数量']]);
   if([1,4,11].includes(m))enumField('网格类型','arrange.0',[[1,'矩形'],[4,'斜向'],[11,'六角']]);
   if([5,9].includes(m))enumField('螺旋类型','arrange.0',[[5,'黄金角'],[9,'规则']]);
   if([7,12].includes(m))enumField('密度分布','arrange.0',[[7,'整个区域'],[12,'密度图案']]);
   if(m===6)curveControl(n,'arrange',20);
   if(m){
+   if(m>=13)extraLayoutControls(n,m);else{
    choice('实例比例',n.arrangeFit,[['contain','保持设计比例'],['stretch','随区域拉伸']],v=>edit(()=>n.arrangeFit=v));note('保持设计比例：排列区域随画布变化，每份图案按所在区域短边适配，不把整组缩进正方形。需要拉伸效果时可切换；防堆叠间距按短边尺度计算，改变比例可能重新分布。');
    if([7,12].includes(m)){check('防堆叠',n.scatterAvoidOverlap,v=>edit(()=>n.scatterAvoidOverlap=v));if(n.scatterAvoidOverlap){const gap=el('input',{type:'number',min:0,max:.5,step:.005,value:n.scatterGap,'aria-label':'额外间距',onchange:()=>edit(()=>n.scatterGap=+gap.value)});controls().append(el('label',{class:'tree-field'},[document.createTextNode('额外间距'),gap]));note('按实际选中图形的可见范围和本次尺寸避让，不再为透明留白和最大随机尺寸预留整块空间。额外间距与最小中心距离仍生效；放不下时减少实际数量。细长/空心图形仍按外包圆保守判断。');}}
    if(n.kind==='group'){choice('实例内容',n.instanceContent,[['all','整个组合'],['random-child','随机一个子节点'],['cycle-child','按顺序循环（取模）']],v=>edit(()=>n.instanceContent=v));if(n.instanceContent==='random-child'){note('每个排列位置从已启用的直接子节点中等概率选一个，允许重复。子组合按整体参与；动画暂时隐藏的子节点仍保留原位置。改变种子可重新杂排。');field('杂排种子','arrange.11',1,999,1);}else if(n.instanceContent==='cycle-child')note('按排列点的生成顺序，依次选择节点树中已启用的直接子节点：1、2、3、1、2、3……。跳过未启用节点，子组合视为一项；调整子节点顺序或数量会改变对应关系。同一点序号的选择不随种子或时间变化，种子仍可影响随机散布的位置。');}
@@ -280,6 +311,8 @@ function inspector(){const n=current();inspectorVariant=inspectorVariantKey(anim
    for(const slot of slots){const spec=arrangementSpec(m,slot,n.arrange),options=slot===19?[[0,'保持方向'],[1,[6,9].includes(m)?'沿路径切线':'朝向圆心外'],[2,[6,9].includes(m)?'垂直路径':'沿圆周切线']]:slot===30?[[0,'按数量等距'],[1,'按间距']]:slot===37?[[0,'仅放射旋转'],[1,'旋转 + 镜像成对']]:slot===38?[[0,'横向错列'],[1,'纵向错列']]:null;if(options)enumField(spec.label,'arrange.'+slot,options);else field(spec.label,'arrange.'+slot,spec.min,spec.max,spec.step);}
    advanced('高级：随机扰动与位置',()=>{for(const slot of [...([7,12].includes(m)?[]:[8]),9,10,11,...(m===1?[12]:[]),13,14]){const spec=arrangementSpec(m,slot,n.arrange);field(spec.label,'arrange.'+slot,spec.min,spec.max,spec.step);}});
    if(m===12){choice('密度图案',n.arrange[39],CATALOG.map((p,i)=>({p,i})).filter(({p,i})=>projectShapeIds().has(p.id)||i===n.arrange[39]).map(({p,i})=>[i,p.zh]),v=>edit(()=>{n.arrange[39]=+v;n.arrange.splice(42,16,...CATALOG[v].defaults);}));for(const p of CATALOG[n.arrange[39]].parameters)field('密度 · '+p.label,'arrange.'+(42+p.slot),p.min,p.max,p.step);}
+   }
+   layoutModifiers(n,m);
    field('每份动画相位偏移','instancePhase',-1,1,.01);controls().append(el('p',{id:'actual-count',class:'tree-note'}),el('button',{text:'展开为独立节点',onclick:()=>edit(()=>{const e=nodeClock(state.root,n.id,time);state.root=expandInstances(state.root,n.id,time,renderer.records(e.node,e.progress,{original:n,aspect:selectionRegions(animationPreviewProject(),n.id,time,{records:arrangementRecords}).regions[0]?.aspect??state.canvas.ratio}));})}));updateActualCount();note('展开固定当前排列布局，保留内容动画；可一次撤销。网格每格拥有独立0～1内容区域。');
   }
  }

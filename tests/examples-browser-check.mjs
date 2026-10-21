@@ -21,8 +21,8 @@ try{
  page.on('pageerror',e=>errors.push(e.message));
  const origin='http://127.0.0.1:'+server.address().port;
  await page.goto(origin+(standalone?'/?view=examples':'/examples.html'));
- await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('15 种组合示例已生成'));
- assert.equal(await page.locator('#samples article').count(),15);
+ await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('22 种组合示例已生成'),null,{timeout:120000});
+ assert.equal(await page.locator('#samples article').count(),22);
  const links=await page.locator('#samples article a').evaluateAll(links=>links.map(a=>a.href));
  const names=new Set();
  for(const href of links){
@@ -41,7 +41,7 @@ try{
    assert.ok(await editor.locator('[role="treeitem"]').count()>1);
   }finally{await editor.close();}
  }
- assert.equal(names.size,15);assert.deepEqual(errors,[]);
+ assert.equal(names.size,22);assert.deepEqual(errors,[]);
  await page.locator('#samples img').evaluateAll(imgs=>Promise.all(imgs.map(img=>img.decode())));
  const shieldPixels=await page.locator('img[alt="蜂巢护盾"]').evaluate(img=>{
   const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;
@@ -92,7 +92,7 @@ try{
    const {TreeRenderer}=await import('./tree-renderer.js'),{treeSamples}=await import('./tree-samples.js'),{project,cloneNode,sanitizeTree}=await import('./tree-model.js'),{encodePNG}=await import('./encoders.js');
    const renderer=new TreeRenderer(document.createElement('canvas')),results=[],sheet=document.createElement('section');sheet.id='ui-check';sheet.style.cssText='background:#15171c;padding:20px;width:920px;display:grid;grid-template-columns:1fr 1fr;gap:20px';
    try{
-    for(const sample of treeSamples().filter(s=>s.tags.includes('UI 底纹'))){
+    for(const sample of treeSamples().filter(s=>s.category==='ui')){
      const raw=project();raw.root.children=[cloneNode(sample.root)];Object.assign(raw.output,sample.output);const p=sanitizeTree(raw),pixels=renderer.draw(p,128,128,{read:true,time:0}),last=renderer.draw(p,128,128,{read:true,time:1});
      let staticError=0,alphaError=0,wrapError=0;const colors=new Set();
      for(let i=0;i<pixels.length;i++){staticError=Math.max(staticError,Math.abs(pixels[i]-last[i]));if(i%4===3)alphaError=Math.max(alphaError,Math.abs(1-pixels[i]));}

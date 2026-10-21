@@ -10,6 +10,8 @@ import {CATALOG} from './catalog.js';
 import {generateArrangement,densitySampler} from './arrangement-layouts.js';
 import {alphaFootprint} from './scatter-footprints.js';
 import {fitInstances} from './instance-geometry.js';
+import {advancedRecords,modifyRecords} from './tree-arrangement.js';
+import {coverageContours} from './coverage-contours.js';
 const HEADER=`#version 300 es
 precision highp float;precision highp int;in vec2 uv;
 layout(location=0) out vec4 colorOut;layout(location=1) out vec4 heightOut;
@@ -34,7 +36,7 @@ void main(){vec4 c=vec4(0);float h=0.;
  if(operation==1){vec2 p=inverseUV(uv,placement,pivotTurn);sampleContent(p,c,h);vec4 d=hasDest==1?texture(dstColor,uv):vec4(0);float dh=hasDest==1?texture(dstHeight,uv).r:0.;c*=opacity;h*=opacity;h=blendHeight(dh,h,c.a,blendMode);c=blendColor(d,c,blendMode);}
  if(operation==2){sampleContent(uv,c,h);float m=texture(maskTex,uv).r;if(inverted==1)m=1.-m;c*=clamp(m,0.,1.);h*=clamp(m,0.,1.);}
  if(operation==3){sampleContent(uv,c,h);if(recolor==1)c.rgb=ramp(h)*c.a;}
- if(operation==4){for(int i=0;i<recordCount;i++){vec4 box=texelFetch(tableTex,ivec2(i*2,0),0),axis=texelFetch(tableTex,ivec2(i*2+1,0),0);vec4 sc;float sh;sampleContent(inverseUV(uv,box,axis),sc,sh);h=blendHeight(h,sh,sc.a,0);c=blendColor(c,sc,0);}}
+ if(operation==4){for(int i=0;i<recordCount;i++){vec4 box=texelFetch(tableTex,ivec2(i*3,0),0),axis=texelFetch(tableTex,ivec2(i*3+1,0),0);float alpha=texelFetch(tableTex,ivec2(i*3+2,0),0).x;vec4 sc;float sh;sampleContent(inverseUV(uv,box,axis),sc,sh);sc*=alpha;sh*=alpha;h=blendHeight(h,sh,sc.a,0);c=blendColor(c,sc,0);}}
  if(operation==6){sampleContent(uv,c,h);float old=h;h=(h-postA.w)/max(postB.x-postA.w,.0001);h=(h-.5)*postA.y+.5+postA.x;h=pow(max(h,0.),1./max(postA.z,.1));h=mix(postB.y,postB.z,h);if(inverted==1)h=1.-h;float a=clamp(h,0.,1.);c=vec4(recolor==1?ramp(h)*a:(c.a>0.?c.rgb/c.a:ramp(h))*a,a);if(recolor==0&&old>0.)c.rgb*=max(h,0.)/old;}
  if(operation==7){c=texture(srcColor,uv);h=texture(srcHeight,uv).r;
  for(int i=-1;i<=1;i+=2){vec2 p=uv+float(i)*contourStep;vec4 sc=vec4(0);float sh=0.;
@@ -89,7 +91,7 @@ export class TreeRenderer{
  gl.uniform1i(loc('imageLuminance'),+imageLuminance);gl.uniform1i(loc('hasDest'),dest?1:0);gl.uniform1i(loc('operation'),op);gl.uniform1i(loc('repeatNode'),+repeat);gl.uniform1i(loc('blendMode'),blendIds[blend]);gl.uniform1i(loc('recolor'),+recolor);gl.uniform1i(loc('recordCount'),count);gl.uniform1f(loc('opacity'),opacity);gl.uniform4fv(loc('placement'),box);gl.uniform4fv(loc('pivotTurn'),axis);gl.uniform3fv(loc('lowColor'),rgb(palette[0]));gl.uniform3fv(loc('highColor'),rgb(palette[1]));if(inPlace){gl.enable(gl.BLEND);gl.blendEquation(gl.FUNC_ADD);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);if(!repeat){const c=Math.cos(axis[2]),s=Math.sin(axis[2]),corners=[0,1].flatMap(x=>[0,1].map(y=>{const dx=(x-axis[0])*axis[3]*box[2],dy=(y-axis[1])*box[3];return [box[0]+c*dx-s*dy/target.aspect,box[1]+s*dx*target.aspect+c*dy];})),x0=Math.max(0,Math.floor(Math.min(...corners.map(p=>p[0]))*target.w)-2),y0=Math.max(0,Math.floor(Math.min(...corners.map(p=>p[1]))*target.h)-2),x1=Math.min(target.w,Math.ceil(Math.max(...corners.map(p=>p[0]))*target.w)+2),y1=Math.min(target.h,Math.ceil(Math.max(...corners.map(p=>p[1]))*target.h)+2);gl.enable(gl.SCISSOR_TEST);gl.scissor(x0,y0,Math.max(0,x1-x0),Math.max(0,y1-y0));}}gl.drawArrays(gl.TRIANGLES,0,3);
  const err=gl.getError();gl.disable(gl.BLEND);gl.disable(gl.SCISSOR_TEST);if(err)throw Error('节点渲染错误 '+err);
  }
- table(records){const gl=this.gl,tex=gl.createTexture(),data=new Float32Array(Math.max(1,records.length)*8);records.forEach((p,i)=>data.set([p.x,p.y,p.width,p.height,.5,.5,p.turn,p.mirror??1],i*8));gl.bindTexture(gl.TEXTURE_2D,tex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA32F,Math.max(2,records.length*2),1,0,gl.RGBA,gl.FLOAT,data);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);return tex;}
+ table(records){const gl=this.gl,tex=gl.createTexture(),data=new Float32Array(Math.max(1,records.length)*12);records.forEach((p,i)=>data.set([p.x,p.y,p.width,p.height,.5,.5,p.turn,p.mirror??1,p.opacity??1,0,0,0],i*12));gl.bindTexture(gl.TEXTURE_2D,tex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA32F,Math.max(3,records.length*3),1,0,gl.RGBA,gl.FLOAT,data);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);return tex;}
  visibleFootprint(n,progress){
   this.footprintCache??=new Map();const key=JSON.stringify([n,progress,this.formulaSeconds??0]);
   if(this.footprintCache.has(key))return this.footprintCache.get(key);
@@ -105,6 +107,17 @@ export class TreeRenderer{
   }finally{this.release(src);this.quality=quality;this.sampleLimit=limit;}
  }
  records(n,time,{original=n,aspect=1}={}){
+  if(n.arrange[0]===14){
+   if(n.kind!=='group'||!n.children.length)throw Error('沿轮廓排列需要组合：第一个子节点为轮廓来源，后续子节点为装饰');
+   this.layoutCache??=new Map();const key='outline:'+JSON.stringify([n,time,this.formulaSeconds,aspect]);if(this.layoutCache.has(key))return this.layoutCache.get(key);
+   const quality=this.quality,limit=this.sampleLimit;let src,records;
+   try{this.quality=1;this.sampleLimit=256;src=this.content({kind:'group',children:[n.children[0]],seamless:false},time,256,256,['#000000','#ffffff'],aspect);
+    const gl=this.gl,raw=this.float?new Float32Array(256*256*4):new Uint8Array(256*256*4);gl.bindFramebuffer(gl.FRAMEBUFFER,src.fb);gl.readBuffer(gl.COLOR_ATTACHMENT0);gl.readPixels(0,0,256,256,gl.RGBA,this.float?gl.FLOAT:gl.UNSIGNED_BYTE,raw);if(gl.getError())throw Error('轮廓采样失败，请重试');
+    const data=this.float?raw:Float32Array.from(raw,v=>v/255),outline=coverageContours(data,256,256,n.arrangeExtra.threshold),loops=outline.paths.map(p=>p.knots.map(k=>[k.points[0]/256,k.points[1]/256]));
+    records=modifyRecords(fitInstances(advancedRecords(n,aspect,loops),aspect,n.arrangeFit),n,aspect);
+   }finally{this.release(src);this.quality=quality;this.sampleLimit=limit;}
+   this.layoutCache.set(key,records);while(this.layoutCache.size>128)this.layoutCache.delete(this.layoutCache.keys().next().value);return records;
+  }
   const measured=n.scatterAvoidOverlap&&[7,12].includes(n.arrange[0]);
   if(!measured&&n.arrange[0]!==12)return placements(n.arrange,n,time,original,aspect);
   this.layoutCache??=new Map();const key=JSON.stringify([n,time,this.formulaSeconds??0,aspect]);
@@ -116,7 +129,7 @@ export class TreeRenderer{
    // Identical variants/phases share one readback; no full-region reservation for a small child.
    const variant=JSON.stringify([children,phase]);if(!footprints.has(variant))footprints.set(variant,this.visibleFootprint({...content,children},phase));return footprints.get(variant);
   };}
-  const records=fitInstances(generateArrangement(n.arrange,options).map(p=>({...p,width:Math.min(1,p.size),height:Math.min(1,p.size),turn:-p.turn})),aspect,n.arrangeFit);
+  const records=modifyRecords(fitInstances(generateArrangement(n.arrange,options).map(p=>({...p,width:Math.min(1,p.size),height:Math.min(1,p.size),turn:-p.turn})),aspect,n.arrangeFit),n,aspect);
   this.layoutCache.set(key,records);while(this.layoutCache.size>128)this.layoutCache.delete(this.layoutCache.keys().next().value);return records;
  }
  content(n,progress,w,h,palette,aspect=w/h){
@@ -156,16 +169,17 @@ export class TreeRenderer{
  const records=this.records(n,e.progress,{original,aspect});this.lastCounts.set(n.id,records.length);let out;
  if(n.arrange[0]){
   out=this.target(w,h,false,aspect);
-  if(n.kind==='group'&&['random-child','cycle-child'].includes(n.instanceContent)){
+  if(n.arrange[0]===14&&n.arrangeExtra.showSource){const src=this.content({kind:'group',children:[n.children[0]],seamless:false},e.progress,w,h,palette,aspect);out=this.composite(out,src,{op:1});}
+  if(n.kind==='group'&&(['random-child','cycle-child'].includes(n.instanceContent)||[14,16].includes(n.arrange[0]))||n.arrange[0]===15){
    const sw=Math.max(1,Math.ceil(w*Math.max(0,...records.map(r=>r.width))*this.quality)),sh=Math.max(1,Math.ceil(h*Math.max(0,...records.map(r=>r.height))*this.quality));
    for(let i=0;i<records.length;i++){
-    const children=instanceChildren(n,i);if(!children.length)continue;
+    const children=instanceChildren(n,i,records[i]);if(n.kind==='group'&&!children.length)continue;
     const r=records[i],phase=shiftedProgress(e.progress,i*n.instancePhase),content={...(n.instancePhase?evaluateNode(original,parentTime,phase).node:n),children};
     const src=this.cachedContent(content,phase,sw,sh,palette,aspect*records[i].width/records[i].height);this.reclaimable.delete(src);
-    out=this.composite(out,src,{op:1,box:[r.x,r.y,r.width,r.height],axis:[.5,.5,r.turn,r.mirror??1],repeat:n.seamless});
+    out=this.composite(out,src,{op:1,box:[r.x,r.y,r.width,r.height],axis:[.5,.5,r.turn,r.mirror??1],repeat:n.seamless,opacity:r.opacity??1});
    }
   }else if(n.instancePhase){
-   for(let i=0;i<records.length;i++){const r=records[i],phase=shiftedProgress(e.progress,i*n.instancePhase),src=this.content(evaluateNode(original,parentTime,phase).node,phase,Math.max(1,Math.ceil(w*r.width*(n.kind==='group'?this.quality:1))),Math.max(1,Math.ceil(h*r.height*(n.kind==='group'?this.quality:1))),palette,aspect*r.width/r.height);out=this.composite(out,src,{op:1,box:[r.x,r.y,r.width,r.height],axis:[.5,.5,r.turn,r.mirror??1],repeat:n.seamless});this.release(src);}
+   for(let i=0;i<records.length;i++){const r=records[i],phase=shiftedProgress(e.progress,i*n.instancePhase),src=this.content(evaluateNode(original,parentTime,phase).node,phase,Math.max(1,Math.ceil(w*r.width*(n.kind==='group'?this.quality:1))),Math.max(1,Math.ceil(h*r.height*(n.kind==='group'?this.quality:1))),palette,aspect*r.width/r.height);out=this.composite(out,src,{op:1,box:[r.x,r.y,r.width,r.height],axis:[.5,.5,r.turn,r.mirror??1],repeat:n.seamless,opacity:r.opacity??1});this.release(src);}
   }else{const sw=Math.max(1,Math.ceil(w*Math.max(0,...records.map(r=>r.width))*(n.kind==='group'?this.quality:1))),sh=Math.max(1,Math.ceil(h*Math.max(0,...records.map(r=>r.height))*(n.kind==='group'?this.quality:1))),src=this.cachedContent(n,e.progress,sw,sh,palette,records.length?aspect*records[0].width/records[0].height:1),tex=this.table(records);try{this.pass(out,{source:src,op:4,repeat:n.seamless,table:tex,count:records.length});}finally{this.gl.deleteTexture(tex);this.consumed(src);}}
  }else out=this.content(n,e.progress,w,h,palette,aspect);
  if(n.mask){const t=evaluateNode(n.mask,e.progress).node,[mw,mh]=fitted(t.transform,aspect,1),m=this.renderNode(n.mask,e.progress,w,h,palette,aspect*mw/mh),placed=this.target(w,h,false,aspect);this.pass(placed,{source:m,op:1,box:[t.transform.x,t.transform.y,...fitted(t.transform,aspect,1)],axis:[t.transform.pivotX,t.transform.pivotY,t.transform.rotation*Math.PI/180,t.transform.mirrorX?-1:1],opacity:t.opacity});this.consumed(m);const next=this.target(w,h,false,aspect);this.pass(next,{source:out,mask:placed,op:2,inverted:n.maskInvert});this.release(out);this.release(placed);out=next;}

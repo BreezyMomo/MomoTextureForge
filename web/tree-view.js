@@ -32,9 +32,10 @@ export function selectionRegions(project,id,time,{solo=false,records=placements}
   const children=[...n.children,...(n.mask?[n.mask]:[])].filter(c=>find(c,id));if(!children.length)return;
   // The node's mask is applied after its arrangement, and is not repeated by that arrangement.
   for(const child of children){
-   const items=child===n.mask?[{x:.5,y:.5,width:1,height:1,turn:0,mirror:1}]:records(n.arrange,n,e.progress,original,m.width/m.height);
+   const reference=n.arrange[0]===14&&child===n.children[0];if(reference&&!n.arrangeExtra.showSource)continue;
+   const items=child===n.mask||reference?[{x:.5,y:.5,width:1,height:1,turn:0,mirror:1}]:records(n.arrange,n,e.progress,original,m.width/m.height);
    for(let i=0;i<items.length;i++){
-    if(child!==n.mask&&n.arrange[0]&&!instanceChildren(n,i).includes(child))continue;
+    if(child!==n.mask&&!reference&&n.arrange[0]&&!instanceChildren(n,i,items[i]).includes(child))continue;
     const r=items[i],rm=mapping({x:r.x,y:r.y,width:r.width,height:r.height,pivotX:.5,pivotY:.5,rotation:r.turn*180/Math.PI,mirrorX:r.mirror<0},m.width,m.height);
     visit(child,child===n.mask?e.progress:shiftedProgress(e.progress,i*n.instancePhase),p=>point(rm.point(p)),m.width*r.width,m.height*r.height);
    }
