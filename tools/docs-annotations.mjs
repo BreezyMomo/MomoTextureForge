@@ -48,7 +48,7 @@ export const annotations={
  'export-vector':[field('导出类型','选择矢量轮廓格式'),css('#confirm-export','导出前检查轮廓设置')],
  'remote-libraries':[field('新图库名称','填写订阅名称'),field('远程目录地址','填写 index.json 地址'),role('button','添加订阅','添加图库订阅')],
  'ai-catalog':[field('导出范围','选择目录范围'),role('button','生成目录','生成可提供给 AI 的目录'),field('AI图形目录JSON','复制目录内容')],
- 'help-menu':[css('#tool-help','内置使用说明'),css('#detailed-help','README 与图文教程'),css('#download-author-skill','下载创作 Skill')].map(spec=>({...spec,side:'left'})),
+ 'help-menu':[css('#tool-help','内置使用说明'),css('#detailed-help','README 与图文教程'),css('#download-author-skill','下载创作 Skill'),css('#support-project','微信扫码赞赏')].map(spec=>({...spec,side:'left'})),
  'library-manager':[role('button','导入资源 ZIP','导入已有资源'),role('button','编辑信息','编辑资源目录信息')],
  'library-manager-edit':[css('#edit-dialog input','修改资源名称'),role('button','保存信息','保存目录信息')],
  'composition-examples':[role('link','在画布中编辑','打开可编辑的组合示例')],

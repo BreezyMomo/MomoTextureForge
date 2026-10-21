@@ -689,6 +689,27 @@ dialog::backdrop {
 .dialog-head h2 {
   font-size: 17px;
 }
+.support-dialog {
+  width: min(380px, calc(100vw - 64px));
+}
+.support-dialog p {
+  line-height: 1.7;
+  color: var(--muted);
+}
+.support-dialog figure {
+  margin: 16px 0 0;
+  text-align: center;
+}
+.support-dialog img {
+  display: block;
+  width: min(280px, 100%);
+  height: auto;
+  margin: 0 auto;
+}
+.support-dialog figcaption {
+  margin-top: 12px;
+  font-weight: 600;
+}
 .help-content {
   overflow: auto;
 }

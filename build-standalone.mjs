@@ -12,6 +12,9 @@ const args=process.argv.slice(2);
 if(args.length>1)throw new Error("Usage: node build-standalone.mjs [output-directory]");
 const output=resolve(args[0]||join(toolRoot,"dist"));
 await buildAuthoringKit();
+// Keep the support dialog offline-ready, using the same original as the docs.
+const appreciationCode=await readFile(join(toolRoot,'docs/images/wechat-appreciation.png'));
+await writeFile(join(webRoot,'appreciation-code.js'),'// Generated from docs/images/wechat-appreciation.png by build-standalone.mjs.\nexport default '+JSON.stringify('data:image/png;base64,'+appreciationCode.toString('base64'))+';\n');
 const registry=await loadDefinitionURL(new URL("./web/definitions/builtin.json",import.meta.url));
 const read=name=>readFile(join(webRoot,name),"utf8");
 const [indexHTML,examplesHTML,validationHTML,css]=await Promise.all([read("index.html"),read("examples.html"),read("validate.html"),Promise.all([read("style.css"),read("tree.css"),read("graphics-workspace.css"),read("dock-workspace.css"),read("inspector-color.css")]).then(parts=>parts.join("\n"))]);

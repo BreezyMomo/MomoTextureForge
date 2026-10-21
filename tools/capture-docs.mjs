@@ -124,7 +124,9 @@ try{
  await run('remote-ai',async()=>{
   await load(spell);await library();await page.getByRole('button',{name:'远程图库',exact:true}).click();await shot('remote-libraries');
   await page.locator('dialog').last().locator('header .graphics-close').click();await page.getByPlaceholder('搜索名称、分类或标签').fill('星形');await page.getByRole('button',{name:'导出 AI 图形目录',exact:true}).click();await page.getByRole('button',{name:'生成目录',exact:true}).click();await page.waitForFunction(()=>[...document.querySelectorAll('dialog textarea')].some(e=>e.value.includes('schema')));await shot('ai-catalog');
-  await load(spell);await page.locator('.header-help > summary').click();await shot('help-menu',null,{x:1050,y:0,width:550,height:340});
+ });
+ await run('help',async()=>{
+  await load(spell);await page.locator('.header-help > summary').click();await shot('help-menu',null,{x:1050,y:0,width:550,height:400});
  });
  await run('manager',async()=>{
   await load(water);
