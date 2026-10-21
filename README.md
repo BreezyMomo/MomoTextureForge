@@ -110,6 +110,8 @@ npm start -- --port 8799
 
 ## 与 AI 协作
 
+“帮助”菜单底部的“GitHub 仓库”可在新标签页打开[项目仓库](https://github.com/BreezyMomo/MomoTextureForge)，用于查看源码、反馈问题和参与贡献。
+
 “帮助”菜单提供两个可下载的 Skill：
 
 - **创作 Skill**：辅助判断公式、SVG 或位图路线，制作可导入资源，并通过命令行渲染检查公式。
