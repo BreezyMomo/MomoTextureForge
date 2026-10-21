@@ -1,6 +1,5 @@
 import {find} from './tree-model.js';
 import {selectionRegions} from './tree-view.js';
-import {BY_ID} from './catalog.js';
 import {contains,sub,moveTransform,pivotTransform,rotateTransform,resizeTransform,bounds,snapMove} from './canvas-transform.js';
 
 const handles=[[0,0],[.5,0],[1,0],[1,.5],[1,1],[.5,1],[0,1],[0,.5]];
@@ -13,7 +12,7 @@ export function createCanvasEditor(surface,api){
  toolbar.prepend(transform,pivot,snapping);snapping.setAttribute('aria-pressed','true');
  const getScope=()=>find(api.project().root,scope)?.node??api.project().root;
  const regionList=id=>selectionRegions(api.project(),id,api.time(),{solo:api.solo(),records:api.records}).regions;
- const hitContains=(id,region,p)=>contains(region,p,BY_ID.get(find(api.project().root,id)?.node.type)?.definition.renderPadding??0);
+ const hitContains=(id,region,p)=>{const n=find(api.project().root,id)?.node;return n?.boundary==='visible'||n?.tracks?.boundary?true:contains(region,p);};
  function setMode(next){api.leaveOtherTools();mode=next;transform.setAttribute('aria-pressed',String(mode==='transform'));pivot.setAttribute('aria-pressed',String(mode==='pivot'));draw();}
  function enabled(){return !api.blocked()&&!space;}
  function point(e){const b=surface.getBoundingClientRect();return [(e.clientX-b.left)/Math.max(1,b.width),1-(e.clientY-b.top)/Math.max(1,b.height)];}

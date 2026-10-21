@@ -57,7 +57,7 @@ test('outline spacing includes multiple closed loops and preserves opposite hole
  n.arrange[30]=1;n.arrange[31]=.1;assert.equal(advancedRecords(n,1,loops).length,60);
 });
 
-function tiles(wrap,cols=6,rows=5){const n=node('group');n.arrange[0]=16;n.arrange[1]=cols;n.arrange[2]=rows;n.arrange[11]=17;n.seamless=wrap;n.children=Array.from({length:16},(_,mask)=>Object.assign(node(),{tileEdges:mask}));return n;}
+function tiles(wrap,cols=6,rows=5){const n=node('group');n.arrange[0]=16;n.arrange[1]=cols;n.arrange[2]=rows;n.arrange[11]=17;n.boundary=wrap?'repeat':'clip';n.children=Array.from({length:16},(_,mask)=>Object.assign(node(),{tileEdges:mask}));return n;}
 test('rule tiles match all interior and periodic edge ports and select the chosen child',()=>{
  for(const wrap of [false,true])for(const [cols,rows]of [[6,5],[1,1],[1,4],[4,1],[16,16]]){
   const n=tiles(wrap,cols,rows),records=matchedTiles(n),m=records.map((r,i)=>{assert.equal(instanceChildren(n,i,r)[0],n.children[r.childIndex]);return n.children[r.childIndex].tileEdges;});

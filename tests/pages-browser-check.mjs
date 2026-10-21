@@ -6,6 +6,7 @@ import {chromium} from 'playwright';
 import {BUILTIN} from '../web/definition-runtime.js';
 import {GENERATOR_EXAMPLE} from '../web/generator-authoring.js';
 import {project,node} from '../web/tree-model.js';
+import {treeSamples} from '../web/tree-samples.js';
 
 const html=await readFile(new URL('../site/index.html',import.meta.url));
 const prefix='/MomoTextureForge/';
@@ -66,8 +67,8 @@ try{
  await page.getByRole('combobox',{name:'预览模式',exact:true}).selectOption('material');await page.waitForFunction(()=>document.querySelector('#render-status').textContent.includes('材质采样'));await page.getByRole('combobox',{name:'预览模型'}).selectOption('2');await page.getByRole('combobox',{name:'预览模式',exact:true}).selectOption('canvas');
  await page.goto(address+'?view=examples');await ready();
  assert.equal(await page.locator('a[href]').first().getAttribute('href'),address);
- await page.locator('#generate').click();
- await page.waitForFunction(()=>document.querySelectorAll('#samples article').length>0,null,{timeout:120000});
+ // Examples generate on navigation; wait for that work instead of clicking a disabled button.
+ await page.waitForFunction(count=>!document.querySelector('#generate')?.disabled&&document.querySelectorAll('#samples article').length===count,treeSamples().length,{timeout:180000});
  const exampleLink=await page.locator('#samples article a').first().getAttribute('href');
  assert.ok(exampleLink.startsWith(address+'#tree='));
  await page.goto(exampleLink);await ready();

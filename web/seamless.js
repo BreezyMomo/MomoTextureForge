@@ -13,7 +13,7 @@ export function seamlessKind(type, mode = 0) {
         ? 2
         : 0;
 }
-function extent(type, p) {
+export function shapeExtent(type, p) {
   const shape = BY_ID.get(type).definition.seamless.extent;
   if (shape === "bezier") return Math.max(...[0, 2, 4, 6].map((i) => Math.hypot(p[i], p[i + 1]))) + Math.max(p[8], p[9]) * 0.5 + p[10];
   const [r, w, , s, d, k] = p;
@@ -52,7 +52,7 @@ export function effectiveSeamlessPattern(type, params, uv, mode = 0) {
     v[6] = 0;
   } else if (kind === 2) {
     // A compact circumscribed shape has a unique closest periodic copy at each pixel.
-    v[0] = Math.min(v[0], 0.9 / Math.max(extent(type, p), 0.01));
+    v[0] = Math.min(v[0], 0.9 / Math.max(shapeExtent(type, p), 0.01));
     v[6] = 0;
   }
   return { kind, params: p, uv: v };

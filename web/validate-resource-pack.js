@@ -11,7 +11,7 @@ try{
  const blob=await new Promise(resolve=>source.toBlob(resolve));const img=await imageAsset(new File([blob],'测试图片.png',{type:'image/png'}));
  for(const [label,asset]of [['独立公式',circle],['周期公式',periodic],['矢量公式',vector],['图片资源',img]]){
   const bytes=await encodeResourcePack({schema:'momo.texture-assets/v1'},{assets:[[asset.definition.id,asset]]}),pack=await readResourcePack(bytes);packs.push(pack);pack.register();
-  const p=project();p.root.children=[node('shape','asset_'+await contentHash(asset))];p.root.children[0].seamless=label==='周期公式';
+  const p=project();p.root.children=[node('shape','asset_'+await contentHash(asset))];p.root.children[0].boundary=label==='周期公式'?'repeat':'clip';
   const title=document.createElement('h2');title.textContent=label;document.getElementById('canvases').append(title);const canvas=document.createElement('canvas');document.getElementById('canvases').append(canvas);const renderer=new TreeRenderer(canvas);renderers.push(renderer);renderer.draw(p,128,128,{time:0,quality:1});
   const copy=document.createElement('canvas');copy.width=copy.height=128;copy.getContext('2d').drawImage(canvas,0,0);const pixels=copy.getContext('2d').getImageData(0,0,128,128).data;let opaque=0,transparent=0;for(let i=3;i<pixels.length;i+=4){if(pixels[i]>200)opaque++;if(pixels[i]<10)transparent++;}if(!opaque||(!asset.definition.outputs.vector&&!transparent))throw Error(label+' 未得到预期的非空透明图案');
   if(label==='图片资源'){const alpha=(x,y)=>pixels[(y*128+x)*4+3];if(alpha(16,16)<200||alpha(112,112)>10)throw Error('图片方向或透明通道错误');}

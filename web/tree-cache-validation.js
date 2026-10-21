@@ -12,7 +12,7 @@ try{
  n.arrange[16]=282.85;n.arrange[19]=2;compare('angle orientation',p);
  n.uv[2]=.17;compare('UV invalidation',p);n.params[0]=.23;compare('shape invalidation',p);
  n.color.mode='own';n.color.stops=[{position:0,color:'#000000'},{position:.5,color:'#ff0000'},{position:1,color:'#00ffff'}];compare('palette invalidation',p);
- n.seamless=true;n.seamMode=1;n.seamBlend=.3;compare('seamless',p);n.polar=true;compare('polar',p);
+ n.boundary='repeat';n.seamMode=1;n.seamBlend=.3;compare('seamless',p);n.polar=true;compare('polar',p);
  n.post[0]=.2;n.invert=true;n.mask=node();n.mask.transform.width=.4;n.maskInvert=true;compare('post and mask',p);
  n.type='HeartLeafTeardrop';n.params=shapeDefaults('HeartLeafTeardrop');compare('type change',p);
  for(const mode of ['height','normal','rgba','color']){p.output.mode=mode;compare('output '+mode,p,.35,128,64);}

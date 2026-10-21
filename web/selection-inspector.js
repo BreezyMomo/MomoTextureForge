@@ -116,8 +116,8 @@ export function createSelectionInspector(host,api){
  function layout(){
   heading('节点占用区域');check('锁定区域宽高比例','transform.lockAspect');
   for(const [k,label,min,max,step]of [['x','位置 X',-2,2,.01],['y','位置 Y',-2,2,.01],['width','区域宽',0,1,.01],['height','区域高',0,1,.01],['rotation','旋转 °',-3600,3600,1],['pivotX','轴心 X',0,1,.01],['pivotY','轴心 Y',0,1,.01]])number(label,'transform.'+k,min,max,step);
-  check('水平镜像','transform.mirrorX');choice('区域适配','transform.fit',[['stretch','随区域拉伸'],['contain','保持比例']]);note('位置、宽高相对各自父级；保留各节点锁定比例，超出范围整次取消。');align();
-  details('图形内部 UV',parent=>uv(parent));heading('无缝与接缝');check('节点无缝重复','seamless');if(compat.allShapes){choice('图形接缝处理','seamMode',[[0,'自动：周期 / 形状重复'],[1,'通用：边缘融合']],{numeric:true});number('融合宽度','seamBlend',.05,.45,.01);}
+  check('水平镜像','transform.mirrorX');choice('区域适配','transform.fit',[['stretch','随区域拉伸'],['contain','保持比例']]);choice('边界处理','boundary',[['clip','裁切到节点区域'],['visible','允许超出节点区域'],['repeat','无缝重复']]);note('位置、宽高相对各自父级；边界处理不改变蓝框或排列格距，仍受祖先组合及最终画布裁切。');align();
+  details('图形内部 UV',parent=>uv(parent));if(branch('boundary')==='repeat'&&compat.allShapes&&branch('arrange.0')===0){choice('图形接缝处理','seamMode',[[0,'自动：周期 / 形状重复'],[1,'通用：边缘融合']],{numeric:true});number('融合宽度','seamBlend',.05,.45,.01);}
   heading('区域内的内容排列');const options=[...ARRANGEMENT_NAMES.map((name,i)=>[i,name]),...EXTRA_LAYOUTS.map(([id,label])=>[id,label+([14,16].includes(id)&&!compat.allGroups?'（需全选组合）':''),[14,16].includes(id)&&!compat.allGroups])];
   choice('排列方式','arrange.0',options,{numeric:true,write:value=>mutate(n=>{if([14,16].includes(value)&&n.kind!=='group')throw Error('此排列需要全部选中组合');const values={'arrange.0':value};if(value===8)values['arrange.33']=1;if([13,14].includes(value))Object.assign(values,{'arrange.3':48,'arrange.4':.04,'arrange.19':1});if(value===15)Object.assign(values,{'arrange.1':2,'arrange.2':2});return {values};})});
   const mode=branch('arrange.0');if(mode===undefined)note('排列方式不同，请先统一方式，再修改对应的排列参数。');else if(mode){

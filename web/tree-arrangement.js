@@ -55,7 +55,7 @@ export function matchedTiles(n){
  function solve(i){if(i===board.length)return true;if(++attempts>50000)throw Error('规则拼接搜索超限：请补充接口图块、减小行列数或更换种子');const x=i%cols,y=Math.floor(i/cols);
   for(const tile of choices[i]){
    if(x&&port(board[i-1],1)!==port(tile,4)||y&&port(board[i-cols],2)!==port(tile,8))continue;
-   if(n.seamless){if(x===cols-1&&port(tile,1)!==port(x?board[i-x]:tile,4))continue;if(y===rows-1&&port(tile,2)!==port(y?board[x]:tile,8))continue;}
+   if((n.boundary==='repeat')){if(x===cols-1&&port(tile,1)!==port(x?board[i-x]:tile,4))continue;if(y===rows-1&&port(tile,2)!==port(y?board[x]:tile,8))continue;}
    else if(x===0&&port(tile,4)||x===cols-1&&port(tile,1)||y===0&&port(tile,8)||y===rows-1&&port(tile,2))continue;
    board[i]=tile;if(solve(i+1))return true;
   }return false;

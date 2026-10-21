@@ -57,13 +57,17 @@ node tests/pages-browser-check.mjs
 
 素材预设回归：`node tests/vfx-presets-browser-check.mjs`，检查透明覆盖、序列化、两个预设的预览、编辑链接及透明 PNG 导出，并生成 `test-results/presets/preview.png` 供视觉审核。
 
-排列相关回归：`node tests/tree-arrangement-browser-check.mjs`（七种示例、三种画布比例、展开/导出一致性、界面保存与分类）和 `node tests/examples-browser-check.mjs`；单文件静态版再加 `--standalone` 运行后者。法线交互回归：`node tests/normal-strength-browser-check.mjs`。
+排列相关回归：`node tests/tree-arrangement-browser-check.mjs`（排列示例、三种画布比例、展开/导出一致性、界面保存与分类）和 `node tests/examples-browser-check.mjs`；单文件静态版再加 `--standalone` 运行后者。法线交互回归：`node tests/normal-strength-browser-check.mjs`。
 
 节点树排列在 `web/tree-arrangement.js` 扩展：`arrange[0]` 的 13/14/15/16 分别为边框、透明轮廓、人字/编织、接口拼接；`arrangeExtra` 保存扩展设置，候选子节点的 `tileEdges` 用右1、上2、左4、下8 的位组合声明接口。旧标量公式的 59 项排列 ABI 和 0～12 模式保持兼容。实例记录附带 `opacity` 与规则选择的 `childIndex`，GPU、选区与展开均需使用同一记录。
 
 按改动范围运行浏览器检查；Node 单元测试不等于已检查实际 WebGL 画面。
 
-拼图回归：`node tests/puzzle-browser-check.mjs`，静态构建后加 `--standalone` 检查单文件界面。覆盖四种接口×四边共324种组合、36组接口配对、四角独立控制、凸耳越界、网格格距、三种半径的拼接、预览/导出、遮罩/滤镜和滑条保存。`renderPadding` 是公式定义的对称渲染留白（0～0.5），只扩展采样与合成范围；蓝框、轴心与排列仍按逻辑主体计算。普通组合不继承子节点留白，最终画布保持裁切。教程截图运行 `node tools/capture-docs.mjs puzzle`。
+拼图回归：`node tests/puzzle-browser-check.mjs`，静态构建后加 `--standalone` 检查单文件界面。覆盖四种接口×四边共324种组合、36组接口配对、四角独立控制、凸耳越界、网格格距、三种半径的拼接、预览/导出、遮罩/滤镜和滑条保存。`renderPadding` 是公式定义的局部内容范围提示（0～0.5）。节点唯一字段 `boundary:clip|visible|repeat` 控制边界；`web/render-bounds.js` 负责逻辑矩形、物理比例变换与滤镜边距。渲染器分别计算方向性范围及祖先可见需求，中间纹理的 `bounds` 不参与格距；无缝重复输出严格保持单位周期；periodicCopies 枚举与该周期相交的实际副本，布局整组回绕，模糊／Bloom／轮廓在周期纹理上采样。子级自然范围参与副本计算，副本数受纹理表宽度和4096预算约束。已知公式使用保守轮廓范围，未知公式在祖先需要范围内采样；图像、矢量和生成器本体仍在资源范围内。最终画布保持裁切。教程截图运行 `node tools/capture-docs.mjs puzzle`。
+
+平铺检查回归：`node tests/tile-preview-browser-check.mjs`，静态版加 `--standalone`。检查2×2、3×3、4×4的实际图案数量与参考框、关闭再开的预设保持、项目不变和导出原始尺寸。
+
+通用超框回归：`node tests/overflow-browser-check.mjs`，加 `--standalone` 检查静态版。覆盖图形、单侧子节点、多层裁切、非方形旋转/镜像/轴心、遮罩与反向遮罩、模糊/膨胀、三种实例渲染路径、展开与流式导出、纹理池复用，以及三种边界的保存、撤销和多选。教程截图运行 `node tools/capture-docs.mjs overflow`。
 
 面板布局回归：`node tests/dock-workspace-browser-check.mjs`；构建后加 `--standalone` 检查单文件版。覆盖实际拖动、标签合并、悬浮移动/缩放、保存与刷新恢复、三维上下文和 PNG 导出。布局模型在 `web/dock-layout.js`，DOM 控制器与样式在 `web/dock-workspace.js`、`web/dock-workspace.css`；只移动原有控件，布局本地存储与项目数据分开。
 
@@ -100,7 +104,8 @@ node tools/capture-docs.mjs colors
 | 组 | 画面 |
 | --- | --- |
 | examples | 通过真实“打开项目”入口检查四个示例 |
-| combinations | 27 种组合/素材预设总览、十种新增排列的分类截图与编辑入口 |
+| combinations | 30 种组合/素材预设总览、十三种新增排列的分类截图与编辑入口 |
+| overflow | 三种边界处理、逻辑蓝框、超出内容和无缝光晕接续 |
 | puzzle | 拼图接口样式、独立四角、凸耳越界与网格行列数 |
 | workspace | 总览、排列、合成和文件菜单 |
 | docking | 面板标签、网页内悬浮与布局保存菜单 |

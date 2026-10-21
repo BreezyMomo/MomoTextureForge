@@ -14,7 +14,7 @@ export function shapeDefaults(type){const p=BY_ID.get(type)??BY_ID.get('Circle')
 export function node(kind='shape',type='Circle'){
  const padding=kind==='shape'?(BY_ID.get(type)?.definition.renderPadding??0):0,size=padding?1/(1+2*padding+.08):1;
  return {id:uid(),name:kind==='group'?'组合':BY_ID.get(type)?.zh??type,kind,enabled:true,type,params:shapeDefaults(type),
- transform:{x:.5,y:.5,width:size,height:size,rotation:0,mirrorX:false,pivotX:.5,pivotY:.5,fit:'stretch',lockAspect:false},opacity:1,blend:'over',seamless:false,seamMode:0,seamBlend:.2,
+ transform:{x:.5,y:.5,width:size,height:size,rotation:0,mirrorX:false,pivotX:.5,pivotY:.5,fit:'stretch',lockAspect:false},boundary:padding?'visible':'clip',opacity:1,blend:'over',seamMode:0,seamBlend:.2,
  uv:[1,0,0,0,0,0,0],polar:false,
  color:{mode:kind==='group'?'preserve':'inherit',fill:'gradient',low:'#000000',high:'#ffffff'},
  arrange:sanitizeTreeArrangement([0,...Array(58).fill(undefined)]),arrangeExtra:extraDefaults(),tileEdges:0,arrangeFit:'contain',imageFit:'contain',instancePhase:0,instanceContent:'all',scatterAvoidOverlap:false,scatterGap:0,
@@ -27,9 +27,9 @@ export function find(root,id){let found=null;walk(root,(n,p,d)=>{if(n.id===id)fo
 export function cloneNode(n){const c=structuredClone(n);walk(c,x=>x.id=uid());return c;}
 export function pathGet(n,path){return path.split('.').reduce((x,k)=>x?.[k],n);}
 export function pathSet(n,path,value){const parts=path.split('.');let at=n;for(const k of parts.slice(0,-1))at=at[k];at[parts.at(-1)]=value;}
-export const ANIMATION_ENUMS={'contour.mode':['none','outline','dilate','erode'],blend:['over','add','max','multiply','subtract','screen','difference','overlay','softlight','dodge','mask','inverseMask'],'transform.fit':['stretch','contain'],'color.mode':['inherit','own','preserve','remap'],'color.fill':['solid','gradient']};
+export const ANIMATION_ENUMS={boundary:['clip','visible','repeat'],'contour.mode':['none','outline','dilate','erode'],blend:['over','add','max','multiply','subtract','screen','difference','overlay','softlight','dodge','mask','inverseMask'],'transform.fit':['stretch','contain'],'color.mode':['inherit','own','preserve','remap'],'color.fill':['solid','gradient']};
 Object.assign(ANIMATION_ENUMS,Object.fromEntries(Object.entries(EXTRA_ENUMS).map(([key,values])=>['arrangeExtra.'+key,values])));
-export const ANIMATION_BOOLS=['shapeClock.follow','enabled','transform.mirrorX','seamless','polar','invert',...EXTRA_BOOLS.map(key=>'arrangeExtra.'+key)];
+export const ANIMATION_BOOLS=['shapeClock.follow','enabled','transform.mirrorX','polar','invert',...EXTRA_BOOLS.map(key=>'arrangeExtra.'+key)];
 export function animationType(n,path){
  const parameter=/^params\.(\d+)$/.exec(path);if(parameter&&BY_ID.get(n.type)?.parameters.find(p=>p.slot===+parameter[1])?.type==='select')return 'discrete';
  const generatorParameter=/^params\.(\d+)$/.exec(path);if(generatorParameter&&BY_ID.get(n.type)?.definition.generator){const spec=BY_ID.get(n.type).parameters.find(p=>p.slot===+generatorParameter[1]);if(spec?.step===1||spec?.type)return 'discrete';}
@@ -73,7 +73,8 @@ export function sanitizeTree(raw,{component=false}={}){
   if(r.kind==='shape'&&!BY_ID.has(r.type))throw Error('未知图形：'+r.type);
   const n=node(r.kind,r.type);n.id=r.id;n.name=String(r.name??n.name).slice(0,80);n.enabled=r.enabled!==false;if(typeof r.resourceRef==='string')n.resourceRef=r.resourceRef.slice(0,96);
   for(const key of ['x','y','width','height','rotation','pivotX','pivotY']){const [min,max]=fieldSpec(n,'transform.'+key);n.transform[key]=num(r.transform?.[key],n.transform[key],min,max);}
-  n.transform.lockAspect=!!r.transform?.lockAspect;n.transform.mirrorX=!!r.transform?.mirrorX;n.transform.fit=r.transform?.fit==='contain'?'contain':'stretch';n.opacity=num(r.opacity,1,0,1);n.blend=['over','add','max','multiply','subtract','screen','difference','overlay','softlight','dodge','mask','inverseMask'].includes(r.blend)?r.blend:'over';n.seamless=!!r.seamless;n.seamMode=r.seamMode===1?1:0;n.seamBlend=num(r.seamBlend,.2,.05,.45);
+  n.transform.lockAspect=!!r.transform?.lockAspect;n.transform.mirrorX=!!r.transform?.mirrorX;n.transform.fit=r.transform?.fit==='contain'?'contain':'stretch';n.opacity=num(r.opacity,1,0,1);n.blend=['over','add','max','multiply','subtract','screen','difference','overlay','softlight','dodge','mask','inverseMask'].includes(r.blend)?r.blend:'over';n.seamMode=r.seamMode===1?1:0;n.seamBlend=num(r.seamBlend,.2,.05,.45);
+  n.boundary=ANIMATION_ENUMS.boundary.includes(r.boundary)?r.boundary:r.seamless?'repeat':r.overflow==='visible'?'visible':n.boundary;
   n.color.mode=['inherit','own','preserve','remap'].includes(r.color?.mode)?r.color.mode:n.color.mode;
   n.color.fill=r.color?.fill==='solid'?'solid':'gradient';
   for(const key of ['low','high'])n.color[key]=/^#[0-9a-f]{6}$/i.test(r.color?.[key])?r.color[key]:n.color[key];
@@ -142,7 +143,7 @@ export function evaluateNode(n,parentTime,progressOverride){const clock=localClo
 export function nodeClock(root,id,time){let result=null;function visit(n,t){const e=evaluateNode(n,t);if(n.id===id)result=e;for(const c of n.children)visit(c,e.progress);if(n.mask)visit(n.mask,e.progress);}visit(root,time);return result;}
 export function moveNode(root,id,parentId,index=Infinity){const source=find(root,id),target=find(root,parentId);if(!source?.parent||!target||target.node.kind!=='group')throw Error('请选择可移动节点和目标组合');if(find(source.node,parentId))throw Error('不能移入自身或后代');if(source.parent.mask===source.node)source.parent.mask=null;else source.parent.children.splice(source.parent.children.indexOf(source.node),1);target.node.children.splice(Math.min(index,target.node.children.length),0,source.node);}
 export function removeNode(root,id){const x=find(root,id);if(!x?.parent)throw Error('不能删除画布根节点');if(x.parent.mask===x.node)x.parent.mask=null;else x.parent.children.splice(x.parent.children.indexOf(x.node),1);}
-export const scatterOptions=(n,aspect=1)=>({avoidOverlap:n.scatterAvoidOverlap===true,gap:n.scatterGap??0,wrap:!!n.seamless,aspect,fit:n.arrangeFit??'contain'});
+export const scatterOptions=(n,aspect=1)=>({avoidOverlap:n.scatterAvoidOverlap===true,gap:n.scatterGap??0,wrap:n.boundary==='repeat',aspect,fit:n.arrangeFit??'contain'});
 export function placements(a,n={},_time=0,_original=n,aspect=1){const records=rawPlacements(a,n,aspect),fitted=a[0]&&!([15,16].includes(a[0]))?fitInstances(records,aspect,n.arrangeFit??'contain'):records;return modifyRecords(fitted,{...n,arrange:a},aspect);}
 function rawPlacements(a,n={},aspect=1){
  if(a[0]>=13)return advancedRecords({...n,arrange:a},aspect);
@@ -166,9 +167,9 @@ export function instanceChildren(n,index,record){
  return [pool[Math.floor(h/4294967296*pool.length)]];
 }
 export function expandInstances(root,id,time,records){const entry=find(root,id);if(!entry)throw Error('节点不存在');const n=entry.node,e=nodeClock(root,id,time);if(!n.arrange[0])throw Error('节点没有排列');
- const points=records??placements(e.node.arrange,e.node),content=cloneNode(n);content.transform=node().transform;content.opacity=1;content.blend='over';content.arrange[0]=0;content.seamless=n.seamless;if(content.color.mode==='remap')content.color.mode='own';content.instancePhase=0;content.mask=null;content.post=POST_SPECS.map(p=>p[3]);content.postFx=fxDefaults();content.contour=node().contour;content.invert=false;content.maskInvert=false;content.timing=node().timing;
+ const points=records??placements(e.node.arrange,e.node),content=cloneNode(n);content.transform=node().transform;content.boundary=n.boundary==='repeat'?'visible':n.boundary;if(content.tracks.boundary)content.tracks.boundary.keys=content.tracks.boundary.keys.map(([t,v])=>[t,v==='repeat'?'visible':v]);content.opacity=1;content.blend='over';content.arrange[0]=0;if(content.color.mode==='remap')content.color.mode='own';content.instancePhase=0;content.mask=null;content.post=POST_SPECS.map(p=>p[3]);content.postFx=fxDefaults();content.contour=node().contour;content.invert=false;content.maskInvert=false;content.timing=node().timing;
  for(const path of Object.keys(content.tracks))if(path.startsWith('arrange.')||path.startsWith('arrangeExtra.')||path.startsWith('transform.')||path==='opacity'||(path.startsWith('post.')||path.startsWith('postFx.'))||path.startsWith('contour.'))delete content.tracks[path];
- const result=node('group');Object.assign(result,{id:n.id,name:n.name,transform:n.transform,opacity:n.opacity,blend:n.blend,seamless:n.seamless,seamMode:n.seamMode,seamBlend:n.seamBlend,timing:n.timing,animationEnabled:n.animationEnabled,mask:n.mask,maskInvert:n.maskInvert,post:n.post,postFx:n.postFx,contour:n.contour,invert:n.invert,color:n.color});result.tracks=Object.fromEntries(Object.entries(n.tracks).filter(([p])=>p.startsWith('transform.')||p==='opacity'||(p.startsWith('post.')||p.startsWith('postFx.'))||p.startsWith('contour.')));
+ const result=node('group');Object.assign(result,{id:n.id,name:n.name,transform:n.transform,boundary:n.boundary,opacity:n.opacity,blend:n.blend,seamMode:n.seamMode,seamBlend:n.seamBlend,timing:n.timing,animationEnabled:n.animationEnabled,mask:n.mask,maskInvert:n.maskInvert,post:n.post,postFx:n.postFx,contour:n.contour,invert:n.invert,color:n.color});result.tracks=Object.fromEntries(Object.entries(n.tracks).filter(([p])=>p.startsWith('transform.')||p==='boundary'||p==='opacity'||(p.startsWith('post.')||p.startsWith('postFx.'))||p.startsWith('contour.')));
  if(e.node.arrange[0]===14&&e.node.arrangeExtra.showSource)result.children=[cloneNode(n.children[0])];
  let size=0;walk(root,()=>size++);walk(n,()=>size--);walk(result,()=>size++);
  for(let i=0;i<points.length;i++){size++;for(const c of instanceChildren(e.node,i,points[i]))walk(c,()=>size++);if(size>LIMITS.nodes)throw Error('展开后超出256节点限制');}

@@ -1,3 +1,4 @@
+import {boundsSize} from './render-bounds.js';
 // Radii are measured in pixels at a 512-pixel canvas, so exports scale consistently.
 export const FX_SPECS=[
  ['模糊半径',0,32,0,.1],['Bloom 强度',0,3,0,.01],
@@ -22,8 +23,8 @@ void applyFx(out vec4 c,out float h){
 `;
 export function applyPostFx(renderer,source,node){
  if(!hasPostFx(node))return source;
- const fx=node.postFx??fxDefaults(),scale=Math.min(source.w,source.h)/(512*(1+2*(source.padding??0)));let out=source;
- const pass=(src,op,options={})=>{const next=renderer.target(src.w,src.h,false,src.aspect);renderer.pass(next,{source:src,op,repeat:node.seamless,...options});return next;};
+ const fx=node.postFx??fxDefaults(),[bw,bh]=boundsSize(source.bounds),scale=Math.min(source.w/bw,source.h/bh)/512;let out=source;
+ const pass=(src,op,options={})=>{const next=renderer.target(src.w,src.h,false,src.aspect);renderer.pass(next,{source:src,op,repeat:(node.boundary==='repeat'),...options});return next;};
  const blur=(src,radius)=>{const x=pass(src,10,{contourStep:[radius*scale/src.w,0]}),y=pass(x,10,{contourStep:[0,radius*scale/src.h]});renderer.release(x);return y;};
  const replace=next=>{renderer.release(out);out=next;};
  if(fx[0]>0)replace(blur(out,fx[0]));

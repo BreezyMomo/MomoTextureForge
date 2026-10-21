@@ -57,7 +57,7 @@ function vfxSamples(){
  ];
 }
 function uiSamples(){
- const tile=(name,content,count,offset=0)=>{const n=group(name);n.children=[content];n.seamless=true;n.arrange[0]=1;n.arrange[1]=n.arrange[2]=count;n.arrange[13]=n.arrange[14]=offset;return n;};
+ const tile=(name,content,count,offset=0)=>{const n=group(name);n.children=[content];n.boundary='repeat';n.arrange[0]=1;n.arrange[1]=n.arrange[2]=count;n.arrange[13]=n.arrange[14]=offset;return n;};
  const diamond=(name,tint,radius=.66)=>{const n=shape('Polygon',name,1,tint);n.params[0]=radius;n.params[2]=4;n.params[5]=45;return n;};
  const lattice=group('菱形格纹'),outline=diamond('细线菱形单元','#536881');outline.contour={mode:'outline',radius:.012};
  const bead=diamond('中心小菱形','#647a95',.06);lattice.children=[tile('菱形轮廓网格',outline,4),tile('中心点缀网格',bead,4)];
@@ -75,19 +75,40 @@ function uiSamples(){
   {root:dots,description:'用于信息面板和科技卡片：细点阵叠加稀疏十字，适合作为文字下方的背景。可调整点径与网格密度。'},
  ].map(sample=>({...sample,tags:['UI 底纹','无缝平铺','静态 PNG'],output:{mode:'color',alpha:false,background:'#1b2638'}}));
 }
+function overflowExamples(){
+ const compare=group('内容边界对照');
+ for(const [i,mode]of ['clip','visible'].entries()){
+  const g=group(i?'右侧：允许超出':'左侧：裁切内容');g.boundary=mode;Object.assign(g.transform,{x:i?.73:.25,width:.3,height:.3});
+  const disk=shape('Circle','边缘圆点',.72,'#f7c568');disk.params[0]=.95;disk.transform.x=1;disk.transform.y=.65;
+  const star=shape('Star','上方星光',.6,'#99e8f8');star.transform.x=.35;star.transform.y=1;star.params[0]=.9;
+  const dot=shape('Circle','中心圆点',.2,'#e2f6ff');dot.params[0]=.9;g.children=[disk,star,dot];compare.children.push(g);
+  for(const [j,ends]of [[-1,-1,1,-1],[1,-1,1,1],[1,1,-1,1],[-1,1,-1,-1]].entries()){
+   const edge=shape('LineSegment',(i?'右':'左')+'侧逻辑区域边线 '+(j+1),.3,'#6a8397');edge.transform.x=i?.73:.25;Object.assign(edge.params,{0:ends[0],1:ends[1],2:ends[2],3:ends[3],4:.012,5:0});compare.children.push(edge);
+  }
+ }
+ const grid=group('跨格光点排列');grid.boundary='visible';grid.transform.width=grid.transform.height=.72;grid.arrange[0]=1;grid.arrange[1]=grid.arrange[2]=3;grid.arrangeFit='stretch';
+ const rim=halo(.9,'#467d96'),light=shape('Star','伸到相邻格的星光',.52,'#b6f4ff');light.transform.x=.96;light.params[0]=.9;light.boundary='visible';light.postFx=[0,.65,20,.5,0,0,0];grid.children=[rim,light];
+ const seamless=group('无缝光晕接续');seamless.boundary='repeat';seamless.postFx=[0,.5,16,.5,0,0,0];const flare=shape('Star','跨边界星光',.42,'#b9f3ff');flare.transform.x=.94;flare.transform.y=.9;flare.boundary='visible';flare.params[0]=1.25;flare.postFx=[3,.4,20,.5,0,0,0];const spark=shape('Circle','中央光点',.09,'#ffc976');spark.transform.x=.47;spark.params[0]=.9;seamless.children=[flare,spark];
+ return [
+  {root:seamless,description:'子星光允许超出，外层组合选择无缝重复。右上角的星光及光晕会从左侧和下侧接回；开启平铺检查观察四边接续，切换边界处理比较三种模式。',tags:['无缝重复','子级超框','光晕回绕']},
+  {root:compare,description:'相同的内容：左侧裁切到节点区域，右侧允许超出。细方框标出逻辑区域；选左右组合 → 变换/排列 → 内容边界，切换后比较边缘星光与圆点。',tags:['裁切对照','图形／组合通用']},
+  {root:grid,description:'每格包含一个圆环和偏到右侧的星光，星光与泛光可跨格显示，三列三行的格距保持不变。切换外层组合的内容边界，比较最右侧星光。',tags:['跨格显示','光晕扩边','固定格距']}
+ ].map(sample=>({...sample,category:'arrangement',output:{mode:'color',alpha:false,background:'#182438'}}));
+}
+
 function arrangementExamples(){
  const border=group('圆角边框灯带');border.arrange[0]=13;border.arrange[3]=64;border.arrange[4]=.035;border.arrange[19]=1;border.arrangeExtra.width=.86;border.arrangeExtra.height=.62;border.arrangeExtra.corner=.1;
  const dash=shape('LineSegment','沿边框的短线',1,'#8cecff');Object.assign(dash.params,{0:0,1:-.7,2:0,3:.7,4:.14,5:1});border.children=[dash,shape('Circle','灯芯',.18,'#ffffff')];
  const outline=group('星形轮廓光点');outline.arrange[0]=14;outline.arrange[3]=72;outline.arrange[4]=.035;outline.arrangeExtra.showSource=true;
  const source=shape('Star','轮廓来源：星形',.82,'#293c55');source.params[0]=.82;source.params[2]=5;
  const marker=shape('Circle','沿轮廓的光点',1,'#8cecff');marker.params[0]=.65;outline.children=[source,marker];
- const woven=kind=>{const n=group(kind==='herringbone'?'人字镶嵌底纹':'篮式编织底纹');n.arrange[0]=15;n.arrange[1]=n.arrange[2]=2;n.arrangeExtra.weave=kind;n.seamless=true;n.instanceContent='cycle-child';n.children=['#42627e','#2d435c'].map((tint,i)=>{const brick=shape('RoundedRect','长砖 '+(i+1),1,tint);brick.params[0]=brick.params[5]=.94;brick.params[4]=.02;return brick;});return n;};
+ const woven=kind=>{const n=group(kind==='herringbone'?'人字镶嵌底纹':'篮式编织底纹');n.arrange[0]=15;n.arrange[1]=n.arrange[2]=2;n.arrangeExtra.weave=kind;n.boundary='repeat';n.instanceContent='cycle-child';n.children=['#42627e','#2d435c'].map((tint,i)=>{const brick=shape('RoundedRect','长砖 '+(i+1),1,tint);brick.params[0]=brick.params[5]=.94;brick.params[4]=.02;return brick;});return n;};
  const herringbone=woven('herringbone'),basket=woven('basket');
  const gradient=group('渐隐装饰点阵');gradient.arrange[0]=1;gradient.arrange[1]=gradient.arrange[2]=8;Object.assign(gradient.arrangeExtra,{gradient:'x',scaleFrom:.15,scaleTo:1.2,opacityFrom:.1,opacityTo:1});
  const dot=shape('Circle','渐变圆点',1,'#84d6ec');dot.params[0]=.5;const ring=shape('Ring','圆点细环',1,'#a4e9f5');ring.params[0]=.74;ring.params[1]=.025;ring.opacity=.3;gradient.children=[ring,dot];
  const flow=group('波浪流场线阵');flow.arrange[0]=1;flow.arrange[1]=8;flow.arrange[2]=4;Object.assign(flow.arrangeExtra,{flow:'wave',flowAmount:.08,flowFrequency:1,flowPhase:0,flowTurn:true});
  const line=shape('LineSegment','流动短线',1,'#63b8dd');Object.assign(line.params,{0:-.7,1:0,2:.7,3:0,4:.035,5:1});const tip=shape('Circle','流向标记',.12,'#d1f6ff');tip.transform.x=.84;flow.children=[line,tip];track(flow,'arrangeExtra.flowPhase',[[0,0],[1,360]]);
- const pipes=group('接口匹配管线');pipes.arrange[0]=16;pipes.arrange[1]=pipes.arrange[2]=6;pipes.arrange[11]=17;pipes.seamless=true;
+ const pipes=group('接口匹配管线');pipes.arrange[0]=16;pipes.arrange[1]=pipes.arrange[2]=6;pipes.arrange[11]=17;pipes.boundary='repeat';
  pipes.children=Array.from({length:16},(_,mask)=>{const tile=group(mask?'连接块 '+mask:'空白块');tile.tileEdges=mask;for(const [bit,x,y]of [[1,1,0],[2,0,1],[4,-1,0],[8,0,-1]])if(mask&bit){const segment=shape('LineSegment','接口线',1,'#72c9df');Object.assign(segment.params,{0:0,1:0,2:x,3:y,4:.055,5:1});tile.children.push(segment);}return tile;});
  const puzzle=shape('PuzzlePiece','单块拼图网格',.76,'#8cecff');puzzle.arrange[0]=1;puzzle.arrange[1]=puzzle.arrange[2]=4;puzzle.arrangeFit='stretch';puzzle.params[4]=.18;puzzle.params[6]=.009;
  const board=group('彩色拼图板');board.transform.width=board.transform.height=.8;
@@ -121,7 +142,7 @@ export function treeSamples(){
  const shieldMask=shape('Circle','圆形护盾遮罩',.96,'#ffffff');shieldMask.params[0]=.9;shieldMask.params[3]=.001;cells.mask=shieldMask;shield.children=[cells,halo(.96,'#b2f6ff')];
  const flame=group('火焰法阵'),flames=node('shape','Bonfire');flames.name='中心火焰';flames.transform.width=flames.transform.height=.7;
  const fireStars=turn(shape('Star','旋转火星',1,'#ffc175'),-180);radial(fireStars,10,.4,.075);flame.children=[flames,halo(.91,'#ff9c52'),halo(.78,'#ffd385'),fireStars];
- return [...vfxSamples().map(s=>({...s,category:'vfx'})),...uiSamples().map(s=>({...s,category:'ui'})),...arrangementExamples(),...vfxPresets(),
+ return [...vfxSamples().map(s=>({...s,category:'vfx'})),...uiSamples().map(s=>({...s,category:'ui'})),...arrangementExamples(),...overflowExamples(),...vfxPresets(),
   {root:summon,description:'同心脉冲圆环、旋转星阵与逐渐淡出的冲击波。',tags:['嵌套组合','关键帧']},
   {root:radar,description:'三层同心环搭配绕中心运动的目标点，可拆解环形排列与旋转。',tags:['环形排列','旋转动画']},
   {root:flower,description:'椭圆花瓣沿圆周朝外排列，叠加花蕊和外框制作徽章。',tags:['环形朝向','分层配色']},

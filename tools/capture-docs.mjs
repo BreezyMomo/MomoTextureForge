@@ -29,13 +29,17 @@ try{
  browser=await chromium.launch({channel:process.env.DOCS_BROWSER??'msedge',headless:true});
  const context=await browser.newContext({viewport:{width:1600,height:1050},deviceScaleFactor:1,locale:'zh-CN',colorScheme:'dark'});
  let page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
- const ready=async()=>{await page.locator('#render-status').waitFor();await page.waitForFunction(()=>{const s=document.querySelector('#render-status');return !s||!s.textContent.includes('加载');});};
+ const ready=async()=>{await page.locator('#render-status').waitFor();await page.waitForFunction(()=>{const s=document.querySelector('#render-status');return !s||!s.textContent.includes('加载');},null,{timeout:120000});};
  const load=async p=>{await page.goto(url+'#tree='+Buffer.from(JSON.stringify(p)).toString('base64'));await page.reload();await ready();};
  const shot=async(name,locator=null,clip=null)=>{await page.mouse.move(3,3);await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));if(await page.locator('#preview-error').isVisible().catch(()=>false))throw Error(await page.locator('#preview-error').innerText());const dialog=page.locator('dialog[open]').last(),modal=page.locator('#global-panel > section');const target=locator??(await dialog.isVisible()?dialog:await modal.isVisible()?modal:null);const clear=await markScreenshot(page,name,clip??(target?await target.boundingBox():null));try{await (target??page).screenshot({path:resolve(output,name+'.png'),animations:'disabled',caret:'hide',...(clip?{clip}:{})});}finally{await clear();}console.log('captured '+name);};
  const run=async(name,fn)=>{if(!only.size||only.has(name)){console.log('section '+name);await fn();}};
  const changeNumber=async(label,value,scope=page)=>{const input=scope.getByRole('spinbutton',{name:label,exact:true});await input.fill(String(value));await input.press('Tab');};
  const library=async()=>{await page.locator('#open-graphics-library').click();await page.getByPlaceholder('搜索名称、分类或标签').waitFor();};
  const editorReady=async()=>{const d=page.locator('dialog').last();await d.getByRole('status').filter({hasText:'预览成功'}).first().waitFor();return d;};
+ await run('overflow',async()=>{
+  await page.setViewportSize({width:1600,height:1300});const p=project();p.name='内容边界对照';p.root.children=[treeSamples().find(s=>s.name===p.name).root];await load(p);
+  await page.getByRole('button',{name:'选择 右侧：允许超出',exact:true}).click();await page.getByRole('button',{name:'变换/排列',exact:true}).click();await page.locator('#show-guides').check();await page.getByRole('combobox',{name:'边界处理',exact:true}).scrollIntoViewIfNeeded();await shot('content-overflow');const repeat=project();repeat.name='无缝光晕接续';repeat.root.children=[treeSamples().find(s=>s.name===repeat.name).root];await load(repeat);await page.getByRole('button',{name:'选择 无缝光晕接续',exact:true}).click();await page.getByRole('button',{name:'变换/排列',exact:true}).click();await page.locator('#tile-preview').click();await page.locator('#tile-grid').selectOption('3');await page.getByRole('combobox',{name:'边界处理',exact:true}).scrollIntoViewIfNeeded();await shot('seamless-overflow');await page.setViewportSize({width:1600,height:1050});
+ });
  await run('puzzle',async()=>{
   await page.setViewportSize({width:1600,height:1450});const p=project();p.name='单块拼图网格';p.root.children=[treeSamples().find(s=>s.name===p.name).root];await load(p);
   await page.getByRole('button',{name:'选择 单块拼图网格',exact:true}).click();await page.getByRole('button',{name:'图形',exact:true}).click();await shot('puzzle-piece');

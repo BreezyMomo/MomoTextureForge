@@ -5,6 +5,8 @@ const css=(selector,label)=>({selector,label});
 const role=(role,name,label=name)=>({role,name,label});
 const field=(name,label=name)=>({field:name,label});
 export const annotations={
+ 'seamless-overflow':[field('边界处理','外层组合选择无缝重复'),role('button','平铺检查','检查四边及四角接续'),field('平铺检查布局','选择2×2、3×3或4×4'),role('button','选择 跨边界星光','子级可单独允许超出')].map(s=>({...s,numberOnly:true})),
+ 'content-overflow':[role('button','选择 右侧：允许超出','选中允许超出的组合'),field('边界处理','切换三种边界模式'),css('#canvas-controls .canvas-region.active','蓝框保留逻辑区域')].map(s=>({...s,numberOnly:true})),
  'puzzle-piece':[field('接口样式','选择四种接口造型'),field('接口圆润度','调节接口弯曲形状'),field('上边','单独设置四边凹凸')].map(s=>({...s,numberOnly:true})),
  'puzzle-corners':[field('左上圆角','左上角：0为直角'),field('右上圆角','右上角圆角大小'),field('右下圆角','右下角圆角大小'),field('左下圆角','左下角圆角大小')].map(s=>({...s,numberOnly:true})),
  'puzzle-grid':[field('排列方式','使用现成网格排列'),field('网格列数','设置列数'),field('网格行数','设置行数')].map(s=>({...s,numberOnly:true})),

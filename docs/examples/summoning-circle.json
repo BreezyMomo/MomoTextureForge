@@ -37,9 +37,9 @@
       "fit": "stretch",
       "lockAspect": false
     },
+    "boundary": "clip",
     "opacity": 1,
     "blend": "over",
-    "seamless": false,
     "seamMode": 0,
     "seamBlend": 0.2,
     "uv": [
@@ -233,9 +233,9 @@
           "fit": "stretch",
           "lockAspect": false
         },
+        "boundary": "clip",
         "opacity": 1,
         "blend": "over",
-        "seamless": false,
         "seamMode": 0,
         "seamBlend": 0.2,
         "uv": [
@@ -429,9 +429,9 @@
               "fit": "stretch",
               "lockAspect": false
             },
+            "boundary": "clip",
             "opacity": 1,
             "blend": "over",
-            "seamless": false,
             "seamMode": 0,
             "seamBlend": 0.2,
             "uv": [
@@ -627,9 +627,9 @@
               "fit": "stretch",
               "lockAspect": false
             },
+            "boundary": "clip",
             "opacity": 1,
             "blend": "over",
-            "seamless": false,
             "seamMode": 0,
             "seamBlend": 0.2,
             "uv": [
@@ -825,9 +825,9 @@
               "fit": "stretch",
               "lockAspect": false
             },
+            "boundary": "clip",
             "opacity": 1,
             "blend": "over",
-            "seamless": false,
             "seamMode": 0,
             "seamBlend": 0.2,
             "uv": [
@@ -1023,9 +1023,9 @@
               "fit": "stretch",
               "lockAspect": false
             },
+            "boundary": "clip",
             "opacity": 1,
             "blend": "over",
-            "seamless": false,
             "seamMode": 0,
             "seamBlend": 0.2,
             "uv": [
