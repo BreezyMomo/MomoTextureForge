@@ -4,6 +4,8 @@ import {resolve,extname,sep} from 'node:path';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {sanitizeTree} from '../web/tree-model.js';
+import {treeSamples} from '../web/tree-samples.js';
+const sampleCount=treeSamples().length;
 
 const standalone=process.argv.includes('--standalone'),root=resolve('web');
 const server=http.createServer(async(req,res)=>{
@@ -21,8 +23,8 @@ try{
  page.on('pageerror',e=>errors.push(e.message));
  const origin='http://127.0.0.1:'+server.address().port;
  await page.goto(origin+(standalone?'/?view=examples':'/examples.html'));
- await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('22 种组合示例已生成'),null,{timeout:120000});
- assert.equal(await page.locator('#samples article').count(),22);
+ await page.waitForFunction(count=>document.querySelector('#status')?.textContent.includes(count+' 种组合示例已生成'),sampleCount,{timeout:180000});
+ assert.equal(await page.locator('#samples article').count(),sampleCount);
  const links=await page.locator('#samples article a').evaluateAll(links=>links.map(a=>a.href));
  const names=new Set();
  for(const href of links){
@@ -41,7 +43,7 @@ try{
    assert.ok(await editor.locator('[role="treeitem"]').count()>1);
   }finally{await editor.close();}
  }
- assert.equal(names.size,22);assert.deepEqual(errors,[]);
+ assert.equal(names.size,sampleCount);assert.deepEqual(errors,[]);
  await page.locator('#samples img').evaluateAll(imgs=>Promise.all(imgs.map(img=>img.decode())));
  const shieldPixels=await page.locator('img[alt="蜂巢护盾"]').evaluate(img=>{
   const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;

@@ -1,4 +1,5 @@
 import {node,project,cloneNode} from './tree-model.js';
+import {vfxPresets} from './vfx-presets.js';
 function buildSamples(){
  const pulse=node('group');pulse.name='脉冲环';const ring=node('shape','Ring');ring.tracks['params.0']={mode:'multiply',ease:'smooth',keys:[[0,.6],[.5,1],[1,.6]]};pulse.children=[ring];
  const seal=node('group');seal.name='多圈法阵';const rings=node('group');rings.name='同心脉冲环组';rings.children=[.45,.7,1].map((size,i)=>{const r=cloneNode(pulse);r.name=['内圈','中圈','外圈'][i];r.transform.width=size;r.transform.height=size;r.timing.offset=i*.12;return r;});seal.children.push(rings);
@@ -112,7 +113,7 @@ export function treeSamples(){
  const shieldMask=shape('Circle','圆形护盾遮罩',.96,'#ffffff');shieldMask.params[0]=.9;shieldMask.params[3]=.001;cells.mask=shieldMask;shield.children=[cells,halo(.96,'#b2f6ff')];
  const flame=group('火焰法阵'),flames=node('shape','Bonfire');flames.name='中心火焰';flames.transform.width=flames.transform.height=.7;
  const fireStars=turn(shape('Star','旋转火星',1,'#ffc175'),-180);radial(fireStars,10,.4,.075);flame.children=[flames,halo(.91,'#ff9c52'),halo(.78,'#ffd385'),fireStars];
- return [...vfxSamples().map(s=>({...s,category:'vfx'})),...uiSamples().map(s=>({...s,category:'ui'})),...arrangementExamples(),
+ return [...vfxSamples().map(s=>({...s,category:'vfx'})),...uiSamples().map(s=>({...s,category:'ui'})),...arrangementExamples(),...vfxPresets(),
   {root:summon,description:'同心脉冲圆环、旋转星阵与逐渐淡出的冲击波。',tags:['嵌套组合','关键帧']},
   {root:radar,description:'三层同心环搭配绕中心运动的目标点，可拆解环形排列与旋转。',tags:['环形排列','旋转动画']},
   {root:flower,description:'椭圆花瓣沿圆周朝外排列，叠加花蕊和外框制作徽章。',tags:['环形朝向','分层配色']},

@@ -41,6 +41,6 @@ try{
  await modes.selectOption('15');await page.getByRole('combobox',{name:'编排样式',exact:true}).selectOption('basket');assert.equal((await saved()).arrangeExtra.weave,'basket');
  await page.evaluate(()=>history.replaceState(null,'',location.pathname));await page.reload();await page.locator('[role=treeitem]').first().click();await page.getByRole('button',{name:'变换/排列',exact:true}).click();assert.equal(await page.getByRole('combobox',{name:'编排样式',exact:true}).inputValue(),'basket');
  await page.getByRole('combobox',{name:'排列方式',exact:true}).selectOption('16');await page.getByText('图块接口配置',{exact:true}).click();assert.ok(await page.getByRole('combobox',{name:/接口$/}).count()>=2);
- await page.goto(origin+'/examples.html');await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('22 种'),null,{timeout:120000});await page.getByRole('combobox',{name:'示例分类',exact:true}).selectOption('arrangement');assert.equal(await page.locator('#samples article:visible').count(),7);
+ await page.goto(origin+'/examples.html');await page.waitForFunction(count=>document.querySelector('#status')?.textContent.includes(count+' 种'),treeSamples().length,{timeout:180000});await page.getByRole('combobox',{name:'示例分类',exact:true}).selectOption('arrangement');assert.equal(await page.locator('#samples article:visible').count(),7);
  assert.deepEqual(errors,[]);console.log({uiPersistence:true,sevenExamples:true,errors});
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

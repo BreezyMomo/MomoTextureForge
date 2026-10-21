@@ -6,6 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {resolve,dirname} from 'node:path';
 import {chromium} from 'playwright';
 import {project,node,walk} from '../web/tree-model.js';
+import {treeSamples} from '../web/tree-samples.js';
 import {markScreenshot,syncScreenshotCaptions} from './docs-annotations.mjs';
 import {GENERATOR_EXAMPLE} from '../web/generator-authoring.js';
 
@@ -44,8 +45,8 @@ try{
   }
  });
  await run('combinations',async()=>{
-  await page.setViewportSize({width:1400,height:5000});await page.goto(url+'examples.html');
-  await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('22 种组合示例已生成'),null,{timeout:120000});
+  await page.setViewportSize({width:1400,height:7000});await page.goto(url+'examples.html');
+  await page.waitForFunction(count=>document.querySelector('#status')?.textContent.includes(count+' 种组合示例已生成'),treeSamples().length,{timeout:180000});
   await page.locator('#samples img').evaluateAll(images=>Promise.all(images.map(image=>image.decode())));
   await shot('composition-examples');await page.getByRole('combobox',{name:'示例分类',exact:true}).selectOption('arrangement');await page.setViewportSize({width:1400,height:2200});await shot('arrangement-examples');await page.setViewportSize({width:1600,height:1050});
  });
