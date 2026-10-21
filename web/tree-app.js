@@ -33,9 +33,11 @@ import {EXTRA_LAYOUTS,EXTRA_SPECS} from './tree-arrangement.js';
 import {download} from './encoders.js';
 import {planPSD} from './tree-psd.js';
 import {planContourPSD} from './tree-psd-contours.js';
+import {installEditorDocking} from './dock-workspace.js';
 const $=id=>document.getElementById(id),el=(tag,props={},children=[])=>{const e=document.createElement(tag);for(const [k,v]of Object.entries(props)){if(k==='text')e.textContent=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else if(k==='value')e.value=v;else if(k==='checked')e.checked=v;else e.setAttribute(k,v);}for(const c of children)e.append(c);return e;};
 const css=el('link',{rel:'stylesheet',href:'tree.css'});if(!document.querySelector('style[data-tree-style]'))document.head.append(css);
 if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'graphics-workspace.css'}));
+if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'dock-workspace.css'}));
 document.body.className='tree-editor';document.body.innerHTML=`
 <header class="tree-header">
 <div class="tree-brand"><strong>MOMO <span>TEXTURE FORGE</span></strong><input id="project-name" aria-label="画布名称" title="画布名称"></div>
@@ -351,7 +353,7 @@ function inspector(){const n=current();inspectorVariant=inspectorVariantKey(anim
 }
 
 function insert(n){edit(()=>{state.root.children.push(n);selected=n.id;});}
-const libraryThumbs=patternThumbnails(document.querySelector('.tree-left'));
+const libraryThumbs=patternThumbnails(null);
 const libraryOpen=new Set();
 function rememberLibraryGroup(details){const key='closed:'+details.dataset.category;if(details.open)libraryOpen.delete(key);else libraryOpen.add(key);}
 function syncLibraryToggle(){const groups=[...$('shape-library').children].filter(e=>e.tagName==='DETAILS');$('collapse-library').textContent=groups.some(e=>e.open)?'收起全部':'展开全部';$('collapse-library').disabled=!groups.length;}
@@ -587,10 +589,11 @@ for(const id of ['grab-uv','pan-preview'])$(id).addEventListener('click',()=>can
 requestRender();
 
 // Native disclosures retain keyboard navigation; dismiss before opening dialogs.
+installEditorDocking({onChange:()=>{sizePreview();requestRender();},onMessage:notify});
 const headerDropdowns=[...document.querySelectorAll('.header-dropdown')];
 document.addEventListener('click',event=>{
  for(const menu of headerDropdowns){
-  if(!menu.contains(event.target)||event.target.closest('button'))menu.open=false;
+  if(!menu.contains(event.target)||(event.target.closest('button')&&!menu.classList.contains('dock-layout-menu')))menu.open=false;
  }
 });
 document.addEventListener('keydown',event=>{

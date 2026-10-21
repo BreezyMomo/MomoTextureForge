@@ -24,7 +24,7 @@ description: Guide users to create visual effects in Momo Texture Forge and to s
 
 ## 按任务查阅
 
-- [界面与资源管理](references/workspace.md)：图库、图形列表、实例、版本、项目保存、画布、多选、组合、图形参数与二维/三维贴图预览。
+- [界面与资源管理](references/workspace.md)：面板拖动停靠/拆分/标签/悬浮与布局保存、图库、图形列表、实例、版本、项目保存、画布、多选、组合、图形参数与二维/三维贴图预览。
 - [远程图库使用与管理](references/remote-libraries.md)：添加多个订阅、下载与离线使用、同ID卡片、更新/删除范围、纯静态本地管理器、Git/Pages/CDN发布与报错处理。
 - [排列与合成](references/layout-compositing.md)：区域与UV、边框/透明轮廓/人字与编织/接口拼接、渐变/流场、随机/取模子节点混排、防堆叠、铺满区域、实例比例、展开编辑、无缝重复、颜色和遮罩。
 - [动画与导出](references/animation-export.md)：累计秒数与0～1进度、录制/关键帧/曲线、相位、格式和尺寸预算。

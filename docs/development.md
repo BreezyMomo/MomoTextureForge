@@ -63,6 +63,8 @@ node tests/pages-browser-check.mjs
 
 按改动范围运行浏览器检查；Node 单元测试不等于已检查实际 WebGL 画面。
 
+面板布局回归：`node tests/dock-workspace-browser-check.mjs`；构建后加 `--standalone` 检查单文件版。覆盖实际拖动、标签合并、悬浮移动/缩放、保存与刷新恢复、三维上下文和 PNG 导出。布局模型在 `web/dock-layout.js`，DOM 控制器与样式在 `web/dock-workspace.js`、`web/dock-workspace.css`；只移动原有控件，布局本地存储与项目数据分开。
+
 图库卡片使用 `web/builtin-thumbnails.js` 中预先生成的缩略图。修改内置图形的视觉公式后，先更新对应缩略图，再构建静态网站。例如更新“流动水纹”：
 
 ```sh
@@ -87,6 +89,7 @@ node tools/capture-docs.mjs
 ```sh
 node tools/capture-docs.mjs workspace library combinations
 node tools/capture-docs.mjs resources animation normal export remote-ai manager
+node tools/capture-docs.mjs docking
 ```
 
 | 组 | 画面 |
@@ -94,6 +97,7 @@ node tools/capture-docs.mjs resources animation normal export remote-ai manager
 | examples | 通过真实“打开项目”入口检查四个示例 |
 | combinations | 24 种组合/素材预设总览、七种新增排列的分类截图与编辑入口 |
 | workspace | 总览、排列、合成和文件菜单 |
+| docking | 面板标签、网页内悬浮与布局保存菜单 |
 | library | 图库、生成器参数、图形列表 |
 | resources | 图片原图/去背景、公式、生成器 JSON、导入文件 |
 | animation | 实际录制的关键帧与曲线 |

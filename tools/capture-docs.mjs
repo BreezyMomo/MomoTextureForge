@@ -71,9 +71,16 @@ try{
   await d.getByRole('tab',{name:'导入文件',exact:true}).click();await shot('resource-import');await d.locator('header .graphics-close').click();
  });
  await run('animation',async()=>{
-  await load(animated);await page.getByRole('button',{name:'选择 呼吸星形',exact:true}).click();await page.getByRole('button',{name:'变换/排列',exact:true}).click();await page.locator('#animation-panel > summary').click();
+  await page.setViewportSize({width:1600,height:1350});await load(animated);await page.getByRole('button',{name:'选择 呼吸星形',exact:true}).click();await page.getByRole('button',{name:'变换/排列',exact:true}).click();await page.locator('#workspace-layout-menu > summary').click();await page.getByRole('button',{name:'动画布局',exact:true}).click();
+  const timelineSplit=page.locator('.dock-split-y').filter({has:page.locator('[data-panel-tab="timeline"]')}).locator(':scope > .dock-splitter'),splitBox=await timelineSplit.boundingBox();await page.mouse.move(splitBox.x+splitBox.width/2,splitBox.y+3);await page.mouse.down();await page.mouse.move(splitBox.x+splitBox.width/2,550,{steps:10});await page.mouse.up();
   await page.getByRole('button',{name:'参数模式 ● 录制',exact:true}).click();await changeNumber('区域宽',.35);await page.getByRole('slider',{name:'当前范围滑动进度',exact:true}).fill('0.5');await changeNumber('区域宽',.8);await page.getByRole('slider',{name:'当前范围滑动进度',exact:true}).fill('1');await changeNumber('区域宽',.35);await page.getByRole('button',{name:'参数模式 ● 录制',exact:true}).click();await shot('animation-keyframes');
-  await page.locator('#node-animation-editor').getByRole('button',{name:'曲线',exact:true}).click();await shot('animation-curves');
+  await page.locator('#node-animation-editor').getByRole('button',{name:'曲线',exact:true}).click();await shot('animation-curves');await page.locator('#workspace-layout-menu > summary').click();await page.getByRole('button',{name:'恢复默认布局',exact:true}).click();await page.setViewportSize({width:1600,height:1050});
+ });
+ await run('docking',async()=>{
+  await load(spell);await page.getByRole('button',{name:'选择 环形星光',exact:true}).click();await shot('workspace-docking');
+  await page.getByRole('button',{name:'悬浮参数面板',exact:true}).click();await shot('workspace-floating');
+  await page.locator('#workspace-layout-menu > summary').click();await page.getByRole('textbox',{name:'布局名称',exact:true}).fill('我的特效布局');await shot('workspace-layout-menu');
+  await page.getByRole('button',{name:'恢复默认布局',exact:true}).click();
  });
  await run('normal',async()=>{
   await load(water);await page.getByRole('combobox',{name:'预览贴图类型',exact:true}).selectOption('height');await shot('height-preview');

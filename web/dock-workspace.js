@@ -1,0 +1,111 @@
+import {PANEL_IDS,PANEL_TITLES,LAYOUT_KEY,layoutPreset,sanitizeLayoutSettings,panelStack,findLayoutNode,closePanel,activatePanel,dockPanel,floatPanel,showPanel} from './dock-layout.js';
+
+const element=(tag,className,text)=>{const e=document.createElement(tag);if(className)e.className=className;if(text)e.textContent=text;return e;};
+const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+
+// Move the existing elements: controls, canvas contexts, selection and animation retain their owners.
+export function createDockWorkspace({host,menuHost,panels,onChange=()=>{},onMessage=()=>{},onVisibility=()=>{}}){
+ let settings,drag=null,overlay=null,ghost=null,target=null,restoring=false;
+ try{const raw=localStorage.getItem(LAYOUT_KEY);settings=sanitizeLayoutSettings(raw&&raw.length<100000?JSON.parse(raw):null);}catch{settings=sanitizeLayoutSettings(null);onMessage('布局设置无法读取，已恢复默认布局');}
+ let layout=settings.current;
+ const parking=element('div');parking.hidden=true;parking.id='dock-panel-parking';host.after(parking);host.classList.add('dock-workspace');
+ const shells=new Map();for(const id of PANEL_IDS){
+  const body=element('div','dock-panel-body');body.id='dock-content-'+id;body.setAttribute('role','tabpanel');body.setAttribute('aria-label',PANEL_TITLES[id]);body.append(panels[id]);shells.set(id,body);
+ }
+ const menu=element('details','header-dropdown dock-layout-menu');menu.id='workspace-layout-menu';menu.append(element('summary','', '布局'));
+ const menuBody=element('div','header-dropdown-panel');menu.append(menuBody);menuHost.append(menu);
+ const tip=element('p','dock-menu-tip','拖动面板标签停靠；Alt 拖动可悬浮。');menuBody.append(tip);
+ const button=(text,fn)=>{const b=element('button','',text);b.type='button';b.onclick=fn;return b;};
+ for(const [id,title]of [['default','恢复默认布局'],['animation','动画布局'],['focus','专注画布']])menuBody.append(button(title,()=>{apply(layoutPreset(id));menu.open=false;}));
+ menuBody.append(element('hr'));const visibility=element('div','dock-panel-toggles');menuBody.append(visibility);
+ const checks=new Map();for(const id of PANEL_IDS){const label=element('label'),input=element('input');input.type='checkbox';input.setAttribute('aria-label','显示'+PANEL_TITLES[id]);input.onchange=()=>input.checked?show(id):apply(closePanel(layout,id));label.append(input,document.createTextNode(PANEL_TITLES[id]));visibility.append(label);checks.set(id,input);}
+ menuBody.append(element('hr'));
+ const saveForm=element('form','dock-save-form'),name=element('input');name.placeholder='例如：我的双栏布局';name.maxLength=32;name.setAttribute('aria-label','布局名称');const save=element('button','','保存当前布局');save.type='submit';saveForm.append(name,save);menuBody.append(saveForm);
+ const named=element('select');named.setAttribute('aria-label','已保存布局');menuBody.append(named);
+ const actions=element('div','dock-saved-actions'),load=button('应用布局',()=>{const saved=settings.named.find(s=>s.name===named.value);if(saved)apply(structuredClone(saved.layout));}),remove=button('删除已保存布局',()=>{settings.named=settings.named.filter(s=>s.name!==named.value);persist();updateMenu();});actions.append(load,remove);menuBody.append(actions);
+ const status=element('p','dock-menu-tip','布局自动保存在当前浏览器，与画布项目分开。');status.setAttribute('role','status');menuBody.append(status);
+ saveForm.onsubmit=e=>{e.preventDefault();const title=name.value.trim();if(!title){status.textContent='请填写布局名称';name.focus();return;}const existing=settings.named.find(s=>s.name===title);if(!existing&&settings.named.length>=12){status.textContent='最多保存12套布局，请先删除不需要的布局';return;}const item={name:title,layout:structuredClone(layout)};if(existing)settings.named[settings.named.indexOf(existing)]=item;else settings.named.push(item);const saved=persist();updateMenu(title);if(saved)status.textContent='已保存布局：'+title;};
+ function updateMenu(selected=named.value){for(const id of PANEL_IDS)checks.get(id).checked=!!panelStack(layout,id);named.replaceChildren();if(!settings.named.length){const o=element('option','','尚未保存布局');o.value='';named.append(o);}else for(const item of settings.named){const o=element('option','',item.name);o.value=item.name;named.append(o);}if(settings.named.some(n=>n.name===selected))named.value=selected;load.disabled=remove.disabled=!settings.named.length;}
+ function persist(){settings.current=layout;try{localStorage.setItem(LAYOUT_KEY,JSON.stringify(settings));return true;}catch{status.textContent='浏览器未能保存布局；当前布局仍可使用';return false;}}
+ function apply(next,{focus=null}={}){layout=next;render();persist();if(focus)host.querySelector(`[data-panel-tab="${focus}"]`)?.focus();}
+ function show(id){apply(showPanel(layout,id),{focus:id});}
+ function active(id){const stack=panelStack(layout,id);return stack?.active===id;}
+ function render(){
+  restoring=true;for(const body of shells.values()){body.hidden=true;parking.append(body);}host.replaceChildren();
+  if(layout.root)host.append(renderTree(layout.root));else{const empty=element('div','dock-empty','所有停靠面板已关闭，可从顶部“布局”菜单重新打开。');empty.setAttribute('role','status');host.append(empty);}
+  for(const f of layout.floats){
+   const win=element('div','dock-floating');win.dataset.floatId=f.id;placeFloat(win,f);win.append(renderTree(f.root));
+   const move=element('button','dock-window-move','⠿');move.type='button';move.setAttribute('aria-label','移动悬浮窗口');move.title='拖动移动悬浮窗口';move.onpointerdown=e=>windowGesture(e,win,f,'move');win.append(move);
+   const size=element('button','dock-window-resize','◢');size.type='button';size.setAttribute('aria-label','调整悬浮窗口大小');size.onpointerdown=e=>windowGesture(e,win,f,'resize');win.append(size);
+   win.addEventListener('pointerdown',()=>{const i=layout.floats.indexOf(f);if(i!==layout.floats.length-1){layout.floats.splice(i,1);layout.floats.push(f);for(const w of host.querySelectorAll('.dock-floating'))w.style.zIndex=String(20+layout.floats.findIndex(x=>x.id===w.dataset.floatId));persist();}},{capture:true});host.append(win);
+  }
+  for(const id of PANEL_IDS)onVisibility(id,active(id));restoring=false;updateMenu();onChange();
+ }
+ function renderTree(n){
+  if(n.kind==='split'){
+   const container=element('div','dock-split dock-split-'+n.axis);container.dataset.splitId=n.id;
+   const first=element('div','dock-branch'),second=element('div','dock-branch');first.style.flex=`0 0 calc(${n.ratio*100}% - 3px)`;second.style.flex='1 1 0';first.append(renderTree(n.first));second.append(renderTree(n.second));
+   const handle=element('div','dock-splitter');handle.tabIndex=0;handle.setAttribute('role','separator');handle.setAttribute('aria-label',n.axis==='x'?'调整面板宽度':'调整面板高度');handle.setAttribute('aria-orientation',n.axis==='x'?'vertical':'horizontal');handle.setAttribute('aria-valuemin','12');handle.setAttribute('aria-valuemax','88');handle.setAttribute('aria-valuenow',String(Math.round(n.ratio*100)));
+   handle.onpointerdown=e=>splitGesture(e,container,first,n);handle.onkeydown=e=>{const keys=n.axis==='x'?['ArrowLeft','ArrowRight']:['ArrowUp','ArrowDown'];if(![...keys,'Home','End'].includes(e.key))return;e.preventDefault();e.stopPropagation();n.ratio=e.key==='Home'?.12:e.key==='End'?.88:clamp(n.ratio+(e.key===keys[0]?-.02:.02),.12,.88);apply(layout);host.querySelector(`[data-split-id="${n.id}"] > .dock-splitter`)?.focus();};container.append(first,handle,second);return container;
+  }
+  const container=element('section','dock-stack');container.dataset.stackId=n.id;
+  const head=element('div','dock-stack-header'),tabs=element('div','dock-tabs');tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','面板标签');
+  for(const id of n.panels){const tab=element('button','dock-tab',PANEL_TITLES[id]);tab.type='button';tab.dataset.panelTab=id;tab.setAttribute('role','tab');tab.setAttribute('aria-selected',String(n.active===id));tab.setAttribute('aria-controls','dock-content-'+id);tab.title='拖动停靠；Alt 拖动悬浮';tab.onclick=()=>{if(!drag)apply(activatePanel(layout,id),{focus:id});};tab.onpointerdown=e=>panelGesture(e,id);tab.onkeydown=e=>{if(!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();e.stopPropagation();const index=(n.panels.indexOf(id)+(e.key==='ArrowLeft'?-1:1)+n.panels.length)%n.panels.length;const next=n.panels[index];apply(activatePanel(layout,next),{focus:next});};tabs.append(tab);}
+  head.append(tabs);const actions=element('div','dock-stack-actions');const float=button('↗',()=>apply(floatPanel(layout,n.active)));float.setAttribute('aria-label','悬浮'+PANEL_TITLES[n.active]);float.title='将当前面板悬浮在网页内';const close=button('×',()=>apply(closePanel(layout,n.active)));close.setAttribute('aria-label','关闭'+PANEL_TITLES[n.active]);close.title='关闭面板，可从布局菜单重新打开';actions.append(float,close);head.append(actions);container.append(head);
+  for(const id of n.panels){const body=shells.get(id);body.hidden=n.active!==id;container.append(body);}return container;
+ }
+ function placeFloat(win,f){win.style.left=f.x*100+'%';win.style.top=f.y*100+'%';win.style.width=f.w*100+'%';win.style.height=f.h*100+'%';win.style.zIndex=String(20+layout.floats.indexOf(f));}
+ function listenGesture(e,move,end,cancel){
+  const controller=new AbortController(),opts={signal:controller.signal,capture:true};
+  const cleanup=()=>{controller.abort();document.body.classList.remove('dock-is-dragging');};
+  document.addEventListener('pointermove',move,opts);document.addEventListener('pointerup',event=>{if(event.pointerId!==e.pointerId)return;cleanup();end(event);},opts);
+  document.addEventListener('pointercancel',event=>{if(event.pointerId!==e.pointerId)return;cleanup();cancel();},opts);
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();cleanup();cancel();}},opts);
+ }
+ function splitGesture(e,container,first,n){
+  if(e.button!==0)return;e.preventDefault();e.stopPropagation();const rect=container.getBoundingClientRect(),before=n.ratio;document.body.classList.add('dock-is-dragging');
+  listenGesture(e,event=>{if(event.pointerId!==e.pointerId)return;const size=n.axis==='x'?rect.width:rect.height,pos=n.axis==='x'?event.clientX-rect.left:event.clientY-rect.top;n.ratio=clamp(pos/Math.max(1,size),.12,.88);first.style.flexBasis=`calc(${n.ratio*100}% - 3px)`;onChange();},()=>apply(layout),()=>{n.ratio=before;render();});
+ }
+ function windowGesture(e,win,f,kind){
+  if(e.button!==0)return;e.preventDefault();e.stopPropagation();const rect=host.getBoundingClientRect(),before={x:f.x,y:f.y,w:f.w,h:f.h};document.body.classList.add('dock-is-dragging');
+  listenGesture(e,event=>{if(event.pointerId!==e.pointerId)return;const dx=(event.clientX-e.clientX)/Math.max(1,rect.width),dy=(event.clientY-e.clientY)/Math.max(1,rect.height);
+   if(kind==='move'){f.x=clamp(before.x+dx,0,1-f.w);f.y=clamp(before.y+dy,0,1-f.h);}else{f.w=clamp(before.w+dx,.2,1-f.x);f.h=clamp(before.h+dy,.15,1-f.y);}placeFloat(win,f);onChange();
+  },()=>{persist();onChange();},()=>{Object.assign(f,before);placeFloat(win,f);onChange();});
+ }
+ function dropTarget(x,y,forceFloat){
+  if(forceFloat)return null;const rect=host.getBoundingClientRect();if(x<rect.left||x>rect.right||y<rect.top||y>rect.bottom)return null;
+  const outer=22;if(x<rect.left+outer)return {id:'root',edge:'left',rect};if(x>rect.right-outer)return {id:'root',edge:'right',rect};if(y<rect.top+outer)return {id:'root',edge:'top',rect};if(y>rect.bottom-outer)return {id:'root',edge:'bottom',rect};
+  const hit=document.elementFromPoint(x,y)?.closest('.dock-stack');if(!hit||!host.contains(hit))return null;const r=hit.getBoundingClientRect(),dx=(x-r.left)/r.width,dy=(y-r.top)/r.height;
+  const edge=dx<.23?'left':dx>.77?'right':dy<.23?'top':dy>.77?'bottom':'center';return {id:hit.dataset.stackId,edge,rect:r};
+ }
+ function drawDrop(){
+  overlay?.remove();overlay=null;if(!target)return;const root=host.getBoundingClientRect(),r=target.rect;overlay=element('div','dock-drop-preview');overlay.textContent=target.edge==='center'?'合并为标签':({left:'停靠左侧',right:'停靠右侧',top:'停靠上方',bottom:'停靠下方'})[target.edge];
+  const width=['left','right'].includes(target.edge)?r.width*.3:r.width,height=['top','bottom'].includes(target.edge)?r.height*.3:r.height;
+  Object.assign(overlay.style,{left:(r.left-root.left+(target.edge==='right'?r.width-width:0))+'px',top:(r.top-root.top+(target.edge==='bottom'?r.height-height:0))+'px',width:width+'px',height:height+'px'});host.append(overlay);
+ }
+ function clearDrag(){drag=null;target=null;overlay?.remove();ghost?.remove();overlay=ghost=null;}
+ function panelGesture(e,id){
+  if(e.button!==0)return;const start={x:e.clientX,y:e.clientY};let moved=false;
+  listenGesture(e,event=>{if(event.pointerId!==e.pointerId)return;if(!moved&&Math.hypot(event.clientX-start.x,event.clientY-start.y)<6)return;
+   if(!moved){moved=true;drag={panel:id};document.body.classList.add('dock-is-dragging');ghost=element('div','dock-drag-ghost',PANEL_TITLES[id]);document.body.append(ghost);}event.preventDefault();ghost.style.left=(event.clientX+14)+'px';ghost.style.top=(event.clientY+14)+'px';target=dropTarget(event.clientX,event.clientY,event.altKey);drawDrop();
+  },event=>{if(!moved)return;const dest=target,rect=host.getBoundingClientRect();clearDrag();if(dest)apply(dockPanel(layout,id,dest.id,dest.edge));else apply(floatPanel(layout,id,{x:(event.clientX-rect.left-80)/rect.width,y:(event.clientY-rect.top-15)/rect.height,w:.45,h:.6}));
+   // Suppress the click generated after a completed drag, preserving the drop destination.
+   const suppress=event=>{event.preventDefault();event.stopImmediatePropagation();};
+   document.addEventListener('click',suppress,{once:true,capture:true});setTimeout(()=>document.removeEventListener('click',suppress,true),0);
+  },clearDrag);
+ }
+ render();return {show,hide:id=>apply(closePanel(layout,id)),toggle:id=>panelStack(layout,id)?apply(closePanel(layout,id)):show(id),active,has:id=>!!panelStack(layout,id),isRestoring:()=>restoring};
+}
+
+export function installEditorDocking({onChange,onMessage}){
+ const host=document.querySelector('.tree-workspace'),left=host.querySelector('.tree-left'),preview=host.querySelector('.tree-preview'),inspector=host.querySelector('.tree-inspector');
+ const nodes=element('div','tree-left dock-nodes-content'),library=element('div','tree-left dock-library-content');let intoLibrary=false;
+ for(const child of [...left.childNodes]){if(child.nodeType===1&&child.tagName==='HR'){intoLibrary=true;continue;}(intoLibrary?library:nodes).append(child);}left.remove();
+ const timeline=document.getElementById('animation-panel'),summary=timeline.querySelector('summary');summary.hidden=true;
+ const controls=document.getElementById('node-animation-editor');controls.classList.add('dock-animation-content');
+ const timelineButton=element('button','dock-open-timeline','动画编辑与时间轴');timelineButton.type='button';timelineButton.id='open-docked-timeline';timeline.before(timelineButton);timeline.remove();
+ let manager;manager=createDockWorkspace({host,menuHost:document.querySelector('.tree-tool-actions'),panels:{nodes,library,canvas:preview,inspector,timeline},onChange,onMessage,onVisibility:(id,visible)=>{if(id==='timeline'){timeline.open=visible;timelineButton.setAttribute('aria-expanded',String(visible));}}});
+ timelineButton.onclick=()=>manager.toggle('timeline');
+ new MutationObserver(()=>{if(timeline.open&&!manager.isRestoring()&&!manager.active('timeline'))manager.show('timeline');}).observe(timeline,{attributes:true,attributeFilter:['open']});
+ return manager;
+}
