@@ -18,6 +18,9 @@ import {formulaTime} from './formula-time.js';
 import {libraryVisible,libraryAliases,libraryVariants,libraryVariantNode} from './library-policy.js';
 import {recordValue,sameTime,animatablePaths} from './animation-editing.js';
 import {selectionRoots,rangeSelection,duplicateSelection,deleteSelection,groupSelection,moveSelection} from './tree-selection.js';
+import {batchValues,validateSelectionValues,layoutSelection} from './selection-editing.js';
+import {evaluateNode} from './tree-model.js';
+import {createSelectionInspector,SELECTION_TABS} from './selection-inspector.js';
 import {createCanvasEditor} from './canvas-editor.js';
 import {assetFor} from './resource-assets.js';
 import {encodeResourcePack,readResourcePack,imageAsset} from './resource-pack.js';
@@ -60,9 +63,9 @@ let quickColorExpanded=false;
 let selected=state.root.id,time=0,formulaSeconds=0,section='shape',solo=false,playing=false,tiled=false,busy=false,history=[],future=[],pending=false,globalPanel=null,formTarget='inspector',dragged=null,exportKind='png',componentPreview=null,cancelExport=false,contourThreshold=50,contourSmooth=true;
 const shelf=new GraphicShelf();let shelfStorageError=null;
 const recentKey='momo-texture-tree:recent:v1';let recent=[];try{recent=JSON.parse(localStorage.getItem(recentKey)||'[]');}catch{}
-let selectedIds=new Set([selected]),selectionPrimary=selected,selectionAnchor=selected,canvasEditor=null;
+let selectedIds=new Set([selected]),selectionPrimary=selected,selectionAnchor=selected,canvasEditor=null,batchInspector=null,editPrimary=false,alignmentReference='selection';
 function reconcileSelection(){if(selectionPrimary!==selected){selectedIds=new Set(selected===state.root.id?[]:[selected]);selectionPrimary=selected;}selectedIds=new Set([...selectedIds].filter(id=>id!==state.root.id&&find(state.root,id)));}
-function setSelection(ids,primary=ids.at(-1)){if(ids.length>1)solo=false;selectedIds=new Set(ids);selected=primary??state.root.id;selectionPrimary=selected;revealAncestors(selected);refresh();}
+function setSelection(ids,primary=ids.at(-1)){if(ids.length>1)solo=false;editPrimary=false;selectedIds=new Set(ids);selected=primary??state.root.id;selectionPrimary=selected;revealAncestors(selected);refresh();}
 function multiSelect(id,e={}){reconcileSelection();if(e.shiftKey){const order=[...$('node-tree').querySelectorAll('[data-node-id]')].map(x=>x.dataset.nodeId);setSelection([...new Set([...(e.ctrlKey||e.metaKey?selectedIds:[]),...rangeSelection(order,selectionAnchor,id)])],id);}else if(e.ctrlKey||e.metaKey){const ids=new Set(selectedIds);ids.has(id)?ids.delete(id):ids.add(id);setSelection([...ids],ids.has(id)?id:[...ids].at(-1));selectionAnchor=id;}else{selectionAnchor=id;setSelection([id],id);}}
 function selectedRoots(){reconcileSelection();return selectionRoots(state.root,selectedIds);}
 function remember(id){recent=[id,...recent.filter(x=>x!==id)].slice(0,24);try{localStorage.setItem(recentKey,JSON.stringify(recent));}catch{}}
@@ -132,6 +135,7 @@ function assignAnimated(n,path,value){
 function animationValue(n,path){return animationEditMode==='base'?pathGet(n,path):pathGet(animationClock(n.id).node,path);}
 function decorateAnimated(input,n,path){input.dataset.animationPath=path;input.dataset.animationNode=n.id;input.disabled=animationEditMode==='normal'&&!!n.tracks[path]&&!n.tracks[path].muted&&n.animationEnabled!==false;}
 function syncParameterStates(){
+ if(batchInspector){batchInspector.sync();return;}
  const n=current();if(n===state.root)return;const evaluated=animationEditMode==='base'?n:animationClock(n.id).node,seen=new Set();
  for(const input of document.querySelectorAll('#inspector [data-animation-path],#inspector-color-quick [data-animation-path]')){
   const path=input.dataset.animationPath,info=parameterState(n,evaluated,path,animationEditMode);
@@ -149,7 +153,7 @@ function syncParameterStates(){
  }
 }
 function inspectorVariantKey(n){const context=colorContext(state.root,n.id,x=>animationClock(x.id).node);return JSON.stringify([context?.source?.id,context?.override?.id,context&&intrinsicColor(context.local),n.id,n.arrange[0],n.arrange[30],n.arrange[33]>1,n.arrange[39],n.color.mode,n.color.fill,n.shapeClock?.follow,n.type==='Star'?n.params[5]:n.type==='Gear'?n.params[8]:null,n.seamless,n.arrangeExtra.gradient,n.arrangeExtra.flow,n.arrangeExtra.weave]);}
-function syncAnimatedFields(){const n=current(),value=animationEditMode==='base'?n:animationClock(n.id).node,progress=animationClock(n.id).progress;if(!previewDragging&&inspectorVariant!==inspectorVariantKey(value))inspector();
+function syncAnimatedFields(){if(batchInspector){batchInspector.sync();return;}const n=current(),value=animationEditMode==='base'?n:animationClock(n.id).node,progress=animationClock(n.id).progress;if(!previewDragging&&inspectorVariant!==inspectorVariantKey(value))inspector();
  syncColorQuick();
  for(const input of document.querySelectorAll('#inspector [data-animation-path],#inspector-color-quick [data-animation-path]')){if(document.activeElement===input)continue;const path=input.dataset.animationPath,v=pathGet(value,path);if(input.type==='checkbox')input.checked=!!v;else input.value=input.hasAttribute('data-packed-color')?'#'+Math.round(v).toString(16).padStart(6,'0'):input.hasAttribute('data-color-hex')?String(v).toUpperCase():String(input.dataset.animationScale?Math.round(v*Number(input.dataset.animationScale)*100)/100:input.dataset.animationFamily?arrangementFamily(v):v);}
  for(const b of $('inspector').querySelectorAll('[data-key-path]')){const path=b.dataset.keyPath,track=n.tracks[path],here=track?.keys.some(k=>sameTime(k[0],progress));b.textContent=here?'◆':track?'◈':'◇';b.classList.toggle('key-at-cursor',!!here);b.title=here?'当前位置已有关键帧，点击更新':track?'参数已有动画，点击在当前位置记录':'添加此参数动画';}
@@ -301,7 +305,35 @@ function progressCurve(n){
  const path=add('polyline',{fill:'none',stroke:'#d7b272','stroke-width':2});const plot=()=>path.setAttribute('points',points.map(p=>`${10+p[0]*200},${130-p[1]*120}`).join(' '));plot();
  points.forEach((p,i)=>{const h=add('circle',{cx:10+p[0]*200,cy:130-p[1]*120,r:5,fill:'#8ddcf0'});h.onpointerdown=e=>{beginAnimationGesture();n.timing.curve=points;h.setPointerCapture?.(e.pointerId);h.onpointermove=e=>{const r=svg.getBoundingClientRect(),x=((e.clientX-r.left)*220/r.width-10)/200,y=(130-(e.clientY-r.top)*140/r.height)/120;p[0]=Math.max(i?points[i-1][0]+.001:0,Math.min(i<points.length-1?points[i+1][0]-.001:1,x));p[1]=Math.max(0,Math.min(1,y));h.setAttribute('cx',10+p[0]*200);h.setAttribute('cy',130-p[1]*120);plot();requestRender();};h.onpointerup=()=>{h.onpointermove=null;endAnimationGesture();};h.onpointercancel=cancelAnimationGesture;};});
 }
-function inspector(){buildInspector();syncParameterStates();}
+function applySelectionChanges(changes){
+ validateSelectionValues(changes);
+ for(const {id,values}of changes){const n=find(state.root,id)?.node;if(!n)throw Error('所选节点已不存在');if(n.kind!=='group'&&([14,16].includes(values['arrange.0'])||['preserve','remap'].includes(values['color.mode'])))throw Error('此设置需要全部选中组合');for(const path of Object.keys(values))if(animationEditMode==='normal'&&n.animationEnabled!==false&&n.tracks[path]&&!n.tracks[path].muted)throw Error('部分节点参数由动画控制，请开启录制或编辑基础值');const trial=structuredClone(n);for(const [path,value]of Object.entries(values))assignAnimated(trial,path,structuredClone(value));}
+ for(const {id,values,clearStops}of changes){const n=find(state.root,id).node;for(const [path,value]of Object.entries(values))assignAnimated(n,path,structuredClone(value));if(clearStops)delete n.color.stops;}
+}
+function changeSelection(changes){
+ if(busy)return false;stopAnimation();
+ if(animationGesture){try{applySelectionChanges(changes);requestRender();return true;}catch(e){notify(e.message);return false;}}
+ return edit(()=>applySelectionChanges(changes));
+}
+function selectionLayoutItems(){const preview=animationPreviewProject();return selectedRoots().map(n=>{const regions=selectionRegions(preview,n.id,time,{records:arrangementRecords}).regions;return {id:n.id,region:regions.length===1?regions[0]:null};});}
+function selectionLayoutReason(){const items=selectionLayoutItems();return items.length<2?'请至少选择两个最外层节点。':items.some(x=>!x.region)?'所选节点隐藏或有多个排列副本，请选择可见的独立节点或其外层组合。':'';}
+function renderSelectionInspector(){
+ let targets=selectedRoots(),values=new Map();const editMain=()=>{editPrimary=true;inspector();};
+ const prepare=()=>{targets=selectedRoots();values=new Map();if(animationEditMode==='base'){for(const n of targets)values.set(n.id,n);return;}const ids=new Set(targets.map(n=>n.id));const visit=(n,t)=>{const e=evaluateNode(n,t);if(ids.has(n.id))values.set(n.id,e.node);for(const child of n.children)visit(child,e.progress);if(n.mask)visit(n.mask,e.progress);};visit(animationPreviewProject().root,time);};
+ $('inspector-color-quick').hidden=true;$('inspector-color-quick').replaceChildren();$('selected-heading').textContent='批量编辑 · '+selectedIds.size+' 个节点';$('selected-path').textContent='仅修改调整过的参数；父子同时选中时只处理最外层节点。';$('inspector-tabs').replaceChildren(...SELECTION_TABS.map(([id,label])=>el('button',{text:label,class:section===id?'active':'',onclick:()=>{section=id;inspector();}})),el('button',{text:'编辑主选节点',title:current().name,onclick:editMain}));$('inspector').replaceChildren();
+ batchInspector=createSelectionInspector($('inspector'),{
+  nodes:()=>targets,selectedCount:()=>selectedIds.size,prepare,value:(n,path)=>pathGet(values.get(n.id)??n,path),locked:paths=>animationEditMode==='normal'&&targets.some(n=>paths.some(path=>n.animationEnabled!==false&&n.tracks[path]&&!n.tracks[path].muted)),editMode:()=>animationEditMode,mode:setAnimationMode,notify,
+  evaluated:n=>values.get(n.id)??n,isImage,section:()=>section,editPrimary:editMain,rebuild:inspector,disclosures:advancedOpen,
+  dependencies:paths=>[...new Set(targets.flatMap(n=>paths.map(path=>parameterState(n,values.get(n.id)??n,path,animationEditMode).dependency)).filter(Boolean))].join(' '),
+  reference:()=>alignmentReference,setReference:value=>alignmentReference=value,
+  begin:beginAnimationGesture,end:endAnimationGesture,cancel:cancelAnimationGesture,
+  apply:(path,value)=>changeSelection(selectedRoots().map(n=>({id:n.id,values:batchValues(n,path,value,animationValue)}))),
+  reset:path=>changeSelection(selectedRoots().map(n=>({id:n.id,values:batchValues(n,path,pathGet(node(n.kind,n.type),path),animationValue)}))),formulaTime:n=>formulaTime(values.get(n.id)??n,formulaSeconds),
+  mutate:plan=>{try{return changeSelection(selectedRoots().map(n=>({id:n.id,...plan(n)})));}catch(e){notify(e.message);return false;}},
+  layoutReason:selectionLayoutReason,layout:(operation,reference)=>{try{changeSelection(layoutSelection(selectionLayoutItems(),operation,reference));}catch(e){notify(e.message);}}
+ });
+}
+function inspector(){batchInspector=null;if(selectedIds.size>1&&!editPrimary){inspectorVariant=inspectorVariantKey(animationClock(current().id).node);renderSelectionInspector();}else{buildInspector();if(selectedIds.size>1)$('inspector-tabs').prepend(el('button',{text:'返回批量编辑',onclick:()=>{editPrimary=false;inspector();}}));}syncParameterStates();}
 function buildInspector(){const n=current();inspectorVariant=inspectorVariantKey(animationClock(n.id).node);if(n===state.root){$('inspector-color-quick').hidden=true;$('inspector-color-quick').replaceChildren();$('selected-heading').textContent='未选择节点';$('selected-path').textContent='';$('inspector-tabs').replaceChildren();$('inspector').replaceChildren();note('选择内容节点以编辑参数，或添加顶层并列节点。');return;}$('selected-heading').textContent=(n.kind==='group'?'组合 · ':'图形 · ')+n.name;$('inspector-tabs').replaceChildren(...[['shape','图形'],['color','颜色'],['layout','变换/排列'],['animation','动画'],['composite','合成']].map(([id,label])=>el('button',{text:label,class:section===id?'active':'',onclick:()=>{section=id;if(id==='animation')$('animation-panel').open=true;inspector();}})));$('inspector').replaceChildren();$('selected-path').textContent=(selectedIds.size>1?'已选 '+selectedIds.size+' 个节点；右侧参数编辑主选节点，画布移动与工具栏操作作用于全部。 ':'')+[...$('breadcrumbs').querySelectorAll('button')].map(b=>b.textContent).join(' / ');
  renderColorQuick(n);
  const modebar=el('div',{class:'animation-tools inspector-animation-mode'});for(const [v,title]of [['record','● 录制'],['base','基础值']])modebar.append(el('button',{text:title,class:animationEditMode===v?(v==='record'?'active recording':'active'):'','aria-label':'参数模式 '+title,'aria-pressed':String(animationEditMode===v),title:v==='record'?(animationEditMode==='record'?'关闭录制，返回普通编辑':'开启录制：修改参数时记录关键帧'):(animationEditMode==='base'?'退出基础值编辑':'编辑基础值（关闭录制）'),onclick:()=>setAnimationMode(animationEditMode===v?'normal':v)}));controls().append(modebar);if(animationEditMode==='base')note('正在编辑基础值：暂时旁路本节点参数动画，退出后恢复动画；保存与导出仍包含完整动画。');
