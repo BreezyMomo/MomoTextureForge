@@ -57,6 +57,15 @@ node tests/pages-browser-check.mjs
 
 按改动范围运行浏览器检查；Node 单元测试不等于已检查实际 WebGL 画面。
 
+图库卡片使用 `web/builtin-thumbnails.js` 中预先生成的缩略图。修改内置图形的视觉公式后，先更新对应缩略图，再构建静态网站。例如更新“流动水纹”：
+
+```sh
+node tests/builtin-release-browser-check.mjs --pattern FlowingWater --parameters
+npm run build:pages
+```
+
+省略 `--pattern` 会重新生成全部内置缩略图；`--parameters` 同时检查参数两端的渲染。生成后查看 `test-results/builtin-release/gallery.png`，并在图库卡片中确认效果。
+
 ## 更新图文教程截图
 
 截图生成工具：[tools/capture-docs.mjs](../tools/capture-docs.mjs)。它启动独立本地服务，用隔离的 Playwright 浏览器上下文操作真实界面，生成演示画布，不读取用户已打开的浏览器或草稿。

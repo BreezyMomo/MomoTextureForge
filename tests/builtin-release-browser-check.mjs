@@ -3,6 +3,9 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {chromium} from 'playwright';
+import builtinThumbnails from '../web/builtin-thumbnails.js';
+const patternIndex=process.argv.indexOf('--pattern'),patternId=patternIndex<0?null:process.argv[patternIndex+1];
+if(patternIndex>=0&&(!patternId||patternId.startsWith('--')))throw Error('--pattern requires a built-in pattern ID');
 const root=fileURLToPath(new URL('..',import.meta.url)),out=resolve(root,'test-results/builtin-release');
 await mkdir(out,{recursive:true});
 const server=http.createServer(async(req,res)=>{try{
@@ -19,12 +22,14 @@ try{
  const page=await browser.newPage({viewport:{width:1440,height:1000}});page.setDefaultTimeout(120000);
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://127.0.0.1:'+server.address().port+'/authoring-render.html');
- const count=await page.evaluate(async()=>{
+ const count=await page.evaluate(async(patternId)=>{
   const {TreeRenderer}=await import('./tree-renderer.js'),{project,node}=await import('./tree-model.js'),{CATALOG}=await import('./catalog.js');
   const {encodePNG}=await import('./encoders.js');
-  window.check={renderer:new TreeRenderer(document.createElement('canvas')),project,node,CATALOG,encodePNG,rows:[],thumbnails:{}};
-  return CATALOG.length;
- });
+  const patterns=patternId?CATALOG.filter(type=>type.id===patternId):CATALOG;
+  if(!patterns.length)throw Error('Unknown built-in pattern: '+patternId);
+  window.check={renderer:new TreeRenderer(document.createElement('canvas')),project,node,CATALOG:patterns,encodePNG,rows:[],thumbnails:{}};
+  return patterns.length;
+ },patternId);
  for(let offset=0;offset<count;offset+=10){
   await page.evaluate(async({offset,parameters})=>{
    const c=window.check;
@@ -46,7 +51,7 @@ try{
  const result=await page.evaluate(()=>({rows:check.rows,thumbnails:check.thumbnails}));
  if(errors.length)throw Error(errors.join('\n'));
  await writeFile(resolve(out,'report.json'),JSON.stringify({patterns:count,errors,rows:result.rows},null,2));
- await writeFile(resolve(root,'web/builtin-thumbnails.js'),'// Generated from the current built-in definitions by tests/builtin-release-browser-check.mjs.\nexport default '+JSON.stringify(result.thumbnails)+';\n');
+ await writeFile(resolve(root,'web/builtin-thumbnails.js'),'// Generated from the current built-in definitions by tests/builtin-release-browser-check.mjs.\nexport default '+JSON.stringify(patternId?{...builtinThumbnails,...result.thumbnails}:result.thumbnails)+';\n');
  await page.evaluate(async()=>{document.body.replaceChildren();const c=document.createElement('canvas');c.width=12*112;c.height=Math.ceil(check.rows.length/12)*124;const g=c.getContext('2d');g.fillStyle='#202329';g.fillRect(0,0,c.width,c.height);g.font='10px sans-serif';for(let i=0;i<check.rows.length;i++){const id=check.rows[i].id,img=new Image();img.src=check.thumbnails[id];await img.decode();const x=i%12*112,y=Math.floor(i/12)*124;g.drawImage(img,x,y,96,96);g.fillStyle='white';g.fillText(id,x,y+108,110);}document.body.append(c);});
  await page.locator('canvas').screenshot({path:resolve(out,'gallery.png')});
  console.log(JSON.stringify({patterns:count,constant:result.rows.filter(r=>r.max-r.min<.00001).map(r=>r.id),noMotion:result.rows.filter(r=>r.usesTime&&r.motion<.000001).map(r=>r.id)},null,2));
