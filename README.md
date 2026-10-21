@@ -81,4 +81,4 @@ npm run build:pages       # 同步生成可部署的 site/index.html
 
 **帮助 → GitHub 仓库 ↗**可查看源码与反馈问题。提交问题时提供复现步骤、浏览器、截图以及可分享的最小项目。
 
-本工具早期设计与部分图形参考了 [EasyCG TexForge](https://easycg-texforge.app.workbuddy.host/)。公共 GLSL 保留其署名和许可文本，PSD 编码器许可见 [PSD-LICENSES.txt](web/vendor/PSD-LICENSES.txt)。
+公共 GLSL 保留其署名和许可文本，PSD 编码器许可见 [PSD-LICENSES.txt](web/vendor/PSD-LICENSES.txt)。
