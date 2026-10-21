@@ -91,6 +91,14 @@ npm run build:pages       # 同步生成可部署的 site/index.html
 
 公共 GLSL 保留其署名和许可文本，PSD 编码器许可见 [PSD-LICENSES.txt](web/vendor/PSD-LICENSES.txt)。
 
+## 支持项目
+
+如果 Momo Texture Forge 帮你节省了制作贴图的时间，欢迎自愿打赏，支持工具的持续开发与维护。感谢你的支持！
+
+**微信扫码赞赏**：使用微信扫描下方赞赏码。
+
+<img src="docs/images/wechat-appreciation.png" alt="微信扫码赞赏 Momo Texture Forge" width="280">
+
 ## 参考网站与项目
 
 以下是开发过程中参考、调研或使用其公开算法的网站与项目：

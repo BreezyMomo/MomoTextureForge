@@ -40,3 +40,11 @@
 - [火焰序列](examples/fire-sequence.json)：用于生成器动画与图集导出。
 
 项目保存的是可继续编辑的结构与依赖；导出的图片是交付结果。两者不能互相代替。
+
+## 支持项目
+
+如果这个工具对你有帮助，欢迎自愿打赏，支持持续开发与维护。感谢你的支持！
+
+**微信扫码赞赏**：使用微信扫描下方赞赏码。
+
+<img src="images/wechat-appreciation.png" alt="微信扫码赞赏 Momo Texture Forge" width="280">
