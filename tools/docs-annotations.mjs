@@ -6,6 +6,10 @@ const role=(role,name,label=name)=>({role,name,label});
 const field=(name,label=name)=>({field:name,label});
 export const annotations={
  workspace:[css('#open-graphics-library','打开图形库'),css('#node-tree','选择节点'),css('#preview-channel','切换贴图类型'),css('#inspector-tabs','编辑选中节点')],
+ 'color-collapsed':[{...role('button','展开颜色快捷区','点击展开颜色与透明度'),side:'left'}],
+ 'color-inheritance':[css('#inspector-color-quick','常驻颜色快捷区'),css('.color-quick-actions','独立修改或前往来源')].map(spec=>({...spec,side:'left'})),
+ 'color-gradient':[role('button','颜色','独立颜色页签'),field('亮部颜色 HEX','输入渐变端点颜色'),css('.color-preset-grid','直接选配色预设')].map(spec=>({...spec,side:'left'})),
+ 'color-solid':[{...field('快捷填充颜色','跨页签直接改颜色'),side:'left'},{...field('着色方式','选择纯色或渐变'),side:'left'},field('填充颜色 HEX','输入十六进制颜色')],
  'workspace-docking':[css('[data-panel-tab="library"]','拖动面板名称标签'),css('.dock-split-x > .dock-splitter','拖动分隔线调整宽度'),css('#workspace-layout-menu > summary','布局菜单')],
  'workspace-floating':[role('button','移动悬浮窗口','拖动握柄移动'),role('button','调整悬浮窗口大小','拖动角标缩放'),css('.dock-floating [data-panel-tab="inspector"]','拖动标签重新停靠')],
  'workspace-layout-menu':[field('布局名称','填写布局名称'),role('button','保存当前布局','命名保存当前布局'),field('显示参数面板','勾选找回关闭的面板'),role('button','恢复默认布局','恢复初始布局')].map(spec=>({...spec,side:'left'})),

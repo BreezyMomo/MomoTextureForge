@@ -14,7 +14,7 @@ const output=resolve(args[0]||join(toolRoot,"dist"));
 await buildAuthoringKit();
 const registry=await loadDefinitionURL(new URL("./web/definitions/builtin.json",import.meta.url));
 const read=name=>readFile(join(webRoot,name),"utf8");
-const [indexHTML,examplesHTML,validationHTML,css]=await Promise.all([read("index.html"),read("examples.html"),read("validate.html"),Promise.all([read("style.css"),read("tree.css"),read("graphics-workspace.css"),read("dock-workspace.css")]).then(parts=>parts.join("\n"))]);
+const [indexHTML,examplesHTML,validationHTML,css]=await Promise.all([read("index.html"),read("examples.html"),read("validate.html"),Promise.all([read("style.css"),read("tree.css"),read("graphics-workspace.css"),read("dock-workspace.css"),read("inspector-color.css")]).then(parts=>parts.join("\n"))]);
 const body=html=>{
   const content=html.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1];
   if(!content)throw new Error("Page body missing");

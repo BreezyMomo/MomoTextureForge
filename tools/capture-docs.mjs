@@ -82,6 +82,11 @@ try{
   await page.locator('#workspace-layout-menu > summary').click();await page.getByRole('textbox',{name:'布局名称',exact:true}).fill('我的特效布局');await shot('workspace-layout-menu');
   await page.getByRole('button',{name:'恢复默认布局',exact:true}).click();
  });
+ await run('colors',async()=>{
+  await page.setViewportSize({width:1600,height:1200});await load(spell);await page.getByRole('button',{name:'选择 环形星光',exact:true}).click();await shot('color-collapsed');await page.getByRole('button',{name:'展开颜色快捷区',exact:true}).click();await shot('color-inheritance');
+  await page.getByRole('button',{name:'改为独立配色',exact:true}).click();await page.getByRole('button',{name:'颜色',exact:true}).click();await shot('color-gradient');
+  await page.getByRole('combobox',{name:'着色方式',exact:true}).selectOption('solid');await page.getByRole('textbox',{name:'填充颜色 HEX',exact:true}).fill('#ff9b57');await page.getByRole('textbox',{name:'填充颜色 HEX',exact:true}).press('Tab');await shot('color-solid');await page.setViewportSize({width:1600,height:1050});
+ });
  await run('normal',async()=>{
   await load(water);await page.getByRole('combobox',{name:'预览贴图类型',exact:true}).selectOption('height');await shot('height-preview');
   await page.getByRole('combobox',{name:'预览贴图类型',exact:true}).selectOption('normal');await changeNumber('法线强度',6,page.locator('#normal-preview-settings'));await shot('normal-preview');

@@ -65,6 +65,8 @@ node tests/pages-browser-check.mjs
 
 面板布局回归：`node tests/dock-workspace-browser-check.mjs`；构建后加 `--standalone` 检查单文件版。覆盖实际拖动、标签合并、悬浮移动/缩放、保存与刷新恢复、三维上下文和 PNG 导出。布局模型在 `web/dock-layout.js`，DOM 控制器与样式在 `web/dock-workspace.js`、`web/dock-workspace.css`；只移动原有控件，布局本地存储与项目数据分开。
 
+颜色面板回归：`node tests/inspector-color-browser-check.mjs`，构建后可加 `--standalone`。检查继承来源、复制为独立配色的画面一致性、HEX与顶部快捷色块、透明度滑条与百分比同步、父子透明度合成、撤销/重做、颜色和透明度关键帧、多色色标和刷新恢复。
+
 图库卡片使用 `web/builtin-thumbnails.js` 中预先生成的缩略图。修改内置图形的视觉公式后，先更新对应缩略图，再构建静态网站。例如更新“流动水纹”：
 
 ```sh
@@ -90,6 +92,7 @@ node tools/capture-docs.mjs
 node tools/capture-docs.mjs workspace library combinations
 node tools/capture-docs.mjs resources animation normal export remote-ai manager
 node tools/capture-docs.mjs docking
+node tools/capture-docs.mjs colors
 ```
 
 | 组 | 画面 |
@@ -98,6 +101,7 @@ node tools/capture-docs.mjs docking
 | combinations | 24 种组合/素材预设总览、七种新增排列的分类截图与编辑入口 |
 | workspace | 总览、排列、合成和文件菜单 |
 | docking | 面板标签、网页内悬浮与布局保存菜单 |
+| colors | 颜色快捷区、继承来源、独立颜色页签、渐变和HEX |
 | library | 图库、生成器参数、图形列表 |
 | resources | 图片原图/去背景、公式、生成器 JSON、导入文件 |
 | animation | 实际录制的关键帧与曲线 |
