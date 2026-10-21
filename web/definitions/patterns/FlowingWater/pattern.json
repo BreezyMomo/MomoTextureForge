@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "FlowingWater",
-  "revision": 1,
+  "revision": 2,
   "abi": "momo-pattern/16-v1",
   "name": "流动水纹",
   "category": "vfx",

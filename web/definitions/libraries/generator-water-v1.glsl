@@ -7,8 +7,7 @@ vec4 generate(vec2 uv){
   if(d<first){second=first;first=d;}else second=min(second,d);
  }
  float edge=exp(-(second-first)*sharpness);
- float ripple=.5+.5*sin(first*18.-t*2.);
- vec3 c=mix(vec3(.015,.08,.16),vec3(.04,.5,.66),ripple*.5+edge*.5);
+ vec3 c=mix(vec3(.015,.08,.16),vec3(.04,.5,.66),edge*.5);
  c+=vec3(.45,.8,.95)*edge*intensity;
  return vec4(c,1.);
 }
