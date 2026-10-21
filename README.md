@@ -4,6 +4,8 @@
 
 **[在线使用](https://breezymomo.github.io/MomoTextureForge/) · [图文操作手册](docs/README.md) · [快速上手](docs/01-quick-start.md) · [常见问题](docs/faq.md)**
 
+源码与文档：[GitHub 主仓库](https://github.com/BreezyMomo/MomoTextureForge) · [Gitee 国内镜像](https://gitee.com/BreezyMomo/MomoTextureForge)。访问 GitHub 不便时，可通过 Gitee 阅读教程或下载仓库；两边使用相同的提交历史。
+
 ![Momo Texture Forge 编辑器：召唤法阵、节点树与参数](docs/images/workspace.png)
 
 > 图中标记：1 打开图形库；2 选择节点；3 切换贴图类型；4 编辑选中节点。

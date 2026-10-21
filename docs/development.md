@@ -124,6 +124,18 @@ node tools/capture-docs.mjs colors
 
 更新后逐张检查关键画面是否完成渲染、参数与图文是否对应、链接是否存在。界面变化时修改教程和生成脚本，再拍截图；不要用旧截图说明新的入口。
 
+## GitHub 与 Gitee 同步
+
+[GitHub](https://github.com/BreezyMomo/MomoTextureForge) 为主仓库，[Gitee](https://gitee.com/BreezyMomo/MomoTextureForge) 为国内镜像。日常提交与合并在 GitHub 完成，Gitee 使用仓库镜像管理中的 **Pull** 方向和 GitHub 的 **push Webhook** 自动拉取更新。
+
+- 同步内容包含代码、文档、截图、`site/` 静态网页、分支与标签；Issue、Pull Request 和发行版附件不随 Git 镜像同步。
+- 不直接向 Gitee 主分支提交独立修改，镜像更新会覆盖目标仓库的数据。
+- 查看 **Gitee → 管理 → 仓库镜像管理** 的最近请求/完成时间；需要时点“更新”重试。比较两边 `main` 的完整提交 SHA，确认版本一致。
+- 镜像使用专用的 GitHub fine-grained token，仅选择本仓库，权限为 Contents/Metadata 只读和 Webhooks 读写；不要把令牌写入代码、日志或文档。
+- 当前同步令牌于 **2027-01-19** 到期。到期前更新凭据，并复查 Webhook 投递结果与镜像同步状态；撤销或到期会中断自动同步。
+
+仓库同步不会自动生成国内在线站点。当前在线编辑器仍由 GitHub Pages 提供；也可从 Gitee 下载仓库中的 `site/index.html`，用 Chrome / Edge 离线打开。
+
 ## 仓库结构与深入资料
 
 - `web/`：编辑器、资源管理与渲染，工作台入口 `tree-app.js`。
