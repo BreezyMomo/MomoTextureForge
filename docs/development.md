@@ -1,0 +1,105 @@
+# 开发、离线构建与静态部署
+
+[手册目录](README.md) · [返回项目首页](../README.md)
+
+## 本地启动
+
+需要 Node.js 22+ 和支持 WebGL2 的桌面浏览器。在仓库根目录执行：
+
+```sh
+npm ci
+npm start
+```
+
+打开 `http://127.0.0.1:8787/`。Windows 可双击 `start.bat`。指定其他端口：
+
+```sh
+npm start -- --port 8799
+```
+
+在线版、不同本地端口、不同浏览器及离线 HTML 的浏览器存储不自动共享。项目 ZIP 和资源 ZIP 用于备份与转移。
+
+## 构建离线版
+
+```sh
+npm run build:standalone
+```
+
+- `dist/MomoTextureForge.html`：脚本、样式、内置定义与导出 Worker 内嵌在单个 HTML 中。
+- `dist/MomoTextureForge-offline.zip`：用于分享。
+- 使用生成文件无需安装 Node.js；本地编辑和导出可离线，刷新/下载远程资源需要网络。
+
+分享画布时另附保存的项目文件，浏览器本地存储不是画布文件备份。
+
+## 导出静态网站
+
+```sh
+npm run build:pages
+```
+
+该命令先构建离线 HTML，再同步到可提交的 `site/index.html`，保留 `.nojekyll`。部署 `site/` 即可，不需要 Node.js 服务，兼容 GitHub Pages 仓库子路径。`dist/` 不提交，`site/` 随源码更新。
+
+`.github/workflows/pages.yml` 在推送 `main` 后执行检查、构建和 Pages 部署。首次配置在 GitHub 仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**；也可在 Actions 中手动运行部署。实际部署状态以 Actions 结果为准。
+
+[官方 Pages 说明](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages)提供服务条件与限制。部署后访问者能获取网页中嵌入的代码和资源。在线版的个人图库与草稿仍在访问者浏览器内，远程图库需另行部署并配置跨域。
+
+## 检查与生成 Skill
+
+```sh
+npm test
+npm run validate:definitions
+node build-authoring-kit.mjs
+npm run build:pages
+node tests/pages-browser-check.mjs
+```
+
+`skills/texture-forge-effects/` 是效果指导 Skill 的维护源。创作 Skill 的一部分文本和随附 CLI 由构建脚本生成，修改相应源文件后运行 `build-authoring-kit.mjs`。生成文件不要只手改嵌入内容。
+
+按改动范围运行浏览器检查；Node 单元测试不等于已检查实际 WebGL 画面。
+
+## 更新图文教程截图
+
+截图生成工具：[tools/capture-docs.mjs](../tools/capture-docs.mjs)。它启动独立本地服务，用隔离的 Playwright 浏览器上下文操作真实界面，生成演示画布，不读取用户已打开的浏览器或草稿。
+
+```sh
+node tools/capture-docs.mjs
+```
+
+默认使用本机 Edge；环境变量 `DOCS_BROWSER` 可选 `chrome` 或已安装的 `chromium`，`DOCS_PORT` 可修改独立服务端口。需事先安装对应浏览器；使用 Playwright Chromium 可运行 `npx playwright install chromium`。
+
+可只更新一组截图：
+
+```sh
+node tools/capture-docs.mjs workspace library
+node tools/capture-docs.mjs resources animation normal export remote-ai manager
+```
+
+| 组 | 画面 |
+| --- | --- |
+| examples | 通过真实“打开项目”入口检查四个示例 |
+| workspace | 总览、排列、合成和文件菜单 |
+| library | 图库、生成器参数、图形列表 |
+| resources | 图片原图/去背景、公式、生成器 JSON、导入文件 |
+| animation | 实际录制的关键帧与曲线 |
+| normal | 高度、法线与三维受光 |
+| export | PNG、序列帧图集设置、实际图集、矢量轮廓 |
+| remote-ai | 远程订阅、AI 图形目录与帮助菜单 |
+| manager | 独立演示图库的真实管理器与编辑窗口 |
+
+图片保存到 `docs/images/`，示例项目保存到 `docs/examples/`，临时图库和诊断只写入忽略的 `test-results/`。管理器示例通过隔离浏览器的文件系统 API 提供演示目录，不会弹出用户电脑上的目录选择器。
+
+更新后逐张检查关键画面是否完成渲染、参数与图文是否对应、链接是否存在。界面变化时修改教程和生成脚本，再拍截图；不要用旧截图说明新的入口。
+
+## 仓库结构与深入资料
+
+- `web/`：编辑器、资源管理与渲染，工作台入口 `tree-app.js`。
+- `web/definitions/`：图形索引、定义、公式及公共函数。
+- `library-manager/`：静态本地管理器。
+- `skills/`：创作与效果指导 Skill。
+- `docs/`：图文教程、截图与可打开的示例。
+- `tests/`：单元测试与浏览器验证。
+- `site/`：可部署网站；`dist/`、`test-results/`、`node_modules/` 不提交。
+
+[图形定义规范](../PATTERN_DEFINITIONS.md) · [本地图形库](../LOCAL_GRAPHICS_LIBRARY.md) · [资源包格式](../RESOURCE-PACK.md) · [远程图库技术说明](../REMOTE_LIBRARIES.md) · [AI CLI](../AI_AUTHORING_CLI.md)
+
+PSD 编码器许可见 [PSD-LICENSES.txt](../web/vendor/PSD-LICENSES.txt)，需要时运行 `npm run build:psd-vendor` 重建。

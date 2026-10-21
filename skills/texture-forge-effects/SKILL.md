@@ -18,6 +18,10 @@ description: Guide users to create visual effects in Momo Texture Forge and to s
 5. 在关键步骤加入观察点；效果偏差时只调整有关参数。给一两个主要调节方向，如“间隔更大：降低实例尺寸”，避免堆砌无关配置。分清建议方案、用户实际截图和自己没有执行的检查。
 6. 结尾给保存/导出选择和简短验收要点。用户反馈截图或报错后定位到具体层/参数，保留其已完成的部分。涉及更新、删除、模板替换时解释影响范围，让用户自行操作。
 
+## 图文教程
+
+面向用户的实际界面截图、分步教程与演示画布见[在线图文操作手册](https://github.com/BreezyMomo/MomoTextureForge/blob/main/docs/README.md)。可按用户的具体操作推荐章节；下载 Skill 的离线包仍以随附 references 手册为准，不假设本地存在仓库 docs 文件夹。
+
 ## 按任务查阅
 
 - [界面与资源管理](references/workspace.md)：图库、图形列表、实例、版本、项目保存、画布、多选、组合、图形参数与二维/三维贴图预览。
