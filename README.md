@@ -2,7 +2,9 @@
 
 在浏览器中制作图形、纹理和动态特效：组合节点、调整参数、创建公式或生成器，再导出图片、法线贴图和序列帧。编辑和渲染在浏览器中完成，也可构建为离线 HTML。
 
-**[在线使用](https://breezymomo.github.io/MomoTextureForge/) · [图文操作手册](docs/README.md) · [快速上手](docs/01-quick-start.md) · [常见问题](docs/faq.md)**
+**[国内在线使用（WorkBuddy）](https://momo-texture-forge.app.workbuddy.host/?sharecode=M22BZOBQB4) · [在线使用（GitHub Pages）](https://breezymomo.github.io/MomoTextureForge/) · [图文操作手册](docs/README.md) · [快速上手](docs/01-quick-start.md) · [常见问题](docs/faq.md)**
+
+国内用户可优先使用 WorkBuddy 入口，分享时请保留链接中的 `sharecode` 参数。该站点目前手动更新，版本可能晚于 GitHub Pages。
 
 源码与文档：[GitHub 主仓库](https://github.com/BreezyMomo/MomoTextureForge) · [Gitee 国内镜像](https://gitee.com/BreezyMomo/MomoTextureForge)。访问 GitHub 不便时，可通过 Gitee 阅读教程或下载仓库；两边使用相同的提交历史。
 
@@ -89,7 +91,7 @@ npm run build:pages       # 同步生成可部署的 site/index.html
 
 [图形定义](PATTERN_DEFINITIONS.md) · [本地图形库](LOCAL_GRAPHICS_LIBRARY.md) · [资源包格式](RESOURCE-PACK.md) · [远程图库技术说明](REMOTE_LIBRARIES.md)
 
-**帮助 → GitHub 仓库 ↗**可查看源码与反馈问题。提交问题时提供复现步骤、浏览器、截图以及可分享的最小项目。
+**帮助 → GitHub 仓库 ↗**可查看源码与反馈问题；访问不便时，可通过 **Gitee 仓库 ↗**打开国内镜像阅读文档与下载仓库。提交问题时提供复现步骤、浏览器、截图以及可分享的最小项目。
 
 公共 GLSL 保留其署名和许可文本，PSD 编码器许可见 [PSD-LICENSES.txt](web/vendor/PSD-LICENSES.txt)。
 

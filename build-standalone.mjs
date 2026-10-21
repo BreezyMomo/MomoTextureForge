@@ -28,29 +28,30 @@ if(!examplesStyle)throw new Error("Examples style missing");
 const serialize=value=>JSON.stringify(value).replaceAll("<","\\u003c");
 const runtime=`const freeze=(value)=>{if(value&&typeof value==='object'){Object.values(value).forEach(freeze);Object.freeze(value);}return value;};export const BUILTIN=freeze(${serialize(registry)});export const formulaText=spec=>spec.inline??BUILTIN.sources[spec.file];`;
 const entry=`
+import {startupStage,mountStartupContent,completeStartup,failStartup} from './startup.js';
 (async()=>{
   const view=new URLSearchParams(location.search).get('view')||'editor';
   try {
     if(view==='examples'){
+      await startupStage('正在准备组合示例…');
       document.title='Momo Texture Forge · 图形示例';
-      document.body.innerHTML=${serialize(body(examplesHTML))};
+      mountStartupContent(${serialize(body(examplesHTML))});
       const style=document.createElement('style');style.textContent=${serialize(examplesStyle)};document.head.append(style);
       await import('./examples.js');
     }else if(view==='validate'){
+      await startupStage('正在准备验证工具…');
       document.title='Momo Texture Forge · 浏览器验证';
-      document.body.innerHTML=${serialize(body(validationHTML))};
+      mountStartupContent(${serialize(body(validationHTML))});
       document.body.style.cssText='padding:24px;max-width:900px;margin:auto';
       await import('./validate.js');
     }else{
-      const treeStyle=document.createElement('style');treeStyle.dataset.treeStyle='true';document.head.append(treeStyle);const {restoreAssets}=await import('./resource-assets.js');await restoreAssets();await import('./tree-app.js');
+      await startupStage('正在读取图形与本地资源…');
+      const treeStyle=document.createElement('style');treeStyle.dataset.treeStyle='true';document.head.append(treeStyle);const {restoreAssets}=await import('./resource-assets.js');await restoreAssets();
+      await startupStage('正在准备编辑器…');await import('./tree-app.js');
     }
-    document.documentElement.dataset.ready='true';
+    await completeStartup();
   }catch(error){
-    const message='工具初始化失败：'+error.message;
-    const status=document.getElementById('render-status')||document.getElementById('status')||document.getElementById('result');
-    if(status)status.textContent=message;
-    const toast=document.getElementById('toast');if(toast){toast.textContent=message;toast.hidden=false;}
-    document.documentElement.dataset.ready='error';console.error(error);
+    failStartup(error);console.error(error);
   }
 })();`;
 const workerBuild=await build({entryPoints:[join(webRoot,'export-worker.js')],bundle:true,write:false,format:'iife',platform:'browser',target:'es2022',minify:true,plugins:[{name:'worker-definitions',setup(plugin){plugin.onLoad({filter:/[\\/]definition-runtime\.js$/},()=>({contents:runtime,loader:'js',resolveDir:webRoot}));}}]});

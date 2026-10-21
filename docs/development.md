@@ -19,6 +19,8 @@ npm start -- --port 8799
 
 在线版、不同本地端口、不同浏览器及离线 HTML 的浏览器存储不自动共享。项目 ZIP 和资源 ZIP 用于备份与转移。
 
+启动页的布局与首屏样式在 `web/index.html`，无需等待脚本下载即可显示。`web/startup.js` 负责真实阶段提示、界面切换与失败重试；源码入口和单文件构建共用这套逻辑，不显示虚构百分比，也不设置最短等待时间。初始化失败时保留错误详情与重新加载入口，不清除本地草稿或资源。
+
 ## 构建离线版
 
 ```sh
@@ -51,7 +53,10 @@ npm run validate:definitions
 node build-authoring-kit.mjs
 npm run build:pages
 node tests/pages-browser-check.mjs
+node tests/startup-browser-check.mjs
 ```
+
+启动页检查覆盖加载阶段、正常进入编辑器、WebGL 初始化失败后的错误详情与重试，以及单文件版的编辑器、示例和验证视图。
 
 `skills/texture-forge-effects/` 是效果指导 Skill 的维护源。创作 Skill 的一部分文本和随附 CLI 由构建脚本生成，修改相应源文件后运行 `build-authoring-kit.mjs`。生成文件不要只手改嵌入内容。
 

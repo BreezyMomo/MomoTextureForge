@@ -1,10 +1,12 @@
-// A missing/invalid definition must be visible instead of leaving an empty editor.
-document.getElementById("render-status").textContent = "正在加载图案定义与公式…";
-try { const {restoreAssets}=await import('./resource-assets.js');await restoreAssets();await import("./tree-app.js"); }
+import {startupStage,completeStartup,failStartup} from './startup.js';
+try {
+ await startupStage('正在读取图形与本地资源…');
+ const {restoreAssets}=await import('./resource-assets.js');await restoreAssets();
+ await startupStage('正在准备编辑器…');
+ await import('./tree-app.js');
+ await completeStartup();
+}
 catch (error) {
-  const message = `工具初始化失败：${error.message}。请检查图案定义及公式文件，修复后刷新。`;
-  document.getElementById("render-status").textContent = message;
-  const toast = document.getElementById("toast");
-  toast.textContent = message; toast.hidden = false;
+  failStartup(error);
   console.error(error);
 }
