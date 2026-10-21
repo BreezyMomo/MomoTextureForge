@@ -1,0 +1,43 @@
+import {createServer} from 'node:http';
+import {readFile,mkdir} from 'node:fs/promises';
+import {resolve,extname,sep} from 'node:path';
+import assert from 'node:assert/strict';
+import {chromium} from 'playwright';
+import {project,node} from '../web/tree-model.js';
+const standalone=process.argv.includes('--standalone'),root=resolve('web'),server=createServer(async(req,res)=>{
+ try{const path=new URL(req.url,'http://local').pathname,file=resolve(root,'.'+(path==='/'?'/index.html':path));if(!file.startsWith(root+sep))throw Error();res.setHeader('Content-Type',standalone?'text/html; charset=utf-8':({'.html':'text/html; charset=utf-8','.js':'text/javascript','.json':'application/json','.glsl':'text/plain','.css':'text/css'})[extname(file)]??'application/octet-stream');res.end(await readFile(standalone?'site/index.html':file));}catch{res.writeHead(404);res.end();}
+});await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
+try{
+ await mkdir('test-results/editor-entry',{recursive:true});browser=await chromium.launch({channel:'msedge',headless:true});
+ const page=await browser.newPage({viewport:{width:1600,height:1050}}),errors=[];page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(60000);
+ const origin='http://127.0.0.1:'+server.address().port,p=project();p.root.children=[];
+ const load=async p=>{await page.goto(origin+'/#tree='+Buffer.from(JSON.stringify(p)).toString('base64'));await page.reload();await page.locator('#open-graphics-library').waitFor();};
+ const saved=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('momo-texture-tree:draft:v1')));
+ const openCard=async name=>{await page.locator('#open-graphics-library').click();await page.getByPlaceholder('搜索名称、分类或标签').fill(name);const card=page.locator('.graphics-card').filter({has:page.locator('strong').getByText(name,{exact:true})});await card.waitFor();return card;};
+ await load(p);let card=await openCard('圆形');await card.getByRole('button',{name:'添加到图形列表',exact:true}).click();await card.getByRole('button',{name:'已添加',exact:true}).waitFor();
+ await page.locator('.graphics-library-dialog').screenshot({path:'test-results/editor-entry/library'+(standalone?'-standalone':'')+'.png'});
+ const shelf=await page.evaluate(()=>JSON.parse(localStorage.getItem('momo-texture-tree:graphic-list:v1')).projectResources);
+ await card.getByRole('button',{name:'直接添加到画布',exact:true}).click();await page.locator('.graphics-library-dialog').waitFor({state:'detached'});
+ assert.equal((await saved()).root.children.length,1);assert.equal((await saved()).root.children[0].type,'Circle');assert.match(await page.locator('#selected-heading').innerText(),/圆形/);
+ assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('momo-texture-tree:graphic-list:v1')).projectResources),shelf);
+ card=await openCard('圆形');await card.getByRole('button',{name:'直接添加到画布',exact:true}).click();assert.equal((await saved()).root.children.length,2);assert.notEqual((await saved()).root.children[0].id,(await saved()).root.children[1].id);
+ await page.locator('#undo').click();assert.equal((await saved()).root.children.length,1);await page.locator('#redo').click();assert.equal((await saved()).root.children.length,2);
+ card=await openCard('湍流火焰');await card.getByRole('button',{name:'直接添加到画布',exact:true}).click();assert.equal((await saved()).root.children[2].type,'TurbulentFlame');assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('momo-texture-tree:graphic-list:v1')).projectResources),shelf);
+ if(!standalone){
+  // Local combinations carry their own asset dependencies, without a shelf entry.
+  await page.evaluate(async()=>{const {builtinAsset,registerAsset,unregisterAsset}=await import('./resource-assets.js'),{node}=await import('./tree-model.js'),{packageGraphic}=await import('./graphics-workspace.js'),{saveLibraryEntry}=await import('./graphics-library.js');const id='entryFixture',asset=builtinAsset('Circle');asset.definition.name='直达测试圆';registerAsset(id,asset);try{const group=node('group');group.children=[node('shape',id)];const pack=await packageGraphic(group,{name:'直达测试组合',kind:'composition'});await saveLibraryEntry(pack.entry,pack.bytes);}finally{unregisterAsset(id);}});
+  card=await openCard('直达测试组合');await card.getByRole('button',{name:'直接添加到画布',exact:true}).click();await page.locator('.graphics-library-dialog').waitFor({state:'detached'});const last=(await saved()).root.children.at(-1);assert.equal(last.name,'直达测试组合');assert.ok(last.children[0].type.startsWith('asset_'));await page.evaluate(()=>history.replaceState(null,'',location.pathname));await page.reload();await page.getByRole('button',{name:'选择 直达测试组合',exact:true}).waitFor();assert.equal(await page.locator('#preview-error').isVisible(),false);
+  await page.evaluate(async()=>{const {imageAsset}=await import('./resource-pack.js'),{registerAsset,unregisterAsset,prepareAsset}=await import('./resource-assets.js'),{node}=await import('./tree-model.js'),{packageGraphic}=await import('./graphics-workspace.js'),{saveLibraryEntry}=await import('./graphics-library.js');const c=document.createElement('canvas');c.width=c.height=8;c.getContext('2d').fillRect(0,0,8,8);const blob=await new Promise(r=>c.toBlob(r)),asset=await imageAsset(new File([blob],'image.png',{type:'image/png'})),id='entryImageFixture';registerAsset(id,asset,await prepareAsset(asset));try{const pack=await packageGraphic(node('shape',id),{name:'直达测试图片',kind:'image'});await saveLibraryEntry(pack.entry,pack.bytes);}finally{unregisterAsset(id);}});
+  card=await openCard('直达测试图片');await card.getByRole('button',{name:'直接添加到画布',exact:true}).click();await page.locator('.graphics-library-dialog').waitFor({state:'detached'});assert.equal((await saved()).root.children.at(-1).name,'直达测试图片');await page.evaluate(()=>history.replaceState(null,'',location.pathname));await page.reload();await page.getByRole('button',{name:'选择 直达测试图片',exact:true}).waitFor();assert.equal(await page.locator('#preview-error').isVisible(),false);
+ }
+ const shape=node('shape','Circle');shape.name='动画参数测试';shape.tracks['params.0']={mode:'absolute',ease:'linear',keys:[[0,.3],[1,.8]]};p.root.children=[shape];await load(p);await page.getByRole('button',{name:'选择 动画参数测试',exact:true}).click();
+ const radius=()=>page.getByRole('spinbutton',{name:'半径',exact:true}),row=()=>radius().locator('..');assert.equal(await radius().isDisabled(),true);assert.match(await row().innerText(),/动画控制中/);assert.equal(await page.getByRole('button',{name:'重置 半径',exact:true}).isDisabled(),true);
+ await row().getByRole('button',{name:'编辑基础值',exact:true}).click();assert.equal(await radius().isEnabled(),true);await radius().fill('.65');await radius().press('Tab');assert.equal((await saved()).root.children[0].params[0],.65);assert.deepEqual((await saved()).root.children[0].tracks['params.0'].keys,[[0,.3],[1,.8]]);
+ await page.getByRole('button',{name:'参数模式 基础值',exact:true}).click();await row().getByRole('button',{name:'录制修改',exact:true}).click();await radius().fill('.45');await radius().press('Tab');assert.equal((await saved()).root.children[0].tracks['params.0'].keys[0][1],.45);assert.equal((await saved()).root.children[0].params[0],.65);
+ await page.getByRole('button',{name:'参数模式 ● 录制',exact:true}).click();await page.screenshot({path:'test-results/editor-entry/animation'+(standalone?'-standalone':'')+'.png'});
+ await page.getByRole('button',{name:'变换/排列',exact:true}).click();const mode=page.getByRole('combobox',{name:'排列方式',exact:true});assert.equal(await mode.locator('option[value="16"]').evaluate(e=>e.disabled),true);assert.ok(await page.getByText(/沿图形轮廓、规则拼接需要选中组合/).isVisible());
+ await page.getByRole('button',{name:'合成',exact:true}).click();assert.match(await page.getByRole('spinbutton',{name:'轮廓宽度（区域短边比例）',exact:true}).locator('..').innerText(),/当前不生效/);
+ const fire=node('shape','TurbulentFlame');fire.params[13]=0;p.root.children=[fire];await load(p);await page.getByRole('button',{name:'选择 湍流火焰',exact:true}).click();await page.getByRole('button',{name:'图形',exact:true}).click();
+ assert.match(await page.getByRole('spinbutton',{name:'烟气扩散',exact:true}).locator('..').innerText(),/烟气混合为0/);const mix=page.getByRole('spinbutton',{name:'烟气混合',exact:true});await mix.fill('.5');await mix.press('Tab');assert.doesNotMatch(await page.getByRole('spinbutton',{name:'烟气扩散',exact:true}).locator('..').innerText(),/当前不生效/);
+ assert.deepEqual(errors,[]);console.log({standalone,directInsertion:true,repeat:true,undoRedo:true,shelfPreserved:true,animationActions:true,dependencyHints:true,errors});
+}finally{await browser?.close();await new Promise(r=>server.close(r));}

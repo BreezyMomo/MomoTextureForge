@@ -17,7 +17,8 @@ export const annotations={
  arrangement:[field('排列方式','选择排列方式'),field('最外圈数量','设置星光数量'),field('实例尺寸','设置每份图形尺寸')],
  compositing:[field('Bloom 强度','调整泛光强度'),field('Bloom 半径','调整泛光范围')],
  'project-files':[{...css('#open-project','打开项目文件'),side:'right'},{...css('#save-project','保存可编辑项目'),side:'right'},css('#export-now','导出成品图片')],
- 'graphics-library':[{placeholder:'搜索名称、分类或标签',label:'搜索资源'},role('button','添加到图形列表','加入常用列表'),role('button','编辑 蓬松烟团','编辑资源')],
+ 'graphics-library':[{placeholder:'搜索名称、分类或标签',label:'搜索资源'},role('button','直接添加到画布','直接添加到画布'),role('button','添加到图形列表','加入常用列表'),role('button','编辑 蓬松烟团','编辑资源')],
+ 'parameter-states':[css('#inspector .parameter-state-badge','参数当前由动画控制'),role('button','录制修改','修改当前时刻的关键帧'),role('button','编辑基础值','编辑基础值')].map(spec=>({...spec,numberOnly:true})),
  'generator-parameters':[field('预览时间（秒）','拖动时间查看运动'),css('.graphic-preview-panel canvas','观察生成结果'),role('button','保存为新图形','保存自己的版本')],
  'graphics-list':[css('#shape-search','搜索常用列表'),role('button','添加 湍流火焰','添加实例到画布')],
  'image-import':[field('资源名称','填写资源名称'),field('图片文件','选择图片文件'),css('.graphic-preview-panel canvas','检查预览')],
@@ -71,8 +72,8 @@ export async function markScreenshot(page,name,clip=null){
   const host=document.createElement('div');host.id='docs-annotation-overlay';host.style.cssText='position:fixed;inset:0;z-index:2147483647;pointer-events:none;font:600 14px system-ui';
   for(const [index,box]of boxes.entries()){
    const frame=document.createElement('div');frame.style.cssText=`position:absolute;box-sizing:border-box;left:${box.x}px;top:${box.y}px;width:${box.width}px;height:${box.height}px;border:2px solid #ffcf66;border-radius:4px;box-shadow:0 0 0 1px #1119`;
-   const label=document.createElement('span');label.textContent=(index+1)+'  '+box.label;
-   const labelWidth=Math.min(240,box.label.length*15+35);let left=Math.min(Math.max(bounds.x+3,box.x),bounds.x+bounds.width-labelWidth-3);
+   const label=document.createElement('span');label.textContent=box.numberOnly?String(index+1):(index+1)+'  '+box.label;
+   const labelWidth=box.numberOnly?28:Math.min(240,box.label.length*15+35);let left=Math.min(Math.max(bounds.x+3,box.x),bounds.x+bounds.width-labelWidth-3);
    let top=box.y-27;if(top<bounds.y+2)top=box.y+box.height+3;if(top+25>bounds.y+bounds.height)top=bounds.y+bounds.height-27;
    if(box.side==='left'){left=box.x-labelWidth-14;top=box.y+box.height/2-13;label.textContent+=' →';}
    if(box.side==='right'){left=box.x+box.width+14;top=box.y+box.height/2-13;label.textContent='← '+label.textContent;}

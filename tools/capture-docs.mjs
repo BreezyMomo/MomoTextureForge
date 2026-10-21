@@ -58,8 +58,11 @@ try{
  });
  await run('library',async()=>{
   await load(spell);await library();await page.getByPlaceholder('搜索名称、分类或标签').fill('特效素材');await page.waitForFunction(()=>document.querySelectorAll('.graphics-card').length===14);await shot('graphics-library');
-  await page.getByPlaceholder('搜索名称、分类或标签').fill('湍流火焰');await page.getByRole('button',{name:'添加到图形列表',exact:true}).click();await page.getByRole('button',{name:'编辑 湍流火焰',exact:true}).click();const d=await editorReady();await d.getByRole('slider',{name:'预览时间（秒）',exact:true}).fill('1.3');await editorReady();await shot('generator-parameters');await d.locator('header .graphics-close').click();
+  await page.getByPlaceholder('搜索名称、分类或标签').fill('湍流火焰');const fireCard=page.locator('.graphics-card').filter({has:page.locator('strong').getByText('湍流火焰',{exact:true})});await fireCard.getByRole('button',{name:'添加到图形列表',exact:true}).click();await fireCard.getByRole('button',{name:'编辑 湍流火焰',exact:true}).click();const d=await editorReady();await d.getByRole('slider',{name:'预览时间（秒）',exact:true}).fill('1.3');await editorReady();await shot('generator-parameters');await d.locator('header .graphics-close').click();
   await page.locator('dialog').last().locator('header .graphics-close').click();await shot('graphics-list');
+ });
+ await run('parameter-states',async()=>{
+  const p=project(),n=node('shape','Circle');n.name='呼吸圆形';n.tracks['params.0']={mode:'absolute',ease:'linear',keys:[[0,.3],[1,.8]]};p.root.children=[n];await load(p);await page.getByRole('button',{name:'选择 呼吸圆形',exact:true}).click();await page.getByRole('button',{name:'图形',exact:true}).click();await shot('parameter-states',page.locator('.tree-inspector'));
  });
  await run('resources',async()=>{
   await load(spell);await library();await page.getByRole('button',{name:'创建资源',exact:true}).click();const d=page.locator('dialog.resource-create-dialog');
