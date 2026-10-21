@@ -12,6 +12,10 @@
 
 ## 发布成静态目录
 
+**免编译方式**：可直接 Fork / 复制 [momo-texture-library](https://github.com/BreezyMomo/momo-texture-library)，用仓库自带的 `library-manager.html` 维护本地文件，再开启 GitHub Pages 发布。无需安装 Node.js；复制仓库、配置 `main` + `/(root)`、上传更新和填写订阅地址的完整步骤见[免编译搭建自己的图库](docs/09-remote-libraries.md#21-免编译复制现成图库并发布到-github-pages)。管理器只改本地目录，整理后仍需自行提交推送。
+
+以下是需要自行生成静态目录时使用的命令行方式。
+
 不需要账户系统或动态后端。从图形库勾选要公开的资源，点“导出资源”，再在本工具目录运行：
 
 ```powershell

@@ -55,7 +55,7 @@
 | 录制关键帧、曲线、局部时间和循环 | [动画与时间轴](docs/06-animation.md) |
 | 图片转法线、灰度高度、三维受光 | [法线与三维预览](docs/07-normal-and-material.md) |
 | PNG、EXR、动态序列、图集、PSD 和 SVG | [导出与交付](docs/08-export.md) |
-| 订阅、维护与发布静态图形库 | [远程图库与管理器](docs/09-remote-libraries.md) |
+| 订阅、免编译搭建 GitHub Pages 图库、维护与发布 | [远程图库与管理器](docs/09-remote-libraries.md) |
 | 下载 Skill、提供图库目录、导入 AI 结果 | [AI 协作与帮助](docs/10-ai-and-help.md) |
 | 拖动、拆分、悬浮面板，保存自己的工作布局 | [自定义面板布局](docs/11-workspace-layout.md) |
 
