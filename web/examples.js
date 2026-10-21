@@ -1,6 +1,30 @@
 import {TreeRenderer} from './tree-renderer.js';
 import {treeSamples} from './tree-samples.js';
 import {project,cloneNode} from './tree-model.js';
-import {encodePNG} from './encoders.js';import {pageHref} from './distribution.js';
-document.querySelector('a[href="./"]').href=pageHref('editor');const urls=[];
-document.getElementById('generate').onclick=async()=>{const button=document.getElementById('generate'),panel=document.getElementById('samples'),status=document.getElementById('status');button.disabled=true;let r;try{urls.splice(0).forEach(URL.revokeObjectURL);panel.replaceChildren();r=new TreeRenderer(document.createElement('canvas'));const samples=treeSamples();for(const sample of samples){const p=project();p.name=sample.name;p.root.children=[cloneNode(sample.root)];const pix=r.draw(p,384,384,{read:true,time:.3}),url=URL.createObjectURL(new Blob([await encodePNG(pix,384,384)],{type:'image/png'}));urls.push(url);const article=document.createElement('article'),img=document.createElement('img'),h=document.createElement('h2'),a=document.createElement('a');img.src=url;img.alt=sample.name;h.textContent=sample.name;a.textContent='编辑此组合';a.href=pageHref('editor','#tree='+btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify(p)))));a.target='_blank';a.rel='noopener';article.append(img,h,a);panel.append(article);}status.textContent=samples.length+'/'+samples.length+' 组合示例已生成';}catch(e){status.textContent=e.message;}finally{r?.destroy();button.disabled=false;}};
+import {encodePNG} from './encoders.js';
+import {pageHref} from './distribution.js';
+
+document.querySelector('a[href="./"]').href=pageHref('editor');
+const urls=[],button=document.getElementById('generate'),panel=document.getElementById('samples'),status=document.getElementById('status');
+button.onclick=async()=>{
+ button.disabled=true;let renderer;
+ try{
+  urls.splice(0).forEach(URL.revokeObjectURL);panel.replaceChildren();
+  renderer=new TreeRenderer(document.createElement('canvas'));
+  const samples=treeSamples();
+  for(const sample of samples){
+   status.textContent='正在生成 '+sample.name+'…';
+   const p=project();p.name=sample.name;p.root.children=[cloneNode(sample.root)];Object.assign(p.output,sample.output);
+   const pixels=renderer.draw(p,384,384,{read:true,time:.3}),url=URL.createObjectURL(new Blob([await encodePNG(pixels,384,384)],{type:'image/png'}));urls.push(url);
+   const article=document.createElement('article'),img=document.createElement('img'),heading=document.createElement('h2'),description=document.createElement('p'),tags=document.createElement('ul'),link=document.createElement('a');
+   img.src=url;img.alt=sample.name;heading.textContent=sample.name;description.textContent=sample.description;
+   for(const tag of sample.tags){const item=document.createElement('li');item.textContent=tag;tags.append(item);}
+   link.textContent='在画布中编辑';link.href=pageHref('editor','#tree='+btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify(p)))));link.target='_blank';link.rel='noopener';
+   article.append(img,heading,description,tags,link);panel.append(article);
+   await new Promise(resolve=>requestAnimationFrame(resolve));
+  }
+  status.textContent=samples.length+' 种组合示例已生成 · 打开后可拆解节点、调整参数和播放动画';
+ }catch(error){status.textContent='示例生成失败：'+error.message;}
+ finally{renderer?.destroy();button.disabled=false;}
+};
+button.click();

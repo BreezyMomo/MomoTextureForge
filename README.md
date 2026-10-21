@@ -6,6 +6,8 @@
 
 ![Momo Texture Forge 编辑器：召唤法阵、节点树与参数](docs/images/workspace.png)
 
+> 图中标记：1 打开图形库；2 选择节点；3 切换贴图类型；4 编辑选中节点。
+
 ## 可以做什么
 
 - **图形与纹理**：298 个内置图形、纹样、噪声与矢量资源，可加载自己的图片和 SVG。
@@ -28,11 +30,13 @@
 
 图库是资源来源，图形列表是常用副本，画布节点是编辑实例。修改实例不会自动修改图库。
 
+顶栏 **组合示例** 提供 15 种可编辑组合。优先展示特效常用的刀光拖尾、命中爆闪、破碎冲击环、能量旋涡与溶解遮罩，另有面向 UI 界面背景的菱形格纹、交错菱砖、斜纹底纹与点阵底纹，可无缝平铺；并保留召唤特效、雷达光环、花瓣徽章、星光螺旋、蜂巢护盾与火焰法阵。点“在画布中编辑”即可拆解，新增示例已配置单次／循环动画及导出设置。
+
 想先体验效果，可下载[召唤法阵演示画布](docs/examples/summoning-circle.json)，在 **文件 → 打开项目** 中打开。详细步骤与更多示例见[快速上手](docs/01-quick-start.md)。
 
 ## 图文教程
 
-每篇包含实际界面截图、操作入口、步骤、观察点与保存/导出说明。
+每篇包含带编号标记的实际界面截图、操作入口、步骤、观察点与保存/导出说明。帮助菜单中的“详细说明 ↗”可直接打开本页。
 
 | 操作 | 文档 |
 | --- | --- |
@@ -82,3 +86,17 @@ npm run build:pages       # 同步生成可部署的 site/index.html
 **帮助 → GitHub 仓库 ↗**可查看源码与反馈问题。提交问题时提供复现步骤、浏览器、截图以及可分享的最小项目。
 
 公共 GLSL 保留其署名和许可文本，PSD 编码器许可见 [PSD-LICENSES.txt](web/vendor/PSD-LICENSES.txt)。
+
+## 参考网站与项目
+
+以下是开发过程中参考、调研或使用其公开算法的网站与项目：
+
+| 网站 / 项目 | 参考内容 |
+| --- | --- |
+| [EasyCG TexForge](https://easycg-texforge.app.workbuddy.host/) | 早期工具设计与部分基础图形 |
+| [NormalMap Online](https://cpetry.github.io/NormalMap-Online/) | 图片转法线、法线参数与三维材质预览 |
+| [GameAnimation · 基础贴图生成](https://gameanimation.info/texture-create/) | 基础图形与贴图生成工具 |
+| [Noise Creater · Voronoi Water Noise](https://noisecreater.com/noiseDetail/voronoiWaterNoise) | 噪声、水纹、动态纹理与序列导出功能调研 |
+| [EffectTextureMaker](https://mebiusbox.github.io/contents/EffectTextureMaker/) | 火焰、闪电、烟雾等特效纹理生成与动态序列 |
+| [pixy.js](https://github.com/mebiusbox/pixy.js) | 动态焦散核心 GLSL 算法来源，源码保留 MIT 署名与许可 |
+| [Ashima WebGL Noise](https://github.com/ashima/webgl-noise) / [Stegu WebGL Noise](https://github.com/stegu/webgl-noise) | Simplex 噪声公共 GLSL 库来源，源码保留署名与许可 |

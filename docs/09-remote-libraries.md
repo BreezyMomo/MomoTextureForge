@@ -6,6 +6,8 @@
 
 ![远程图库入口与订阅管理](images/remote-libraries.png)
 
+> 图中标记：1 填写订阅名称；2 填写 index.json 地址；3 添加图库订阅。
+
 1. **图形库 → 远程图库**，填订阅名称和 `index.json` 目录地址。
 2. 刷新目录，查看可用资源。远程服务必须允许跨域访问。
 3. 按需下载，再添加到图形列表和画布。
@@ -32,6 +34,8 @@ node build-remote-library.mjs --input "图库.zip" --out "remote-library" --name
 
 ![本地图库管理器中的演示资源](images/library-manager.png)
 
+> 图中标记：1 导入已有资源；2 编辑资源目录信息。
+
 打开生成的 `library-manager.html`，使用桌面 Chrome / Edge 的“选择本地图库目录”，选择整个图库文件夹并授权读写。
 
 - **导入资源 ZIP**：先预览再确认导入，不覆盖相同 ID/版本的不同内容。
@@ -41,6 +45,8 @@ node build-remote-library.mjs --input "图库.zip" --out "remote-library" --name
 - **目录恢复**：恢复目录快照或下载 JSON 备份。快照保存在当前浏览器，不随图库目录共享。
 
 ![编辑资源的目录信息](images/library-manager-edit.png)
+
+> 图中标记：1 修改资源名称；2 保存目录信息。
 
 截图使用独立的演示图库，名称、分类、标签与说明在“编辑信息”中修改。
 

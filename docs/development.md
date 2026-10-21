@@ -79,13 +79,14 @@ node tools/capture-docs.mjs
 可只更新一组截图：
 
 ```sh
-node tools/capture-docs.mjs workspace library
+node tools/capture-docs.mjs workspace library combinations
 node tools/capture-docs.mjs resources animation normal export remote-ai manager
 ```
 
 | 组 | 画面 |
 | --- | --- |
 | examples | 通过真实“打开项目”入口检查四个示例 |
+| combinations | 15 种特效、UI 底纹与几何组合示例、编辑入口 |
 | workspace | 总览、排列、合成和文件菜单 |
 | library | 图库、生成器参数、图形列表 |
 | resources | 图片原图/去背景、公式、生成器 JSON、导入文件 |
@@ -94,6 +95,8 @@ node tools/capture-docs.mjs resources animation normal export remote-ai manager
 | export | PNG、序列帧图集设置、实际图集、矢量轮廓 |
 | remote-ai | 远程订阅、AI 图形目录与帮助菜单 |
 | manager | 独立演示图库的真实管理器与编辑窗口 |
+
+截图标记在 [tools/docs-annotations.mjs](../tools/docs-annotations.mjs) 中定义，按真实按钮/输入框定位绘制编号框，并自动同步各篇图下注解。标记只在拍摄时临时注入，不影响网页实际界面；目标不可见时拍摄报错，应滚动到正确位置或拆成两张图，避免用猜测坐标标注。修改相关界面时同时检查标记位置。
 
 图片保存到 `docs/images/`，示例项目保存到 `docs/examples/`，临时图库和诊断只写入忽略的 `test-results/`。管理器示例通过隔离浏览器的文件系统 API 提供演示目录，不会弹出用户电脑上的目录选择器。
 
