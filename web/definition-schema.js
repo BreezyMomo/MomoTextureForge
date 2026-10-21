@@ -68,10 +68,12 @@ export function validateLibrary(raw) {
     require(Array.isArray(p.defaults) && (p.generator?p.defaults.length>=16&&p.defaults.length<=parameterLimit:p.defaults.length===16) && p.defaults.every(finite), `${p.id} 默认参数数量或数值无效`);
     require(Array.isArray(p.parameters) && p.parameters.length <= parameterLimit, `${p.id} 参数列表无效`);
     const slots = new Set();
+    require(p.renderPadding===undefined||(finite(p.renderPadding)&&p.renderPadding>=0&&p.renderPadding<=.5&&!p.generator&&!p.outputs?.vector),`${p.id} 渲染留白需为0～0.5的公式图形参数`);
     const generatorVariables=new Set();
     for (const spec of p.parameters) {
       require(object(spec) && Number.isInteger(spec.slot) && spec.slot >= 0 && spec.slot < p.defaults.length && !slots.has(spec.slot), `${p.id} 参数槽重复或无效`); slots.add(spec.slot);
       require(spec.key === generatorSlotKey(spec.slot) && typeof spec.label === "string" && spec.label.trim(), `${p.id} 参数名称/绑定无效`);
+      if(spec.type==='select')require(Array.isArray(spec.options)&&spec.options.length>0&&spec.options.every(o=>Number.isInteger(o.value)&&o.value>=spec.min&&o.value<=spec.max&&typeof o.label==='string'),`${p.id} 选项无效`);
       if(p.generator){require(typeof spec.variable==='string'&&/^[A-Za-z]\w*$/.test(spec.variable)&&!generatorVariables.has(spec.variable),`${p.id} 生成器参数标识无效或重复`);generatorVariables.add(spec.variable);require(!spec.type||['color','select'].includes(spec.type),`${p.id} 参数类型无效`);if(spec.type==='color')require(spec.min===0&&spec.max===16777215&&spec.step===1,`${p.id} 颜色范围无效`);if(spec.type==='select')require(Array.isArray(spec.options)&&spec.options.length>0&&spec.options.every(o=>Number.isInteger(o.value)&&o.value>=spec.min&&o.value<=spec.max&&typeof o.label==='string'),`${p.id} 选项无效`);}
       require([spec.min, spec.max, spec.step, spec.default].every(finite) && spec.min < spec.max && spec.step > 0 && spec.default >= spec.min && spec.default <= spec.max && p.defaults[spec.slot] === spec.default, `${p.id} 参数 ${spec.key} 范围/默认值无效`);
     }

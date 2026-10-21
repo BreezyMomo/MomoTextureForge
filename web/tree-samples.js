@@ -89,7 +89,15 @@ function arrangementExamples(){
  const line=shape('LineSegment','流动短线',1,'#63b8dd');Object.assign(line.params,{0:-.7,1:0,2:.7,3:0,4:.035,5:1});const tip=shape('Circle','流向标记',.12,'#d1f6ff');tip.transform.x=.84;flow.children=[line,tip];track(flow,'arrangeExtra.flowPhase',[[0,0],[1,360]]);
  const pipes=group('接口匹配管线');pipes.arrange[0]=16;pipes.arrange[1]=pipes.arrange[2]=6;pipes.arrange[11]=17;pipes.seamless=true;
  pipes.children=Array.from({length:16},(_,mask)=>{const tile=group(mask?'连接块 '+mask:'空白块');tile.tileEdges=mask;for(const [bit,x,y]of [[1,1,0],[2,0,1],[4,-1,0],[8,0,-1]])if(mask&bit){const segment=shape('LineSegment','接口线',1,'#72c9df');Object.assign(segment.params,{0:0,1:0,2:x,3:y,4:.055,5:1});tile.children.push(segment);}return tile;});
+ const puzzle=shape('PuzzlePiece','单块拼图网格',.76,'#8cecff');puzzle.arrange[0]=1;puzzle.arrange[1]=puzzle.arrange[2]=4;puzzle.arrangeFit='stretch';puzzle.params[4]=.18;puzzle.params[6]=.009;
+ const board=group('彩色拼图板');board.transform.width=board.transform.height=.8;
+ for(let y=0;y<3;y++)for(let x=0;x<3;x++){const piece=shape('PuzzlePiece','拼图 '+(y*3+x+1),1/3,['#59bfd2','#ffbc66','#ad8cda','#8ac17a','#ee8f91','#78a5df','#d7ba75','#7dcdb5','#bc93c4'][y*3+x]);Object.assign(piece.transform,{x:(x+.5)/3,y:(y+.5)/3});Object.assign(piece.params,{0:y===2?0:1,1:x===2?0:1,2:y===0?0:-1,3:x===0?0:-1,4:.15,8:1});board.children.push(piece);}
+ const puzzleStyles=group('拼图接口与圆角');
+ puzzleStyles.children=['圆头凸耳','方头卡扣','梯形燕尾','波浪接口'].map((name,i)=>{const n=shape('PuzzlePiece',name,.32,['#76d9eb','#ffc778','#c0a1e8','#8fd1a5'][i]);Object.assign(n.transform,{x:i%2?.75:.25,y:i<2?.75:.25});Object.assign(n.params,{8:1,9:i,10:[1,.2,.45,.7][i],11:0,12:.18,13:.28,14:.08});return n;});
  return [
+  {root:puzzleStyles,description:'左上圆头、右上方头、左下燕尾、右下波浪；每块的左上角为直角，其他三角使用不同圆角大小。选单块切换接口样式、圆润度，再展开主体四角逐个调整。',tags:['四种接口','独立四角','可调圆润度']},
+  {root:puzzle,description:'只有一个拼图图形，使用现成的4×4网格排列。主体占满每格，凸耳伸入相邻格；增大凸耳半径不会改变格距。',tags:['单块拼图','凸耳越界','网格排列']},
+  {root:board,description:'九块独立配色的实心拼图，相邻边凹凸配对，最外侧设为平边。可分别编辑每块颜色、四边和凸耳大小。',tags:['拼图边块／角块','独立配色']},
   {root:border,description:'沿圆角矩形周长等距放置灯点，短线跟随切线转向。调整边框宽高、圆角和数量，适合弹窗与卡牌装饰。',tags:['边框排列','UI 装饰']},
   {root:outline,description:'第一个子节点提供星形轮廓，第二个子节点作为重复光点。可换成其他图形、组合或有透明轮廓的图片。',tags:['沿图形轮廓','自动等距']},
   {root:herringbone,description:'2:1 长砖按人字规则交替转向，深浅两种图块顺序混排。调整重复块数和长砖外观制作可平铺背景。',tags:['人字排列','无缝平铺']},

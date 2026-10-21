@@ -12,6 +12,7 @@ import {alphaFootprint} from './scatter-footprints.js';
 import {fitInstances} from './instance-geometry.js';
 import {advancedRecords,modifyRecords} from './tree-arrangement.js';
 import {coverageContours} from './coverage-contours.js';
+import {paddingScale,paddedPlacement,paddedRecords,arrangedPadding} from './render-padding.js';
 const HEADER=`#version 300 es
 precision highp float;precision highp int;in vec2 uv;
 layout(location=0) out vec4 colorOut;layout(location=1) out vec4 heightOut;
@@ -66,23 +67,26 @@ export class TreeRenderer{
  trimPool(limit=0){while(this.pool.length&&this.allocated>limit)this.discard(this.pool.shift());}
  target(w,h,colorOnly=false,aspect=w/h){const gl=this.gl,bytes=w*h*(this.float?(colorOnly?16:20):(colorOnly?4:5));
  const index=this.pool.findIndex(t=>t.w===w&&t.h===h&&t.colorOnly===colorOnly);
- if(index>=0){const t=this.pool.splice(index,1)[0];t.aspect=aspect;this.live.add(t);gl.bindFramebuffer(gl.FRAMEBUFFER,t.fb);gl.drawBuffers(colorOnly?[gl.COLOR_ATTACHMENT0]:[gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1]);gl.viewport(0,0,w,h);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);return t;}
+ if(index>=0){const t=this.pool.splice(index,1)[0];t.aspect=aspect;t.padding=0;this.live.add(t);gl.bindFramebuffer(gl.FRAMEBUFFER,t.fb);gl.drawBuffers(colorOnly?[gl.COLOR_ATTACHMENT0]:[gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1]);gl.viewport(0,0,w,h);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);return t;}
  this.trimPool(this.budget-bytes);
  // Old-state caches are not inputs of this frame. Evict before allocation, not only after success.
  if(this.allocated+bytes>this.budget)for(const [key,cached]of this.cache){if(!this.usedKeys.has(key)||this.reclaimable.has(cached)){this.release(cached);this.cache.delete(key);this.trimPool(this.budget-bytes);if(this.allocated+bytes<=this.budget)break;}}
  if(this.allocated+bytes>this.budget)throw Error('渲染超过中间纹理预算，请简化嵌套或降低导出尺寸');
- const t={w,h,aspect,bytes,colorOnly,textures:[],fb:gl.createFramebuffer()};gl.bindFramebuffer(gl.FRAMEBUFFER,t.fb);
+ const t={w,h,aspect,bytes,colorOnly,padding:0,textures:[],fb:gl.createFramebuffer()};gl.bindFramebuffer(gl.FRAMEBUFFER,t.fb);
  for(let i=0;i<(colorOnly?1:2);i++){const tex=gl.createTexture();t.textures.push(tex);gl.bindTexture(gl.TEXTURE_2D,tex);gl.texImage2D(gl.TEXTURE_2D,0,this.float?(i?gl.R32F:gl.RGBA32F):(i?gl.R8:gl.RGBA8),w,h,0,i?gl.RED:gl.RGBA,this.float?gl.FLOAT:gl.UNSIGNED_BYTE,null);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0+i,gl.TEXTURE_2D,tex,0);}
  gl.drawBuffers(colorOnly?[gl.COLOR_ATTACHMENT0]:[gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1]);if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE||gl.getError()){t.textures.forEach(x=>gl.deleteTexture(x));gl.deleteFramebuffer(t.fb);throw Error('浏览器或显卡无法分配当前渲染缓冲，请关闭其他图形程序后重试');}gl.viewport(0,0,w,h);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);this.live.add(t);this.allocated+=bytes;return t;}
  release(t){if(!t||!this.live.delete(t))return;this.reclaimable.delete(t);if(this.streaming)this.discard(t);else this.pool.push(t);}
+ paddedTarget(w,h,padding=0,aspect=w/h){const scale=paddingScale(padding),limit=Math.min(4096,this.base.maxSize),shrink=Math.min(1,limit/Math.max(w*scale,h*scale)),out=this.target(Math.max(1,Math.ceil(w*scale*shrink)),Math.max(1,Math.ceil(h*scale*shrink)),false,aspect);out.padding=padding;return out;}
  consumed(t){if(this.streaming){if(!t.streamHeld)this.release(t);}else this.reclaimable.add(t);}
  clearStreamSources(){for(const t of this.streamSources?.values()??[]){t.streamHeld=false;this.release(t);}this.streamSources?.clear();}
  composite(out,src,options){
   if(this.streaming&&this.overBlend&&(options.blend??'over')==='over'){this.pass(out,{...options,source:src,inPlace:true});this.consumed(src);return out;}
-  const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{...options,source:src,dest:out});this.consumed(src);this.release(out);return next;
+  const next=this.target(out.w,out.h,false,out.aspect);next.padding=out.padding??0;this.pass(next,{...options,source:src,dest:out});this.consumed(src);this.release(out);return next;
  }
  clearCache(){for(const t of this.cache.values())this.release(t);this.cache.clear();this.trimPool();}
  pass(target,{source=null,dest=null,mask=null,op=3,box=[.5,.5,1,1],axis=[.5,.5,0,1],repeat=false,opacity=1,blend='over',palette=['#000000','#ffffff'],recolor=false,imageLuminance=false,post=[0,1,1,0,1,0,1],inverted=false,contourStep=[0,0],table=null,count=0,inPlace=false,fxAmount=0,fxThreshold=0}={}){
+ if(op===1)({box,axis}=paddedPlacement(box,axis,source?.padding??0,target.padding??0));
+ else if(![0,4,5,9].includes(op))target.padding=source?.padding??0;
  const gl=this.gl,p=this.program();gl.useProgram(p);const loc=n=>this.location(p,n);gl.bindFramebuffer(gl.FRAMEBUFFER,target.fb);gl.drawBuffers([gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1]);gl.viewport(0,0,target.w,target.h);gl.disable(gl.BLEND);
  const fallback=source?.textures[0]??dest?.textures[0]??mask?.textures[0];if(!fallback)return;
  const textures=[source?.textures[0],source?.textures[1],dest?.textures[0],dest?.textures[1],mask?.textures[1],table];
@@ -91,7 +95,7 @@ export class TreeRenderer{
  gl.uniform1i(loc('imageLuminance'),+imageLuminance);gl.uniform1i(loc('hasDest'),dest?1:0);gl.uniform1i(loc('operation'),op);gl.uniform1i(loc('repeatNode'),+repeat);gl.uniform1i(loc('blendMode'),blendIds[blend]);gl.uniform1i(loc('recolor'),+recolor);gl.uniform1i(loc('recordCount'),count);gl.uniform1f(loc('opacity'),opacity);gl.uniform4fv(loc('placement'),box);gl.uniform4fv(loc('pivotTurn'),axis);gl.uniform3fv(loc('lowColor'),rgb(palette[0]));gl.uniform3fv(loc('highColor'),rgb(palette[1]));if(inPlace){gl.enable(gl.BLEND);gl.blendEquation(gl.FUNC_ADD);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);if(!repeat){const c=Math.cos(axis[2]),s=Math.sin(axis[2]),corners=[0,1].flatMap(x=>[0,1].map(y=>{const dx=(x-axis[0])*axis[3]*box[2],dy=(y-axis[1])*box[3];return [box[0]+c*dx-s*dy/target.aspect,box[1]+s*dx*target.aspect+c*dy];})),x0=Math.max(0,Math.floor(Math.min(...corners.map(p=>p[0]))*target.w)-2),y0=Math.max(0,Math.floor(Math.min(...corners.map(p=>p[1]))*target.h)-2),x1=Math.min(target.w,Math.ceil(Math.max(...corners.map(p=>p[0]))*target.w)+2),y1=Math.min(target.h,Math.ceil(Math.max(...corners.map(p=>p[1]))*target.h)+2);gl.enable(gl.SCISSOR_TEST);gl.scissor(x0,y0,Math.max(0,x1-x0),Math.max(0,y1-y0));}}gl.drawArrays(gl.TRIANGLES,0,3);
  const err=gl.getError();gl.disable(gl.BLEND);gl.disable(gl.SCISSOR_TEST);if(err)throw Error('节点渲染错误 '+err);
  }
- table(records){const gl=this.gl,tex=gl.createTexture(),data=new Float32Array(Math.max(1,records.length)*12);records.forEach((p,i)=>data.set([p.x,p.y,p.width,p.height,.5,.5,p.turn,p.mirror??1,p.opacity??1,0,0,0],i*12));gl.bindTexture(gl.TEXTURE_2D,tex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA32F,Math.max(3,records.length*3),1,0,gl.RGBA,gl.FLOAT,data);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);return tex;}
+ table(records,sourcePadding=0,targetPadding=0){const gl=this.gl,tex=gl.createTexture(),data=new Float32Array(Math.max(1,records.length)*12);paddedRecords(records,sourcePadding,targetPadding).forEach((p,i)=>data.set([p.x,p.y,p.width,p.height,.5,.5,p.turn,p.mirror??1,p.opacity??1,0,0,0],i*12));gl.bindTexture(gl.TEXTURE_2D,tex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA32F,Math.max(3,records.length*3),1,0,gl.RGBA,gl.FLOAT,data);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);return tex;}
  visibleFootprint(n,progress){
   this.footprintCache??=new Map();const key=JSON.stringify([n,progress,this.formulaSeconds??0]);
   if(this.footprintCache.has(key))return this.footprintCache.get(key);
@@ -101,7 +105,7 @@ export class TreeRenderer{
    const gl=this.gl,pixels=this.float?new Float32Array(src.w*src.h*4):new Uint8Array(src.w*src.h*4);
    gl.bindFramebuffer(gl.FRAMEBUFFER,src.fb);gl.readBuffer(gl.COLOR_ATTACHMENT0);gl.readPixels(0,0,src.w,src.h,gl.RGBA,this.float?gl.FLOAT:gl.UNSIGNED_BYTE,pixels);
    if(gl.getError())throw Error('可见范围采样失败，请重试预览');
-   const bounds=alphaFootprint(pixels,src.w,src.h);this.footprintCache.set(key,bounds);
+   const bounds=alphaFootprint(pixels,src.w,src.h),scale=paddingScale(src.padding);bounds.x*=scale;bounds.y*=scale;bounds.radius*=scale;this.footprintCache.set(key,bounds);
    while(this.footprintCache.size>256)this.footprintCache.delete(this.footprintCache.keys().next().value);
    return bounds;
   }finally{this.release(src);this.quality=quality;this.sampleLimit=limit;}
@@ -135,12 +139,13 @@ export class TreeRenderer{
  content(n,progress,w,h,palette,aspect=w/h){
  w=Math.min(w,this.sampleLimit);h=Math.min(h,this.sampleLimit);
  if(n.kind==='shape'&&this.quality>1){w=Math.min(4096,this.base.maxSize,w*this.quality);h=Math.min(4096,this.base.maxSize,h*this.quality);}
- let out=this.target(w,h,false,aspect);
+ const padding=n.kind==='shape'?(CATALOG.find(p=>p.id===n.type)?.definition.renderPadding??0):0;
+ let out=this.paddedTarget(w,h,padding,aspect);w=out.w;h=out.h;
  if(n.kind==='shape'){
   const imageResource=resources.get(n.type)?.kind==='image',fit=imageResource&&n.imageFit!=='stretch'&&Math.abs(aspect-1)>1e-9;
   const [cw,ch]=fit?fitted({fit:'contain',width:1,height:1},aspect,1):[1,1],sw=Math.max(1,Math.ceil(w*cw)),sh=Math.max(1,Math.ceil(h*ch)),design=fit?this.target(sw,sh,false,1):out;
-  const s=defaults();s.layers[0]=newLayer(n.type);s.layers[0].params=n.params;s.layers[0].uv=n.uv;s.layers[0].polar=n.polar;s.output.mode=1;s.output.seamless=n.seamless;s.output.seamMode=n.seamMode;s.output.seamBlend=n.seamBlend;s.animation.duration=1;s.animation.speed=1;
-  const raw=this.base.draw(s,sw,sh,{time:progress,formulaTime:formulaTime(n,this.formulaSeconds),float:this.float,retainTexture:true,preserveSeamlessScale:true,treeEdges:true});let vector=null;const image=(resources.get(n.type)?.kind==='image'&&n.params[0]<.5&&n.color.mode==='inherit')||!!CATALOG.find(p=>p.id===n.type)?.definition.generator;try{if(image||CATALOG.find(p=>p.id===n.type)?.vector){s.output.mode=0;vector=this.base.draw(s,sw,sh,{time:progress,formulaTime:formulaTime(n,this.formulaSeconds),float:this.float,retainTexture:true,preserveSeamlessScale:true,treeEdges:true});}this.pass(design,{source:{textures:[vector?.texture??raw.texture,raw.texture]},op:image?9:vector?5:0,palette,imageLuminance:imageResource&&n.params[0]<.5&&n.color.mode==='inherit',recolor:!!CATALOG.find(p=>p.id===n.type)?.definition.generator&&['own','remap'].includes(n.color.mode)});}finally{this.gl.deleteTexture(raw.texture);if(vector)this.gl.deleteTexture(vector.texture);}if(fit){out=this.composite(out,design,{op:1,box:[.5,.5,cw,ch],repeat:n.seamless});this.release(design);}return out;
+  const s=defaults();s.layers[0]=newLayer(n.type);s.layers[0].params=n.params;s.layers[0].uv=n.uv;s.layers[0].polar=n.polar;s.output.mode=1;s.output.seamless=padding?false:n.seamless;s.output.seamMode=n.seamMode;s.output.seamBlend=n.seamBlend;s.animation.duration=1;s.animation.speed=1;
+  const raw=this.base.draw(s,sw,sh,{time:progress,formulaTime:formulaTime(n,this.formulaSeconds),float:this.float,retainTexture:true,preserveSeamlessScale:true,treeEdges:true,sampleOffset:[-padding,-padding],sampleScale:[paddingScale(padding),paddingScale(padding)]});let vector=null;const image=(resources.get(n.type)?.kind==='image'&&n.params[0]<.5&&n.color.mode==='inherit')||!!CATALOG.find(p=>p.id===n.type)?.definition.generator;try{if(image||CATALOG.find(p=>p.id===n.type)?.vector){s.output.mode=0;vector=this.base.draw(s,sw,sh,{time:progress,formulaTime:formulaTime(n,this.formulaSeconds),float:this.float,retainTexture:true,preserveSeamlessScale:true,treeEdges:true});}this.pass(design,{source:{textures:[vector?.texture??raw.texture,raw.texture]},op:image?9:vector?5:0,palette,imageLuminance:imageResource&&n.params[0]<.5&&n.color.mode==='inherit',recolor:!!CATALOG.find(p=>p.id===n.type)?.definition.generator&&['own','remap'].includes(n.color.mode)});}finally{this.gl.deleteTexture(raw.texture);if(vector)this.gl.deleteTexture(vector.texture);}if(fit){out=this.composite(out,design,{op:1,box:[.5,.5,cw,ch],repeat:n.seamless});this.release(design);}return out;
  }
  for(const child of n.children){const e=evaluateNode(child,progress);if(!e.visible)continue;const t=e.node.transform,[cw,ch]=fitted(t,aspect,1);
   const src=this.renderNode(child,progress,Math.max(1,Math.ceil(w*cw)),Math.max(1,Math.ceil(h*ch)),palette,aspect*cw/ch);
@@ -168,7 +173,7 @@ export class TreeRenderer{
  if(!e.visible){const blank=this.target(w,h,false,aspect);if(!this.streaming)this.cache.set(key,blank);return blank;}
  const records=this.records(n,e.progress,{original,aspect});this.lastCounts.set(n.id,records.length);let out;
  if(n.arrange[0]){
-  out=this.target(w,h,false,aspect);
+  out=this.paddedTarget(w,h,n.seamless?0:arrangedPadding(n.kind==='shape'?(CATALOG.find(p=>p.id===n.type)?.definition.renderPadding??0):0,records),aspect);
   if(n.arrange[0]===14&&n.arrangeExtra.showSource){const src=this.content({kind:'group',children:[n.children[0]],seamless:false},e.progress,w,h,palette,aspect);out=this.composite(out,src,{op:1});}
   if(n.kind==='group'&&(['random-child','cycle-child'].includes(n.instanceContent)||[14,16].includes(n.arrange[0]))||n.arrange[0]===15){
    const sw=Math.max(1,Math.ceil(w*Math.max(0,...records.map(r=>r.width))*this.quality)),sh=Math.max(1,Math.ceil(h*Math.max(0,...records.map(r=>r.height))*this.quality));
@@ -180,14 +185,14 @@ export class TreeRenderer{
    }
   }else if(n.instancePhase){
    for(let i=0;i<records.length;i++){const r=records[i],phase=shiftedProgress(e.progress,i*n.instancePhase),src=this.content(evaluateNode(original,parentTime,phase).node,phase,Math.max(1,Math.ceil(w*r.width*(n.kind==='group'?this.quality:1))),Math.max(1,Math.ceil(h*r.height*(n.kind==='group'?this.quality:1))),palette,aspect*r.width/r.height);out=this.composite(out,src,{op:1,box:[r.x,r.y,r.width,r.height],axis:[.5,.5,r.turn,r.mirror??1],repeat:n.seamless,opacity:r.opacity??1});this.release(src);}
-  }else{const sw=Math.max(1,Math.ceil(w*Math.max(0,...records.map(r=>r.width))*(n.kind==='group'?this.quality:1))),sh=Math.max(1,Math.ceil(h*Math.max(0,...records.map(r=>r.height))*(n.kind==='group'?this.quality:1))),src=this.cachedContent(n,e.progress,sw,sh,palette,records.length?aspect*records[0].width/records[0].height:1),tex=this.table(records);try{this.pass(out,{source:src,op:4,repeat:n.seamless,table:tex,count:records.length});}finally{this.gl.deleteTexture(tex);this.consumed(src);}}
+  }else{const sw=Math.max(1,Math.ceil(w*Math.max(0,...records.map(r=>r.width))*(n.kind==='group'?this.quality:1))),sh=Math.max(1,Math.ceil(h*Math.max(0,...records.map(r=>r.height))*(n.kind==='group'?this.quality:1))),src=this.cachedContent(n,e.progress,sw,sh,palette,records.length?aspect*records[0].width/records[0].height:1),tex=this.table(records,src.padding??0,out.padding??0);try{this.pass(out,{source:src,op:4,repeat:n.seamless,table:tex,count:records.length});}finally{this.gl.deleteTexture(tex);this.consumed(src);}}
  }else out=this.content(n,e.progress,w,h,palette,aspect);
- if(n.mask){const t=evaluateNode(n.mask,e.progress).node,[mw,mh]=fitted(t.transform,aspect,1),m=this.renderNode(n.mask,e.progress,w,h,palette,aspect*mw/mh),placed=this.target(w,h,false,aspect);this.pass(placed,{source:m,op:1,box:[t.transform.x,t.transform.y,...fitted(t.transform,aspect,1)],axis:[t.transform.pivotX,t.transform.pivotY,t.transform.rotation*Math.PI/180,t.transform.mirrorX?-1:1],opacity:t.opacity});this.consumed(m);const next=this.target(w,h,false,aspect);this.pass(next,{source:out,mask:placed,op:2,inverted:n.maskInvert});this.release(out);this.release(placed);out=next;}
- if(n.color.mode==='remap'){const next=this.target(w,h,false,aspect);this.pass(next,{source:out,op:3,recolor:true,palette});this.release(out);out=next;}
- if(n.invert||n.post.some((v,i)=>v!==[0,1,1,0,1,0,1][i])){const next=this.target(w,h,false,aspect);this.pass(next,{source:out,op:6,post:n.post,inverted:n.invert,palette,recolor:n.color.mode==='remap'||n.kind==='shape'&&!((resources.get(n.type)?.kind==='image'&&n.params[0]<.5&&n.color.mode==='inherit')||(CATALOG.find(p=>p.id===n.type)?.definition.generator&&['inherit','preserve'].includes(n.color.mode)))});this.release(out);out=next;}
+ if(n.mask){const t=evaluateNode(n.mask,e.progress).node,[mw,mh]=fitted(t.transform,aspect,1),m=this.renderNode(n.mask,e.progress,w,h,palette,aspect*mw/mh),placed=this.target(out.w,out.h,false,out.aspect);placed.padding=out.padding??0;this.pass(placed,{source:m,op:1,box:[t.transform.x,t.transform.y,...fitted(t.transform,aspect,1)],axis:[t.transform.pivotX,t.transform.pivotY,t.transform.rotation*Math.PI/180,t.transform.mirrorX?-1:1],opacity:t.opacity});this.consumed(m);const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{source:out,mask:placed,op:2,inverted:n.maskInvert});this.release(out);this.release(placed);out=next;}
+ if(n.color.mode==='remap'){const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{source:out,op:3,recolor:true,palette});this.release(out);out=next;}
+ if(n.invert||n.post.some((v,i)=>v!==[0,1,1,0,1,0,1][i])){const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{source:out,op:6,post:n.post,inverted:n.invert,palette,recolor:n.color.mode==='remap'||n.kind==='shape'&&!((resources.get(n.type)?.kind==='image'&&n.params[0]<.5&&n.color.mode==='inherit')||(CATALOG.find(p=>p.id===n.type)?.definition.generator&&['inherit','preserve'].includes(n.color.mode)))});this.release(out);out=next;}
  if(n.contour?.mode!=='none'&&n.contour?.radius>0){
   const original=out,erode=n.contour.mode==='erode';
-  for(const step of contourPasses(n.contour.radius,out.w,out.h)){const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{source:out,op:7,contourStep:step,inverted:erode,repeat:n.seamless});if(out!==original)this.release(out);out=next;}
+  for(const step of contourPasses(n.contour.radius/paddingScale(out.padding),out.w,out.h)){const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{source:out,op:7,contourStep:step,inverted:erode,repeat:n.seamless});if(out!==original)this.release(out);out=next;}
   if(n.contour.mode==='outline'){const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{source:out,dest:original,op:8});this.release(out);out=next;}
   if(out!==original)this.release(original);
  }
@@ -204,7 +209,7 @@ export class TreeRenderer{
  this.usedKeys.clear();this.reclaimable.clear();this.budget=stream?Infinity:384*1024*1024;
  try{
   let root=canvasRoot(project.root),parentTime=time;if(solo){const entry=find(root,solo);if(entry){root=entry.node.id===project.root.id?canvasRoot(entry.node):entry.node;parentTime=entry.parent?nodeClock(canvasRoot(project.root),entry.parent.id,time).progress:time;}}
-  const aspect=project.canvas.ratio,e=evaluateNode(root,parentTime),t=e.node.transform,[rw,rh]=fitted(t,aspect,1),src=this.renderNode(root,parentTime,w,h,undefined,aspect*rw/rh);this.clearStreamSources();const identity=stream&&t.x===.5&&t.y===.5&&t.width===1&&t.height===1&&t.pivotX===.5&&t.pivotY===.5&&t.rotation===0&&!t.mirrorX&&e.node.opacity===1,placed=identity?src:this.target(w,h,false,aspect);
+  const aspect=project.canvas.ratio,e=evaluateNode(root,parentTime),t=e.node.transform,[rw,rh]=fitted(t,aspect,1),src=this.renderNode(root,parentTime,w,h,undefined,aspect*rw/rh);this.clearStreamSources();const identity=stream&&!src.padding&&t.x===.5&&t.y===.5&&t.width===1&&t.height===1&&t.pivotX===.5&&t.pivotY===.5&&t.rotation===0&&!t.mirrorX&&e.node.opacity===1,placed=identity?src:this.target(w,h,false,aspect);
   if(!identity){this.pass(placed,{source:src,op:1,box:[t.x,t.y,...fitted(t,aspect,1)],axis:[t.pivotX,t.pivotY,t.rotation*Math.PI/180,t.mirrorX?-1:1],opacity:e.node.opacity});this.consumed(src);}
   const gl=this.gl,p=this.program(true),loc=n=>this.location(p,n);if(!(read&&stream)){if(this.canvas.width!==w)this.canvas.width=w;if(this.canvas.height!==h)this.canvas.height=h;}let target=null;if(read)target=this.target(w,h,true,aspect);gl.bindFramebuffer(gl.FRAMEBUFFER,target?.fb??null);gl.drawBuffers(target?[gl.COLOR_ATTACHMENT0]:[gl.BACK]);gl.useProgram(p);gl.viewport(0,0,w,h);
   placed.textures.forEach((tex,i)=>{gl.activeTexture(gl.TEXTURE0+i);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(loc(i?'srcHeight':'srcColor'),i);});gl.uniform1i(loc('outputMode'),['color','height','normal','rgba'].indexOf(project.output.mode));gl.uniform1i(loc('transparent'),+project.output.alpha);gl.uniform1iv(loc('channels'),project.output.channels);gl.uniform3fv(loc('background'),rgb(project.output.background??'#000000'));gl.uniform1f(loc('strength'),project.output.normal);setNormalUniforms(gl,loc,project.output);gl.uniform2f(loc('pixel'),1/w,1/h);gl.drawArrays(gl.TRIANGLES,0,3);

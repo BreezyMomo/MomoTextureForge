@@ -35,12 +35,16 @@ web/definitions/
 | category / order / variant | 分类 ID、全目录索引、分类内索引；按原有顺序追加，不能重排现有 ID |
 | defaults | 16 个有限数值，保留旧槽位；可见槽位必须等于参数 default |
 | parameters | `{slot,key,label,min,max,step,default}`；最多 16 个，槽位不重复 |
+| parameters[].type / options | 公式也可声明 `type:"select"` 与 `{value,label}` 选项数组；值须为范围内整数，参数动画按离散值切换 |
+| renderPadding | 可选0～0.5的对称渲染留白，仅标量公式可用；不改变主体的0～1坐标、轴心、选区或排列格距 |
 | outputs.scalar | 所有图案必需的标量公式描述，供混合/蒙版/排列/高度/法线使用 |
 | outputs.vector | 可选 `{library:"vector-v1"}`，图案输出模式使用矢量函数库，标量采样仍保留 |
 | seamless | `blend`、`repeat` 或 `periodic`，见下文 |
 | editor | `kind: parameters / gear / star / bezier`；复杂编辑器明确声明能力和所需槽位 |
 
 图案例子可直接查看 `patterns/Circle/pattern.json`、`patterns/Gear/pattern.json` 和 `patterns/BezierRibbon/pattern.json`。添加图案时新增目录/配置/公式，再向索引末尾追加引用；为新记录设置全目录末尾 order 和分类内下一个 variant，不重排既有图案。修改现有图案参数或公式只需编辑它自己的文件。参数槽键按顺序固定为 `R W N S D K H T A B C E F G I J`；这些键是 ABI 绑定，显示名称可自由命名。数值数组/关键帧沿用旧 v5 数据；没有把现有项目转换成另一套参数命名。
+
+`PuzzlePiece` 为单块拼图，四边独立选择平边、凸耳、凹口，支持轮廓／实心。槽9选择圆头／方头／燕尾／波浪，槽10调接口圆润度；槽11～14为左上／右上／右下／左下主体圆角，0为直角，最大0.4。主体占满0～1，凸耳在区域外；使用现成网格排列。相邻凹凸使用相同接口参数并镜像同一局部轮廓；主体圆角会在格点留空。该定义以 `renderPadding:0.46` 容纳最大凸耳，渲染器对中间纹理、实例合成及轴心换算留白，普通组合和最终画布仍裁切。留白图形新建时区域会缩小以完整展示，手动改为区域宽高1则仍受最终画布裁切。资源包保留定义元数据。
 
 ## 公式描述和 ABI
 

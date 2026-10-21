@@ -5,6 +5,9 @@ const css=(selector,label)=>({selector,label});
 const role=(role,name,label=name)=>({role,name,label});
 const field=(name,label=name)=>({field:name,label});
 export const annotations={
+ 'puzzle-piece':[field('接口样式','选择四种接口造型'),field('接口圆润度','调节接口弯曲形状'),field('上边','单独设置四边凹凸')].map(s=>({...s,numberOnly:true})),
+ 'puzzle-corners':[field('左上圆角','左上角：0为直角'),field('右上圆角','右上角圆角大小'),field('右下圆角','右下角圆角大小'),field('左下圆角','左下角圆角大小')].map(s=>({...s,numberOnly:true})),
+ 'puzzle-grid':[field('排列方式','使用现成网格排列'),field('网格列数','设置列数'),field('网格行数','设置行数')].map(s=>({...s,numberOnly:true})),
  workspace:[css('#open-graphics-library','打开图形库'),css('#node-tree','选择节点'),css('#preview-channel','切换贴图类型'),css('#inspector-tabs','编辑选中节点')],
  'color-collapsed':[{...role('button','展开颜色快捷区','点击展开颜色与透明度'),side:'left'}],
  'color-inheritance':[css('#inspector-color-quick','常驻颜色快捷区'),css('.color-quick-actions','独立修改或前往来源')].map(spec=>({...spec,side:'left'})),

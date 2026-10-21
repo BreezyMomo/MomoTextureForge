@@ -91,6 +91,8 @@ test("schema rejects incompatible ABI, duplicate IDs/slots, unstable indices, un
     r=>r.patterns[0].outputs.scalar.inline='1.',
     r=>r.patterns[0].editor.kind='bezier', r=>r.patterns[0].seamless.extent='unknown',
     r=>r.patterns[0].outputs.vector={library:'unsupported'},
+    ...[-.01,.51,NaN,'0.1'].map(value=>r=>r.patterns[0].renderPadding=value),
+    r=>{r.patterns[0].parameters[0].type='select';r.patterns[0].parameters[0].options=[{value:999,label:'超范围'}];},
     ...['../secret.glsl','/absolute.glsl','https://example.com/a.glsl','a/../../b.glsl','a\\b.glsl','a.glsl?x=1'].map(file=>r=>r.patterns[0].outputs.scalar.file=file)
   ];
   for(const change of cases){const r=clone();change(r);assert.throws(()=>validateLibrary(r),/图案定义错误/);}

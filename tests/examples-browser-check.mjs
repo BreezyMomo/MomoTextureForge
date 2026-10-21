@@ -30,7 +30,7 @@ try{
  for(const href of links){
   const url=new URL(href);assert.equal(url.origin,origin);
   const project=sanitizeTree(JSON.parse(Buffer.from(url.hash.slice(6),'base64').toString('utf8')));
-  assert.ok(project.root.children[0].children.length>=2);names.add(project.name);
+  const root=project.root.children[0];assert.ok(root.kind==='shape'?root.arrange[0]>0:root.children.length>=2);names.add(project.name);
   if(['刀光拖尾','命中爆闪','破碎冲击环','溶解遮罩'].includes(project.name))assert.equal(project.output.loopExport,false,project.name);
   if(project.name==='溶解遮罩'){assert.equal(project.output.mode,'height');assert.equal(project.output.alpha,false);}
   if(['菱形格纹','交错菱砖','斜纹底纹','点阵底纹'].includes(project.name)){assert.equal(project.output.mode,'color');assert.equal(project.output.alpha,false);}
@@ -40,7 +40,7 @@ try{
    await editor.waitForFunction(()=>{const s=document.querySelector('#render-status');return s&&s.textContent.includes('预览')&&!s.textContent.includes('加载');});
    assert.equal(await editor.locator('#project-name').inputValue(),project.name);
    assert.equal(await editor.locator('#preview-error').isVisible(),false,project.name);
-   assert.ok(await editor.locator('[role="treeitem"]').count()>1);
+   assert.ok(await editor.locator('[role="treeitem"]').count()>=(root.kind==='shape'?1:2));
   }finally{await editor.close();}
  }
  assert.equal(names.size,sampleCount);assert.deepEqual(errors,[]);

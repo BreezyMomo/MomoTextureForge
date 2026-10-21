@@ -1,5 +1,6 @@
 import {find} from './tree-model.js';
 import {selectionRegions} from './tree-view.js';
+import {BY_ID} from './catalog.js';
 import {contains,sub,moveTransform,pivotTransform,rotateTransform,resizeTransform,bounds,snapMove} from './canvas-transform.js';
 
 const handles=[[0,0],[.5,0],[1,0],[1,.5],[1,1],[.5,1],[0,1],[0,.5]];
@@ -12,6 +13,7 @@ export function createCanvasEditor(surface,api){
  toolbar.prepend(transform,pivot,snapping);snapping.setAttribute('aria-pressed','true');
  const getScope=()=>find(api.project().root,scope)?.node??api.project().root;
  const regionList=id=>selectionRegions(api.project(),id,api.time(),{solo:api.solo(),records:api.records}).regions;
+ const hitContains=(id,region,p)=>contains(region,p,BY_ID.get(find(api.project().root,id)?.node.type)?.definition.renderPadding??0);
  function setMode(next){api.leaveOtherTools();mode=next;transform.setAttribute('aria-pressed',String(mode==='transform'));pivot.setAttribute('aria-pressed',String(mode==='pivot'));draw();}
  function enabled(){return !api.blocked()&&!space;}
  function point(e){const b=surface.getBoundingClientRect();return [(e.clientX-b.left)/Math.max(1,b.width),1-(e.clientY-b.top)/Math.max(1,b.height)];}
@@ -38,7 +40,7 @@ export function createCanvasEditor(surface,api){
  }
  function candidates(p){
   const nodes=api.solo()?[find(api.project().root,api.primary())?.node].filter(Boolean):getScope().children,found=[];
-  for(const n of [...nodes].reverse()){const regions=regionList(n.id);for(let i=regions.length-1;i>=0;i--)if(contains(regions[i],p)){found.push({id:n.id,copy:i,region:regions[i]});break;}}
+  for(const n of [...nodes].reverse()){const regions=regionList(n.id);for(let i=regions.length-1;i>=0;i--)if(hitContains(n.id,regions[i],p)){found.push({id:n.id,copy:i,region:regions[i]});break;}}
   return found;
  }
  function hits(p){return candidates(p).filter(c=>api.hit(c.id,p));}
@@ -58,7 +60,7 @@ export function createCanvasEditor(surface,api){
   let hit;try{
    // A node selected in the tree remains directly editable even outside the
    // current group scope. Alt explicitly returns to overlap cycling.
-   if(!e.altKey&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey)for(const n of [...api.nodes()].reverse()){const rs=regionList(n.id),copy=rs.findIndex(r=>contains(r,p));if(copy>=0&&api.hit(n.id,p)){hit={id:n.id,copy,region:rs[copy]};break;}}
+   if(!e.altKey&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey)for(const n of [...api.nodes()].reverse()){const rs=regionList(n.id),copy=rs.findIndex(r=>hitContains(n.id,r,p));if(copy>=0&&api.hit(n.id,p)){hit={id:n.id,copy,region:rs[copy]};break;}}
    hit??=choose(e,p);
   }catch(error){api.notify('无法选择：'+error.message);return;}
   if(hit){activeCopy=hit.copy;if(e.ctrlKey||e.metaKey||e.shiftKey){api.toggle(hit.id);draw();return;}if(!api.ids().includes(hit.id))api.select([hit.id],hit.id);begin(e,'move',hit);}

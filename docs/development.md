@@ -63,6 +63,8 @@ node tests/pages-browser-check.mjs
 
 按改动范围运行浏览器检查；Node 单元测试不等于已检查实际 WebGL 画面。
 
+拼图回归：`node tests/puzzle-browser-check.mjs`，静态构建后加 `--standalone` 检查单文件界面。覆盖四种接口×四边共324种组合、36组接口配对、四角独立控制、凸耳越界、网格格距、三种半径的拼接、预览/导出、遮罩/滤镜和滑条保存。`renderPadding` 是公式定义的对称渲染留白（0～0.5），只扩展采样与合成范围；蓝框、轴心与排列仍按逻辑主体计算。普通组合不继承子节点留白，最终画布保持裁切。教程截图运行 `node tools/capture-docs.mjs puzzle`。
+
 面板布局回归：`node tests/dock-workspace-browser-check.mjs`；构建后加 `--standalone` 检查单文件版。覆盖实际拖动、标签合并、悬浮移动/缩放、保存与刷新恢复、三维上下文和 PNG 导出。布局模型在 `web/dock-layout.js`，DOM 控制器与样式在 `web/dock-workspace.js`、`web/dock-workspace.css`；只移动原有控件，布局本地存储与项目数据分开。
 
 颜色面板回归：`node tests/inspector-color-browser-check.mjs`，构建后可加 `--standalone`。检查继承来源、复制为独立配色的画面一致性、HEX与顶部快捷色块、透明度滑条与百分比同步、父子透明度合成、撤销/重做、颜色和透明度关键帧、多色色标和刷新恢复。
@@ -98,7 +100,8 @@ node tools/capture-docs.mjs colors
 | 组 | 画面 |
 | --- | --- |
 | examples | 通过真实“打开项目”入口检查四个示例 |
-| combinations | 24 种组合/素材预设总览、七种新增排列的分类截图与编辑入口 |
+| combinations | 27 种组合/素材预设总览、十种新增排列的分类截图与编辑入口 |
+| puzzle | 拼图接口样式、独立四角、凸耳越界与网格行列数 |
 | workspace | 总览、排列、合成和文件菜单 |
 | docking | 面板标签、网页内悬浮与布局保存菜单 |
 | colors | 颜色快捷区、继承来源、独立颜色页签、渐变和HEX |

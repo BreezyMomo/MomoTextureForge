@@ -36,6 +36,12 @@ try{
  const changeNumber=async(label,value,scope=page)=>{const input=scope.getByRole('spinbutton',{name:label,exact:true});await input.fill(String(value));await input.press('Tab');};
  const library=async()=>{await page.locator('#open-graphics-library').click();await page.getByPlaceholder('搜索名称、分类或标签').waitFor();};
  const editorReady=async()=>{const d=page.locator('dialog').last();await d.getByRole('status').filter({hasText:'预览成功'}).first().waitFor();return d;};
+ await run('puzzle',async()=>{
+  await page.setViewportSize({width:1600,height:1450});const p=project();p.name='单块拼图网格';p.root.children=[treeSamples().find(s=>s.name===p.name).root];await load(p);
+  await page.getByRole('button',{name:'选择 单块拼图网格',exact:true}).click();await page.getByRole('button',{name:'图形',exact:true}).click();await shot('puzzle-piece');
+  await page.getByRole('button',{name:'变换/排列',exact:true}).click();await page.getByRole('spinbutton',{name:'网格行数',exact:true}).evaluate(e=>e.scrollIntoView({block:'center'}));await shot('puzzle-grid');
+  const styles=project();styles.name='拼图接口与圆角';styles.root.children=[treeSamples().find(s=>s.name===styles.name).root];await load(styles);await page.getByRole('button',{name:'选择 圆头凸耳',exact:true}).click();await page.getByRole('button',{name:'图形',exact:true}).click();await page.getByText('主体四角：0为直角',{exact:true}).click();await shot('puzzle-corners');await page.setViewportSize({width:1600,height:1050});
+ });
  await run('examples',async()=>{
   for(const [file,p]of [['summoning-circle',spell],['animation-star',animated],['water-caustics',water],['fire-sequence',fire]]){
    await page.goto(url);await ready();await page.locator('#project-file').setInputFiles(resolve(root,'docs/examples/'+file+'.json'));

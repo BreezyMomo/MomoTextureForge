@@ -2,6 +2,14 @@ import {node} from './tree-model.js';
 
 // Curated presets use current definitions directly. No retired-ID redirects.
 export const LIBRARY_PRESETS=[
+  {id:'puzzle-corner',type:'PuzzlePiece',alias:'拼图角块',params:{0:1,1:1,2:0,3:0}},
+  {id:'puzzle-edge',type:'PuzzlePiece',alias:'拼图边块',params:{0:1,1:1,2:0,3:-1}},
+  {id:'puzzle-tabs',type:'PuzzlePiece',alias:'四向凸耳拼图',params:{0:1,1:1,2:1,3:1}},
+  {id:'puzzle-sockets',type:'PuzzlePiece',alias:'四向凹口拼图',params:{0:-1,1:-1,2:-1,3:-1}},
+  {id:'puzzle-square',type:'PuzzlePiece',alias:'方头卡扣拼图',params:{9:1,10:.2}},
+  {id:'puzzle-dovetail',type:'PuzzlePiece',alias:'燕尾接口拼图',params:{9:2,10:.45}},
+  {id:'puzzle-wave',type:'PuzzlePiece',alias:'波浪接口拼图',params:{9:3,10:.7}},
+  {id:'puzzle-rounded',type:'PuzzlePiece',alias:'圆角主体拼图',params:{11:.18,12:.18,13:.18,14:.18}},
   {id:"square-gradient",type:"ShapeGradient",alias:"方形渐变",params:{0:1,1:.62,2:1}},
   {
     "id": "honeycomb",

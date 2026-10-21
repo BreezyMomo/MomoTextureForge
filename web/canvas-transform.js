@@ -4,7 +4,7 @@ export function inversePoint(point,p){
  const o=point([0,0]),x=sub(point([1,0]),o),y=sub(point([0,1]),o),v=sub(p,o),det=x[0]*y[1]-x[1]*y[0];
  if(Math.abs(det)<1e-12)throw Error('节点区域为零，先在右侧调整宽高');return [(v[0]*y[1]-v[1]*y[0])/det,(x[0]*v[1]-x[1]*v[0])/det];
 }
-export function contains(region,p){try{const q=inversePoint(region.point,p);return q.every(v=>v>=0&&v<=1);}catch{return false;}}
+export function contains(region,p,padding=0){try{const q=inversePoint(region.point,p);return q.every(v=>v>=-padding&&v<=1+padding);}catch{return false;}}
 export function moveTransform(region,delta){const t=region.transform,d=sub(inversePoint(region.parentPoint,add(region.pivot,delta)),inversePoint(region.parentPoint,region.pivot));return {x:t.x+d[0],y:t.y+d[1]};}
 export function pivotTransform(region,p){
  const q=inversePoint(region.point,p).map(v=>Math.max(0,Math.min(1,v))),position=inversePoint(region.parentPoint,region.point(q));return {pivotX:q[0],pivotY:q[1],x:position[0],y:position[1]};

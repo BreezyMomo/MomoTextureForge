@@ -1,9 +1,9 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "PuzzlePiece",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
-  "name": "拼图纹理",
+  "name": "拼图块",
   "category": "pattern",
   "order": 51,
   "variant": 0,
@@ -11,61 +11,241 @@
     {
       "slot": 0,
       "key": "R",
-      "label": "格数",
-      "min": 1.0,
-      "max": 8.0,
-      "step": 1.0,
-      "default": 3.0
+      "label": "上边",
+      "min": -1,
+      "max": 1,
+      "step": 1,
+      "default": 1,
+      "type": "select",
+      "options": [
+        {
+          "value": -1,
+          "label": "凹口"
+        },
+        {
+          "value": 0,
+          "label": "平边"
+        },
+        {
+          "value": 1,
+          "label": "凸耳"
+        }
+      ]
     },
     {
       "slot": 1,
       "key": "W",
-      "label": "凸耳大小",
-      "min": 0.06,
-      "max": 0.5,
-      "step": 0.01,
-      "default": 0.22
+      "label": "右边",
+      "min": -1,
+      "max": 1,
+      "step": 1,
+      "default": 1,
+      "type": "select",
+      "options": [
+        {
+          "value": -1,
+          "label": "凹口"
+        },
+        {
+          "value": 0,
+          "label": "平边"
+        },
+        {
+          "value": 1,
+          "label": "凸耳"
+        }
+      ]
     },
     {
       "slot": 2,
       "key": "N",
-      "label": "块大小",
-      "min": 0.55,
-      "max": 0.95,
-      "step": 0.01,
-      "default": 0.8
+      "label": "下边",
+      "min": -1,
+      "max": 1,
+      "step": 1,
+      "default": -1,
+      "type": "select",
+      "options": [
+        {
+          "value": -1,
+          "label": "凹口"
+        },
+        {
+          "value": 0,
+          "label": "平边"
+        },
+        {
+          "value": 1,
+          "label": "凸耳"
+        }
+      ]
     },
     {
       "slot": 3,
       "key": "S",
-      "label": "线宽",
-      "min": 0.002,
-      "max": 0.03,
-      "step": 0.001,
-      "default": 0.007
+      "label": "左边",
+      "min": -1,
+      "max": 1,
+      "step": 1,
+      "default": -1,
+      "type": "select",
+      "options": [
+        {
+          "value": -1,
+          "label": "凹口"
+        },
+        {
+          "value": 0,
+          "label": "平边"
+        },
+        {
+          "value": 1,
+          "label": "凸耳"
+        }
+      ]
     },
     {
       "slot": 4,
       "key": "D",
-      "label": "边缘柔化",
-      "min": 0.002,
-      "max": 0.04,
+      "label": "接口大小",
+      "min": 0.04,
+      "max": 0.2,
+      "step": 0.005,
+      "default": 0.12
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "label": "颈部收窄",
+      "min": 0,
+      "max": 0.92,
+      "step": 0.01,
+      "default": 0.72
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "label": "线宽",
+      "min": 0.001,
+      "max": 0.025,
       "step": 0.001,
-      "default": 0.004
+      "default": 0.006
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "label": "羽化",
+      "min": 0,
+      "max": 0.02,
+      "step": 0.001,
+      "default": 0
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "label": "显示方式",
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "default": 0,
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "label": "轮廓"
+        },
+        {
+          "value": 1,
+          "label": "实心"
+        }
+      ]
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "label": "接口样式",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "default": 0,
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "label": "圆头凸耳"
+        },
+        {
+          "value": 1,
+          "label": "方头卡扣"
+        },
+        {
+          "value": 2,
+          "label": "梯形燕尾"
+        },
+        {
+          "value": 3,
+          "label": "波浪接口"
+        }
+      ]
+    },
+    {
+      "slot": 10,
+      "key": "C",
+      "label": "接口圆润度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 1
+    },
+    {
+      "slot": 11,
+      "key": "E",
+      "label": "左上圆角",
+      "min": 0,
+      "max": 0.4,
+      "step": 0.005,
+      "default": 0
+    },
+    {
+      "slot": 12,
+      "key": "F",
+      "label": "右上圆角",
+      "min": 0,
+      "max": 0.4,
+      "step": 0.005,
+      "default": 0
+    },
+    {
+      "slot": 13,
+      "key": "G",
+      "label": "右下圆角",
+      "min": 0,
+      "max": 0.4,
+      "step": 0.005,
+      "default": 0
+    },
+    {
+      "slot": 14,
+      "key": "I",
+      "label": "左下圆角",
+      "min": 0,
+      "max": 0.4,
+      "step": 0.005,
+      "default": 0
     }
   ],
   "defaults": [
-    3.0,
-    0.22,
-    0.8,
-    0.007,
-    0.004,
+    1,
+    1,
+    -1,
+    -1,
+    0.12,
+    0.72,
+    0.006,
     0,
     0,
     0,
-    0,
-    0,
-    0,
+    1,
     0,
     0,
     0,
@@ -77,8 +257,7 @@
       "kind": "body",
       "file": "formula.glsl",
       "libraries": [
-        "math-v1",
-        "reference-v1"
+        "math-v1"
       ]
     }
   },
@@ -87,5 +266,6 @@
   },
   "editor": {
     "kind": "parameters"
-  }
+  },
+  "renderPadding": 0.46
 }

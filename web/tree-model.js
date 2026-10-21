@@ -12,8 +12,9 @@ const num=(v,d,a=-10000,b=10000)=>clamp(Number.isFinite(Number(v))?Number(v):d,a
 export const uid=()=>globalThis.crypto?.randomUUID?.()??`n-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 export function shapeDefaults(type){const p=BY_ID.get(type)??BY_ID.get('Circle'),values=[...p.defaults];for(const spec of p.parameters)if(spec.label==='羽化')values[spec.slot]=0;return values;}
 export function node(kind='shape',type='Circle'){
+ const padding=kind==='shape'?(BY_ID.get(type)?.definition.renderPadding??0):0,size=padding?1/(1+2*padding+.08):1;
  return {id:uid(),name:kind==='group'?'组合':BY_ID.get(type)?.zh??type,kind,enabled:true,type,params:shapeDefaults(type),
- transform:{x:.5,y:.5,width:1,height:1,rotation:0,mirrorX:false,pivotX:.5,pivotY:.5,fit:'stretch',lockAspect:false},opacity:1,blend:'over',seamless:false,seamMode:0,seamBlend:.2,
+ transform:{x:.5,y:.5,width:size,height:size,rotation:0,mirrorX:false,pivotX:.5,pivotY:.5,fit:'stretch',lockAspect:false},opacity:1,blend:'over',seamless:false,seamMode:0,seamBlend:.2,
  uv:[1,0,0,0,0,0,0],polar:false,
  color:{mode:kind==='group'?'preserve':'inherit',fill:'gradient',low:'#000000',high:'#ffffff'},
  arrange:sanitizeTreeArrangement([0,...Array(58).fill(undefined)]),arrangeExtra:extraDefaults(),tileEdges:0,arrangeFit:'contain',imageFit:'contain',instancePhase:0,instanceContent:'all',scatterAvoidOverlap:false,scatterGap:0,
@@ -30,6 +31,7 @@ export const ANIMATION_ENUMS={'contour.mode':['none','outline','dilate','erode']
 Object.assign(ANIMATION_ENUMS,Object.fromEntries(Object.entries(EXTRA_ENUMS).map(([key,values])=>['arrangeExtra.'+key,values])));
 export const ANIMATION_BOOLS=['shapeClock.follow','enabled','transform.mirrorX','seamless','polar','invert',...EXTRA_BOOLS.map(key=>'arrangeExtra.'+key)];
 export function animationType(n,path){
+ const parameter=/^params\.(\d+)$/.exec(path);if(parameter&&BY_ID.get(n.type)?.parameters.find(p=>p.slot===+parameter[1])?.type==='select')return 'discrete';
  const generatorParameter=/^params\.(\d+)$/.exec(path);if(generatorParameter&&BY_ID.get(n.type)?.definition.generator){const spec=BY_ID.get(n.type).parameters.find(p=>p.slot===+generatorParameter[1]);if(spec?.step===1||spec?.type)return 'discrete';}
  if(path==='color.low'||path==='color.high')return 'color';
  if(ANIMATION_ENUMS[path]||ANIMATION_BOOLS.includes(path))return 'discrete';
