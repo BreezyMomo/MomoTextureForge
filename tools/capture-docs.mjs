@@ -95,6 +95,9 @@ try{
   await page.getByRole('combobox',{name:'预览贴图类型',exact:true}).selectOption('normal');await changeNumber('法线强度',6,page.locator('#normal-preview-settings'));await shot('normal-preview');
   await page.getByRole('combobox',{name:'预览模式',exact:true}).selectOption('material');await page.waitForFunction(()=>document.querySelector('#render-status').textContent.includes('材质采样'));await shot('material-preview');
  });
+ await run('effect',async()=>{
+  const p=project();p.name='火焰特效混合对照';p.root.children=[node('shape','TurbulentFlame')];await load(p);await page.getByRole('combobox',{name:'预览模式',exact:true}).selectOption('effect');await page.getByRole('combobox',{name:'特效预览背景',exact:true}).selectOption('compare');await page.getByRole('slider',{name:'当前范围滑动进度',exact:true}).fill('0.45');await page.waitForFunction(()=>document.querySelector('#render-status').textContent.includes('特效预览'));await shot('effect-preview',page.locator('.tree-preview'));
+ });
  await run('export',async()=>{
   await load(spell);await page.locator('#export-now').click();await shot('export-png');await page.locator('#close-global').click();
   await load(fire);await page.locator('#export-now').click();await page.getByRole('combobox',{name:'导出类型',exact:true}).selectOption('atlas');await changeNumber('像素宽',128,page.locator('#global-panel'));await changeNumber('播放秒数',1,page.locator('#global-panel'));await changeNumber('每秒帧数（FPS）',16,page.locator('#global-panel'));await changeNumber('图集列数',4,page.locator('#global-panel'));await shot('export-atlas');

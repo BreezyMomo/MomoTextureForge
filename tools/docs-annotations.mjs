@@ -33,6 +33,7 @@ export const annotations={
  'height-preview':[css('#preview-channel','贴图类型选择高度')],
  'normal-preview':[css('#preview-channel','贴图类型选择法线'),field('法线强度','调整凹凸强度'),field('法线算法','选择法线算法')],
  'material-preview':[css('#preview-mode','切换三维材质'),field('预览模型','选择球体或平面'),css('#material-preview','拖动旋转检查受光')],
+ 'effect-preview':[css('#preview-mode','切换特效预览'),field('特效预览背景','切换深浅背景'),field('特效预览混合','对比透明与相加混合'),css('#tree-time','播放或定位动画')].map(spec=>({...spec,numberOnly:true})),
  'export-png':[field('导出类型','选择 PNG 当前帧'),field('输出内容','选择颜色或法线'),css('#confirm-export','开始导出')],
  'export-atlas':[field('导出类型','选择序列帧图集'),field('每秒帧数（FPS）','设置帧率'),field('播放秒数','设置序列时长'),field('图集列数','设置图集排布')],
  'atlas-preview':[{...role('img','完整画布图集预览','首帧'),portion:[0,0,.25,.25]},{...role('img','完整画布图集预览','末帧'),portion:[.75,.75,.25,.25]}],
