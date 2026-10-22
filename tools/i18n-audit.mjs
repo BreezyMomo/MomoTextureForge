@@ -8,7 +8,7 @@ export async function collectMessages(){
  const found=new Map(),base=UI_CATALOGS[config.default],namespaces=new Set(Object.keys(base).map(key=>key.split('.')[0]));
  const add=(key,file)=>{if(!found.has(key))found.set(key,[]);if(!found.get(key).includes(file))found.get(key).push(file);};
  const markup=(source,file)=>{for(const match of source.matchAll(/data-i18n(?:-title|-aria-label|-placeholder|-alt)?=["']([^"']+)["']/g))add(match[1],file);};
- for(const name of [...await readdir(new URL('../web/',import.meta.url)),'../build-standalone.mjs']){
+ for(const name of [...await readdir(new URL('../web/',import.meta.url)),'../build-standalone.mjs','../library-manager/index.html','../library-manager/app.js']){
   if(!/\.(?:m?js|html)$/.test(name)||/vendor|kit-runtime/.test(name))continue;
   const source=await readFile(new URL('../web/'+name,import.meta.url),'utf8');markup(source,name);for(const match of source.matchAll(/uiText\(['"]([a-z][A-Za-z0-9.]*)['"]\)/g))add(match[1],name);
   if(/\.m?js$/.test(name))visit(parse(source,{ecmaVersion:'latest',sourceType:'module'}),node=>{

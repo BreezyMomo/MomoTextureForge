@@ -1,5 +1,9 @@
 # 10 · AI 协作与帮助
 
+<!-- doc-language -->
+[简体中文](10-ai-and-help.md) · [English](10-ai-and-help.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md) · 上一篇：[远程图库](09-remote-libraries.md)
 
 ## 1. 顶部入口与帮助菜单

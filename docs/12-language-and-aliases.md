@@ -1,5 +1,9 @@
 # 语言、图形名称与参数别名
 
+<!-- doc-language -->
+[简体中文](12-language-and-aliases.md) · [English](12-language-and-aliases.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md) · [返回项目首页](../README.md)
 
 ## 设置参数的显示语言

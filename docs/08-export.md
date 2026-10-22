@@ -1,5 +1,9 @@
 # 08 · 导出与交付
 
+<!-- doc-language -->
+[简体中文](08-export.md) · [English](08-export.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md) · 上一篇：[法线与三维](07-normal-and-material.md) · 下一篇：[远程图库](09-remote-libraries.md)
 
 ## 1. 导出单张 PNG

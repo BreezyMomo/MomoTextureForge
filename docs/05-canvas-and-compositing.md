@@ -1,5 +1,9 @@
 # 05 · 画布、排列与合成
 
+<!-- doc-language -->
+[简体中文](05-canvas-and-compositing.md) · [English](05-canvas-and-compositing.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md) · 上一篇：[公式与生成器](04-formulas-and-generators.md) · 下一篇：[动画](06-animation.md)
 
 打开[召唤法阵示例](examples/summoning-circle.json)，选中节点“环形星光”，可以复现本章的排列界面。

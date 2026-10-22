@@ -3,3 +3,5 @@
 #start-status.error{color:#ffb69e}
 
 .danger{color:#ffb6ad;border-color:#a95350;background:#462a30}.danger:hover{border-color:#ef8b80}
+
+.header-options{display:flex;align-items:center;gap:12px}header{gap:16px;flex-wrap:wrap}

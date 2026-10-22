@@ -1,5 +1,9 @@
 # 自定义生成器
 
+<!-- doc-language -->
+[简体中文](generator-guide.md) · [English](generator-guide.en.md)
+<!-- /doc-language -->
+
 适用于需要原生 RGB/RGBA、多个渲染步骤或中间纹理的程序图形，例如彩色火焰、柔光、烟气与纹理。简单标量形状仍优先使用公式。图库已有生成器可直接编辑参数并另存；创建入口没有模板选择。
 
 交付 UTF-8 `.generator.json`，schema 为 `momo.generator-authoring/v1`。用户可在“图库 → 创建资源 → 生成器”粘贴或选择文件，验证预览并导入图形库；“导入文件”页签也识别此 JSON，支持与公式 JSON 一起多选。已保存生成器可重新编辑代码、导出生成器 JSON，或通过“导出资源”打包完整依赖。

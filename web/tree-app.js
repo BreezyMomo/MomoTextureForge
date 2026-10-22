@@ -1,9 +1,10 @@
+import {documentationURL,repositoryURL} from './documentation-links.js';
 import {installHeaderToolbar} from './header-toolbar.js';
 import {graphicSearchText} from './graphic-name.js';
 import {messageError} from './message-catalog.js';
 import {uiOption,uiError,uiText,localizeApplicationMarkup,uiFormat} from './ui-language.js';
 import {installLanguageSelector} from './language-settings.js';
-import {parameterLabel,onLanguageChange} from './language.js';
+import {parameterLabel,onLanguageChange,interfaceLanguage} from './language.js';
 import {parameterRole} from './parameter-metadata.js';
 import {createEffectPreview} from './effect-preview.js';
 import {mountStartupContent} from './startup.js';
@@ -736,4 +737,7 @@ document.addEventListener('keydown',event=>{
 });
 
 installLanguageSelector($('language-settings'),{notify});
+const updateDocumentationLink=()=>{const language=interfaceLanguage();$('detailed-help').href=documentationURL('README.md',language);$('github-repository').href=repositoryURL('https://github.com/BreezyMomo/MomoTextureForge',language);$('gitee-repository').href=repositoryURL('https://gitee.com/BreezyMomo/MomoTextureForge',language);};
+updateDocumentationLink();
+onLanguageChange(updateDocumentationLink);
 onLanguageChange(()=>{groupSelected.textContent=uiText("editor.groupSelection");groupSelected.title=uiText("editor.ctrlCmdGGroupSelectedSiblings");["editor.showSelected","editor.hideSelected","editor.ctrlMultiselectShiftRangeSelectDragReorder"].forEach((label,i)=>selectionTools.children[i].textContent=uiText(label));refresh();animationEditor.update(true);});

@@ -1,5 +1,9 @@
 # 界面语言统一消息键
 
+<!-- doc-language -->
+[简体中文](ui-message-keys.md) · [English](ui-message-keys.en.md)
+<!-- /doc-language -->
+
 目标：界面使用稳定的语义 key，所有语言文件结构一致，文案修改不改变调用身份。
 
 1. 提取中文与英文独立词库，提供统一解析、插值与缺失回退；语言配置仍在构建时固定。

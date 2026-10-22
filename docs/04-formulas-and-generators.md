@@ -1,5 +1,9 @@
 # 04 · 公式与生成器
 
+<!-- doc-language -->
+[简体中文](04-formulas-and-generators.md) · [English](04-formulas-and-generators.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md) · 上一篇：[图片与 SVG](03-images-and-svg.md) · 下一篇：[画布与合成](05-canvas-and-compositing.md)
 
 ## 1. 先选合适的创作方式

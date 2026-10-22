@@ -1,5 +1,9 @@
 # 生成器统一时间驱动
 
+<!-- doc-language -->
+[简体中文](01-generator-time.md) · [English](01-generator-time.en.md)
+<!-- /doc-language -->
+
 状态：完成
 
 ## 范围

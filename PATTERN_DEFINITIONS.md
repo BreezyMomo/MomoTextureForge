@@ -1,5 +1,9 @@
 # 图案定义与公式文件
 
+<!-- doc-language -->
+[简体中文](PATTERN_DEFINITIONS.md) · [English](PATTERN_DEFINITIONS.en.md)
+<!-- /doc-language -->
+
 每个内置图案各自拥有独立目录和配置，由 `web/definitions/builtin.json` 的有序索引注册；公共数学/周期/矢量函数在 `libraries/`。启动时校验并读取本地资源，浏览器和 Node 使用同一份定义，不需要生成步骤或生产依赖。现有参数面板、图层/蒙版、动画、排列、平铺、法线与导出消费这份目录；宿主多 pass 渲染和编码逻辑保留。
 
 `NaturalWood`（自然木纹）追加于目录末尾，使用16参数与独立的 `natural-wood-v1` 库，函数统一为 `nw` 前缀，避免与用户导入的木纹创作文件冲突。内置记录保留可移植创作源码，编辑器可以继续编辑和导出参数。原有 `Wood` 及其它图案索引不变。
@@ -18,7 +22,7 @@ web/definitions/
       periodic.glsl            # 可选：原生周期公式
 ```
 
-本轮完成结构与内置图案迁移，暂未提供公式上传/编辑 UI。直接编辑文件后刷新可重新加载；更新旧版本运行中的服务时先重启 `start.bat`，服务需要支持 JSON/GLSL MIME 与同源静态资源读取。配置不是 JavaScript，不使用 eval；GLSL 资源仍是可信本地开发输入，结构校验不是任意代码的安全沙箱。
+内置定义按以下文件结构维护；用户也可通过图形库创建、编辑和导入公式。直接编辑文件后刷新可重新加载；更新旧版本运行中的服务时先重启 `start.bat`，服务需要支持 JSON/GLSL MIME 与同源静态资源读取。配置不是 JavaScript，不使用 eval；GLSL 资源仍是可信本地开发输入，结构校验不是任意代码的安全沙箱。
 
 ## 目录结构
 
@@ -31,7 +35,7 @@ web/definitions/
 | 字段 | 契约 |
 |---|---|
 | schema / revision / abi | `momo.texture-pattern/v1`、正整数版本、`momo-pattern/16-v1` |
-| id / name | 稳定英文 ID 与中文显示名；ID 不重复 |
+| id / name / aliases | 稳定 ID、默认名称与可选多语言名称映射；ID 不重复 |
 | category / order / variant | 分类 ID、全目录索引、分类内索引；按原有顺序追加，不能重排现有 ID |
 | defaults | 16 个有限数值，保留旧槽位；可见槽位必须等于参数 default |
 | parameters | `{slot,key,variable,aliases,min,max,step,default}`；最多 16 个，槽位不重复 |
@@ -80,7 +84,7 @@ return sat(value/3.);
 - `repeat`：声明 `extent` 外接范围算法（radius/ring/rectangle/cross/ellipse/polygon/capsule/heart/profile/bezier），宿主约束有效缩放并重复形状；原始编辑值不被覆盖。
 - `periodic`：声明独立 `source`、稳定周期 `order`、`countSlot`（可选，默认2，前8槽内的已声明参数）、`countMultiplier`（1 或 2）、`evenCount` 与 `rows`；宿主按这些策略对周期数量/旋转/Brick 行数吸附。
 
-Star/Gear/Bezier 的专用选择器、条件参数、曲线拖拽与关键帧由 `editor.kind` 选择，具体 ABI 槽位继续保持原义。排列、图层合成、法线多 pass、RGBA 打包、透明度、图集/逐帧/批量都是宿主能力，不要求每份公式重新实现。已有 v1-v5 项目迁移和旧模式补偿代码保留；项目/预设/分享仍保存 ID 与参数，不携带公式文件。将来用户导入能力需要另行定义公式携带/版本解析与执行约束。
+Star/Gear/Bezier 的专用选择器、条件参数、曲线拖拽与关键帧由 `editor.kind` 选择，具体 ABI 槽位继续保持原义。排列、图层合成、法线多 pass、RGBA 打包、透明度、图集/逐帧/批量都是宿主能力，不要求每份公式重新实现。已有 v1-v5 项目迁移和旧模式补偿代码保留；可移植项目与资源包携带所需定义及依赖；简单内置配置分享使用 ID 与参数。导入与资源版本约束见资源包和本地图形库文档。
 
 ## 校验与渲染验证
 
@@ -90,7 +94,7 @@ node validate-definitions.mjs <本地目录JSON路径>
 npm test
 ```
 
-校验器检查 schema/ABI、顺序/ID/分类、索引与配置的 ID 一致性、参数绑定/范围/default、能力、依赖、源文件内容与路径，加载成功前不发布目录。先读取独立配置再读取公式，两个阶段各最多 8 个并发，每个文件只读一次；注册记录冻结。301 份配置与 310 份 GLSL 文件均经过实际读取，CLI 单独报告 configurationFiles/sourceFiles。CLI 校验结构与文件，不替代 GPU 编译。
+校验器检查 schema/ABI、顺序/ID/分类、索引与配置的 ID 一致性、参数绑定/范围/default、能力、依赖、源文件内容与路径，加载成功前不发布目录。先读取独立配置再读取公式，两个阶段各最多 8 个并发，每个文件只读一次；注册记录冻结。CLI 按当前目录实际读取并报告 configurationFiles/sourceFiles。CLI 校验结构与文件，不替代 GPU 编译。
 
 图案库去重已删除11份定义，并连续重排全局和分类索引。用户明确不要求旧画布兼容，迁移前的固定快照及其测试已移除；不保留旧ID重定向。当前验证覆盖定义加载/路径/资源完整性、预设保存读取、节点运算与实际GPU渲染。公式本身更改应调整相应revision并重新验证。
 
@@ -107,7 +111,7 @@ OgeeFlowerTile 只绘制居中单体，使用body公式文件；周期复制由�
 
 烟雾先生成种子确定的烟团，叠加密度、进行双向模糊，再做域扭曲与边缘处理；雾气使用密度和后处理步骤；火花与闪电先生成轨迹几何，再叠加两个尺度的辉光。火焰、浮尘和颗粒通过各自的全屏着色器生成。生成结果同时提供原色、透明度和标量采样，继续使用现有节点变换、排列、蒙版、配色与输出通路。原色模式保留生成器颜色，节点配色模式只替换颜色并保留透明度。
 
-`generator.programs` 引用 `generator.libraries` 中的渲染着色器；资源包会携带这些依赖。CPU 烟团/轨迹生成由工具的 v1 生成器引擎执行，接收端需要支持该能力；未知引擎版本明确报错。资源配置不执行 JavaScript。图形编辑器提供完整的参数面板，保存结果仍是可编辑资源，不烘焙成图片；单公式 AI 创作文件不承载生成器，请使用资源包导出。
+`generator.programs` 引用 `generator.libraries` 中的渲染着色器；资源包会携带这些依赖。CPU 烟团/轨迹生成由工具的 v1 生成器引擎执行，接收端需要支持该能力；未知引擎版本明确报错。资源配置不执行 JavaScript。图形编辑器提供完整的参数面板，保存结果仍是可编辑资源，不烘焙成图片；单公式 AI 创作文件不承载生成器，请使用生成器创作JSON或资源包。
 
 含生成器的资源包声明 `momo-pattern/16-v1+generator-v1` 接口版本，使旧工具拒绝导入而非显示空图。普通公式资源包继续使用原来的接口版本。底层三图层 `Renderer` 不合并同 ID 的多套生成器参数，调用方应使用节点 `TreeRenderer` 分别生成再合成；工作台已经使用该通路。
 

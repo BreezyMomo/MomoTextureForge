@@ -1,5 +1,9 @@
 # 07 · 法线与三维预览
 
+<!-- doc-language -->
+[简体中文](07-normal-and-material.md) · [English](07-normal-and-material.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md) · 上一篇：[动画](06-animation.md) · 下一篇：[导出](08-export.md)
 
 打开[动态焦散材质示例](examples/water-caustics.json)可复现截图；也可以将自己的图片添加到画布。

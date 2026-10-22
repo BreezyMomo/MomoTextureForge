@@ -1,0 +1,106 @@
+# Workspace and resource management
+
+<!-- doc-language -->
+[简体中文](workspace.md) · [English](workspace.en.md)
+<!-- /doc-language -->
+
+## Main interface
+
+- The toolbar has the editable canvas name; File (new/open/save/share), undo/redo icons, Canvas settings and Export; Graphics library and Examples; then Layout, language, Support and Help. Hover history icons for shortcuts. Narrow windows move Canvas settings into File and Examples into the menu beside Graphics library. Help includes quick/detailed guides, two Skill ZIP downloads, and GitHub/Gitee source links. Extract Skills for a compatible AI application.
+- Default left panels contain nodes and reusable graphics. The center holds preview/tools/playback. The inspector offers Shape, Color, Transform / Layout, Animation and Composite for single or batch editing; no selection means no node settings.
+- Preview actions save selection/canvas to the library, save/update list copies, and toggle solo. Similar names have different scopes.
+
+## Custom panel layouts
+
+Dock the node tree, graphics list, canvas, inspector and timeline independently. Drag a title tab to an edge for a split or center for merged tabs. Drag separators to resize.
+
+Use ↗ or Alt-drag to float inside the page. Move with the upper-left handle, resize with the lower-right, or drag the tab back to dock. Floating does not create browser windows. Esc cancels.
+
+× closes a tab without deleting content. Reopen through Layout. Check hidden/merged tabs when parameters/timeline seem missing. Default, animation and canvas-focused presets are provided. Timeline toggles below the preview and opens automatically for recording/new tracks.
+
+Current layouts autosave per browser/origin. Save up to 12 named layouts, replacing matching names, then apply/delete them. They contain positions/proportions/tabs/visibility, not nodes/parameters/animation, and do not travel in projects/shares or across origins. Layout changes preserve canvas/list/undo.
+
+Examples open editable independent canvases, with construction descriptions. Initial VFX cards show slashes, flashes, shock rings, vortices and dissolve masks. Thumbnails are static; play the opened canvas. One-shots omit loop export, vortices loop, dissolve defaults to opaque Height. Links retain duration/frames/channel/alpha. Four UI backgrounds use repeated grids and default opaque color PNGs. Edit rows/columns/colors/widths and inspect seams; enable alpha to deliver just the pattern.
+
+## Resource scopes and versions
+
+| Scope | Purpose | Editing/deletion |
+| --- | --- | --- |
+| Library | Reusable formulas/images/compositions from built-in/local/remote sources | Remote is read-only static subscription; local-original deletion affects its stored entry |
+| Graphics list | Browser-persistent reusable copies across canvases | Added from library or saved manually; project changes do not clear/replace the list |
+| Canvas node | Actual drawn instance | Edits do not automatically change other instances/library; list updates are explicit |
+
+Add directly to canvas uses the card's selected version, creates an independent selected node and closes the library. Undo/redo and project dependencies are retained. It does not modify list copies. Add to graphics list separately for reuse. Remote packs download on demand.
+
+Search/filter library names/aliases/categories/tags and sources/types. Select current results, batch-add or export selected resources. Higher-version updates are scoped, never global instance replacements. Identity has resource ID, formal version and personal revision. Explicit list updates increment personal revision; publication increments formal version and resets the publishing copy. Do not hand-edit IDs to bypass content conflicts.
+
+Create resource offers Image/Import files/Formula/Generator. Export resources includes dependencies, not just screenshots. Generator supports custom GLSL/multipass JSON. Built-in edits save copies; custom editors can update their originals. Explain deletion scopes and let the user act.
+
+List + Add creates an instance. Thumbnail opens trial editing; Add to canvas inserts it and Return to canvas restores the old work. Updating replaces only that list copy and offers Undo update; Save as makes another entry.
+
+Unlinked nodes offer Save to graphics; linked nodes offer update/save-as. Saving prompts for name, defaulting to canvas name for the whole canvas. Deleting a linked list entry hides update actions but retains the canvas. Undo can restore it. More → Rename changes the entry/future initial instance names, not existing nodes/library. Names are 1–80 characters; cancel changes nothing. List edits/renames persist separately with undo; unrelated canvas undo does not reset them.
+
+## Nodes and canvas
+
+- + Group creates a container; Wrap all in group wraps top-level content. An arranged group normally repeats its subtree, or uses one enabled direct child randomly/sequentially per point. Random repeats are allowed, seed-stable across playback/reload/export, and use the shared arrangement seed. Animated-hidden candidates retain their slots; masks are excluded. Expand retains the current selection.
+- Tree ordering controls composition. Middle drops reparent; edge drops reorder. Masks affect earlier content in their group only.
+- Click, Ctrl/Cmd multi-select, Shift ranges or box selection. Batch mode preserves five tabs for visibility, color/opacity/stops, transform/pivot/mirror, layouts/variation, blend/contour/filters, parent timing/loops/fixed progress/animation switches. Mixed values are indicated; only changed fields overwrite. Primary-edit mode handles individual work. Matching shapes share exclusive controls; UV/polar require shapes, motion requires time-aware graphics. Parent-child selections edit only outermost nodes.
+- Color edits retain untouched modes/stops; use Custom coloring before unifying fills. Presets replace stops. Equal counts allow per-stop batch changes; otherwise apply a preset or restore endpoints. Locks preserve aspect, and invalid results cancel the batch. Animation-controlled fields lock ordinary editing; Record uses each local time and Base values retains tracks. Edit keys/curves/remapping individually through the primary node. Multicolor stops do not record keys. One continuous slider gesture is one undo.
+- Group coloring/contour/rule tiling require all groups; mixed selections explain disabled controls. Unify arrangement/density types first. Existing children remain; sources/candidates are not auto-created.
+- Alignment uses rotated logical region bounds and selection/canvas targets. Three nodes enable equal edge gaps, fixed endpoints and overlap if space is insufficient. Cross-parent visible single-instance nodes work; hidden/replicated nodes require selecting their outer group.
+- Canvas tools move/resize/rotate. Double-click groups to enter and use breadcrumbs to return. Alt-click cycles overlap, context menus list candidates. Shift locks movement/15° rotation; Alt temporarily disables snapping. Pivot/UV tools are separate.
+- Ctrl/Cmd+D duplicates, Ctrl/Cmd+G groups siblings, Delete removes, Ctrl+Z undoes and Ctrl+Shift+Z redoes. Esc cancels; Space temporarily pans.
+- Zoom, checkerboard/black/white, bounds, pivots and solo are view-only. Export covers the entire canvas at output dimensions without guides. Set output background in canvas/export settings.
+- Tile preview supports 2×2/3×3/4×4, enables on preset choice and remembers the count across toggles. It reveals seams without changing projects/export or repairing continuity.
+
+## Shape parameters
+
+Quick-color controls persist above the inspector and start collapsed to color/opacity summaries. Expansion lasts for the session across node/tab edits, resetting on reload. Solid swatches edit directly; gradient/Color settings opens Color with modes, HEX (3/6 digits, optional #), palettes and visible stops. Color is not in Composite.
+
+Opacity appears in Color as 0–1 with reset/keys and quick controls as synchronized 0–100%. Collapsed summaries follow animation. It applies to solid/gradient/inherited/original-color nodes/groups, multiplying through parents. It supports Record/Base/undo/save independently of palette inheritance. Animation controls ordinary inputs when active.
+
+Inherited palettes name their source and can visit it or copy the currently evaluated palette locally without changing initial appearance. Child-preserving groups offer child coloring while retaining already independent children. Parent-wide recoloring remaps the composite, including independently colored children; the UI identifies that source. Original images/generators show their state; custom tint remaps luminance and need not preserve source colors.
+
+Solid and low/high endpoint colors can be keyed. Multicolor stops cannot. Restoring two colors takes outermost stops as endpoints. Presets and stop counts edit base gradients, not color animation.
+
+Groups offer whole/random/sequential instance content. See [Arrangement](layout-compositing.en.md) for overlap, gap, fill, aspect and expansion. Instance fit affects each item; region fit affects the whole node.
+
+Shape selects the current/basic graphic, name/visibility and exclusive parameters. Its dropdown normally includes loaded/current graphics, not the entire catalog. Use the library when missing. Consult exported catalog metadata for current names/ranges/motion and conditional Gear/Star controls. Reset restores defaults; randomize is exploratory, not a deterministic reproduction step. Zero feather still antialiases; added feather softens explicitly. New nodes start crisp while existing resource defaults remain.
+
+## Saving and sharing
+
+Save project writes a canvas ZIP with dependencies; Open project restores it. Autosave is not backup. Custom/offline configurations share as project files; simple built-in configurations can use links.
+
+The list persists independently across new/open/share/reload. Opening projects restores only canvas/dependencies, not the entire list, and project ZIPs do not back up that list. Legacy draft lists migrate only when no independent list exists; an explicitly empty independent list wins. Transfer list items by saving/exporting resources. Nothing syncs across devices/origins automatically.
+
+Save canvas to library produces one reusable composition; selection save uses that subtree. PNG/SVG exports are delivery files, not fully editable project backups.
+
+## Multiple remote libraries
+
+Read [Remote libraries](remote-libraries.en.md) for subscription, downloads, offline use, merged identities, update/delete boundaries, static manager and publication. Distinguish remote index/cache, browser originals/list and the computer's managed folder.
+
+## Filters and material preview
+
+Composite postprocessing includes blur, Bloom, sharpening, chromatic aberration and toon levels with keys. Radii normalize to 512 pixels. Groups composite before filtering. Normal preview exposes strength, algorithm, flips, inverted height and smoothing shared with exports/packed channels. Color-image luminance supplies height even inside opaque regions. Strength/smoothing normalize to a short side of 512; sampling size affects detail, not strength scale.
+
+Texture channels include Color/Height/Normal/Custom RGBA; preview modes include 2D canvas/3D material. 2D normals show exportable pixels; 3D normals light a neutral material, Color prints flat and Height shows grayscale. Sphere/plane/cube update with parameters, time and playback. Drag, light, roughness, metalness and repeat affect viewing only. Return to 2D for canvas tools. Preview switches do not change export content; choose Normal explicitly in Export.
+
+## Parameter status guidance
+
+Animation-controlled fields/reset follow tracks. Record changes edits keys now; Edit base value edits the underlying state. Leaving those modes restores evaluation. Pausing tracks/disabling node animation removes the lock.
+
+Inactive settings retain values while dependencies are unmet: zero smoke amount, zero UV speed or disabled contours. Guidance reflects evaluated time. Contour/rule layouts indicate group requirements and explain sources/candidates.
+
+## Effect blending preview
+
+Effect mode displays the current sampled channel over backgrounds, usually Color. Dark/light/combined/custom backgrounds and alpha/additive/both support up to four tiles from one frame. Alpha preserves occlusion; additive adds RGB × alpha.
+
+Playback/scrubbing/keys and inspector edits remain live; canvas/UV dragging pauses until 2D returns. Size 20–100% and brightness 0–3 are viewing controls. Reset restores dark, alpha/additive, 80% size and brightness 1. They do not persist in projects or affect node/export alpha, PNG or sequences. Confirm target-engine HDR/color space/material behavior separately.
+
+## Parameter display language
+
+Select Chinese/English directly in the toolbar. Codes/types/order cannot be edited by users. Selected-language aliases win, then configured order, then variables. Third-party resources can supply one language; inactive imported aliases remain preserved. Hover reveals variables. Guidance should include display names and identifiers without treating aliases as formula/key bindings. Alias editors use fixed nonduplicate selectors.
+
+The preference also covers library, previews/export, timeline, layouts, examples and help. User project/node names/code remain untouched. Default graphic names remain data; displayed names resolve resource aliases rather than UI catalogs. Use real names, not UI IDs such as `menu.file`, when entering aliases.
+
+Multilingual graphic names are edited beside default names with fixed choices, shared by built-ins/custom resources. Library/list/remote indexes display selected-language-first, then default, and search all aliases/IDs. JSON/ZIP preserve metadata; composition publishing/list rename support it. New nodes use the then-current display name, then persist independently.

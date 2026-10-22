@@ -1,5 +1,9 @@
 # 图文操作手册
 
+<!-- doc-language -->
+[简体中文](README.md) · [English](README.en.md)
+<!-- /doc-language -->
+
 [返回项目首页](../README.md) · [打开在线编辑器](https://breezymomo.github.io/MomoTextureForge/)
 
 截图中的金色编号框标出当前操作位置，图下“图中标记”说明编号含义；编号只用于当前图片。

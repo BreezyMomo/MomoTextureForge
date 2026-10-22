@@ -1,5 +1,9 @@
 # 变换、排列与合成
 
+<!-- doc-language -->
+[简体中文](layout-compositing.md) · [English](layout-compositing.en.md)
+<!-- /doc-language -->
+
 ## 三种容易混淆的尺寸
 
 1. “变换/排列 → 节点占用区域”：位置X/Y相对父区域，中心通常0.5/0.5；区域宽高0～1，旋转用度，轴心0～1。锁定区域宽高比例用于联动；水平镜像翻转；区域适配可随区域拉伸或保持比例。

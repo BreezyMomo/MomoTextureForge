@@ -1,5 +1,9 @@
 # 图形资源多语言名称
 
+<!-- doc-language -->
+[简体中文](graphic-name-aliases.md) · [English](graphic-name-aliases.en.md)
+<!-- /doc-language -->
+
 状态：已完成并验证；未提交、未推送。
 
 1. 在图形定义与资源元数据增加可选 aliases，统一名称解析、校验与搜索。默认 name 保持兼容，回退为所选语言、配置语言顺序、name、id。

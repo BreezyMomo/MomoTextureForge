@@ -1,5 +1,9 @@
 # 02 · 图库与图形列表
 
+<!-- doc-language -->
+[简体中文](02-graphics-library.md) · [English](02-graphics-library.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md) · 上一篇：[快速上手](01-quick-start.md) · 下一篇：[图片与 SVG](03-images-and-svg.md)
 
 ## 1. 找到资源并添加

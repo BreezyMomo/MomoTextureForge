@@ -1,0 +1,237 @@
+{
+  "workspace": [
+    "Open the graphics library",
+    "Select a node",
+    "Switch texture channel",
+    "Edit the selected node"
+  ],
+  "graphics-library": [
+    "Search resources",
+    "Add directly to canvas",
+    "Add to the reusable list",
+    "Edit a resource"
+  ],
+  "project-files": [
+    "Open a project",
+    "Save an editable project",
+    "Export an image"
+  ],
+  "composition-examples": [
+    "Open an editable composition"
+  ],
+  "graphics-list": [
+    "Search the reusable list",
+    "Add an instance to the canvas"
+  ],
+  "image-import": [
+    "Enter the resource name",
+    "Select an image file",
+    "Inspect the preview"
+  ],
+  "image-background": [
+    "Choose background processing",
+    "Specify the color to remove",
+    "Check transparency against the checkerboard"
+  ],
+  "formula-editor": [
+    "Choose the formula type",
+    "Enter GLSL code"
+  ],
+  "formula-validate": [
+    "Validate the formula",
+    "Save it to the library after checking the result"
+  ],
+  "generator-parameters": [
+    "Scrub time to inspect motion",
+    "Inspect the generated image",
+    "Save your version"
+  ],
+  "generator-editor": [
+    "Paste a generator definition",
+    "Inspect the live preview"
+  ],
+  "generator-validate": [
+    "Validate and generate parameter controls",
+    "Save the generator resource"
+  ],
+  "resource-import": [
+    "Open the import tab",
+    "Choose authoring files or resource packs"
+  ],
+  "selection-editing": [
+    "Ctrl/Cmd-select nodes",
+    "Existing tabs remain available",
+    "Change mixed values together",
+    "Alignment and distribution"
+  ],
+  "selection-colors": [
+    "Color tab",
+    "Batch opacity",
+    "Custom or inherited coloring",
+    "Change only fill color"
+  ],
+  "selection-shape": [
+    "Select matching shapes",
+    "Shape tab",
+    "Mixed radii",
+    "Batch ring width"
+  ],
+  "transform-region": [
+    "Transform / Layout tab",
+    "Node region"
+  ],
+  "arrangement": [
+    "Choose an arrangement",
+    "Set star count",
+    "Set each instance's size"
+  ],
+  "arrangement-examples": [
+    "Filter new arrangements",
+    "Open an example"
+  ],
+  "puzzle-piece": [
+    "Four connector styles",
+    "Connector curvature",
+    "Independent settings for four edges"
+  ],
+  "puzzle-corners": [
+    "Top-left: zero is square",
+    "Top-right radius",
+    "Bottom-right radius",
+    "Bottom-left radius"
+  ],
+  "puzzle-grid": [
+    "Existing grid arrangement",
+    "Columns",
+    "Rows"
+  ],
+  "content-overflow": [
+    "Select the overflow group",
+    "Switch boundary mode",
+    "Blue frame remains the logical region"
+  ],
+  "seamless-overflow": [
+    "Outer group uses seamless repeat",
+    "Check edges and corners",
+    "Choose 2×2, 3×3 or 4×4",
+    "Child independently allows overflow"
+  ],
+  "color-collapsed": [
+    "Expand color and opacity"
+  ],
+  "color-inheritance": [
+    "Persistent quick controls",
+    "Make independent or visit source"
+  ],
+  "color-gradient": [
+    "Color tab",
+    "Gradient endpoint values",
+    "Palette presets"
+  ],
+  "color-solid": [
+    "Edit color across tabs",
+    "Solid or gradient",
+    "Hexadecimal input"
+  ],
+  "compositing": [
+    "Bloom strength",
+    "Bloom radius"
+  ],
+  "effect-preview": [
+    "Effect preview",
+    "Background choice",
+    "Compare alpha/additive",
+    "Play or scrub"
+  ],
+  "animation-keyframes": [
+    "Set the recording time",
+    "Toggle Record",
+    "Change the parameter to record"
+  ],
+  "animation-curves": [
+    "Switch to curves",
+    "Inspect the parameter curve"
+  ],
+  "parameter-states": [
+    "Parameter is animation-controlled",
+    "Record changes at the current time",
+    "Edit the base value"
+  ],
+  "height-preview": [
+    "Select Height as the texture channel"
+  ],
+  "normal-preview": [
+    "Select Normal",
+    "Adjust normal strength",
+    "Choose the normal algorithm"
+  ],
+  "material-preview": [
+    "Switch to 3D material",
+    "Choose a sphere or plane",
+    "Drag to inspect lighting"
+  ],
+  "export-png": [
+    "Choose current-frame PNG",
+    "Choose color or normals",
+    "Start export"
+  ],
+  "export-atlas": [
+    "Choose sprite atlas",
+    "Set FPS",
+    "Set duration",
+    "Set atlas layout"
+  ],
+  "atlas-preview": [
+    "First frame",
+    "Last frame"
+  ],
+  "export-vector": [
+    "Choose a vector-contour format",
+    "Check contour settings before exporting"
+  ],
+  "remote-libraries": [
+    "Subscription name",
+    "index.json URL",
+    "Add subscription"
+  ],
+  "library-manager": [
+    "Import resources",
+    "Edit directory metadata"
+  ],
+  "library-manager-edit": [
+    "Resource name",
+    "Save directory information"
+  ],
+  "help-menu": [
+    "Built-in quick guide",
+    "README and illustrated tutorials",
+    "Download Authoring Skill",
+    "Mainland source mirror and documentation",
+    "WeChat donation code"
+  ],
+  "ai-catalog": [
+    "Select catalog scope",
+    "Generate the catalog",
+    "Copy its contents"
+  ],
+  "workspace-docking": [
+    "Drag a panel title tab",
+    "Drag a separator to resize",
+    "Layout menu"
+  ],
+  "workspace-floating": [
+    "Move with the handle",
+    "Resize with the corner handle",
+    "Drag the tab to dock again"
+  ],
+  "workspace-layout-menu": [
+    "Enter a layout name",
+    "Save the current layout",
+    "Reopen closed panels",
+    "Restore the default layout"
+  ],
+  "vfx-presets": [
+    "Choose the material presets category",
+    "Edit a preset on the canvas"
+  ]
+}

@@ -1,5 +1,9 @@
 # 09 · 远程图库与管理器
 
+<!-- doc-language -->
+[简体中文](09-remote-libraries.md) · [English](09-remote-libraries.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md) · 上一篇：[导出](08-export.md) · 下一篇：[AI 协作](10-ai-and-help.md)
 
 ## 1. 订阅别人分享的图形库
@@ -75,6 +79,8 @@ node build-remote-library.mjs --input "图库.zip" --out "remote-library" --name
 输出包含 `index.json`、资源、缩略图和 `library-manager.html`。继续更新同一输出目录以保留图库身份和既有条目。
 
 ## 3. 用本地管理器维护
+
+图库管理器右上角可选择简体中文或 English，切换只改变界面文字，不改写图库名称、资源名称或目录数据。
 
 ![本地图库管理器中的演示资源](images/library-manager.png)
 

@@ -1,5 +1,9 @@
 # 法线控制与三维材质预览
 
+<!-- doc-language -->
+[简体中文](04-material-preview.md) · [English](04-material-preview.en.md)
+<!-- /doc-language -->
+
 状态：完成
 
 ## 范围

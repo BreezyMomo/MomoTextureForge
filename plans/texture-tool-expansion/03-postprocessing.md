@@ -1,5 +1,9 @@
 # 通用后处理
 
+<!-- doc-language -->
+[简体中文](03-postprocessing.md) · [English](03-postprocessing.en.md)
+<!-- /doc-language -->
+
 状态：完成
 
 ## 范围

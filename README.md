@@ -1,5 +1,9 @@
 # Momo Texture Forge
 
+<!-- doc-language -->
+[简体中文](README.md) · [English](README.en.md)
+<!-- /doc-language -->
+
 在浏览器中制作图形、纹理和动态特效：组合节点、调整参数、创建公式或生成器，再导出图片、法线贴图和序列帧。编辑和渲染在浏览器中完成，也可构建为离线 HTML。
 
 **[国内在线使用（WorkBuddy）](https://momo-texture-forge.app.workbuddy.host/?sharecode=M22BZOBQB4) · [在线使用（GitHub Pages）](https://breezymomo.github.io/MomoTextureForge/) · [图文操作手册](docs/README.md) · [快速上手](docs/01-quick-start.md) · [常见问题](docs/faq.md)**

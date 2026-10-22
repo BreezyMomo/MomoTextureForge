@@ -1,5 +1,9 @@
 # 03 · 图片与 SVG
 
+<!-- doc-language -->
+[简体中文](03-images-and-svg.md) · [English](03-images-and-svg.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md) · 上一篇：[图库](02-graphics-library.md) · 下一篇：[公式与生成器](04-formulas-and-generators.md)
 
 ## 1. 上传或粘贴图片

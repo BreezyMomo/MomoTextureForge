@@ -1,5 +1,9 @@
 # Momo Texture Forge
 
+<!-- doc-language -->
+[简体中文](AGENTS.md) · [English](AGENTS.en.md)
+<!-- /doc-language -->
+
 本仓库维护 Momo Texture Forge 网页图形与纹理创作工具。
 
 - 命令均从仓库根目录执行，使用 Node.js 安装依赖、运行测试和构建。
@@ -21,3 +25,5 @@
 - 语言类型、原生名称与默认语言由 `web/language-config.json` 在构建时固定；全局入口和参数别名编辑器只提供选择控件，不允许手输语言编码或增改语言类型。参数按所选语言优先、再按配置顺序回退；未启用语言的导入别名保留，不自动删除。
 
 - 图形名称归资源所有：内置与自定义定义顶层 `name + aliases`，参数仍使用各自 `variable + aliases`。显示调用 `graphicLabel`，搜索调用 `graphicSearchText`，不在界面词库维护图形名称。图形库/列表/创作JSON/ZIP/远程目录必须保留名称别名；派生模板不得继承旧名称别名。创建节点时使用当前显示名称，之后不随语言切换改名。
+
+- 仓库文档保留中文 `.md` 与相邻英文 `.en.md`，正文链接留在当前语言，顶部语言切换除外；两版同步维护，截图使用各自语言的真实界面（英文在 `docs/images/en/`，中文在 `docs/images/`），示例和代码共用。网页详细说明在 `zh-CN` 跳中文，其余跳英文。运行 `node tools/check-docs.mjs` 检查覆盖、路径和锚点；Skill 下载包含两版，排列参数表同时生成英文。

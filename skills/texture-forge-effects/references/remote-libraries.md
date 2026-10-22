@@ -1,5 +1,9 @@
 # 远程图库使用与管理
 
+<!-- doc-language -->
+[简体中文](remote-libraries.md) · [English](remote-libraries.en.md)
+<!-- /doc-language -->
+
 按用户目的选择流程：使用别人提供的地址看“订阅与使用”；整理自己的资源看“纯静态管理器”；让其他人订阅看“手动发布”。本Skill仅指导用户操作，不代点击、读写目录、上传或执行Git命令。
 
 ## 先区分资源放在哪里

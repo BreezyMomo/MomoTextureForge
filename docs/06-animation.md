@@ -1,5 +1,9 @@
 # 06 · 动画与时间轴
 
+<!-- doc-language -->
+[简体中文](06-animation.md) · [English](06-animation.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md) · 上一篇：[画布与合成](05-canvas-and-compositing.md) · 下一篇：[法线与三维](07-normal-and-material.md)
 
 下载[呼吸星形起点](examples/animation-star.json)，通过“文件 → 打开项目”打开，再跟随本章录制。该文件初始没有关键帧。

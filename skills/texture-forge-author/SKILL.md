@@ -5,6 +5,10 @@ description: Help users turn screenshots or ideas into Momo Texture Forge resour
 
 # Texture Forge 图形创作
 
+<!-- doc-language -->
+[简体中文](SKILL.md) · [English](SKILL.en.md)
+<!-- /doc-language -->
+
 帮助用户把截图、参考图或文字想法变成可导入资源。流程：理解需求 → 辅助选择公式/生成器/SVG/位图 → 按需整理参考图 → 制作与验证 → 导入编辑器 → 根据反馈修改。公式最灵活，但不必强求公式。
 
 ## 1. 理解需求

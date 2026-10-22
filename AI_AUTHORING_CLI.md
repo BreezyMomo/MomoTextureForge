@@ -1,5 +1,9 @@
 # AI 命令行渲染
 
+<!-- doc-language -->
+[简体中文](AI_AUTHORING_CLI.md) · [English](AI_AUTHORING_CLI.en.md)
+<!-- /doc-language -->
+
 在 MomoTextureForge 工具目录执行，要求 Node.js >=22。首次安装：
 
 ```bash

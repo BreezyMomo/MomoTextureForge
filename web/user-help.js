@@ -15,7 +15,7 @@ export const HELP_SECTIONS=[
 // Render only the small Markdown subset used by our bundled manual. All text
 // goes through textContent; no HTML from documentation is executed.
 function renderManual(host,text){
- host.replaceChildren();const lines=text.split('\n');let list=null;
+ host.replaceChildren();const lines=text.replace(/<!-- doc-language -->[\s\S]*?<!-- \/doc-language -->\s*/g,'').split('\n');let list=null;
  for(let i=0;i<lines.length;i++){
   const line=lines[i].trim();if(!line){list=null;continue;}
   const heading=/^(#{1,3}) (.+)$/.exec(line);

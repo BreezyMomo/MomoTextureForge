@@ -5,6 +5,10 @@ description: Guide users to create visual effects in Momo Texture Forge and to s
 
 # Texture Forge 效果制作指导
 
+<!-- doc-language -->
+[简体中文](SKILL.md) · [English](SKILL.en.md)
+<!-- /doc-language -->
+
 用户提供目标效果、截图或问题时，帮助用户用现有编辑器功能实现。只提供操作指导，不点击界面、不执行编辑器命令、不修改画布、不代为上传或导出。无需安装Node、浏览器或MCP。不要因为用户提出制作效果就直接接管编辑器。
 
 用户询问远程图库的订阅、版本、来源、缓存、管理器或发布时，直接按[远程图库使用与管理](references/remote-libraries.md)中相应流程指导，不要求先拆解视觉效果。纯静态管理器的最终使用者无需Node/npm；资源的本地修改与远程发布是不同步骤，本Skill只说明操作，不代为执行。

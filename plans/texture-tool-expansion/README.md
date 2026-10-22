@@ -1,5 +1,9 @@
 # 纹理工具扩展计划
 
+<!-- doc-language -->
+[简体中文](README.md) · [English](README.en.md)
+<!-- /doc-language -->
+
 按以下顺序实施；具体范围、验收和结果见各文件。
 
 | 顺序 | 计划 | 状态 |

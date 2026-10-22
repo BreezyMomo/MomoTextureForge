@@ -19,7 +19,7 @@ try{
  draft.root.children[0].tracks['params.0']={mode:'absolute',ease:'linear',keys:[[0,.3],[1,.8]]};
  await page.goto(address+'#tree='+Buffer.from(JSON.stringify(draft)).toString('base64'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('[role=treeitem]').first().click();
  const initial=await page.evaluate(()=>({saved:localStorage.getItem('momo-texture-tree:draft:v1'),undo:document.querySelector('#undo').disabled,hash:location.hash}));
- async function language(first){const select=page.locator('#language-settings');assert.deepEqual(await select.locator('option').evaluateAll(options=>options.map(o=>({code:o.value,name:o.textContent}))),[{code:'zh-CN',name:'简体中文'},{code:'en',name:'English'}]);await select.selectOption(first);assert.equal(await page.locator('.language-dialog').count(),0);}
+ async function language(first){const select=page.locator('#language-settings');assert.deepEqual(await select.locator('option').evaluateAll(options=>options.map(o=>({code:o.value,name:o.textContent}))),[{code:'zh-CN',name:'简体中文'},{code:'en',name:'English'}]);await select.selectOption(first);assert.equal(await page.locator('#detailed-help').getAttribute('href'),'https://github.com/BreezyMomo/MomoTextureForge/blob/main/'+(first==='zh-CN'?'README.md':'README.en.md'));for(const [id,host]of [['github-repository','github.com'],['gitee-repository','gitee.com']])assert.equal(await page.locator('#'+id).getAttribute('href'),'https://'+host+'/BreezyMomo/MomoTextureForge'+(first==='zh-CN'?'':'/blob/main/README.en.md'));assert.equal(await page.locator('.language-dialog').count(),0);}
  await language('en');assert.equal(await page.locator('#project-name').inputValue(),'文件');assert.deepEqual(await page.locator('#node-tree .tree-node button:last-child').allTextContents(),['◇ 颜色','◇ 保存']);
  assert.deepEqual(await page.evaluate(()=>({saved:localStorage.getItem('momo-texture-tree:draft:v1'),undo:document.querySelector('#undo').disabled,hash:location.hash})),initial);
  async function english(label,scope='body'){
@@ -35,6 +35,8 @@ try{
  // Multi-selection must translate shared enums and leave explicit node names intact.
  await page.locator('[role=treeitem]').nth(1).click({modifiers:['Control']});
  for(let i=0;i<5;i++){await page.locator('#inspector-tabs button').nth(i).click();await english('multi-'+i);}
+ await page.locator('#inspector-tabs button').nth(1).click();await page.getByRole('combobox',{name:'Batch Color source',exact:true}).selectOption('own');for(const fill of ['solid','gradient']){await page.getByRole('combobox',{name:'Batch Color fill',exact:true}).selectOption(fill);await english('multi-color-'+fill);}
+
  await page.locator('[role=treeitem]').first().click();await page.locator('#export-now').click();await english('export');await page.locator('#close-global').click();
  await page.locator('#preview-channel').selectOption('normal');await english('normal');
  await page.locator('#preview-mode').selectOption('material');await english('material');

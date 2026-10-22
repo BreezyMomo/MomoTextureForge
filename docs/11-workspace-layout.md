@@ -1,5 +1,9 @@
 # 11 · 自定义面板布局
 
+<!-- doc-language -->
+[简体中文](11-workspace-layout.md) · [English](11-workspace-layout.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md) · [快速上手](01-quick-start.md)
 
 节点树、图形列表、画布预览、参数面板和时间轴可以分别调整位置。适用于想放大画布、让参数靠近预览，或留出更大动画编辑空间的工作方式。

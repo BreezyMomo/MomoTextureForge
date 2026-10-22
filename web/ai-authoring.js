@@ -46,6 +46,10 @@ export function authoringFromEditor(asset,meta,source,kind,specs,helpers){
 }
 export const AUTHORING_GUIDE=`# Momo Texture Forge 图形创作规范
 
+<!-- doc-language -->
+[简体中文](authoring-guide.md) · [English](authoring-guide.en.md)
+<!-- /doc-language -->
+
 先按Skill流程辅助用户选择公式、SVG或位图；未选定时确认路线，已有选择或已授权AI决定时直接继续。公式灵活，但不强求公式重建。按需要使用可用的生图/图片处理能力改善参考图，说明生成式细化会补造细节；无工具时提供编辑器操作指导。复杂修图可先在PS完成。没有看过参考图时不得声称已评估细节。以下格式只适用于公式；独立SVG和位图通过“打开图形库 → 创建资源 → 图片”导入，具体限制与处理流程见Skill。图片与公式组合需分别交付并说明操作，不能伪装成单一创作JSON已包含整个组合。
 
 选择公式路线时交付一个 UTF-8 JSON 文件，schema 为 momo.graphic-authoring/v1。通过“打开图形库 → 创建资源 → 导入文件”选择文件或粘贴JSON后预览，通过编译后由用户保存到图形库。不要生成资源ID、参数槽位、内容哈希或ZIP内部清单。
@@ -79,6 +83,10 @@ description: Help users turn screenshots or ideas into Momo Texture Forge resour
 ---
 
 # Texture Forge 图形创作
+
+<!-- doc-language -->
+[简体中文](SKILL.md) · [English](SKILL.en.md)
+<!-- /doc-language -->
 
 帮助用户把截图、参考图或文字想法变成可导入资源。流程：理解需求 → 辅助选择公式/生成器/SVG/位图 → 按需整理参考图 → 制作与验证 → 导入编辑器 → 根据反馈修改。公式最灵活，但不必强求公式。
 

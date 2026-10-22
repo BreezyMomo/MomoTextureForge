@@ -1,5 +1,9 @@
 # 图库上下文
 
+<!-- doc-language -->
+[简体中文](ai-context.md) · [English](ai-context.en.md)
+<!-- /doc-language -->
+
 Skill 不携带固定图形目录。用户描述效果后，先分析需要的几何、纹理和组合能力。需要推荐具体图形时，请用户打开“图形库 → 导出 AI 图形目录”，选择“选中的资源”或“当前筛选结果”，生成后复制文本或下载 JSON 发给 AI。需要全部目录时先清除搜索和筛选条件。
 
 schema 为 `momo.ai-library-context/v1`，只用于咨询，不可导入为资源：

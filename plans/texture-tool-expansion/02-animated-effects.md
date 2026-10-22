@@ -1,5 +1,9 @@
 # 动态水面、焦散、篝火、闪电
 
+<!-- doc-language -->
+[简体中文](02-animated-effects.md) · [English](02-animated-effects.en.md)
+<!-- /doc-language -->
+
 状态：完成
 
 ## 范围

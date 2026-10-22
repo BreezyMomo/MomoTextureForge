@@ -1,5 +1,9 @@
 # 开发、离线构建与静态部署
 
+<!-- doc-language -->
+[简体中文](development.md) · [English](development.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md) · [返回项目首页](../README.md)
 
 ## 本地启动
@@ -131,6 +135,8 @@ node tools/capture-docs.mjs colors
 | remote-ai | 远程订阅、AI 图形目录与帮助菜单 |
 | manager | 独立演示图库的真实管理器与编辑窗口 |
 
+使用 `--language en` 拍摄英文界面和英文演示名称，`--language zh-CN` 拍摄中文（默认）。例如：`node tools/capture-docs.mjs --language en workspace library`。也支持环境变量 `DOCS_LANGUAGE`。中文截图保存在 `docs/images/`，英文截图保存在 `docs/images/en/`，每次只同步对应语言文档的图下注解。英文标记文案维护在 `tools/docs-callouts.en.json`。
+
 截图标记在 [tools/docs-annotations.mjs](../tools/docs-annotations.mjs) 中定义，按真实按钮/输入框定位绘制编号框，并自动同步各篇图下注解。标记只在拍摄时临时注入，不影响网页实际界面；目标不可见时拍摄报错，应滚动到正确位置或拆成两张图，避免用猜测坐标标注。修改相关界面时同时检查标记位置。
 
 图片保存到 `docs/images/`，示例项目保存到 `docs/examples/`，临时图库和诊断只写入忽略的 `test-results/`。管理器示例通过隔离浏览器的文件系统 API 提供演示目录，不会弹出用户电脑上的目录选择器。
@@ -147,7 +153,7 @@ node tools/capture-docs.mjs colors
 - 镜像使用专用的 GitHub fine-grained token，仅选择本仓库，权限为 Contents/Metadata 只读和 Webhooks 读写；不要把令牌写入代码、日志或文档。
 - 当前同步令牌于 **2027-01-19** 到期。到期前更新凭据，并复查 Webhook 投递结果与镜像同步状态；撤销或到期会中断自动同步。
 
-仓库同步不会自动生成国内在线站点。当前在线编辑器仍由 GitHub Pages 提供；也可从 Gitee 下载仓库中的 `site/index.html`，用 Chrome / Edge 离线打开。
+仓库同步不会自动生成国内在线站点。在线编辑器由 GitHub Pages 和 WorkBuddy 各自部署更新；也可从 Gitee 下载仓库中的 `site/index.html`，用 Chrome / Edge 离线打开。
 
 ## 仓库结构与深入资料
 
@@ -167,7 +173,7 @@ PSD 编码器许可见 [PSD-LICENSES.txt](../web/vendor/PSD-LICENSES.txt)，需�
 
 `web/parameter-metadata.js` 校验变量和别名；`web/language-config.json` 定义编译时语言编码、原生名称和默认语言，`web/language.js` 维护独立语言偏好与固定回退顺序；`web/ui-language.js` 只翻译应用声明的界面文案，不观察或重写任意用户内容。内置定义使用 `variable` 和 `aliases`，公式 ABI、slot、key 与动画路径保持原样。行为使用 `role`，不能再通过 label 判断羽化或图片模式。旧资源包仅在校验/显示边界兼容 label-only 定义，不能为迁移元数据直接改写旧资产，以免破坏原哈希。
 
-参数显示通过 `parameterLabel`，不要给已解析的别名再套界面字典，否则会破坏作者设置的回退语言。别名修改参与资源哈希，语言切换不参与。固定界面文案采用稳定语义 key，中英文分别放在 `web/locales/zh-CN.json`、`web/locales/en.json`，由 `web/locales/catalogs.js` 注册。调用 `uiText('menu.file')`，动态句子用 `uiFormat(key, ...values)` 插值，插入的用户名称保持原文。HTML 使用显式 `data-i18n` 及属性绑定，不按中文内容反查。`messageError(key, ...values)` 携带错误身份，界面用 `uiError` 显示；Worker 通过序列化保留身份和插值数据。修改措辞只修改对应语言文件，不能重命名稳定 key。构建时 `tools/i18n-audit.mjs` 校验语言文件同键、占位符一致和引用完整。内置图形通过 `graphicLabel` 显示英文，元数据保持原样；自定义资源名称不经过界面字典。下拉框翻译显示文本，不翻译选项值；不要用中文标题或翻译结果作逻辑判断与DOM选择器。界面支持简体中文与英文；全局入口和别名编辑器只允许选择该配置提供的语言，不能手输编码、增加类型或重排语言。导入资源中的未启用语言别名保留在资源内，但不作为当前构建的回退语言。英文帮助内容在 `web/locales/help-en.js`，仓库文档仍以中文为主。
+参数显示通过 `parameterLabel`，不要给已解析的别名再套界面字典，否则会破坏作者设置的回退语言。别名修改参与资源哈希，语言切换不参与。固定界面文案采用稳定语义 key，中英文分别放在 `web/locales/zh-CN.json`、`web/locales/en.json`，由 `web/locales/catalogs.js` 注册。调用 `uiText('menu.file')`，动态句子用 `uiFormat(key, ...values)` 插值，插入的用户名称保持原文。HTML 使用显式 `data-i18n` 及属性绑定，不按中文内容反查。`messageError(key, ...values)` 携带错误身份，界面用 `uiError` 显示；Worker 通过序列化保留身份和插值数据。修改措辞只修改对应语言文件，不能重命名稳定 key。构建时 `tools/i18n-audit.mjs` 校验语言文件同键、占位符一致和引用完整。内置图形通过 `graphicLabel` 显示英文，元数据保持原样；自定义资源名称不经过界面字典。下拉框翻译显示文本，不翻译选项值；不要用中文标题或翻译结果作逻辑判断与DOM选择器。界面支持简体中文与英文；全局入口和别名编辑器只允许选择该配置提供的语言，不能手输编码、增加类型或重排语言。导入资源中的未启用语言别名保留在资源内，但不作为当前构建的回退语言。英文帮助内容在 `web/locales/help-en.js`，仓库文档分别维护中文与英文 Markdown。
 
 验证：`node --test tests/parameter-language.test.mjs`、`node tests/parameter-language-browser-check.mjs`；构建后再执行 `node tests/parameter-language-browser-check.mjs --built`，检查固定语言选项、非法选择拒绝、持久化、回退、项目/撤销/渲染不变和编辑器元数据。
 
@@ -181,3 +187,10 @@ PSD 编码器许可见 [PSD-LICENSES.txt](../web/vendor/PSD-LICENSES.txt)，需�
 名称元数据覆盖公式/生成器创作 JSON、图形定义、graphicResource、图形列表与远程目录；构造派生图片/新公式时不得继承 Circle 模板的名称别名。未提供的字段不补写，已导入资源不因语言切换被改写。版本更新必须保留 aliases；名称/别名编辑属于内容修改，语言切换只改变视图。创建画布节点时取当前显示名称，之后按节点自己的 name 保存。
 
 验证：`node --test tests/graphic-name.test.mjs`，`node tests/graphic-name-browser-check.mjs` 及构建后的 `--built`。浏览器检查覆盖名称编辑、JSON/ZIP、跨语言搜索、列表持久化、节点名隔离与真实远程订阅。
+
+
+## 中英文文档
+
+保留中文 `.md` 与相邻英文 `.en.md`，不使用翻译词库。每篇顶部提供语言切换，正文链接跳到当前语言的文档；截图使用对应语言的界面，代码、示例共用。API 名称、配置键和数据格式保持原样，两版内容同步维护。`web/documentation-links.js` 将网页详细说明在 `zh-CN` 时指向中文，其余语言指向英文，并在语言切换后立即更新。GitHub/Gitee仓库入口在英文界面落到各自的英文README，中文界面保留仓库首页。
+
+Skill 构建同时包含中英文参考文档，并生成两版排列参数表。中文创作 Skill 入口及规范来自 `web/ai-authoring.js`，应修改源文本后重建，不能只改生成文件。运行 `node tools/check-docs.mjs`、`npm test`，构建后检查源码与静态版的说明链接。见[文档计划](plans/bilingual-documentation.md)。

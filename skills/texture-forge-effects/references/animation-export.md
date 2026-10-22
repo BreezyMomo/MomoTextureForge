@@ -1,5 +1,9 @@
 # 动画与导出
 
+<!-- doc-language -->
+[简体中文](animation-export.md) · [English](animation-export.en.md)
+<!-- /doc-language -->
+
 ## 两套时间
 
 - 播放条在折叠的“动画编辑与时间轴”外，播放/重新播放、播放时长（0.05～600秒）、当前范围进度可直接操作。切换图形不应作为停止播放的步骤。

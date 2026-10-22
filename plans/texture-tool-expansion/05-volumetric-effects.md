@@ -1,5 +1,9 @@
 # 体积火焰、爆炸、烟雾
 
+<!-- doc-language -->
+[简体中文](05-volumetric-effects.md) · [English](05-volumetric-effects.en.md)
+<!-- /doc-language -->
+
 状态：完成
 
 ## 范围

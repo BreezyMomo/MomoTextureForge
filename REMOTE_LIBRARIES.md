@@ -1,5 +1,9 @@
 # 多地址远程图形库
 
+<!-- doc-language -->
+[简体中文](REMOTE_LIBRARIES.md) · [English](REMOTE_LIBRARIES.en.md)
+<!-- /doc-language -->
+
 “图形库 → 远程图库”添加名称和目录地址，可订阅多个图库。地址可为 `https://example.com/library/index.json`；以 `/` 结尾时自动补 `index.json`。每个图库可独立改名、改地址、停用、刷新或移除。
 
 - 默认自动检查目录：打开图形库时检查，保持打开时每五分钟检查一次。关闭图形库后停止，不是浏览器后台常驻服务。
@@ -22,7 +26,7 @@
 node build-remote-library.mjs --input "图库.zip" --out "remote-library" --name "团队图库"
 ```
 
-也支持单资源 ZIP；重复 `--input` 可合并多个输入。输出包含 `index.json`、`resources/*.zip` 和可选 `thumbnails/*`。上传整个目录到静态网站/CDN，将目录地址提供给使用者。只发布准备公开分享的文件。
+当前命令行构建仅接受基础ABI资源包；生成器资源可先用正式ZIP直接导入编辑器，不要手改manifest。也支持单资源 ZIP；重复 `--input` 可合并多个输入。输出包含 `index.json`、`resources/*.zip` 和可选 `thumbnails/*`。上传整个目录到静态网站/CDN，将目录地址提供给使用者。只发布准备公开分享的文件。
 
 后续更新使用同一输出目录运行工具：保留 `libraryId`，合并资源，资源ID相同的更高版本替换目录项，未涉及条目保留。旧 ZIP 文件保留，目录每个ID只列最新版本。相同ID/版本的不同字节、版本倒退会报错；内容修改后应在创作端发布新版本。需要全新独立图库时使用新目录。索引最后原子替换；部署时也先上传 ZIP/缩略图，再更新索引，避免客户端见到尚未上传的版本。
 

@@ -1,5 +1,9 @@
 # 常见问题
 
+<!-- doc-language -->
+[简体中文](faq.md) · [English](faq.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md)
 
 ## 加到图形列表后为什么画布还是空的？

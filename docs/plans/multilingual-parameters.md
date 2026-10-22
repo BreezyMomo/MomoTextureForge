@@ -1,5 +1,9 @@
 # 参数变量与多语言别名
 
+<!-- doc-language -->
+[简体中文](multilingual-parameters.md) · [English](multilingual-parameters.en.md)
+<!-- /doc-language -->
+
 状态：已完成并验证；本轮不提交、不推送。
 
 ## 约定

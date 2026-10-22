@@ -1,5 +1,9 @@
 # 01 · 快速上手
 
+<!-- doc-language -->
+[简体中文](01-quick-start.md) · [English](01-quick-start.en.md)
+<!-- /doc-language -->
+
 [手册目录](README.md) · 下一篇：[图库与图形列表](02-graphics-library.md)
 
 ## 1. 打开编辑器

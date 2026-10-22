@@ -1,5 +1,5 @@
 import {onLanguageChange} from './language.js';
-import {uiText} from './ui-language.js';
+import {uiText,uiFormat} from './ui-language.js';
 import {PANEL_IDS,PANEL_TITLES,LAYOUT_KEY,layoutPreset,sanitizeLayoutSettings,panelStack,findLayoutNode,closePanel,activatePanel,dockPanel,floatPanel,showPanel} from './dock-layout.js';
 
 const element=(tag,className,text)=>{const e=document.createElement(tag);if(className)e.className=className;if(text)e.textContent=uiText(text);return e;};
@@ -20,7 +20,7 @@ export function createDockWorkspace({host,menuHost,panels,onChange=()=>{},onMess
  const button=(text,fn)=>{const b=element('button','',text);b.type='button';b.onclick=fn;return b;};
  for(const [id,title]of [['default',"layout.restoreDefaultLayout"],['animation',"layout.animationLayout"],['focus',"layout.focusCanvas"]])menuBody.append(button(uiText(title),()=>{apply(layoutPreset(id));menu.open=false;}));
  menuBody.append(element('hr'));const visibility=element('div','dock-panel-toggles');menuBody.append(visibility);
- const checks=new Map();for(const id of PANEL_IDS){const label=element('label'),input=element('input');input.type='checkbox';input.setAttribute('aria-label',(uiText("layout.show") + uiText(PANEL_TITLES[id])));input.onchange=()=>input.checked?show(id):apply(closePanel(layout,id));label.append(input,document.createTextNode(uiText(PANEL_TITLES[id])));visibility.append(label);checks.set(id,input);}
+ const checks=new Map();for(const id of PANEL_IDS){const label=element('label'),input=element('input');input.type='checkbox';input.setAttribute('aria-label',uiFormat("layout.showPanel",uiText(PANEL_TITLES[id])));input.onchange=()=>input.checked?show(id):apply(closePanel(layout,id));label.append(input,document.createTextNode(uiText(PANEL_TITLES[id])));visibility.append(label);checks.set(id,input);}
  menuBody.append(element('hr'));
  const saveForm=element('form','dock-save-form'),name=element('input');name.placeholder=uiText("layout.eGMyTwoColumnLayout");name.maxLength=32;name.setAttribute('aria-label',uiText("layout.layoutName"));const save=element('button','',uiText("layout.saveCurrentLayout"));save.type='submit';saveForm.append(name,save);menuBody.append(saveForm);
  const named=element('select');named.setAttribute('aria-label',uiText("layout.savedLayouts"));menuBody.append(named);
@@ -53,7 +53,7 @@ export function createDockWorkspace({host,menuHost,panels,onChange=()=>{},onMess
   const container=element('section','dock-stack');container.dataset.stackId=n.id;
   const head=element('div','dock-stack-header'),tabs=element('div','dock-tabs');tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label',uiText("layout.panelTabs"));
   for(const id of n.panels){const tab=element('button','dock-tab',PANEL_TITLES[id]);tab.type='button';tab.dataset.panelTab=id;tab.setAttribute('role','tab');tab.setAttribute('aria-selected',String(n.active===id));tab.setAttribute('aria-controls','dock-content-'+id);tab.title=uiText("layout.dragToDockAltDragToFloat");tab.onclick=()=>{if(!drag)apply(activatePanel(layout,id),{focus:id});};tab.onpointerdown=e=>panelGesture(e,id);tab.onkeydown=e=>{if(!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();e.stopPropagation();const index=(n.panels.indexOf(id)+(e.key==='ArrowLeft'?-1:1)+n.panels.length)%n.panels.length;const next=n.panels[index];apply(activatePanel(layout,next),{focus:next});};tabs.append(tab);}
-  head.append(tabs);const actions=element('div','dock-stack-actions');const float=button('↗',()=>apply(floatPanel(layout,n.active)));float.setAttribute('aria-label',(uiText("layout.float") + uiText(PANEL_TITLES[n.active])));float.title=uiText("layout.floatThisPanelInsideTheWebpage");const close=button('×',()=>apply(closePanel(layout,n.active)));close.setAttribute('aria-label',(uiText("common.close") + uiText(PANEL_TITLES[n.active])));close.title=uiText("layout.closePanelReopenFromLayout");actions.append(float,close);head.append(actions);container.append(head);
+  head.append(tabs);const actions=element('div','dock-stack-actions');const float=button('↗',()=>apply(floatPanel(layout,n.active)));float.setAttribute('aria-label',uiFormat("layout.floatPanel",uiText(PANEL_TITLES[n.active])));float.title=uiText("layout.floatThisPanelInsideTheWebpage");const close=button('×',()=>apply(closePanel(layout,n.active)));close.setAttribute('aria-label',uiFormat("layout.closePanel",uiText(PANEL_TITLES[n.active])));close.title=uiText("layout.closePanelReopenFromLayout");actions.append(float,close);head.append(actions);container.append(head);
   for(const id of n.panels){const body=shells.get(id);body.hidden=n.active!==id;container.append(body);}return container;
  }
  function placeFloat(win,f){win.style.left=f.x*100+'%';win.style.top=f.y*100+'%';win.style.width=f.w*100+'%';win.style.height=f.h*100+'%';win.style.zIndex=String(20+layout.floats.indexOf(f));}
