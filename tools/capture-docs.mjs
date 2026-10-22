@@ -74,7 +74,7 @@ try{
   await page.locator('.dock-stack').filter({has:page.locator('[data-panel-tab="library"]')}).first().locator('.dock-stack-actions button').first().click();
   const floating=page.locator('.dock-floating').filter({has:page.locator('[data-panel-tab="library"]')}).first();
   await floating.evaluate(e=>{e.style.left='18px';e.style.top='80px';e.style.width='360px';e.style.height='850px';});
-  for(const type of ['formula','image'])await page.locator('#library-filter button[data-value="'+type+'"]').click();
+  await page.locator('#library-filter button[data-value=all]').click();
   for(const type of ['形状','渐变'])await page.locator('#library-categories button[data-value="'+type+'"]').click();
   await page.waitForFunction(()=>document.querySelector('#shape-library img')?.dataset.ready==='true');
   await shot('graphics-list');

@@ -1758,5 +1758,17 @@
   "library.multiFilterHint": "可多选；同组匹配任意一项，两组筛选共同生效。点“全部”清除该组筛选。",
   "editor.nodeVisibilityNamed": "节点可见性：{0}",
   "editor.hideNodeNamed": "隐藏 {0}",
-  "editor.showNodeNamed": "显示 {0}"
+  "editor.showNodeNamed": "显示 {0}",
+  "library.favoriteGraphic": "收藏 {0}",
+  "library.unfavoriteGraphic": "取消收藏 {0}",
+  "library.noMatchingFavorites": "没有匹配的收藏。点击图形右上角的 ☆ 收藏，或选择“全部”查看其他图形。",
+  "library.favoritesSaveFailed": "收藏保存失败。",
+  "library.browseModes": "图形筛选",
+  "library.favorites": "收藏",
+  "library.recent": "最近",
+  "library.animated": "动态",
+  "library.animatedHint": "包含随时间变化的图形、关键帧动画或 UV 滚动的资源",
+  "library.animatedBadge": "含动画",
+  "library.noRecentGraphics": "没有匹配的最近使用图形。预览或添加图形后，会按最近使用顺序显示在这里。",
+  "library.favoritesCount": "收藏（{0}）"
 }

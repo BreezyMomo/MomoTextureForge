@@ -25,8 +25,9 @@ try{
  await open();await select();await batch.click();await progress.waitFor({state:'visible'});
  await page.waitForFunction(()=>document.querySelector('.graphics-batch-progress progress')?.value>=5);
  assert.ok((await progress.locator('.graphics-batch-name').textContent()).length>0);
- await mkdir('test-results/library-batch',{recursive:true});await page.screenshot({path:'test-results/library-batch/'+(built?'built':'source')+'-progress.png'});
- await progress.getByRole('button',{name:'取消',exact:true}).click();await finished();
+ // Cancel at the observed progress point; capturing a screenshot first can let a fast batch finish.
+ await progress.getByRole('button',{name:'取消',exact:true}).evaluate(button=>button.click());await finished();
+ await mkdir('test-results/library-batch',{recursive:true});await page.screenshot({path:'test-results/library-batch/'+(built?'built':'source')+'-canceled.png'});
  report.canceledCount=(await read()).length;assert.ok(report.canceledCount>0&&report.canceledCount<CATALOG.length);assert.ok((await dialog.locator('.graphics-body>p[role=status]').textContent()).includes('已取消'));
  assert.equal(await page.evaluate(()=>window.batchWrites),1);
  await batch.click();await finished();assert.equal((await read()).length,CATALOG.length);assert.equal(await page.evaluate(()=>window.batchWrites),2);

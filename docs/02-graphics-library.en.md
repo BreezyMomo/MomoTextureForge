@@ -14,7 +14,11 @@ Thumbnail grids automatically add or remove columns based on available panel wid
 
 Pending thumbnails show a loading spinner until the image is ready. Failed previews show an indicator with details on hover; you can still view or add the graphic.
 
-Resource type and Graphic categories use multiselect chip buttons. Any selected option within a group matches; both groups combine with search. All or deselecting the last option clears that group. Categories include built-ins and personal resources. Chips wrap to panel width, language changes retain selection, and filtering never changes graphic content.
+Loaded cards and thumbnails are reused. Favoriting, canvas parameter edits, renaming, language changes, and filtering do not reload existing previews. Updating graphic content redraws only that graphic’s thumbnail.
+
+Browse **All / Favorites / Recent / Animated**, regardless of whether a resource is an image, formula, or composition. Recent contains up to 24 previewed or added graphics, most recently used first. Animated includes time-based graphics, keyframe animation, and UV motion, with a green play icon in the upper-left corner of each card and a localized tooltip. Graphic categories remain multiselect: any selected category matches, combined with the active browse mode and search. All or deselecting the last category clears the category restriction. Language changes retain selection; filters never change graphic content.
+
+Use **☆ / ★** in the upper-right corner of a card to favorite or unfavorite it; **Favorites count** in the first row shows only favorite graphics. Favorites and recent usage stay in this browser across reloads and are not included in projects or resource packages. Built-in favorites still saved by the legacy editor migrate automatically.
 
 ![Search effect resources](images/en/graphics-library.png)
 
@@ -31,7 +35,7 @@ Direct insertion uses the card's currently selected version and creates an indep
 
 ![Resources in the graphics list](images/en/graphics-list.png)
 
-> Callouts: 1 Search the reusable list; 2 Select resource types; 3 Select graphic categories; 4 Add an instance to the canvas.
+> Callouts: 1 Search the reusable list; 2 Switch All, Favorites, Recent, or Animated; 3 Select graphic categories; 4 Add an instance to the canvas.
 
 “Added” means the resource is already in the graphics list, not that a node exists on the canvas. Instances can be adjusted independently without changing the library original.
 

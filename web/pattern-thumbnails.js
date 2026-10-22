@@ -1,12 +1,14 @@
 import {TreeRenderer} from './tree-renderer.js';
 import {project,node,cloneNode} from './tree-model.js';
 import {uiText,uiFormat,uiError} from './ui-language.js';
+import {messageError} from './message-catalog.js';
 
 // One offscreen GPU context, only for visible cards. Cached PNGs survive library filtering.
 export function patternThumbnails(root){
  const cache=new Map(),queue=[];let renderer=null,pending=false;
  function setState(img,state,error){
   const frame=img.parentElement;frame.dataset.state=state;
+  if(error!==undefined)img.thumbnailError=error;
   frame.setAttribute('aria-busy',String(state==='loading'));
   frame.setAttribute('aria-label',state==='ready'?img.alt:uiFormat('library.thumbnailState',img.alt,uiText(state==='loading'?'library.thumbnailLoading':'library.thumbnailFailed')));
   if(state==='ready'){img.dataset.ready='true';frame.removeAttribute('title');}
@@ -18,12 +20,12 @@ export function patternThumbnails(root){
   }
   img.setAttribute('aria-hidden','true');
   img.onload=()=>setState(img,'ready');
-  img.onerror=()=>{cache.delete(img.dataset.pattern);setState(img,'error',new Error(uiText('library.thumbnailDecodeFailed')));};
+  img.onerror=()=>{cache.delete(img.dataset.pattern);setState(img,'error',messageError('library.thumbnailDecodeFailed'));};
   setState(img,'loading');
  }
  const Observer=globalThis.IntersectionObserver??window.IntersectionObserver;
  const observer=Observer?new Observer(entries=>{
-  for(const entry of entries)if(entry.isIntersecting){observer.unobserve(entry.target);queue.push(entry.target);}
+  for(const entry of entries)if(entry.isIntersecting){observer.unobserve(entry.target);if(entry.target.parentElement?.dataset.state==='loading'&&!queue.includes(entry.target))queue.push(entry.target);}
   schedule();
  },{root,rootMargin:'80px'}):null;
  function schedule(){
@@ -44,8 +46,15 @@ export function patternThumbnails(root){
    schedule();
   },{timeout:300});
  }
+ function resume(img){
+  if(img.parentElement?.dataset.state!=='loading'||queue.includes(img))return;
+  if(observer)observer.observe(img);else{queue.push(img);schedule();}
+ }
  return {
-  observe(img,id,component=id){img.dataset.pattern=id;img.component=component;placeholder(img);if(cache.has(id)){img.src=cache.get(id);}else if(observer)observer.observe(img);else{queue.push(img);schedule();}},
+  observe(img,id,component=id){observer?.unobserve(img);for(let i=queue.length-1;i>=0;i--)if(queue[i]===img)queue.splice(i,1);img.dataset.pattern=id;img.component=component;delete img.thumbnailError;placeholder(img);if(cache.has(id)){img.src=cache.get(id);}else resume(img);},
+  resume,
+  localize(img){const state=img.parentElement?.dataset.state;if(state)setState(img,state,img.thumbnailError);},
+  forget(img){observer?.unobserve(img);for(let i=queue.length-1;i>=0;i--)if(queue[i]===img)queue.splice(i,1);cache.delete(img.dataset.pattern);},
   invalidate(id){cache.delete(id);},
   release(){observer?.disconnect();queue.length=0;renderer?.destroy();renderer=null;cache.clear();},
   reset(){observer?.disconnect();queue.length=0;}

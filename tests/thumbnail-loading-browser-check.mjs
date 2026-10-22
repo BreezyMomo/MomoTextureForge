@@ -15,17 +15,19 @@ try{
  assert.equal(await first.getAttribute('data-state'),'loading');assert.equal(await first.getAttribute('aria-busy'),'true');assert.match(await first.getAttribute('aria-label'),/加载中/);
  assert.equal(await firstImage.evaluate(e=>getComputedStyle(e).opacity),'0');assert.notEqual(await first.locator('.tree-thumbnail-indicator').evaluate(e=>getComputedStyle(e).display),'none');
  await mkdir('test-results/thumbnail-loading',{recursive:true});await page.screenshot({path:'test-results/thumbnail-loading/'+(built?'built':'source')+'-loading.png'});
+ // A pending preview detached by filtering must resume when the same card returns.
+ await firstImage.evaluate(img=>window.pendingThumbnail=img);await page.locator('#shape-search').fill('__no_matching_graphic__');await page.evaluate(()=>{let remaining=100;while(window.thumbnailIdle.length&&remaining--)window.thumbnailIdle.shift()();});await page.locator('#shape-search').fill('');await page.waitForFunction(()=>window.thumbnailIdle.length>0);assert.equal(await firstImage.evaluate(img=>img===window.pendingThumbnail),true);
  await page.evaluate(()=>window.thumbnailIdle.shift()());await page.waitForFunction(()=>document.querySelector('.tree-thumbnail-preview[data-state=ready] img')?.naturalWidth>0);
  assert.equal(await first.getAttribute('data-state'),'ready');assert.equal(await first.getAttribute('aria-busy'),'false');assert.equal(await firstImage.evaluate(e=>getComputedStyle(e).opacity),'1');assert.equal(await first.locator('.tree-thumbnail-indicator').evaluate(e=>getComputedStyle(e).display),'none');
  // A renderer failure must end loading and leave the original resource usable.
  await frames.nth(1).locator('img').evaluate(img=>img.component=null);await page.evaluate(()=>window.thumbnailIdle.shift()());
  assert.equal(await frames.nth(1).getAttribute('data-state'),'error');assert.match(await frames.nth(1).getAttribute('title'),/仍可点击查看或添加/);
  const failedCard=page.locator('.tree-pattern-card').nth(1);await failedCard.locator('button').nth(1).click();assert.ok(await page.locator('#node-tree [role=treeitem]').count()>0);
- // Rebuilding the list reuses the cached PNG and keeps list-mode sizing.
+ // Switching views preserves ready previews and keeps list-mode sizing.
  await page.locator('#shape-library-view').selectOption('list');await page.waitForFunction(()=>document.querySelector('.tree-thumbnail-preview')?.dataset.state==='ready');assert.equal(await first.evaluate(e=>e.getBoundingClientRect().width),40);
  // Force an actual image decode error, not just a synthesized error event.
  await firstImage.evaluate(img=>img.src='data:image/png;base64,invalid');await page.waitForFunction(()=>document.querySelector('.tree-thumbnail-preview')?.dataset.state==='error');assert.equal(await firstImage.evaluate(e=>getComputedStyle(e).opacity),'0');
- await page.locator('#language-settings').selectOption('en');assert.match(await first.getAttribute('aria-label'),/Loading preview/);
+ await page.locator('#language-settings').selectOption('en');assert.match(await first.getAttribute('aria-label'),/Preview unavailable/);assert.match(await first.getAttribute('title'),/Thumbnail could not be loaded/);
  await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await first.locator('.tree-thumbnail-indicator').evaluate(e=>getComputedStyle(e).animationName),'none');
- assert.deepEqual(errors,[]);const report={built,pass:true,checks:['pending spinner without broken image','real PNG load','render failure fallback','add despite preview failure','cache reuse','40px list preview','real PNG decode failure','English loading text','reduced motion']};await writeFile('test-results/thumbnail-loading/'+(built?'built':'source')+'.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+ assert.deepEqual(errors,[]);const report={built,pass:true,checks:['pending spinner without broken image','detached pending preview resumes','real PNG load','render failure fallback','add despite preview failure','cache reuse','40px list preview','real PNG decode failure','localized failure without reload','reduced motion']};await writeFile('test-results/thumbnail-loading/'+(built?'built':'source')+'.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

@@ -1758,5 +1758,17 @@
   "library.multiFilterHint": "Select multiple options. Any selected option within a group matches; both groups apply together. All clears that group.",
   "editor.nodeVisibilityNamed": "Node visibility: {0}",
   "editor.hideNodeNamed": "Hide {0}",
-  "editor.showNodeNamed": "Show {0}"
+  "editor.showNodeNamed": "Show {0}",
+  "library.favoriteGraphic": "Favorite {0}",
+  "library.unfavoriteGraphic": "Unfavorite {0}",
+  "library.noMatchingFavorites": "No matching favorites. Use ☆ on a graphic to favorite it, or choose All to view other graphics.",
+  "library.favoritesSaveFailed": "Could not save favorites.",
+  "library.browseModes": "Browse graphics",
+  "library.favorites": "Favorites",
+  "library.recent": "Recent",
+  "library.animated": "Animated",
+  "library.animatedHint": "Graphics with time-based effects, keyframe animation, or UV motion",
+  "library.animatedBadge": "Animated graphic",
+  "library.noRecentGraphics": "No matching recent graphics. Preview or add a graphic to show it here, most recently used first.",
+  "library.favoritesCount": "Favorites ({0})"
 }
