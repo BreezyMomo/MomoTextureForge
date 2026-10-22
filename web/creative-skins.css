@@ -1,0 +1,94 @@
+/* Creative presets adapt Framer, Spotify, Runway, Lovable and MiniMax references.
+   Every rule is opt-in. Original, Refined, Minimal and Soft keep their own chrome. */
+.appearance-presets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0 0 22px}
+.tree-editor .appearance-presets .appearance-preset{display:flex;flex-direction:column;gap:4px;min-width:0;margin:0;padding:7px;text-align:left;white-space:normal;border:1px solid var(--ui-line);border-radius:10px;background:var(--ui-panel);color:var(--ui-text);box-shadow:none}
+.tree-editor .appearance-presets .appearance-preset:hover{border-color:var(--ui-line-strong);background:var(--ui-surface)}
+.tree-editor .appearance-presets .appearance-preset[aria-pressed=true]{border-color:var(--ui-accent-text);background:var(--ui-selected);color:var(--ui-text);box-shadow:inset 0 0 0 1px var(--ui-accent-text)}
+.appearance-preset-label{font-size:12px;font-weight:600}
+.appearance-preset>small{font-size:10px;line-height:1.5;color:var(--ui-muted)}
+.appearance-preset-art{position:relative;display:block;width:100%;height:60px;overflow:hidden;border-radius:6px;background:var(--preset-bg);--preset-round:7px}
+.appearance-preset[data-preset=aurora]{--preset-bg:#111528;--preset-accent:#b5a0ff;--preset-surface:#28304c}
+.appearance-preset[data-preset=pulse]{--preset-bg:#111712;--preset-accent:#77e5a0;--preset-surface:#2a3a30}
+.appearance-preset[data-preset=cinema]{--preset-bg:#101114;--preset-accent:#eeeef2;--preset-surface:#26272e}
+.appearance-preset[data-preset=candy]{--preset-bg:#faedf6;--preset-accent:#ad3d79;--preset-surface:#ebcfe0}
+.appearance-preset-art i{display:block;position:absolute}
+.preset-mini-sidebar{left:5px;top:5px;bottom:5px;width:22%;background:var(--preset-surface);border-radius:var(--preset-round)}
+.preset-mini-tab{left:32%;top:7px;width:35%;height:8px;border-radius:var(--preset-round);background:var(--preset-accent)}
+.preset-mini-orbit{left:44%;top:22px;width:33px;height:33px;border:4px solid var(--preset-accent);border-radius:50%;box-shadow:0 0 17px color-mix(in srgb,var(--preset-accent) 30%,transparent)}
+.preset-mini-field{right:6px;top:22px;width:16%;bottom:5px;border-radius:var(--preset-round);background:var(--preset-surface)}
+.appearance-preset[data-preset=aurora] .appearance-preset-art{background:radial-gradient(ellipse at 75% 75%,#30265e,transparent 70%),var(--preset-bg)}
+.appearance-preset[data-preset=pulse] .appearance-preset-art{--preset-round:999px}
+.appearance-preset[data-preset=cinema] .appearance-preset-art{--preset-round:2px}
+.appearance-preset[data-preset=cinema] .preset-mini-tab{height:2px;top:13px}
+.appearance-preset[data-preset=candy] .appearance-preset-art{background:linear-gradient(135deg,#ede7fb,#fae1e9)}
+.appearance-preview{align-self:start;position:sticky;top:0}
+@media(max-width:550px){.appearance-preview{position:static;align-self:stretch}}
+
+/* Capsule headers replace the old rectangular document tabs in the colorful presets. */
+:where(:root:is([data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=candy])) .dock-stack-header{height:calc(var(--ui-tab-height) + 8px);padding:4px 5px;align-items:center;background:transparent;border-bottom:0}
+:where(:root:is([data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=candy])) .dock-tabs{align-items:center;gap:4px}
+:where(:root:is([data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=candy])) .tree-editor .dock-tab{height:var(--ui-tab-height);padding:4px 12px;border-radius:999px;box-shadow:none}
+:where(:root:is([data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=candy])) .tree-editor .dock-tab[aria-selected=true]{background:var(--ui-selection-surface);color:var(--ui-accent-text);box-shadow:none}
+:where(:root:is([data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=candy])) .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs){padding:4px;gap:4px;border:0;border-radius:999px;background:var(--ui-inset)}
+:where(:root:is([data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=candy])) .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs) button{border:0;border-radius:999px;padding:7px 8px}
+:where(:root:is([data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=candy])) .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs) button.active{background:var(--ui-selection-surface);color:var(--ui-accent-text);box-shadow:none}
+:where(:root:is([data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=candy])) .tree-editor .inspector-module>summary{background:transparent}
+:where(:root:is([data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=candy])) .tree-editor .inspector-module[open]>summary{border-bottom:0}
+:where(:root:is([data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=candy])) .tree-editor .inspector-module>summary:hover{background:var(--ui-hover)}
+:where(:root:is([data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=candy])) .tree-editor .tree-header #export-now{border-radius:999px;padding-inline:15px}
+:where(:root:is([data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=candy])) .tree-editor .tree-resource-actions,:where(:root:is([data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=candy])) .tree-editor .tree-tool-actions{border-left-color:var(--ui-line-soft)}
+
+/* Aurora: a violet control room, with restrained light around active controls. */
+:root[data-interface-style=aurora]{--ui-control-radius:9px;--ui-module-radius:12px;--ui-card-radius:10px;--ui-pane-radius:12px;--ui-window-radius:18px;--ui-module-heading:transparent;--ui-module-bg:color-mix(in srgb,var(--ui-surface) 18%,var(--ui-panel))}
+:where(:root[data-interface-style=aurora]) .tree-editor .tree-header{background:linear-gradient(100deg,var(--ui-panel),color-mix(in srgb,var(--ui-accent) 7%,var(--ui-panel)));border-bottom-color:var(--ui-selection-line)}
+:where(:root[data-interface-style=aurora]) .dock-stack{border-color:color-mix(in srgb,var(--ui-accent) 17%,var(--ui-line));box-shadow:0 3px 16px #0000001f}
+:where(:root[data-interface-style=aurora]) .tree-editor .dock-tab[aria-selected=true]{box-shadow:inset 0 0 0 1px var(--ui-selection-line),0 0 14px color-mix(in srgb,var(--ui-accent) 7%,transparent)}
+:where(:root[data-interface-style=aurora]) .tree-node.selected{box-shadow:inset 2px 0 var(--ui-accent-text),0 0 12px color-mix(in srgb,var(--ui-accent) 9%,transparent)}
+:where(:root[data-interface-style=aurora]) .tree-editor .inspector-module{border-color:color-mix(in srgb,var(--ui-accent) 9%,var(--ui-line-soft))}
+:where(:root[data-interface-style=aurora]) .tree-editor .tree-header strong{letter-spacing:.2px}
+:where(:root[data-interface-style=aurora]) .tree-editor .tree-header button.primary{box-shadow:0 3px 14px color-mix(in srgb,var(--ui-accent) 22%,transparent)}
+
+/* Pulse: strong pill geometry and a fresh accent, like a compact creative player. */
+:root[data-interface-style=pulse]{--ui-control-radius:10px;--ui-module-radius:14px;--ui-card-radius:12px;--ui-pane-radius:14px;--ui-window-radius:20px;--ui-module-shadow:none;--ui-pane-shadow:none;--ui-module-bg:var(--ui-panel);--ui-control-shadow:none}
+:root[data-theme=light]:is([data-interface-style=pulse],[data-interface-style=cinema]){--ui-control-shadow:none;--ui-module-shadow:none;--ui-pane-shadow:none}
+:where(:root[data-interface-style=pulse]) .dock-stack{border-color:transparent}
+:where(:root[data-interface-style=pulse]) .tree-editor .dock-tab[aria-selected=true],:where(:root[data-interface-style=pulse]) .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs) button.active{background:var(--ui-accent);color:var(--ui-on-accent);font-weight:650}
+:where(:root[data-interface-style=pulse]) .tree-editor .inspector-module{border-color:var(--ui-line-soft)}
+:where(:root[data-interface-style=pulse]) .tree-editor .inspector-module-title{font-weight:650}
+:where(:root[data-interface-style=pulse]) .tree-editor button.primary{border-radius:999px;box-shadow:none}
+:where(:root[data-interface-style=pulse]) .tree-node.selected{border-radius:999px;box-shadow:none;background:var(--ui-selection-surface)}
+:where(:root[data-interface-style=pulse]) .tree-editor input[type=search],:where(:root[data-interface-style=pulse]) .tree-editor #shape-search{border-radius:999px;background:var(--ui-surface);border-color:transparent}
+:where(:root[data-interface-style=pulse]) #shape-library .tree-pattern-card{border-color:transparent;background:var(--ui-surface)}
+:where(:root[data-interface-style=pulse]) #shape-library.tree-library-grid .tree-pattern-text{background:transparent}
+:where(:root[data-interface-style=pulse]) .tree-editor .tree-timeline{background:var(--ui-inset);border-color:transparent;border-radius:999px}
+
+/* Cinema: the artwork is the visual event. Quiet text tabs and a near-black stage. */
+:root[data-interface-style=cinema]{--ui-control-radius:6px;--ui-module-radius:0px;--ui-card-radius:6px;--ui-pane-radius:6px;--ui-window-radius:12px;--ui-pane-shadow:none;--ui-module-shadow:none;--ui-module-bg:transparent;--ui-module-heading:transparent;--ui-control-shadow:none}
+:where(:root[data-interface-style=cinema]) .dock-stack{border-color:var(--ui-line-soft)}
+:where(:root[data-interface-style=cinema]) .dock-stack-header{background:transparent;border-bottom:0}
+:where(:root[data-interface-style=cinema]) .tree-editor .dock-tab{letter-spacing:.5px;font-size:11px}
+:where(:root[data-interface-style=cinema]) .tree-editor .dock-tab[aria-selected=true]{background:transparent;box-shadow:inset 0 -1px var(--ui-text);color:var(--ui-text)}
+:where(:root[data-interface-style=cinema]) .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs){background:transparent;border:0;border-radius:0;padding:0;gap:8px}
+:where(:root[data-interface-style=cinema]) .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs) button{padding:8px 2px;border-radius:0;border:0;background:transparent;font-size:11px}
+:where(:root[data-interface-style=cinema]) .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs) button.active{background:transparent;box-shadow:inset 0 -2px var(--ui-text);color:var(--ui-text)}
+:where(:root[data-interface-style=cinema]) .tree-editor .inspector-module{border:0;border-top:1px solid var(--ui-line-soft);background:transparent;box-shadow:none}
+:where(:root[data-interface-style=cinema]) .tree-editor .inspector-module>summary{background:transparent;border-bottom:0}
+:where(:root[data-interface-style=cinema]) .tree-editor .inspector-module>summary:hover{background:var(--ui-hover)}
+:where(:root[data-interface-style=cinema]) #shape-library .tree-pattern-card{border-color:transparent;box-shadow:none}
+:where(:root[data-interface-style=cinema]) #shape-library.tree-library-grid .tree-pattern-text{background:transparent}
+:where(:root[data-interface-style=cinema]) .tree-node.selected{background:var(--ui-surface);box-shadow:inset 2px 0 var(--ui-text)}
+:where(:root[data-interface-style=cinema]) .tree-editor .tree-timeline{background:transparent;border-inline:0;border-bottom:0;border-radius:0}
+:where(:root[data-interface-style=cinema]) .tree-editor .appearance-preview-module{border:0;border-top:1px solid var(--ui-line-soft);background:transparent;box-shadow:none}
+
+/* Candy: a light studio by default; the same geometry also supports a dark palette. */
+:root[data-interface-style=candy]{--ui-control-radius:10px;--ui-module-radius:15px;--ui-card-radius:12px;--ui-pane-radius:16px;--ui-window-radius:22px;--ui-module-bg:var(--ui-panel);--ui-module-shadow:0 3px 12px color-mix(in srgb,var(--ui-accent) 5%,transparent)}
+:where(:root[data-interface-style=candy]) .tree-editor .tree-header{background:linear-gradient(110deg,var(--ui-panel),color-mix(in srgb,var(--ui-accent) 8%,var(--ui-panel)));border-bottom-color:transparent}
+:where(:root[data-interface-style=candy]) .dock-stack{border-color:color-mix(in srgb,var(--ui-accent) 12%,var(--ui-line));box-shadow:none}
+:where(:root[data-interface-style=candy]) .dock-panel-body>.tree-left,:where(:root[data-interface-style=candy]) .dock-panel-body>.tree-inspector{background:var(--ui-inset)}
+:where(:root[data-interface-style=candy]) .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs){background:transparent;padding:0;gap:5px}
+:where(:root[data-interface-style=candy]) .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs) button.active{background:var(--ui-panel);color:var(--ui-accent-text);box-shadow:0 2px 8px color-mix(in srgb,var(--ui-accent) 9%,transparent)}
+:where(:root[data-interface-style=candy]) .tree-editor .inspector-module{border-color:color-mix(in srgb,var(--ui-line) 55%,transparent)}
+:where(:root[data-interface-style=candy]) .tree-node.selected{border-radius:10px;box-shadow:none;background:var(--ui-selection-surface)}
+:where(:root[data-interface-style=candy]) .tree-editor .tree-timeline{background:var(--ui-inset);border-color:transparent}
+:where(:root[data-interface-style=candy]) #shape-library .tree-pattern-card{background:var(--ui-panel);box-shadow:0 2px 8px color-mix(in srgb,var(--ui-accent) 5%,transparent)}
+:where(:root[data-interface-style=candy]) #shape-library.tree-library-grid .tree-pattern-text{background:var(--ui-panel)}

@@ -22,13 +22,17 @@ Visit the [online editor](https://breezymomo.github.io/MomoTextureForge/). See [
 
 Open **Appearance** in the toolbar to choose Momo classic dark, neutral graphite, soft light, or follow the system, and set a custom accent color. Changes preview across the workspace. **Save appearance** remembers your choice; Cancel or Esc restores the appearance from before the dialog opened. Preferences stay in this browser and site without changing artwork colors, exports, or project files.
 
-**Interface style** offers Refined, Original, Minimal, and Soft. Original retains the earlier module frames, selection treatment and controls; saved preferences keep that style, while fresh browsers default to Refined. Refined uses fine borders, layered surfaces and subtle shadows; nested settings use separators to avoid repeated frames. Minimal quiets module frames, while Soft rounds controls and panels further. Menus, dialogs and floating panels share one elevation treatment. **Density** offers Compact and Comfortable, adjusting control height and spacing in parameter modules, node rows, and library cards. Combine either setting with any palette; saving or cancelling applies to all appearance choices together.
+**Creative presets** offer Aurora, Pulse, Cinema and Candy. Click a card to preview its style, palette, accent and recommended tabs together while keeping the current density. Aurora uses violet atmosphere and pill tabs; Pulse pairs fresh green with rounded controls; Cinema frames artwork with a monochrome interface; Candy creates a pastel studio. You can still change the light/dark palette or customize the accent. Only Save remembers the changes; Cancel or Esc restores every setting.
+
+**Interface style** retains Refined, Original, Minimal and Soft alongside the four new styles. Original retains the earlier module frames, selection treatment and controls; saved preferences keep that style, while fresh browsers default to Refined. Refined uses fine borders, layered surfaces and subtle shadows; nested settings use separators to avoid repeated frames. Minimal quiets module frames, while Soft rounds controls and panels further. Menus, dialogs and floating panels share one elevation treatment. **Density** offers Compact and Comfortable, adjusting control height and spacing in parameter modules, node rows, and library cards. Combine either setting with any palette; saving or cancelling applies to all appearance choices together.
+
+**Tab style** independently offers Classic, Segmented, Pills and Underlined, or Follow interface style to retain a skin’s original tabs. Changing only tabs leaves colors, skin and density unchanged; switching skins also preserves an explicit tab choice. The preview includes both dock-panel and inspector tabs, using the editor’s actual style rules.
 
 While dragging a parameter module, adjacent modules smoothly make room. The new order is saved only on drop; Esc cancels. Same-level node sorting shows an insertion gap, while cross-group moves retain insertion lines and target highlights. Panel placement, section disclosures, menus, thumbnails and notifications use brief transitions; sliders, canvas manipulation and dragged objects remain immediate. Interface motion respects the system's reduced-motion preference without changing artwork animation or exports.
 
 ![Interface colors, style and density](images/en/appearance-settings.png)
 
-> Callouts: 1 Choose interface colors; 2 Choose an interface style; 3 Set interface density; 4 Customize the accent color; 5 Save appearance preferences in this browser.
+> Callouts: 1 Choose interface colors; 2 Choose an interface style; 3 Set interface density; 4 Customize the accent color; 5 Save appearance preferences in this browser; 6 Choose a tab style independently; 7 Choose a creative preset.
 
 ## 2. Add your first graphic
 
