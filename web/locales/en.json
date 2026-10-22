@@ -1857,5 +1857,13 @@
   "shortcuts.allNodes": "All nodes, including new nodes",
   "shortcuts.scopeHint": "Pins controls without changing parameter values. Individual nodes can still opt out.",
   "dialog.moveWindow": "Move window",
-  "dialog.moveHint": "Drag the title bar to move the window, or use arrow keys to nudge it."
+  "dialog.moveHint": "Drag the title bar to move the window, or use arrow keys to nudge it.",
+  "ribbon.stylePreset": "Trail style preset",
+  "ribbon.chooseStyle": "Choose a trail style…",
+  "ribbon.parametersHelp": "Continuous strands run horizontally; twisting gathers them into folds. Strand width is relative to graphic height and keeps the same proportions in preview and export. Subpixel coverage is integrated automatically. Horizontal seamless mode rounds wave and distortion frequencies and disables end fading. Use the shared color, blur and alpha curve controls.",
+  "errors.ribbonMissingPath": "The ribbon generator is missing its path program",
+  "errors.ribbonGeometry": "Ribbon geometry rendering failed ({0})",
+  "ribbon.membraneHelp": "A continuous membrane has its own tint, interior opacity, edge color and crease brightness. Horizontal seamless mode rounds frequencies and disables end fading. Node colors can override the membrane palette; inherited colors retain its original colors.",
+  "ribbon.strandsHelp": "Independent strands vary in distortion phase, width and opacity. Strand variation controls width and brightness differences. Width is relative to graphic height with automatic subpixel coverage. Horizontal seamless mode rounds frequencies and disables end fading.",
+  "errors.ribbonStyle": "Unsupported ribbon generation style"
 }

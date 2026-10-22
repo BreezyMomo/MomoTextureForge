@@ -53,6 +53,6 @@ try{
  await writeFile(resolve(out,'report.json'),JSON.stringify({patterns:count,errors,rows:result.rows},null,2));
  await writeFile(resolve(root,'web/builtin-thumbnails.js'),'// Generated from the current built-in definitions by tests/builtin-release-browser-check.mjs.\nexport default '+JSON.stringify(patternId?{...builtinThumbnails,...result.thumbnails}:result.thumbnails)+';\n');
  await page.evaluate(async()=>{document.body.replaceChildren();const c=document.createElement('canvas');c.width=12*112;c.height=Math.ceil(check.rows.length/12)*124;const g=c.getContext('2d');g.fillStyle='#202329';g.fillRect(0,0,c.width,c.height);g.font='10px sans-serif';for(let i=0;i<check.rows.length;i++){const id=check.rows[i].id,img=new Image();img.src=check.thumbnails[id];await img.decode();const x=i%12*112,y=Math.floor(i/12)*124;g.drawImage(img,x,y,96,96);g.fillStyle='white';g.fillText(id,x,y+108,110);}document.body.append(c);});
- await page.locator('canvas').screenshot({path:resolve(out,'gallery.png')});
+ if(!process.argv.includes('--no-screenshots'))await page.locator('canvas').screenshot({path:resolve(out,'gallery.png')});
  console.log(JSON.stringify({patterns:count,constant:result.rows.filter(r=>r.max-r.min<.00001).map(r=>r.id),noMotion:result.rows.filter(r=>r.usesTime&&r.motion<.000001).map(r=>r.id)},null,2));
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

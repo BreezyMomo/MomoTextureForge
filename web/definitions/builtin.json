@@ -1,6 +1,6 @@
 {
   "schema": "momo.texture-index/v1",
-  "revision": 19,
+  "revision": 21,
   "abi": "momo-pattern/16-v1",
   "categories": [
     {
@@ -147,6 +147,22 @@
     },
     "generator-volume-v1": {
       "file": "libraries/generator-volume-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-ribbon-path-v1": {
+      "file": "libraries/generator-ribbon-path-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-ribbon-color-v1": {
+      "file": "libraries/generator-ribbon-color-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-particle-strands-path-v1": {
+      "file": "libraries/generator-particle-strands-path-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-membrane-color-v1": {
+      "file": "libraries/generator-membrane-color-v1.glsl",
       "abi": "momo-pattern/16-v1"
     }
   },
@@ -1342,6 +1358,18 @@
     {
       "id": "VolumeSmoke",
       "file": "patterns/VolumeSmoke/pattern.json"
+    },
+    {
+      "id": "FoldedRibbon",
+      "file": "patterns/FoldedRibbon/pattern.json"
+    },
+    {
+      "id": "RefractionMembrane",
+      "file": "patterns/RefractionMembrane/pattern.json"
+    },
+    {
+      "id": "ParticleStrands",
+      "file": "patterns/ParticleStrands/pattern.json"
     }
   ]
 }

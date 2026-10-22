@@ -6,7 +6,7 @@ import {contourPasses} from '../web/contour.js';
 import {libraryVisible,libraryAliases} from '../web/library-policy.js';
 const plan=JSON.parse(await readFile(new URL('../web/definitions/library-curation.json',import.meta.url)));
 test('curated catalog removes only approved redundant entries and keeps legacy iris',async()=>{
- assert.equal(CATALOG.length,298);assert.ok(CATALOG.every(p=>libraryVisible(p.id)));
+ assert.equal(CATALOG.length,301);assert.ok(CATALOG.every(p=>libraryVisible(p.id)));
  for(const id of plan.removed)assert.ok(!BY_ID.has(id),id);
  for(const id of plan.added)assert.ok(BY_ID.has(id),id);
  assert.equal(BY_ID.get('IrisBlades').zh,'光阑叶片');

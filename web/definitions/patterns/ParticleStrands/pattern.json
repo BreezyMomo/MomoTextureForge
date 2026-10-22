@@ -1,0 +1,340 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "ParticleStrands",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "粒子细丝",
+  "aliases": {
+    "zh-CN": "粒子细丝",
+    "en": "Particle strands"
+  },
+  "category": "ribbon",
+  "order": 300,
+  "variant": 18,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 2917,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      }
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "variable": "waveAmplitude",
+      "label": "波形振幅",
+      "min": 0,
+      "max": 0.3,
+      "step": 0.001,
+      "default": 0.06,
+      "aliases": {
+        "zh-CN": "波形振幅",
+        "en": "Wave amplitude"
+      }
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "variable": "waveCount",
+      "label": "波形数量",
+      "min": 0.25,
+      "max": 8,
+      "step": 0.05,
+      "default": 1.3,
+      "aliases": {
+        "zh-CN": "波形数量",
+        "en": "Wave count"
+      }
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "variable": "bandWidth",
+      "label": "带宽",
+      "min": 0.02,
+      "max": 0.9,
+      "step": 0.01,
+      "default": 0.36,
+      "aliases": {
+        "zh-CN": "带宽",
+        "en": "Band width"
+      }
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "strandCount",
+      "label": "细线数量",
+      "min": 8,
+      "max": 1024,
+      "step": 1,
+      "default": 340,
+      "aliases": {
+        "zh-CN": "细线数量",
+        "en": "Strand count"
+      }
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "variable": "layerCount",
+      "label": "叠加层数",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 1,
+      "aliases": {
+        "zh-CN": "叠加层数",
+        "en": "Layer count"
+      }
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "variable": "strandWidth",
+      "label": "细线宽度",
+      "min": 0.0001,
+      "max": 0.012,
+      "step": 0.0001,
+      "default": 0.0016,
+      "aliases": {
+        "zh-CN": "细线宽度",
+        "en": "Strand width"
+      }
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "variable": "strandOpacity",
+      "label": "细线透明度",
+      "min": 0.005,
+      "max": 1,
+      "step": 0.005,
+      "default": 0.12,
+      "aliases": {
+        "zh-CN": "细线透明度",
+        "en": "Strand opacity"
+      }
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "variable": "noiseStrength",
+      "label": "扰动强度",
+      "min": 0,
+      "max": 0.3,
+      "step": 0.001,
+      "default": 0.07,
+      "aliases": {
+        "zh-CN": "扰动强度",
+        "en": "Distortion strength"
+      }
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "variable": "noiseFrequency",
+      "label": "扰动频率",
+      "min": 0.25,
+      "max": 16,
+      "step": 0.05,
+      "default": 3.4,
+      "aliases": {
+        "zh-CN": "扰动频率",
+        "en": "Distortion frequency"
+      }
+    },
+    {
+      "slot": 10,
+      "key": "C",
+      "variable": "detailStrength",
+      "label": "细节扰动",
+      "min": 0,
+      "max": 0.04,
+      "step": 0.001,
+      "default": 0.0035,
+      "aliases": {
+        "zh-CN": "细节扰动",
+        "en": "Fine distortion"
+      }
+    },
+    {
+      "slot": 11,
+      "key": "E",
+      "variable": "noiseOffset",
+      "label": "沿线扰动偏移",
+      "min": -10,
+      "max": 10,
+      "step": 0.01,
+      "default": 0,
+      "aliases": {
+        "zh-CN": "沿线扰动偏移",
+        "en": "Longitudinal offset"
+      }
+    },
+    {
+      "slot": 12,
+      "key": "F",
+      "variable": "exposure",
+      "label": "叠加亮度",
+      "min": 0.1,
+      "max": 6,
+      "step": 0.05,
+      "default": 2,
+      "aliases": {
+        "zh-CN": "叠加亮度",
+        "en": "Exposure"
+      }
+    },
+    {
+      "slot": 13,
+      "key": "G",
+      "variable": "softGlow",
+      "label": "柔光",
+      "min": 0,
+      "max": 3,
+      "step": 0.05,
+      "default": 0.65,
+      "aliases": {
+        "zh-CN": "柔光",
+        "en": "Soft glow"
+      }
+    },
+    {
+      "slot": 14,
+      "key": "I",
+      "variable": "endFade",
+      "label": "两端淡出",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.01,
+      "default": 0.08,
+      "aliases": {
+        "zh-CN": "两端淡出",
+        "en": "End fade"
+      }
+    },
+    {
+      "slot": 15,
+      "key": "J",
+      "variable": "seamlessU",
+      "label": "横向无缝",
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "default": 0,
+      "aliases": {
+        "zh-CN": "横向无缝",
+        "en": "Horizontal seamless"
+      },
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "variable": "off",
+          "label": "关闭",
+          "aliases": {
+            "zh-CN": "关闭",
+            "en": "Off"
+          }
+        },
+        {
+          "value": 1,
+          "variable": "on",
+          "label": "开启",
+          "aliases": {
+            "zh-CN": "开启",
+            "en": "On"
+          }
+        }
+      ]
+    },
+    {
+      "slot": 16,
+      "key": "P16",
+      "variable": "motionSpeed",
+      "label": "形态演变速度",
+      "min": -3,
+      "max": 3,
+      "step": 0.01,
+      "default": 0.35,
+      "aliases": {
+        "zh-CN": "形态演变速度",
+        "en": "Evolution speed"
+      }
+    },
+    {
+      "variable": "strandVariation",
+      "label": "细丝差异",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.55,
+      "aliases": {
+        "zh-CN": "细丝差异",
+        "en": "Strand variation"
+      },
+      "slot": 17,
+      "key": "P17"
+    }
+  ],
+  "defaults": [
+    2917,
+    0.06,
+    1.3,
+    0.36,
+    340,
+    1,
+    0.0016,
+    0.12,
+    0.07,
+    3.4,
+    0.0035,
+    0,
+    2,
+    0.65,
+    0.08,
+    0,
+    0.35,
+    0.55
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "inline": "return 0.;",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  },
+  "generator": {
+    "schema": "momo.generator/v1",
+    "revision": 1,
+    "effect": "ribbon",
+    "scalar": "alpha",
+    "usesTime": true,
+    "libraries": [
+      "generator-particle-strands-path-v1",
+      "generator-ribbon-color-v1"
+    ],
+    "programs": {
+      "path": "generator-particle-strands-path-v1",
+      "color": "generator-ribbon-color-v1"
+    },
+    "style": "strands"
+  }
+}

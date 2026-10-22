@@ -1,5 +1,6 @@
 import {SHORTCUT_TABS,nodeShortcutState,shortcutPin,shortcutControls,curvePreview} from './node-shortcuts.js';
 import {makeDialogMovable} from './movable-dialog.js';
+import {ribbonPresets,ribbonPresetParameters} from './ribbon-presets.js';
 import {createNodeGroupPreview} from './node-drop-prompt.js';
 import {segmentedChoice} from './segmented-choice.js';
 import {createGradientEditor} from './gradient-editor.js';
@@ -451,6 +452,11 @@ function renderInspectorTab(n,tab){
   if(n.kind==='group'){note(uiFormat("editor.thisGroupContainsValueChildrenSelectAnyNodeInTheTree",n.children.length));renderColorPanel(n);return;}
   heading('modules.generator');choice(uiText("editor.baseShape"),n.type,CATALOG.filter(p=>projectShapeIds().has(p.id)||p.id===n.type).map(p=>[p.id,p.id.startsWith('asset_')?p.zh+' · '+uiText("editor.custom"):graphicLabel(p)+' · '+p.id]),v=>edit(()=>{typeMemory.set(n.id+':'+n.type,{params:[...n.params],tracks:structuredClone(Object.fromEntries(Object.entries(n.tracks).filter(([k])=>k.startsWith('params.'))))});n.type=v;const cached=typeMemory.get(n.id+':'+v);n.params=cached?[...cached.params]:shapeDefaults(v);for(const key of Object.keys(n.tracks))if(key.startsWith('params.'))delete n.tracks[key];if(cached)Object.assign(n.tracks,structuredClone(cached.tracks));remember('shape:'+v);}));
   heading('modules.shapeParameters',uiFormat('modules.graphicParameters',graphicLabel(BY_ID.get(n.type))));controls().append(el('button',{text:uiText("editor.resetShapeParameters"),onclick:()=>edit(()=>shapeDefaults(n.type).forEach((v,i)=>assignAnimated(n,'params.'+i,v)))}));
+  if(BY_ID.get(n.type).definition.generator?.effect==='ribbon'){
+   const definition=BY_ID.get(n.type).definition,presets=ribbonPresets(definition);
+   choice(uiText('ribbon.stylePreset'),'', [['',uiText('ribbon.chooseStyle')],...presets.map(p=>[p.id,graphicLabel(p)])],id=>{const preset=presets.find(p=>p.id===id);if(!preset)return;edit(()=>{ribbonPresetParameters(definition,preset).forEach((value,i)=>assignAnimated(n,'params.'+i,value));for(const [path,value]of [['color.mode',preset.native?'inherit':'own'],['color.fill','solid'],['color.high',preset.color??'#ffffff']])assignAnimated(n,path,value);});},false);
+   note(uiText(({membrane:'ribbon.membraneHelp',strands:'ribbon.strandsHelp'})[definition.generator.style]??'ribbon.parametersHelp'),true);
+  }
   if(BY_ID.get(n.type).parameters.some(p=>parameterRole(p)==='feather')){note(uiText('modules.parametersHelp'),true);note(uiText("editor.shapeSizeIsEvaluatedInsideTheNodeRegionFeatherAddsSoft"),true);}
   if(n.type==='PuzzlePiece')note(uiText("editor.theBodyFillsTheBlueBoundsTabsMayExtendOutsidePair"));
   controls().append(el('button',{text:uiText("editor.randomize"),onclick:()=>edit(()=>{for(const p of BY_ID.get(n.type).parameters){if(parameterRole(p)==='feather')continue;assignAnimated(n,'params.'+p.slot,Math.round(((n.type==='BezierRibbon'&&p.slot<8?-1:p.min)+Math.random()*(n.type==='BezierRibbon'&&p.slot<8?2:p.max-p.min))/p.step)*p.step);}})}));

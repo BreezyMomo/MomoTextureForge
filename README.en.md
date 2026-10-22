@@ -20,7 +20,7 @@ Source and documentation: [GitHub primary repository](https://github.com/BreezyM
 
 ## What you can create
 
-- **Graphics and textures:** 298 built-in shapes, patterns, noise and vector resources, plus your own images and SVG files.
+- **Graphics and textures:** 301 built-in shapes, patterns, noise and vector resources, plus your own images and SVG files.
 - **Custom resources:** write GLSL formulas or multipass generator JSON, expose parameters, colors and opacity, and validate the live preview.
 - **Animated effects:** fire, smoke, lightning, sparks, water, caustics and volumetric effects, with built-in time motion and parameter keyframes.
 - **Compositions:** groups, regions and UVs; grid, radial, scatter, border, contour, herringbone, weave and rule-based arrangements; gradients, flow fields, blending, masks and postprocessing.

@@ -19,7 +19,7 @@ test('selected builtins include self-contained formulas and repeatable IDs/bytes
 test('all builtin graphics export with one dependency bundle per resource',async()=>{
  const records=await Promise.all(CATALOG.filter(p=>!p.id.startsWith('asset_')&&libraryVisible(p.id)).map(meta));
  const zip=await exportGraphicsLibrary(records,()=>{}),files=await decodeZIP(zip),index=JSON.parse(new TextDecoder().decode(files.get('library.json')));
- assert.equal(index.entries.length,records.length);assert.equal(records.length,298);
+ assert.equal(index.entries.length,records.length);assert.equal(records.length,301);
  for(const entry of index.entries){const pack=await readResourcePack(files.get(entry.file));assert.ok(pack.payload.root);pack.rollback();}
 });
 

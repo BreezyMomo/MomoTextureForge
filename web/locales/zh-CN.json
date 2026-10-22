@@ -1857,5 +1857,13 @@
   "shortcuts.allNodes": "所有节点（含新建节点）",
   "shortcuts.scopeHint": "仅固定快捷控件，不修改参数值；单个节点仍可单独取消。",
   "dialog.moveWindow": "移动窗口",
-  "dialog.moveHint": "拖动标题栏移动窗口，也可用方向键微调位置。"
+  "dialog.moveHint": "拖动标题栏移动窗口，也可用方向键微调位置。",
+  "ribbon.stylePreset": "拖尾风格预设",
+  "ribbon.chooseStyle": "选择拖尾风格…",
+  "ribbon.parametersHelp": "沿横向生成连续细线，扭转折叠使线束汇聚成褶皱。细线宽度相对图形高度，预览和导出保持相同比例；缩小时自动计算像素覆盖。横向无缝开启后，波形与扰动频率取整，两端淡出停用。颜色、模糊与透明度曲线使用通用模块。",
+  "errors.ribbonMissingPath": "丝带生成器缺少轨迹步骤",
+  "errors.ribbonGeometry": "丝带几何渲染错误 {0}",
+  "ribbon.membraneHelp": "连续薄膜带面具有独立的底色、内部透明度、边缘颜色和折痕亮度。横向无缝开启后，波形与扰动频率取整，两端淡出停用。节点颜色可覆盖薄膜原色；使用继承配色可保留原色。",
+  "ribbon.strandsHelp": "独立细丝具有不同的扰动相位、线宽和透明度。细丝差异控制轨迹间的宽度与亮度变化，细线宽度相对图形高度并自动计算像素覆盖。横向无缝开启后，频率取整，两端淡出停用。",
+  "errors.ribbonStyle": "不支持的丝带生成样式"
 }

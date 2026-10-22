@@ -1,5 +1,6 @@
 import {messageError} from './message-catalog.js';
 import {generatorGeometry} from './generator-geometry.js';
+import {ribbonWork,ribbonVertex,ribbonFragment,membraneVertex,membraneFragment} from './ribbon-renderer.js';
 
 const vertex=`#version 300 es
 out vec2 uv;void main(){vec2 p=vec2(float((gl_VertexID<<1)&2),float(gl_VertexID&2));uv=p;gl_Position=vec4(p*2.-1.,0,1);}`;
@@ -19,7 +20,7 @@ void main(){vec2 corners[6]=vec2[6](vec2(-1,-1),vec2(1,-1),vec2(1,1),vec2(-1,-1)
 const geometryFragment=`#version 300 es
 precision highp float;precision highp int;in vec2 local;in vec4 shade;uniform int cloud;out vec4 result;
 void main(){float distance=dot(local,local);float falloff=cloud==1?exp(-distance*mix(8.,2.,shade.a)):shade.a<0.?exp(-distance*4.):exp(-local.y*local.y*5.)+exp(-local.y*local.y)*.12;result=vec4(shade.rgb*falloff,falloff);}`;
-const blur=`vec4 generate(vec2 uv){vec4 color=vec4(0);float weights=0.;for(int i=-8;i<=8;i++){float distance=float(i)/8.;float weight=exp(-distance*distance*3.);color+=texture(input0,uv+blurDirection*distance*blurRadius)*weight;weights+=weight;}return color/weights;}`;
+const blur=`vec4 generate(vec2 uv){vec4 color=vec4(0);float weights=0.;for(int i=-8;i<=8;i++){float distance=float(i)/8.;float weight=exp(-distance*distance*3.);vec2 p=uv+blurDirection*distance*blurRadius;if(wrapHorizontal==1)p.x=fract(p.x);color+=texture(input0,p)*weight;weights+=weight;}return color/weights;}`;
 
 export class GeneratorRenderer{
  constructor(gl,{float,prune=s=>s}={}){this.gl=gl;this.float=float;this.blendFloat=float&&!!gl.getExtension('EXT_float_blend');this.prune=prune;this.programs=new Map();this.cache=new Map();this.pinned=new Set();this.vao=gl.createVertexArray();this.instances=gl.createBuffer();this.drawCount=0;}
@@ -47,11 +48,12 @@ export class GeneratorRenderer{
  bind(target){const gl=this.gl;gl.bindFramebuffer(gl.FRAMEBUFFER,target.fb);gl.drawBuffers([gl.COLOR_ATTACHMENT0]);gl.viewport(0,0,target.w,target.h);gl.disable(gl.SCISSOR_TEST);gl.disable(gl.BLEND);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);}
  fullscreen(target,body,common,parameters,inputs=[],extra={}){
   const gl=this.gl,defines=parameters.specs.map(p=>'#define '+p.variable+' gp['+p.slot+']').join('\n');
-  const source=`#version 300 es\nprecision highp float;precision highp int;in vec2 uv;out vec4 outputValue;uniform float gp[64];uniform float generatorSeed,time;uniform vec2 generatorResolution;uniform sampler2D input0,input1,input2;uniform vec2 blurDirection,bloomStrengths;uniform float blurRadius,emissionIntensity;\n${common}\n${defines}\n${body}\nvoid main(){outputValue=generate(uv);}`;
+  const source=`#version 300 es\nprecision highp float;precision highp int;in vec2 uv;out vec4 outputValue;uniform float gp[64];uniform float generatorSeed,time;uniform vec2 generatorResolution;uniform sampler2D input0,input1,input2;uniform vec2 blurDirection,bloomStrengths;uniform float blurRadius,emissionIntensity;${body===blur?'uniform int wrapHorizontal;':''}\n${common}\n${defines}\n${body}\nvoid main(){outputValue=generate(uv);}`;
   const program=this.program(source);this.bind(target);gl.useProgram(program.p);gl.bindVertexArray(this.vao);
   const data=new Float32Array(64);data.set(parameters.values);const activeCount=program.sizes.get('gp[0]');if(activeCount)gl.uniform1fv(this.location(program,'gp[0]'),data.subarray(0,activeCount));
   gl.uniform1f(this.location(program,'generatorSeed'),parameters.values[parameters.specs.find(p=>p.variable==='seed')?.slot??0]);
   gl.uniform2f(this.location(program,'generatorResolution'),target.w,target.h);gl.uniform1f(this.location(program,'time'),parameters.time??0);
+  if(body===blur)gl.uniform1i(this.location(program,'wrapHorizontal'),extra.wrap?1:0);
   // Do not leave a render target bound to an unused input sampler.
   for(let index=0;index<3;index++){gl.activeTexture(gl.TEXTURE0+index);gl.bindTexture(gl.TEXTURE_2D,inputs[index]?.tex??null);gl.uniform1i(this.location(program,'input'+index),index);}
   if(extra.direction)gl.uniform2fv(this.location(program,'blurDirection'),extra.direction);if(extra.radius!==undefined)gl.uniform1f(this.location(program,'blurRadius'),extra.radius);
@@ -64,6 +66,16 @@ export class GeneratorRenderer{
   gl.uniform2f(this.location(program,'resolution'),target.w,target.h);gl.uniform1i(this.location(program,'cloud'),effect==='smoke'?1:0);gl.uniform1i(this.location(program,'motionKind'),effect==='sparks'?1:effect==='lightning'?2:0);gl.uniform1f(this.location(program,'geometryTime'),time);gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE);gl.drawArraysInstanced(gl.TRIANGLES,0,6,rows.length/12);this.drawCount++;gl.disable(gl.BLEND);
   for(let i=0;i<3;i++){gl.vertexAttribDivisor(i,0);gl.disableVertexAttribArray(i);}gl.bindVertexArray(null);const error=gl.getError();if(error)throw Error('生成器几何渲染错误 '+error);
  }
+ ribbon(target,path,parameters,settings,style){
+  const gl=this.gl,defines=parameters.specs.map(p=>'#define '+p.variable+' gp['+p.slot+']').join('\n'),film=style==='membrane',program=film?this.program(membraneFragment(defines),membraneVertex(path,defines)):this.program(ribbonFragment,ribbonVertex(path,defines,{particles:style==='strands'}));
+  this.bind(target);gl.useProgram(program.p);gl.bindVertexArray(this.vao);
+  const data=new Float32Array(64);data.set(parameters.values);const size=program.sizes.get('gp[0]');if(size)gl.uniform1fv(this.location(program,'gp[0]'),data.subarray(0,size));
+  gl.uniform1f(this.location(program,'generatorSeed'),settings.seed);gl.uniform1f(this.location(program,'time'),parameters.time);gl.uniform2f(this.location(program,'generatorResolution'),target.w,target.h);
+  const work=ribbonWork(settings,target.w),{steps,layers}=work,strands=film?128:work.strands;
+  gl.uniform1i(this.location(program,'ribbonSteps'),steps);gl.uniform1i(this.location(program,'ribbonStrands'),strands);gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE);
+  gl.drawArraysInstanced(gl.TRIANGLE_STRIP,0,(steps+1)*2,strands*layers);this.drawCount++;
+  gl.disable(gl.BLEND);gl.bindVertexArray(null);const error=gl.getError();if(error)throw messageError('errors.ribbonGeometry',error);
+ }
  render(type,values,w,h,libraries,time=0){
   const definition=type.definition,spec=definition.generator,clock=spec.usesTime&&definition.parameters.some(p=>p.variable==='motionSpeed'&&values[p.slot]===0)?0:time,key=JSON.stringify([type.id,spec,values,w,h,type.usesTime?clock:0]);this.pinned.add(key);
   if(this.cache.has(key)){const cached=this.cache.get(key);this.cache.delete(key);this.cache.set(key,cached);return cached;}
@@ -73,7 +85,7 @@ export class GeneratorRenderer{
   let output;
   try{
    output=allocate();
-   const blurred=(source,radius,scalar=false)=>{if(radius<=0)return source;const horizontal=allocate(scalar),vertical=allocate(scalar);this.fullscreen(horizontal,blur,'',parameters,[source],{direction:[1/w,0],radius});this.fullscreen(vertical,blur,'',parameters,[horizontal],{direction:[0,1/h],radius});return vertical;};
+   const blurred=(source,radius,scalar=false,wrap=false)=>{if(radius<=0)return source;const horizontal=allocate(scalar),vertical=allocate(scalar);this.fullscreen(horizontal,blur,'',parameters,[source],{direction:[1/w,0],radius,wrap});this.fullscreen(vertical,blur,'',parameters,[horizontal],{direction:[0,1/h],radius,wrap});return vertical;};
    if(spec.effect==='pipeline'){
     const outputs=new Map();
     for(const [index,pass]of spec.passes.entries()){
@@ -84,6 +96,10 @@ export class GeneratorRenderer{
      const pending=new Set(spec.passes.slice(index+1).flatMap(p=>p.inputs));
      for(const [id,old]of outputs)if(old!==output&&!pending.has(id)){this.release(old);targets.splice(targets.indexOf(old),1);outputs.delete(id);}
     }
+   }else if(spec.effect==='ribbon'){
+    const sharp=allocate(false,true);this.ribbon(sharp,libraries[spec.programs.path],parameters,settings,spec.style);
+    const glow=blurred(sharp,settings.softGlow*h/128,false,settings.seamlessU>.5);
+    this.fullscreen(output,libraries[spec.programs.color],common,parameters,[sharp,glow]);
    }else if(spec.effect==='smoke'||spec.effect==='fog'){
     let density=allocate(true,spec.effect==='smoke');
     if(spec.effect==='smoke')this.geometry(density,'smoke',settings);else this.fullscreen(density,libraries[spec.programs.density],common,parameters);

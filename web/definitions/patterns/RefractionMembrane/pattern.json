@@ -1,0 +1,387 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "RefractionMembrane",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "折光薄膜",
+  "aliases": {
+    "zh-CN": "折光薄膜",
+    "en": "Refractive membrane"
+  },
+  "category": "ribbon",
+  "order": 299,
+  "variant": 17,
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 2917,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      }
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "variable": "waveAmplitude",
+      "label": "波形振幅",
+      "min": 0,
+      "max": 0.3,
+      "step": 0.001,
+      "default": 0.06,
+      "aliases": {
+        "zh-CN": "波形振幅",
+        "en": "Wave amplitude"
+      }
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "variable": "waveCount",
+      "label": "波形数量",
+      "min": 0.25,
+      "max": 8,
+      "step": 0.05,
+      "default": 1.2,
+      "aliases": {
+        "zh-CN": "波形数量",
+        "en": "Wave count"
+      }
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "variable": "bandWidth",
+      "label": "带宽",
+      "min": 0.02,
+      "max": 0.9,
+      "step": 0.01,
+      "default": 0.36,
+      "aliases": {
+        "zh-CN": "带宽",
+        "en": "Band width"
+      }
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "layerCount",
+      "label": "叠加层数",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2,
+      "aliases": {
+        "zh-CN": "叠加层数",
+        "en": "Layer count"
+      }
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "variable": "foldAmount",
+      "label": "扭转折叠",
+      "min": 0,
+      "max": 1.5,
+      "step": 0.01,
+      "default": 0.48,
+      "aliases": {
+        "zh-CN": "扭转折叠",
+        "en": "Twist and folds"
+      }
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "variable": "noiseStrength",
+      "label": "扰动强度",
+      "min": 0,
+      "max": 0.3,
+      "step": 0.001,
+      "default": 0.035,
+      "aliases": {
+        "zh-CN": "扰动强度",
+        "en": "Distortion strength"
+      }
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "variable": "noiseFrequency",
+      "label": "扰动频率",
+      "min": 0.25,
+      "max": 16,
+      "step": 0.05,
+      "default": 3.2,
+      "aliases": {
+        "zh-CN": "扰动频率",
+        "en": "Distortion frequency"
+      }
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "variable": "detailStrength",
+      "label": "细节扰动",
+      "min": 0,
+      "max": 0.04,
+      "step": 0.001,
+      "default": 0.002,
+      "aliases": {
+        "zh-CN": "细节扰动",
+        "en": "Fine distortion"
+      }
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "variable": "noiseOffset",
+      "label": "沿线扰动偏移",
+      "min": -10,
+      "max": 10,
+      "step": 0.01,
+      "default": 0,
+      "aliases": {
+        "zh-CN": "沿线扰动偏移",
+        "en": "Longitudinal offset"
+      }
+    },
+    {
+      "slot": 10,
+      "key": "C",
+      "variable": "exposure",
+      "label": "叠加亮度",
+      "min": 0.1,
+      "max": 6,
+      "step": 0.05,
+      "default": 1.4,
+      "aliases": {
+        "zh-CN": "叠加亮度",
+        "en": "Exposure"
+      }
+    },
+    {
+      "slot": 11,
+      "key": "E",
+      "variable": "softGlow",
+      "label": "柔光",
+      "min": 0,
+      "max": 3,
+      "step": 0.05,
+      "default": 0.25,
+      "aliases": {
+        "zh-CN": "柔光",
+        "en": "Soft glow"
+      }
+    },
+    {
+      "slot": 12,
+      "key": "F",
+      "variable": "endFade",
+      "label": "两端淡出",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.01,
+      "default": 0.08,
+      "aliases": {
+        "zh-CN": "两端淡出",
+        "en": "End fade"
+      }
+    },
+    {
+      "slot": 13,
+      "key": "G",
+      "variable": "seamlessU",
+      "label": "横向无缝",
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "default": 0,
+      "aliases": {
+        "zh-CN": "横向无缝",
+        "en": "Horizontal seamless"
+      },
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "variable": "off",
+          "label": "关闭",
+          "aliases": {
+            "zh-CN": "关闭",
+            "en": "Off"
+          }
+        },
+        {
+          "value": 1,
+          "variable": "on",
+          "label": "开启",
+          "aliases": {
+            "zh-CN": "开启",
+            "en": "On"
+          }
+        }
+      ]
+    },
+    {
+      "slot": 14,
+      "key": "I",
+      "variable": "motionSpeed",
+      "label": "形态演变速度",
+      "min": -3,
+      "max": 3,
+      "step": 0.01,
+      "default": 0.35,
+      "aliases": {
+        "zh-CN": "形态演变速度",
+        "en": "Evolution speed"
+      }
+    },
+    {
+      "variable": "interiorOpacity",
+      "label": "内部透明度",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.055,
+      "aliases": {
+        "zh-CN": "内部透明度",
+        "en": "Interior opacity"
+      },
+      "slot": 15,
+      "key": "J"
+    },
+    {
+      "variable": "edgeWidth",
+      "label": "边缘宽度",
+      "min": 0.0001,
+      "max": 0.02,
+      "step": 0.0001,
+      "default": 0.0025,
+      "aliases": {
+        "zh-CN": "边缘宽度",
+        "en": "Edge width"
+      },
+      "slot": 16,
+      "key": "P16"
+    },
+    {
+      "variable": "edgeBrightness",
+      "label": "边缘亮度",
+      "min": 0,
+      "max": 3,
+      "step": 0.01,
+      "default": 0.65,
+      "aliases": {
+        "zh-CN": "边缘亮度",
+        "en": "Edge brightness"
+      },
+      "slot": 17,
+      "key": "P17"
+    },
+    {
+      "variable": "creaseBrightness",
+      "label": "折痕亮度",
+      "min": 0,
+      "max": 2,
+      "step": 0.01,
+      "default": 0.16,
+      "aliases": {
+        "zh-CN": "折痕亮度",
+        "en": "Crease brightness"
+      },
+      "slot": 18,
+      "key": "P18"
+    },
+    {
+      "variable": "baseTint",
+      "label": "薄膜底色",
+      "min": 0,
+      "max": 16777215,
+      "step": 1,
+      "default": 12441333,
+      "aliases": {
+        "zh-CN": "薄膜底色",
+        "en": "Membrane tint"
+      },
+      "type": "color",
+      "slot": 19,
+      "key": "P19"
+    },
+    {
+      "variable": "edgeTint",
+      "label": "边缘颜色",
+      "min": 0,
+      "max": 16777215,
+      "step": 1,
+      "default": 10407679,
+      "aliases": {
+        "zh-CN": "边缘颜色",
+        "en": "Edge color"
+      },
+      "type": "color",
+      "slot": 20,
+      "key": "P20"
+    }
+  ],
+  "defaults": [
+    2917,
+    0.06,
+    1.2,
+    0.36,
+    2,
+    0.48,
+    0.035,
+    3.2,
+    0.002,
+    0,
+    1.4,
+    0.25,
+    0.08,
+    0,
+    0.35,
+    0.055,
+    0.0025,
+    0.65,
+    0.16,
+    12441333,
+    10407679
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "inline": "return 0.;",
+      "libraries": [
+        "math-v1"
+      ]
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  },
+  "generator": {
+    "schema": "momo.generator/v1",
+    "revision": 1,
+    "effect": "ribbon",
+    "scalar": "alpha",
+    "usesTime": true,
+    "libraries": [
+      "generator-ribbon-path-v1",
+      "generator-membrane-color-v1"
+    ],
+    "programs": {
+      "path": "generator-ribbon-path-v1",
+      "color": "generator-membrane-color-v1"
+    },
+    "style": "membrane"
+  }
+}

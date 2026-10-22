@@ -123,6 +123,20 @@ Canvas tools support moving, rotating and pivot editing. Shift locks movement ax
 
 A shape repeats itself; an arranged group repeats the entire group by default.
 
+### Ribbon and trail textures
+
+Search the **Graphics library** for “Folded ribbon strands”, “Refractive membrane” or “Particle strands” and add it to the canvas. All three generate transparent horizontal strips for ribbon, energy trail and gauze surface textures. A 4:1 or 8:1 canvas is a useful starting point.
+
+Choose a **Trail style preset** in the graphic parameters module, then adjust the controls:
+
+- **Folded ribbon strands:** continuous strands gather into folds. Presets: Moonlit silk, Cyan energy and Drifting wisps.
+- **Refractive membrane:** a continuous sheet with separate interior opacity, edge width/brightness, crease brightness, membrane tint and edge color. Presets: Ice blue membrane, Violet gold sheen and Moonlit veil. Inherited colors retain its original palette; node colors can override it.
+- **Particle strands:** independently phased strands, with width and opacity variation controlled by Strand variation. Presets: Soft white strands, Blue flowing strands and Dusty wisps.
+
+Styles also set the palette; use the shared node color, opacity, channel curves and image filters for further adjustments. Strand and membrane edge widths are relative to graphic height, with automatic subpixel coverage, so preview and export preserve their proportions.
+
+**Evolution speed** supports forward and reverse motion; 0 holds the shape still. UV scrolling remains available for texture flow. **Horizontal seamless** rounds wave and distortion frequencies to whole cycles and disables end fading to join the horizontal edges. This controls spatial tiling and does not guarantee identical first and last animation frames. Parameters support keyframes, shortcut pins, undo and project/resource saves. Export through the existing transparent PNG and sequence workflows.
+
 ### Bezier paths: expanded and multisegment editing
 
 Bezier Ribbon and Along path arrangements share a path editor. Choose **Expand editor** for a larger window. Zoom with the wheel or plus/minus buttons, drag empty space to pan, and use **Fit all** to reveal every point. View changes do not edit the artwork. Point coordinates range from −8 to 8, beyond the edges of the original small viewport.
