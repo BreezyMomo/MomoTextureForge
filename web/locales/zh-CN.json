@@ -1573,5 +1573,9 @@
   "workspace.randomPattern": "随机图案",
   "workspace.seamlessTiling": "无缝平铺",
   "workspace.valueSettings": "{0}设置",
-  "workspace.visible": "显示中"
+  "workspace.visible": "显示中",
+  "header.resources": "创作资源",
+  "header.moreResources": "更多资源",
+  "header.undoShortcut": "撤销 (Ctrl/⌘+Z)",
+  "header.redoShortcut": "重做 (Ctrl/⌘+Shift+Z · Ctrl+Y)"
 }

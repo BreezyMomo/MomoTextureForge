@@ -1573,5 +1573,9 @@
   "workspace.randomPattern": "Random pattern",
   "workspace.seamlessTiling": "Seamless tiling",
   "workspace.valueSettings": "{0} settings",
-  "workspace.visible": "Visible"
+  "workspace.visible": "Visible",
+  "header.resources": "Creative resources",
+  "header.moreResources": "More resources",
+  "header.undoShortcut": "Undo (Ctrl/⌘+Z)",
+  "header.redoShortcut": "Redo (Ctrl/⌘+Shift+Z · Ctrl+Y)"
 }
