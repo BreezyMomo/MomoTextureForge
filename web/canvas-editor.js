@@ -1,3 +1,5 @@
+import {onLanguageChange} from './language.js';
+import {uiText} from './ui-language.js';
 import {find} from './tree-model.js';
 import {selectionRegions} from './tree-view.js';
 import {contains,sub,moveTransform,pivotTransform,rotateTransform,resizeTransform,bounds,snapMove} from './canvas-transform.js';
@@ -5,10 +7,11 @@ import {contains,sub,moveTransform,pivotTransform,rotateTransform,resizeTransfor
 const handles=[[0,0],[.5,0],[1,0],[1,.5],[1,1],[.5,1],[0,1],[0,.5]];
 export function createCanvasEditor(surface,api){
  const doc=surface.ownerDocument,ns='http://www.w3.org/2000/svg';
- const svg=doc.createElementNS(ns,'svg');svg.id='canvas-controls';svg.setAttribute('viewBox','0 0 1000 1000');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-label','画布编辑控制点');surface.append(svg);
+ const svg=doc.createElementNS(ns,'svg');svg.id='canvas-controls';svg.setAttribute('viewBox','0 0 1000 1000');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-label',uiText("canvas.canvasEditingHandles"));surface.append(svg);
  const toolbar=doc.querySelector('.tree-toolbar'),button=(id,text,fn)=>{const b=doc.createElement('button');b.id=id;b.textContent=text;b.onclick=fn;return b;};
  let mode='transform',scope=null,activeCopy=0,gesture=null,space=false,hover=false,snap=true,guides=[],cycle=null,menu=null;
- const transform=button('canvas-transform','选择 / 变换',()=>setMode('transform')),pivot=button('canvas-pivot','编辑轴心',()=>setMode('pivot')),snapping=button('canvas-snap','吸附',()=>{snap=!snap;snapping.setAttribute('aria-pressed',String(snap));});
+ const transform=button('canvas-transform',uiText("canvas.selectTransform"),()=>setMode('transform')),pivot=button('canvas-pivot',uiText("canvas.editPivot"),()=>setMode('pivot')),snapping=button('canvas-snap',uiText("canvas.snap"),()=>{snap=!snap;snapping.setAttribute('aria-pressed',String(snap));});
+ const localizeTools=()=>{svg.setAttribute('aria-label',uiText("canvas.canvasEditingHandles"));for(const [control,label]of [[transform,"canvas.selectTransform"],[pivot,"canvas.editPivot"],[snapping,"canvas.snap"]])control.textContent=uiText(label);};localizeTools();onLanguageChange(localizeTools);
  toolbar.prepend(transform,pivot,snapping);snapping.setAttribute('aria-pressed','true');
  const getScope=()=>find(api.project().root,scope)?.node??api.project().root;
  const regionList=id=>selectionRegions(api.project(),id,api.time(),{solo:api.solo(),records:api.records}).regions;
@@ -25,17 +28,17 @@ export function createCanvasEditor(surface,api){
   svg.replaceChildren();if(!enabled())return;const rs=activeRegions(),rect=surface.getBoundingClientRect(),sx=1000/Math.max(1,rect.width),sy=1000/Math.max(1,rect.height);
   for(const r of rs){add('polygon',{points:r.corners.map(screen).map(p=>p.join(',')).join(' '),class:'canvas-region'+(r.active?' active':''),'data-copy':r.copy});
    if(!r.active||api.nodes().length!==1)continue;
-   if(mode==='pivot'){const p=screen(r.pivot);add('ellipse',{cx:p[0],cy:p[1],rx:9*sx,ry:9*sy,class:'canvas-handle pivot-handle','data-action':'pivot',tabindex:0,'aria-label':'拖动轴心（保持图形位置）'});continue;}
-   for(const [i,h]of handles.entries()){const p=screen(r.point(h));add('rect',{x:p[0]-4*sx,y:p[1]-4*sy,width:8*sx,height:8*sy,class:'canvas-handle','data-action':'resize','data-handle':i,'aria-label':'调整区域 '+i});}
+   if(mode==='pivot'){const p=screen(r.pivot);add('ellipse',{cx:p[0],cy:p[1],rx:9*sx,ry:9*sy,class:'canvas-handle pivot-handle','data-action':'pivot',tabindex:0,'aria-label':uiText("canvas.dragPivotKeepArtworkInPlace")});continue;}
+   for(const [i,h]of handles.entries()){const p=screen(r.point(h));add('rect',{x:p[0]-4*sx,y:p[1]-4*sy,width:8*sx,height:8*sy,class:'canvas-handle','data-action':'resize','data-handle':i,'aria-label':(uiText("canvas.resizeBounds") + i)});}
    const top=screen(r.point([.5,1])),center=screen(r.center),dx=(top[0]-center[0])/sx,dy=(top[1]-center[1])/sy,l=Math.hypot(dx,dy)||1,p=[top[0]+dx/l*25*sx,top[1]+dy/l*25*sy];
-   add('path',{d:`M${top} L${p}`,class:'canvas-rotation-line'});add('ellipse',{cx:p[0],cy:p[1],rx:6*sx,ry:6*sy,class:'canvas-handle','data-action':'rotate','aria-label':'拖动旋转，Shift 按15度吸附'});
+   add('path',{d:`M${top} L${p}`,class:'canvas-rotation-line'});add('ellipse',{cx:p[0],cy:p[1],rx:6*sx,ry:6*sy,class:'canvas-handle','data-action':'rotate','aria-label':uiText("canvas.dragToRotateHoldShiftToSnapTo")});
   }
   for(const g of guides)add('path',{d:g.axis===0?`M${g.value*1000},0v1000`:`M0,${(1-g.value)*1000}h1000`,class:'canvas-snap-line'});
   if(gesture?.kind==='marquee'){const a=screen(gesture.start),b=screen(gesture.end??gesture.start);add('rect',{x:Math.min(a[0],b[0]),y:Math.min(a[1],b[1]),width:Math.abs(a[0]-b[0]),height:Math.abs(a[1]-b[1]),class:'canvas-marquee'});}
  }
  function navigation(){
   const nav=doc.getElementById('breadcrumbs');if(getScope().id===api.project().root.id)return;
-  nav.prepend(button('canvas-back','← 返回上层',()=>{scope=find(api.project().root,getScope().id)?.parent?.id??null;api.refresh();}),Object.assign(doc.createElement('span'),{textContent:'编辑范围：'+getScope().name+' · '}));
+  nav.prepend(button('canvas-back',uiText("canvas.backToParent"),()=>{scope=find(api.project().root,getScope().id)?.parent?.id??null;api.refresh();}),Object.assign(doc.createElement('span'),{textContent:'编辑范围：'+getScope().name+' · '}));
  }
  function candidates(p){
   const nodes=api.solo()?[find(api.project().root,api.primary())?.node].filter(Boolean):getScope().children,found=[];
@@ -61,7 +64,7 @@ export function createCanvasEditor(surface,api){
    // current group scope. Alt explicitly returns to overlap cycling.
    if(!e.altKey&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey)for(const n of [...api.nodes()].reverse()){const rs=regionList(n.id),copy=rs.findIndex(r=>hitContains(n.id,r,p));if(copy>=0&&api.hit(n.id,p)){hit={id:n.id,copy,region:rs[copy]};break;}}
    hit??=choose(e,p);
-  }catch(error){api.notify('无法选择：'+error.message);return;}
+  }catch(error){api.notify((uiText("canvas.couldNotSelect") + error.message));return;}
   if(hit){activeCopy=hit.copy;if(e.ctrlKey||e.metaKey||e.shiftKey){api.toggle(hit.id);draw();return;}if(!api.ids().includes(hit.id))api.select([hit.id],hit.id);begin(e,'move',hit);}
   else{gesture={kind:'marquee',start:p,end:p,pointer:e.pointerId,add:e.ctrlKey||e.metaKey||e.shiftKey,previous:api.ids()};surface.setPointerCapture?.(e.pointerId);e.preventDefault();}
  });

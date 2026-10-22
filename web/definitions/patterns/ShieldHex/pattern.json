@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "ShieldHex",
-  "revision": 2,
+  "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "能量护盾",
   "category": "energy",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "网格密度",
-      "min": 2.0,
-      "max": 12.0,
+      "min": 2,
+      "max": 12,
       "step": 0.5,
-      "default": 5.0
+      "default": 5,
+      "variable": "gridDensity",
+      "aliases": {
+        "zh-CN": "网格密度",
+        "en": "Grid density"
+      }
     },
     {
       "slot": 1,
@@ -24,32 +29,47 @@
       "min": 0.01,
       "max": 0.2,
       "step": 0.005,
-      "default": 0.05
+      "default": 0.05,
+      "variable": "gridLineWidth",
+      "aliases": {
+        "zh-CN": "网格线宽",
+        "en": "Grid line width"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "脉动速度",
-      "min": 0.0,
-      "max": 3.0,
+      "min": 0,
+      "max": 3,
       "step": 0.05,
-      "default": 1.0
+      "default": 1,
+      "variable": "pulsationSpeed",
+      "aliases": {
+        "zh-CN": "脉动速度",
+        "en": "Pulsation speed"
+      }
     },
     {
       "slot": 4,
       "key": "D",
       "label": "脉动强度",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.7
+      "default": 0.7,
+      "variable": "pulsationStrength",
+      "aliases": {
+        "zh-CN": "脉动强度",
+        "en": "Pulsation strength"
+      }
     }
   ],
   "defaults": [
-    5.0,
+    5,
     0.05,
     0,
-    1.0,
+    1,
     0.7,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "能量护盾",
+    "en": "Shield Hex"
   }
 }

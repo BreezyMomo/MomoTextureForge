@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Waves",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "波浪",
   "category": "pattern",
@@ -12,28 +12,43 @@
       "slot": 0,
       "key": "R",
       "label": "频率",
-      "min": 1.0,
-      "max": 20.0,
+      "min": 1,
+      "max": 20,
       "step": 0.5,
-      "default": 4.0
+      "default": 4,
+      "variable": "frequency",
+      "aliases": {
+        "zh-CN": "频率",
+        "en": "Frequency"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "振幅",
-      "min": 0.0,
+      "min": 0,
       "max": 0.5,
       "step": 0.01,
-      "default": 0.12
+      "default": 0.12,
+      "variable": "amplitude",
+      "aliases": {
+        "zh-CN": "振幅",
+        "en": "Amplitude"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "速度",
-      "min": 0.0,
-      "max": 2.0,
+      "min": 0,
+      "max": 2,
       "step": 0.05,
-      "default": 0.15
+      "default": 0.15,
+      "variable": "speed",
+      "aliases": {
+        "zh-CN": "速度",
+        "en": "Speed"
+      }
     },
     {
       "slot": 3,
@@ -42,11 +57,16 @@
       "min": 0.01,
       "max": 0.3,
       "step": 0.005,
-      "default": 0.08
+      "default": 0.08,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      }
     }
   ],
   "defaults": [
-    4.0,
+    4,
     0.12,
     0.15,
     0.08,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "波浪",
+    "en": "Waves"
   }
 }

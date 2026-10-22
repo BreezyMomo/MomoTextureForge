@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Stone",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "岩石",
   "category": "natural",
@@ -12,43 +12,63 @@
       "slot": 0,
       "key": "R",
       "label": "缩放",
-      "min": 1.0,
-      "max": 20.0,
+      "min": 1,
+      "max": 20,
       "step": 0.5,
-      "default": 5.0
+      "default": 5,
+      "variable": "scale",
+      "aliases": {
+        "zh-CN": "缩放",
+        "en": "Scale"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "层数",
-      "min": 1.0,
-      "max": 8.0,
-      "step": 1.0,
-      "default": 5.0
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 5,
+      "variable": "layers",
+      "aliases": {
+        "zh-CN": "层数",
+        "en": "Layers"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "对比",
       "min": 0.3,
-      "max": 6.0,
+      "max": 6,
       "step": 0.05,
-      "default": 2.0
+      "default": 2,
+      "variable": "contrast",
+      "aliases": {
+        "zh-CN": "对比",
+        "en": "Contrast"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "阈值",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.35
+      "default": 0.35,
+      "variable": "threshold",
+      "aliases": {
+        "zh-CN": "阈值",
+        "en": "Threshold"
+      }
     }
   ],
   "defaults": [
-    5.0,
-    5.0,
-    2.0,
+    5,
+    5,
+    2,
     0.35,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "岩石",
+    "en": "Stone"
   }
 }

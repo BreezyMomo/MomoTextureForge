@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Sand",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "沙粒",
   "category": "natural",
@@ -12,33 +12,48 @@
       "slot": 0,
       "key": "R",
       "label": "缩放",
-      "min": 1.0,
-      "max": 16.0,
+      "min": 1,
+      "max": 16,
       "step": 0.5,
-      "default": 4.0
+      "default": 4,
+      "variable": "scale",
+      "aliases": {
+        "zh-CN": "缩放",
+        "en": "Scale"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "颗粒",
-      "min": 4.0,
-      "max": 600.0,
-      "step": 4.0,
-      "default": 220.0
+      "min": 4,
+      "max": 600,
+      "step": 4,
+      "default": 220,
+      "variable": "grain",
+      "aliases": {
+        "zh-CN": "颗粒",
+        "en": "Grain"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "风纹",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.6
+      "default": 0.6,
+      "variable": "windPattern",
+      "aliases": {
+        "zh-CN": "风纹",
+        "en": "Wind pattern"
+      }
     }
   ],
   "defaults": [
-    4.0,
-    220.0,
+    4,
+    220,
     0.6,
     0,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "沙粒",
+    "en": "Sand"
   }
 }

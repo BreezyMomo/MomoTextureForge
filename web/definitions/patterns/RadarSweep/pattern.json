@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RadarSweep",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "雷达扫描",
   "category": "digital",
@@ -12,43 +12,63 @@
       "slot": 0,
       "key": "R",
       "label": "扫描速度",
-      "min": 0.0,
-      "max": 3.0,
+      "min": 0,
+      "max": 3,
       "step": 0.05,
-      "default": 0.8
+      "default": 0.8,
+      "variable": "scanSpeed",
+      "aliases": {
+        "zh-CN": "扫描速度",
+        "en": "Scan speed"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "余辉",
       "min": 0.5,
-      "max": 8.0,
+      "max": 8,
       "step": 0.1,
-      "default": 3.0
+      "default": 3,
+      "variable": "afterglow",
+      "aliases": {
+        "zh-CN": "余辉",
+        "en": "Afterglow"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "环数",
-      "min": 2.0,
-      "max": 12.0,
+      "min": 2,
+      "max": 12,
       "step": 0.5,
-      "default": 4.0
+      "default": 4,
+      "variable": "ringCount",
+      "aliases": {
+        "zh-CN": "环数",
+        "en": "Ring count"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "噪点",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.3
+      "default": 0.3,
+      "variable": "parameterNoise",
+      "aliases": {
+        "zh-CN": "噪点",
+        "en": "Noise"
+      }
     }
   ],
   "defaults": [
     0.8,
-    3.0,
-    4.0,
+    3,
+    4,
     0.3,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "雷达扫描",
+    "en": "Radar Sweep"
   }
 }

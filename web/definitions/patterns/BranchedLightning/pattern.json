@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "BranchedLightning",
-  "revision": 2,
+  "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "分叉闪电",
   "category": "vfx",
@@ -16,7 +16,11 @@
       "min": 0,
       "max": 99999,
       "step": 1,
-      "default": 7872
+      "default": 7872,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      }
     },
     {
       "slot": 1,
@@ -26,7 +30,11 @@
       "min": 8,
       "max": 128,
       "step": 1,
-      "default": 45
+      "default": 45,
+      "aliases": {
+        "zh-CN": "主干分段",
+        "en": "Trunk segments"
+      }
     },
     {
       "slot": 2,
@@ -36,7 +44,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.7
+      "default": 0.7,
+      "aliases": {
+        "zh-CN": "曲折程度",
+        "en": "Zigzag amount"
+      }
     },
     {
       "slot": 3,
@@ -46,7 +58,11 @@
       "min": 0.3,
       "max": 6,
       "step": 0.05,
-      "default": 2.5
+      "default": 2.5,
+      "aliases": {
+        "zh-CN": "粗细",
+        "en": "Thickness"
+      }
     },
     {
       "slot": 4,
@@ -56,7 +72,11 @@
       "min": 0,
       "max": 20,
       "step": 1,
-      "default": 8
+      "default": 8,
+      "aliases": {
+        "zh-CN": "分叉数量",
+        "en": "Branch count"
+      }
     },
     {
       "slot": 5,
@@ -66,7 +86,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "分叉扩散",
+        "en": "Branch spread"
+      }
     },
     {
       "slot": 6,
@@ -76,7 +100,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "分叉长度变化",
+        "en": "Branch length variation"
+      }
     },
     {
       "slot": 7,
@@ -86,7 +114,11 @@
       "min": 0.1,
       "max": 3,
       "step": 0.05,
-      "default": 0.9
+      "default": 0.9,
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     },
     {
       "slot": 8,
@@ -96,7 +128,11 @@
       "min": 0,
       "max": 5,
       "step": 0.05,
-      "default": 2.5
+      "default": 2.5,
+      "aliases": {
+        "zh-CN": "核心辉光",
+        "en": "Core glow"
+      }
     },
     {
       "slot": 9,
@@ -106,7 +142,11 @@
       "min": 0,
       "max": 3,
       "step": 0.05,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "外围辉光",
+        "en": "Outer glow"
+      }
     },
     {
       "slot": 10,
@@ -116,7 +156,11 @@
       "min": 0,
       "max": 12,
       "step": 0.1,
-      "default": 4
+      "default": 4,
+      "aliases": {
+        "zh-CN": "辉光范围",
+        "en": "Glow range"
+      }
     },
     {
       "slot": 11,
@@ -126,7 +170,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.62
+      "default": 0.62,
+      "aliases": {
+        "zh-CN": "色相",
+        "en": "Hue"
+      }
     },
     {
       "slot": 12,
@@ -136,7 +184,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.7
+      "default": 0.7,
+      "aliases": {
+        "zh-CN": "饱和度",
+        "en": "Saturation"
+      }
     },
     {
       "slot": 13,
@@ -146,7 +198,11 @@
       "min": 0,
       "max": 3,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "动画速度",
+        "en": "Animation speed"
+      }
     }
   ],
   "defaults": [
@@ -195,5 +251,9 @@
       "color": "generator-emission-v1"
     },
     "usesTime": true
+  },
+  "aliases": {
+    "zh-CN": "分叉闪电",
+    "en": "Branched Lightning"
   }
 }

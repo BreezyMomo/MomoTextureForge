@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Silk",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "丝绸",
   "category": "noise",
@@ -12,41 +12,61 @@
       "slot": 0,
       "key": "R",
       "label": "缩放",
-      "min": 1.0,
-      "max": 10.0,
+      "min": 1,
+      "max": 10,
       "step": 0.5,
-      "default": 4.0
+      "default": 4,
+      "variable": "scale",
+      "aliases": {
+        "zh-CN": "缩放",
+        "en": "Scale"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "扭曲",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.35
+      "default": 0.35,
+      "variable": "warp",
+      "aliases": {
+        "zh-CN": "扭曲",
+        "en": "Warp"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "方向",
-      "min": 0.0,
+      "min": 0,
       "max": 3.14,
       "step": 0.01,
-      "default": 0.6
+      "default": 0.6,
+      "variable": "direction",
+      "aliases": {
+        "zh-CN": "方向",
+        "en": "Direction"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "对比",
       "min": 0.2,
-      "max": 4.0,
+      "max": 4,
       "step": 0.05,
-      "default": 1.4
+      "default": 1.4,
+      "variable": "contrast",
+      "aliases": {
+        "zh-CN": "对比",
+        "en": "Contrast"
+      }
     }
   ],
   "defaults": [
-    4.0,
+    4,
     0.35,
     0.6,
     1.4,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "丝绸",
+    "en": "Silk"
   }
 }

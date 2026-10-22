@@ -9,8 +9,15 @@
 - 修改内置图形视觉公式后，运行 node tests/builtin-release-browser-check.mjs --pattern <图形ID> 更新对应图库缩略图，再构建静态网站；检查实际卡片效果。
 - 教程截图通过 tools/capture-docs.mjs 拍摄，操作标记在 tools/docs-annotations.mjs 维护；按真实控件定位编号框，同步图下注解，保证操作目标可见。
 - 编辑器入口：web/tree-app.js；内置图形：web/definitions。
+- 图形参数必须有稳定且图形内唯一的 variable，显示名称使用 aliases 语言映射与全局顺序回退；无匹配别名时显示变量名。行为判断用 role，不用中文 label。语言切换不得修改项目、关键帧或资源哈希；格式见 docs/12-language-and-aliases.md。
 - Skill 源文件在 skills/，修改后运行 node build-authoring-kit.mjs，同步生成文件。
 - AI 上下文仅从图形库导出，不恢复选中节点上下文或固定图形清单。
 - 安装：npm ci。验证：npm test、npm run validate:definitions。构建：npm run build:standalone。
 - 测试输出放在 test-results/，离线产物放在 dist/；npm run build:pages 将网页同步到可提交的 site/ 目录供静态部署。不提交依赖目录和浏览器用户数据。
 - 提交、推送与发布按用户指令执行。
+
+- 固定界面文案用稳定语义 key 调用 `uiText(key)`，动态句子用 `uiFormat(key, ...values)`；各语言独立 JSON 在 `web/locales/`，由 `catalogs.js` 注册，禁止中文作 key 或运行时按文案反查。HTML 用显式 `data-i18n` 绑定，程序错误用 `messageError` 携带 key 与参数，界面通过 `uiError` 显示。修改措辞只改语言文件，构建校验所有语言同键与占位符一致；参数别名用 `parameterLabel`，用户命名与代码不得自动翻译。选项值、DOM选择器和判断条件不使用翻译结果。修改界面后检查 `tests/ui-language.test.mjs` 与源码/静态版 `tests/ui-language-browser-check.mjs`，保留英文窄屏顶栏可用性。
+
+- 语言类型、原生名称与默认语言由 `web/language-config.json` 在构建时固定；全局入口和参数别名编辑器只提供选择控件，不允许手输语言编码或增改语言类型。参数按所选语言优先、再按配置顺序回退；未启用语言的导入别名保留，不自动删除。
+
+- 图形名称归资源所有：内置与自定义定义顶层 `name + aliases`，参数仍使用各自 `variable + aliases`。显示调用 `graphicLabel`，搜索调用 `graphicSearchText`，不在界面词库维护图形名称。图形库/列表/创作JSON/ZIP/远程目录必须保留名称别名；派生模板不得继承旧名称别名。创建节点时使用当前显示名称，之后不随语言切换改名。

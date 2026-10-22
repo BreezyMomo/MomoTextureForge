@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "OgeeFlowerTile",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "弧菱花砖",
   "category": "shape",
@@ -15,7 +15,12 @@
       "min": 0.5,
       "max": 1.05,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "variable": "heightRatio",
+      "aliases": {
+        "zh-CN": "高度比例",
+        "en": "Height ratio"
+      }
     },
     {
       "slot": 0,
@@ -24,7 +29,12 @@
       "min": 0.5,
       "max": 1.2,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "variable": "widthRatio",
+      "aliases": {
+        "zh-CN": "宽度比例",
+        "en": "Width ratio"
+      }
     },
     {
       "slot": 1,
@@ -33,7 +43,12 @@
       "min": 0.005,
       "max": 0.04,
       "step": 0.001,
-      "default": 0.023
+      "default": 0.023,
+      "variable": "borderThickness",
+      "aliases": {
+        "zh-CN": "边框粗细",
+        "en": "Border thickness"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,13 @@
       "min": 0.001,
       "max": 0.03,
       "step": 0.001,
-      "default": 0.003
+      "default": 0.003,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     },
     {
       "slot": 4,
@@ -51,7 +72,12 @@
       "min": 0,
       "max": 0.1,
       "step": 0.001,
-      "default": 0.065
+      "default": 0.065,
+      "variable": "arcBend",
+      "aliases": {
+        "zh-CN": "弧线弯曲",
+        "en": "Arc bend"
+      }
     },
     {
       "slot": 5,
@@ -60,7 +86,12 @@
       "min": 0.04,
       "max": 0.18,
       "step": 0.001,
-      "default": 0.13
+      "default": 0.13,
+      "variable": "flowerCenterSize",
+      "aliases": {
+        "zh-CN": "花芯大小",
+        "en": "Flower center size"
+      }
     },
     {
       "slot": 6,
@@ -69,7 +100,12 @@
       "min": 0.7,
       "max": 1.08,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "variable": "borderRatio",
+      "aliases": {
+        "zh-CN": "边框比例",
+        "en": "Border ratio"
+      }
     },
     {
       "slot": 7,
@@ -78,7 +114,12 @@
       "min": 0,
       "max": 0.04,
       "step": 0.001,
-      "default": 0.027
+      "default": 0.027,
+      "variable": "accentDotSize",
+      "aliases": {
+        "zh-CN": "装饰点大小",
+        "en": "Accent dot size"
+      }
     }
   ],
   "defaults": [
@@ -113,5 +154,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "弧菱花砖",
+    "en": "Ogee Flower Tile"
   }
 }

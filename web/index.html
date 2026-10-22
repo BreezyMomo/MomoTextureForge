@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Momo Texture Forge · 节点组合工作台</title>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title data-i18n="ui.momoTextureForgeWorkspace">Momo Texture Forge · 节点组合工作台</title>
 <style>
 html,body{margin:0;background:#15171b;color:#ece8df}
 #startup-screen{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;box-sizing:border-box;padding:28px;background:radial-gradient(ellipse at 50% 38%,#28252b 0,transparent 55%),#15171b;font:14px/1.6 "Segoe UI","Microsoft YaHei",sans-serif;transition:opacity .18s ease}
@@ -27,14 +27,14 @@ html,body{margin:0;background:#15171b;color:#ece8df}
 </style>
 <link rel="stylesheet" href="style.css" />
 </head><body>
-<section id="startup-screen" aria-label="正在打开 Momo Texture Forge" aria-busy="true">
+<section id="startup-screen" aria-label="正在打开 Momo Texture Forge" data-i18n-aria-label="ui.openingMomoTextureForge" aria-busy="true">
 <div class="startup-card">
 <svg class="startup-symbol" viewBox="0 0 80 80" fill="none" aria-hidden="true"><rect x="9" y="9" width="62" height="62" rx="15" stroke="currentColor" stroke-opacity=".3"/><path d="M40 19 61 40 40 61 19 40Z" stroke="currentColor" stroke-width="1.5"/><path d="M40 29 51 40 40 51 29 40Z" fill="currentColor" fill-opacity=".18" stroke="currentColor"/><path d="M40 13v9m0 36v9M13 40h9m36 0h9" stroke="currentColor" stroke-linecap="round"/></svg>
 <p class="startup-brand">MOMO</p><h1>TEXTURE FORGE</h1>
 <div class="startup-track" aria-hidden="true"></div>
-<p id="startup-status" role="status" aria-live="polite">正在准备画布…</p>
-<div id="startup-error" hidden><p>请重新加载页面。如果问题持续，可展开错误信息反馈给我们。</p><details><summary>查看错误信息</summary><pre id="startup-error-detail"></pre></details><button id="startup-retry" type="button">重新加载</button></div>
-<p class="startup-caption">图形 · 纹理 · 动态特效</p>
+<p id="startup-status" role="status" aria-live="polite"><span data-i18n="ui.preparingCanvas">正在准备画布…</span></p>
+<div id="startup-error" hidden><p><span data-i18n="ui.reloadThePageIfTheProblemPersistsExpandTheErrorDetails">请重新加载页面。如果问题持续，可展开错误信息反馈给我们。</span></p><details><summary><span data-i18n="ui.showErrorDetails">查看错误信息</span></summary><pre id="startup-error-detail"></pre></details><button id="startup-retry" type="button"><span data-i18n="ui.reload">重新加载</span></button></div>
+<p class="startup-caption"><span data-i18n="ui.graphicsTexturesAnimatedEffects">图形 · 纹理 · 动态特效</span></p>
 </div></section>
-<noscript><style>#startup-screen{display:none}</style><p>请启用浏览器的 JavaScript 后重新打开画布。</p></noscript>
+<noscript><style>#startup-screen{display:none}</style><p><span data-i18n="ui.enableJavaScriptInYourBrowserToOpenTheCanvas">请启用浏览器的 JavaScript 后重新打开画布。</span></p></noscript>
 <div id="toast" hidden></div><script type="module" src="bootstrap.js"></script></body></html>

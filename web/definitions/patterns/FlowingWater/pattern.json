@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "FlowingWater",
-  "revision": 2,
+  "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "流动水纹",
   "category": "vfx",
@@ -16,7 +16,11 @@
       "min": 0,
       "max": 99999,
       "step": 1,
-      "default": 123
+      "default": 123,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      }
     },
     {
       "slot": 1,
@@ -26,7 +30,11 @@
       "min": -3,
       "max": 3,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "流动速度",
+        "en": "Flow speed"
+      }
     },
     {
       "slot": 2,
@@ -36,7 +44,11 @@
       "min": 1,
       "max": 20,
       "step": 0.1,
-      "default": 6
+      "default": 6,
+      "aliases": {
+        "zh-CN": "纹理密度",
+        "en": "Texture density"
+      }
     },
     {
       "slot": 3,
@@ -46,7 +58,11 @@
       "min": 1,
       "max": 30,
       "step": 0.1,
-      "default": 14
+      "default": 14,
+      "aliases": {
+        "zh-CN": "水纹锐度",
+        "en": "Water sharpness"
+      }
     },
     {
       "slot": 4,
@@ -56,7 +72,11 @@
       "min": 0.1,
       "max": 3,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     }
   ],
   "defaults": [
@@ -112,5 +132,9 @@
         "program": "generator-water-v1"
       }
     ]
+  },
+  "aliases": {
+    "zh-CN": "流动水纹",
+    "en": "Flowing Water"
   }
 }

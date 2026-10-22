@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Halo",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "高斯光晕",
   "category": "radial",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "半径",
-      "min": 0.0,
+      "min": 0,
       "max": 1.4,
       "step": 0.01,
-      "default": 0.65
+      "default": 0.65,
+      "variable": "radius",
+      "aliases": {
+        "zh-CN": "半径",
+        "en": "Radius"
+      }
     },
     {
       "slot": 1,
@@ -24,22 +29,32 @@
       "min": 0.005,
       "max": 0.6,
       "step": 0.005,
-      "default": 0.12
+      "default": 0.12,
+      "variable": "width",
+      "aliases": {
+        "zh-CN": "宽度",
+        "en": "Width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "强度",
       "min": 0.1,
-      "max": 2.0,
+      "max": 2,
       "step": 0.02,
-      "default": 1.0
+      "default": 1,
+      "variable": "strength",
+      "aliases": {
+        "zh-CN": "强度",
+        "en": "Strength"
+      }
     }
   ],
   "defaults": [
     0.65,
     0.12,
-    1.0,
+    1,
     0,
     0,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "高斯光晕",
+    "en": "Halo"
   }
 }

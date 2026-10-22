@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "WebSigil",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "蛛网阵",
   "category": "sigil",
@@ -12,19 +12,29 @@
       "slot": 0,
       "key": "R",
       "label": "辐条数",
-      "min": 4.0,
-      "max": 36.0,
-      "step": 1.0,
-      "default": 16.0
+      "min": 4,
+      "max": 36,
+      "step": 1,
+      "default": 16,
+      "variable": "spokeCount",
+      "aliases": {
+        "zh-CN": "辐条数",
+        "en": "Spoke count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "环数",
-      "min": 1.0,
-      "max": 10.0,
-      "step": 1.0,
-      "default": 5.0
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "variable": "ringCount",
+      "aliases": {
+        "zh-CN": "环数",
+        "en": "Ring count"
+      }
     },
     {
       "slot": 2,
@@ -33,7 +43,12 @@
       "min": 0.2,
       "max": 1.1,
       "step": 0.01,
-      "default": 0.86
+      "default": 0.86,
+      "variable": "outerRadius",
+      "aliases": {
+        "zh-CN": "外半径",
+        "en": "Outer radius"
+      }
     },
     {
       "slot": 3,
@@ -42,12 +57,17 @@
       "min": 0.002,
       "max": 0.05,
       "step": 0.001,
-      "default": 0.008
+      "default": 0.008,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      }
     }
   ],
   "defaults": [
-    16.0,
-    5.0,
+    16,
+    5,
     0.86,
     0.008,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "蛛网阵",
+    "en": "Web Sigil"
   }
 }

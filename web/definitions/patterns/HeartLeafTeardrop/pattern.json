@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "HeartLeafTeardrop",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "心形",
   "category": "shape",
@@ -15,7 +15,12 @@
       "min": 0.02,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.62
+      "default": 0.62,
+      "variable": "heartSize",
+      "aliases": {
+        "zh-CN": "心形大小",
+        "en": "Heart size"
+      }
     },
     {
       "slot": 3,
@@ -24,7 +29,13 @@
       "min": 0.001,
       "max": 0.3,
       "step": 0.001,
-      "default": 0.015
+      "default": 0.015,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
@@ -60,5 +71,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "心形",
+    "en": "Heart Leaf Teardrop"
   }
 }

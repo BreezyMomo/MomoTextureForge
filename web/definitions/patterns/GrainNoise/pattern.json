@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "GrainNoise",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "胶片颗粒",
   "category": "noise",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "颗粒密度",
-      "min": 8.0,
-      "max": 200.0,
-      "step": 2.0,
-      "default": 56.0
+      "min": 8,
+      "max": 200,
+      "step": 2,
+      "default": 56,
+      "variable": "grainDensity",
+      "aliases": {
+        "zh-CN": "颗粒密度",
+        "en": "Grain density"
+      }
     },
     {
       "slot": 1,
@@ -24,32 +29,47 @@
       "min": 0.1,
       "max": 1.6,
       "step": 0.02,
-      "default": 0.75
+      "default": 0.75,
+      "variable": "strength",
+      "aliases": {
+        "zh-CN": "强度",
+        "en": "Strength"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "双频比",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "frequencyRatio",
+      "aliases": {
+        "zh-CN": "双频比",
+        "en": "Frequency ratio"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "团块尺度",
       "min": 0.5,
-      "max": 14.0,
+      "max": 14,
       "step": 0.5,
-      "default": 3.0
+      "default": 3,
+      "variable": "clumpScale",
+      "aliases": {
+        "zh-CN": "团块尺度",
+        "en": "Clump scale"
+      }
     }
   ],
   "defaults": [
-    56.0,
+    56,
     0.75,
     0.5,
-    3.0,
+    3,
     0,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "胶片颗粒",
+    "en": "Grain Noise"
   }
 }

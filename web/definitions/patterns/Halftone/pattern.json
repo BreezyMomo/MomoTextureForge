@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Halftone",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "半调网点",
   "category": "pattern",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 3.0,
-      "max": 60.0,
-      "step": 1.0,
-      "default": 16.0
+      "min": 3,
+      "max": 60,
+      "step": 1,
+      "default": 16,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
@@ -24,16 +29,26 @@
       "min": 0.05,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.42
+      "default": 0.42,
+      "variable": "maximumRadius",
+      "aliases": {
+        "zh-CN": "最大半径",
+        "en": "Maximum radius"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "角度",
-      "min": 0.0,
+      "min": 0,
       "max": 3.14,
       "step": 0.01,
-      "default": 0.6
+      "default": 0.6,
+      "variable": "parameterAngle",
+      "aliases": {
+        "zh-CN": "角度",
+        "en": "Angle"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,12 @@
       "min": 0.3,
       "max": 1.4,
       "step": 0.01,
-      "default": 0.85
+      "default": 0.85,
+      "variable": "gradientRadius",
+      "aliases": {
+        "zh-CN": "渐变半径",
+        "en": "Gradient radius"
+      }
     },
     {
       "slot": 4,
@@ -51,7 +71,42 @@
       "min": 0,
       "max": 2,
       "step": 1,
-      "default": 0
+      "default": 0,
+      "variable": "grayscaleSource",
+      "aliases": {
+        "zh-CN": "灰度来源（径向/线性/噪声）",
+        "en": "Grayscale source"
+      },
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "variable": "value0",
+          "label": "径向",
+          "aliases": {
+            "zh-CN": "径向",
+            "en": "Radial"
+          }
+        },
+        {
+          "value": 1,
+          "variable": "value1",
+          "label": "线性",
+          "aliases": {
+            "zh-CN": "线性",
+            "en": "Linear"
+          }
+        },
+        {
+          "value": 2,
+          "variable": "value2",
+          "label": "噪声",
+          "aliases": {
+            "zh-CN": "噪声",
+            "en": "Noise"
+          }
+        }
+      ]
     },
     {
       "slot": 5,
@@ -60,7 +115,12 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "grayscaleCenterX",
+      "aliases": {
+        "zh-CN": "灰度中心 X",
+        "en": "Grayscale center X"
+      }
     },
     {
       "slot": 6,
@@ -69,11 +129,16 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "grayscaleCenterY",
+      "aliases": {
+        "zh-CN": "灰度中心 Y",
+        "en": "Grayscale center Y"
+      }
     }
   ],
   "defaults": [
-    16.0,
+    16,
     0.42,
     0.6,
     0.85,
@@ -105,5 +170,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "半调网点",
+    "en": "Halftone"
   }
 }

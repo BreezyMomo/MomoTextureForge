@@ -1,3 +1,4 @@
+import {graphicSearchText} from '../web/graphic-name.js';
 import {LocalLibrary} from './model.mjs';
 import {BrowserDirectoryStore,BrowserSnapshots} from './storage.mjs';
 const $=id=>document.getElementById(id),make=(tag,text,className)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(className)e.className=className;return e;};
@@ -8,7 +9,7 @@ function message(text,error=false){const active=$('offline').hidden?'status':'st
 async function action(fn){if(busy)return;busy=true;$('choose-folder').disabled=$('resume-folder').disabled=true;$('workspace').inert=true;document.querySelectorAll('.dialog-error').forEach(e=>e.remove());document.querySelectorAll('dialog').forEach(d=>d.inert=true);try{await fn();}catch(e){message(e.message,true);for(const d of document.querySelectorAll('dialog[open]')){const error=make('p',e.message,'dialog-error');error.setAttribute('role','alert');d.append(error);}}finally{busy=false;$('choose-folder').disabled=!supported;$('resume-folder').disabled=!supported||!remembered;$('workspace').inert=false;document.querySelectorAll('dialog').forEach(d=>d.inert=false);}}
 async function refresh(){state=await api('state');selected=new Set([...selected].filter(id=>state.index.entries.some(e=>e.resourceId===id)));render();}
 const kind=e=>e.kind==='image'?(e.imageMime==='image/svg+xml'?'矢量图（SVG）':'位图'):e.kind==='formula'?'公式':'组合';
-function matching(){const q=$('search').value.trim().toLowerCase();return state.index.entries.filter(e=>(!$('kind').value||e.kind===$('kind').value)&&(e.name+' '+e.category+' '+(e.tags??[]).join(' ')).toLowerCase().includes(q));}
+function matching(){const q=$('search').value.trim().toLowerCase();return state.index.entries.filter(e=>(!$('kind').value||e.kind===$('kind').value)&&graphicSearchText(e).includes(q));}
 function selection(){const entries=matching();$('count').textContent='显示 '+entries.length+' / '+state.index.entries.length+' 项 · 已选 '+selected.size+' 项';$('remove').textContent='移出目录（'+selected.size+'）';$('remove').disabled=!selected.size;$('delete-permanently').textContent='彻底删除（'+selected.size+'）';$('delete-permanently').disabled=!selected.size;$('select-all').checked=!!entries.length&&entries.every(e=>selected.has(e.resourceId));}
 function render(){
  generation++;const current=generation;observer?.disconnect();for(const u of urls)URL.revokeObjectURL(u);urls=[];$('library-title').textContent=state.index.name;$('root').textContent='本地目录：'+state.root;$('grid').replaceChildren();

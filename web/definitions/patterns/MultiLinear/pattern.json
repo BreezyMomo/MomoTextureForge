@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "MultiLinear",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "多向线性",
   "category": "gradient",
@@ -12,34 +12,49 @@
       "slot": 0,
       "key": "R",
       "label": "方向数",
-      "min": 2.0,
-      "max": 4.0,
-      "step": 1.0,
-      "default": 2.0
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 2,
+      "variable": "directionCount",
+      "aliases": {
+        "zh-CN": "方向数",
+        "en": "Direction count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "角度",
-      "min": 0.0,
+      "min": 0,
       "max": 6.28,
       "step": 0.01,
-      "default": 0.0
+      "default": 0,
+      "variable": "parameterAngle",
+      "aliases": {
+        "zh-CN": "角度",
+        "en": "Angle"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "模式",
-      "min": 0.0,
-      "max": 2.0,
-      "step": 1.0,
-      "default": 1.0
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "default": 1,
+      "variable": "mode",
+      "aliases": {
+        "zh-CN": "模式",
+        "en": "Mode"
+      }
     }
   ],
   "defaults": [
-    2.0,
-    0.0,
-    1.0,
+    2,
+    0,
+    1,
     0,
     0,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "多向线性",
+    "en": "Multi Linear"
   }
 }

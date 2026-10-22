@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "SlotVent",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "百叶格栅",
   "category": "digital",
@@ -12,42 +12,62 @@
       "slot": 0,
       "key": "R",
       "label": "横向格数",
-      "min": 1.0,
-      "max": 30.0,
-      "step": 1.0,
-      "default": 6.0
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 6,
+      "variable": "horizontalCells",
+      "aliases": {
+        "zh-CN": "横向格数",
+        "en": "Horizontal cells"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "纵向格数",
-      "min": 1.0,
-      "max": 30.0,
-      "step": 1.0,
-      "default": 10.0
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 10,
+      "variable": "verticalCells",
+      "aliases": {
+        "zh-CN": "纵向格数",
+        "en": "Vertical cells"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "明暗",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.05,
-      "default": 0.7
+      "default": 0.7,
+      "variable": "brightness",
+      "aliases": {
+        "zh-CN": "明暗",
+        "en": "Brightness"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "边框",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.05,
-      "default": 0.6
+      "default": 0.6,
+      "variable": "border",
+      "aliases": {
+        "zh-CN": "边框",
+        "en": "Border"
+      }
     }
   ],
   "defaults": [
-    6.0,
-    10.0,
+    6,
+    10,
     0.7,
     0.6,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "百叶格栅",
+    "en": "Slot Vent"
   }
 }

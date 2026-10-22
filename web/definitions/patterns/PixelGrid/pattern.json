@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "PixelGrid",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "像素格",
   "category": "digital",
@@ -12,23 +12,33 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 2.0,
-      "max": 60.0,
-      "step": 1.0,
-      "default": 16.0
+      "min": 2,
+      "max": 60,
+      "step": 1,
+      "default": 16,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "间隙",
-      "min": 0.0,
+      "min": 0,
       "max": 0.45,
       "step": 0.01,
-      "default": 0.06
+      "default": 0.06,
+      "variable": "gap",
+      "aliases": {
+        "zh-CN": "间隙",
+        "en": "Gap"
+      }
     }
   ],
   "defaults": [
-    16.0,
+    16,
     0.06,
     0,
     0,
@@ -60,5 +70,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "像素格",
+    "en": "Pixel Grid"
   }
 }

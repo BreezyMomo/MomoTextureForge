@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "CharredCoal",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "焦炭",
   "category": "natural",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "密度",
-      "min": 2.0,
-      "max": 18.0,
+      "min": 2,
+      "max": 18,
       "step": 0.5,
-      "default": 5.0
+      "default": 5,
+      "variable": "density",
+      "aliases": {
+        "zh-CN": "密度",
+        "en": "Density"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,12 @@
       "min": 0.01,
       "max": 0.2,
       "step": 0.005,
-      "default": 0.05
+      "default": 0.05,
+      "variable": "crackWidth",
+      "aliases": {
+        "zh-CN": "裂纹宽",
+        "en": "Crack width"
+      }
     },
     {
       "slot": 2,
@@ -33,7 +43,12 @@
       "min": 0.2,
       "max": 0.8,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "levels",
+      "aliases": {
+        "zh-CN": "层级",
+        "en": "Levels"
+      }
     },
     {
       "slot": 3,
@@ -42,11 +57,16 @@
       "min": 0.2,
       "max": 1.5,
       "step": 0.02,
-      "default": 0.7
+      "default": 0.7,
+      "variable": "brightness",
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     }
   ],
   "defaults": [
-    5.0,
+    5,
     0.05,
     0.5,
     0.7,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "焦炭",
+    "en": "Charred Coal"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "ReactionDiffusion",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "反应扩散风格纹理",
   "category": "noise",
@@ -12,32 +12,47 @@
       "slot": 0,
       "key": "R",
       "label": "缩放",
-      "min": 1.0,
-      "max": 20.0,
+      "min": 1,
+      "max": 20,
       "step": 0.5,
-      "default": 5.0
+      "default": 5,
+      "variable": "scale",
+      "aliases": {
+        "zh-CN": "缩放",
+        "en": "Scale"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "阈值",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.35
+      "default": 0.35,
+      "variable": "threshold",
+      "aliases": {
+        "zh-CN": "阈值",
+        "en": "Threshold"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "对比",
       "min": 0.5,
-      "max": 8.0,
+      "max": 8,
       "step": 0.1,
-      "default": 2.6
+      "default": 2.6,
+      "variable": "contrast",
+      "aliases": {
+        "zh-CN": "对比",
+        "en": "Contrast"
+      }
     }
   ],
   "defaults": [
-    5.0,
+    5,
     0.35,
     2.6,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "反应扩散风格纹理",
+    "en": "Reaction Diffusion"
   }
 }

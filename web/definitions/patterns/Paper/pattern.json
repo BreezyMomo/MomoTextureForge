@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Paper",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "纸张",
   "category": "natural",
@@ -12,32 +12,47 @@
       "slot": 0,
       "key": "R",
       "label": "缩放",
-      "min": 1.0,
-      "max": 24.0,
+      "min": 1,
+      "max": 24,
       "step": 0.5,
-      "default": 7.0
+      "default": 7,
+      "variable": "scale",
+      "aliases": {
+        "zh-CN": "缩放",
+        "en": "Scale"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "纤维",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.35
+      "default": 0.35,
+      "variable": "fibers",
+      "aliases": {
+        "zh-CN": "纤维",
+        "en": "Fibers"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "起伏",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.25
+      "default": 0.25,
+      "variable": "relief",
+      "aliases": {
+        "zh-CN": "起伏",
+        "en": "Relief"
+      }
     }
   ],
   "defaults": [
-    7.0,
+    7,
     0.35,
     0.25,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "纸张",
+    "en": "Paper"
   }
 }

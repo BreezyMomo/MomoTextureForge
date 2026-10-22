@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RadialStreak",
-  "revision": 2,
+  "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "扰动环纹",
   "category": "radial",
@@ -12,19 +12,29 @@
       "slot": 0,
       "key": "R",
       "label": "频率",
-      "min": 1.0,
-      "max": 40.0,
+      "min": 1,
+      "max": 40,
       "step": 0.5,
-      "default": 14.0
+      "default": 14,
+      "variable": "frequency",
+      "aliases": {
+        "zh-CN": "频率",
+        "en": "Frequency"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "扰动",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.35
+      "default": 0.35,
+      "variable": "distortion",
+      "aliases": {
+        "zh-CN": "扰动",
+        "en": "Distortion"
+      }
     },
     {
       "slot": 2,
@@ -33,7 +43,12 @@
       "min": 0.01,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.06
+      "default": 0.06,
+      "variable": "sharpness",
+      "aliases": {
+        "zh-CN": "锐度",
+        "en": "Sharpness"
+      }
     },
     {
       "slot": 3,
@@ -42,11 +57,16 @@
       "min": 0.4,
       "max": 1.4,
       "step": 0.01,
-      "default": 0.9
+      "default": 0.9,
+      "variable": "falloff",
+      "aliases": {
+        "zh-CN": "衰减",
+        "en": "Falloff"
+      }
     }
   ],
   "defaults": [
-    14.0,
+    14,
     0.35,
     0.06,
     0.9,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "扰动环纹",
+    "en": "Radial Streak"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "NaturalWood",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "自然木纹",
   "category": "natural",
@@ -16,7 +16,11 @@
       "step": 1,
       "default": 24,
       "slot": 0,
-      "key": "R"
+      "key": "R",
+      "aliases": {
+        "zh-CN": "纹路数量",
+        "en": "Grain line count"
+      }
     },
     {
       "variable": "grainWidth",
@@ -26,7 +30,11 @@
       "step": 0.005,
       "default": 0.055,
       "slot": 1,
-      "key": "W"
+      "key": "W",
+      "aliases": {
+        "zh-CN": "纹线基础粗细",
+        "en": "Base grain width"
+      }
     },
     {
       "variable": "bendAmount",
@@ -36,7 +44,11 @@
       "step": 0.01,
       "default": 0.4,
       "slot": 2,
-      "key": "N"
+      "key": "N",
+      "aliases": {
+        "zh-CN": "弯曲幅度",
+        "en": "Bend amplitude"
+      }
     },
     {
       "variable": "bendScale",
@@ -46,7 +58,11 @@
       "step": 0.1,
       "default": 1.1,
       "slot": 3,
-      "key": "S"
+      "key": "S",
+      "aliases": {
+        "zh-CN": "弯曲频率",
+        "en": "Bend frequency"
+      }
     },
     {
       "variable": "irregularity",
@@ -56,7 +72,11 @@
       "step": 0.01,
       "default": 0.85,
       "slot": 4,
-      "key": "D"
+      "key": "D",
+      "aliases": {
+        "zh-CN": "纹路间隔变化",
+        "en": "Grain spacing variation"
+      }
     },
     {
       "variable": "knotDensity",
@@ -66,7 +86,11 @@
       "step": 0.05,
       "default": 1.4,
       "slot": 5,
-      "key": "K"
+      "key": "K",
+      "aliases": {
+        "zh-CN": "木结疏密（越大越密）",
+        "en": "Knot density"
+      }
     },
     {
       "variable": "knotStrength",
@@ -76,7 +100,11 @@
       "step": 0.01,
       "default": 1,
       "slot": 6,
-      "key": "H"
+      "key": "H",
+      "aliases": {
+        "zh-CN": "木结强度",
+        "en": "Knot strength"
+      }
     },
     {
       "variable": "knotSize",
@@ -86,7 +114,11 @@
       "step": 0.005,
       "default": 0.1,
       "slot": 7,
-      "key": "T"
+      "key": "T",
+      "aliases": {
+        "zh-CN": "木结生长范围",
+        "en": "Knot range"
+      }
     },
     {
       "variable": "strokeVariation",
@@ -96,7 +128,11 @@
       "step": 0.01,
       "default": 0.85,
       "slot": 8,
-      "key": "A"
+      "key": "A",
+      "aliases": {
+        "zh-CN": "纹线粗细变化",
+        "en": "Grain width variation"
+      }
     },
     {
       "variable": "edgeSoftness",
@@ -106,7 +142,11 @@
       "step": 0.005,
       "default": 0.01,
       "slot": 9,
-      "key": "B"
+      "key": "B",
+      "aliases": {
+        "zh-CN": "边缘柔和",
+        "en": "Edge softness"
+      }
     },
     {
       "variable": "grainContrast",
@@ -116,7 +156,11 @@
       "step": 0.05,
       "default": 1,
       "slot": 10,
-      "key": "C"
+      "key": "C",
+      "aliases": {
+        "zh-CN": "纹理对比",
+        "en": "Texture contrast"
+      }
     },
     {
       "variable": "directionDeg",
@@ -126,7 +170,11 @@
       "step": 1,
       "default": 0,
       "slot": 11,
-      "key": "E"
+      "key": "E",
+      "aliases": {
+        "zh-CN": "方向（度）",
+        "en": "Direction degrees"
+      }
     },
     {
       "variable": "randomSeed",
@@ -136,7 +184,11 @@
       "step": 1,
       "default": 7,
       "slot": 12,
-      "key": "F"
+      "key": "F",
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      }
     },
     {
       "variable": "ringLayers",
@@ -146,7 +198,11 @@
       "step": 1,
       "default": 2,
       "slot": 13,
-      "key": "G"
+      "key": "G",
+      "aliases": {
+        "zh-CN": "内圈年轮层次",
+        "en": "Inner growth ring detail"
+      }
     },
     {
       "variable": "knotAspect",
@@ -156,7 +212,11 @@
       "step": 0.1,
       "default": 4.2,
       "slot": 14,
-      "key": "I"
+      "key": "I",
+      "aliases": {
+        "zh-CN": "木结狭长程度",
+        "en": "Knot elongation"
+      }
     },
     {
       "variable": "knotScatter",
@@ -166,7 +226,11 @@
       "step": 0.01,
       "default": 0.35,
       "slot": 15,
-      "key": "J"
+      "key": "J",
+      "aliases": {
+        "zh-CN": "木结分布错落",
+        "en": "Knot staggering"
+      }
     }
   ],
   "defaults": [
@@ -208,5 +272,9 @@
     "kind": "body",
     "portable": true
   },
-  "description": "自然纵切木纹：狭长木结、逐渐收细的尖梢、不等间隔与沿线粗细渐变。木结疏密控制整幅分布，纹路数量控制主纹密度，间隔变化与纹线粗细变化可分别调整。密集或较粗的纹路可能相互靠近、并合。输出为纹理遮罩，可自行搭配木色；非原生无缝。"
+  "description": "自然纵切木纹：狭长木结、逐渐收细的尖梢、不等间隔与沿线粗细渐变。木结疏密控制整幅分布，纹路数量控制主纹密度，间隔变化与纹线粗细变化可分别调整。密集或较粗的纹路可能相互靠近、并合。输出为纹理遮罩，可自行搭配木色；非原生无缝。",
+  "aliases": {
+    "zh-CN": "自然木纹",
+    "en": "Natural Wood"
+  }
 }

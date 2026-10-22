@@ -51,3 +51,7 @@ node pack-resource-folder.mjs ./我的解压目录 ./我的图形.zip
 支持 ZIP Store 和 Deflate；不支持加密、多卷或 ZIP64。包与解压后总内容最多 64 MiB，单文件最多 16 MiB、4096 个文件；每包及本地最多 256 个自定义图形，个人组件仍最多 40 个；图片尺寸最多 4096×4096。公式接口不兼容或显卡无法编译时明确拒绝导入，不静默替换为圆形。浏览器可能另有存储配额限制。
 
 `validate-resource-pack.html` 提供独立 GPU 往返验证页，不修改用户项目或持久化组件库。
+
+## 多语言参数元数据
+
+图形 definition 的 parameters 携带稳定 variable 和可选 aliases，选项同理。导入导出不按当前显示语言改写这些元数据。别名本身参与内容哈希；切换浏览器语言偏好不参与哈希。读取旧 label-only 资源时保持原始描述符及校验哈希，在显示边界兼容为中文别名。完整规则见[语言与参数别名](docs/12-language-and-aliases.md)。

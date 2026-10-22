@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "GearTeeth",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "直线齿条",
   "category": "pattern",
@@ -15,7 +15,12 @@
       "min": 1,
       "max": 32,
       "step": 1,
-      "default": 8
+      "default": 8,
+      "variable": "toothCount",
+      "aliases": {
+        "zh-CN": "齿数",
+        "en": "Tooth count"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,12 @@
       "min": 0.1,
       "max": 1.9,
       "step": 0.01,
-      "default": 1.6
+      "default": 1.6,
+      "variable": "parameterLength",
+      "aliases": {
+        "zh-CN": "长度",
+        "en": "Length"
+      }
     },
     {
       "slot": 2,
@@ -33,7 +43,12 @@
       "min": 0.01,
       "max": 0.8,
       "step": 0.01,
-      "default": 0.2
+      "default": 0.2,
+      "variable": "baseHeight",
+      "aliases": {
+        "zh-CN": "底座高度",
+        "en": "Base height"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,12 @@
       "min": 0.01,
       "max": 0.8,
       "step": 0.01,
-      "default": 0.2
+      "default": 0.2,
+      "variable": "toothHeight",
+      "aliases": {
+        "zh-CN": "齿高",
+        "en": "Tooth height"
+      }
     },
     {
       "slot": 4,
@@ -51,7 +71,12 @@
       "min": 0.1,
       "max": 1,
       "step": 0.01,
-      "default": 0.8
+      "default": 0.8,
+      "variable": "toothRootWidth",
+      "aliases": {
+        "zh-CN": "齿根宽度",
+        "en": "Tooth root width"
+      }
     },
     {
       "slot": 5,
@@ -60,7 +85,12 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.4
+      "default": 0.4,
+      "variable": "toothTipWidth",
+      "aliases": {
+        "zh-CN": "齿顶宽度",
+        "en": "Tooth tip width"
+      }
     },
     {
       "slot": 6,
@@ -69,7 +99,13 @@
       "min": 0,
       "max": 0.1,
       "step": 0.001,
-      "default": 0.003
+      "default": 0.003,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
@@ -105,5 +141,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "直线齿条",
+    "en": "Gear Teeth"
   }
 }

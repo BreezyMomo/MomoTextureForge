@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "VortexGate",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "漩涡之门",
   "category": "sigil",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "旋臂数",
-      "min": 1.0,
-      "max": 8.0,
-      "step": 1.0,
-      "default": 3.0
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 3,
+      "variable": "spiralArmCount",
+      "aliases": {
+        "zh-CN": "旋臂数",
+        "en": "Spiral arm count"
+      }
     },
     {
       "slot": 1,
@@ -24,25 +29,40 @@
       "min": 0.01,
       "max": 0.35,
       "step": 0.005,
-      "default": 0.09
+      "default": 0.09,
+      "variable": "armWidth",
+      "aliases": {
+        "zh-CN": "臂宽",
+        "en": "Arm width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "旋紧度",
       "min": 0.5,
-      "max": 6.0,
+      "max": 6,
       "step": 0.05,
-      "default": 2.2
+      "default": 2.2,
+      "variable": "spiralTightness",
+      "aliases": {
+        "zh-CN": "旋紧度",
+        "en": "Spiral tightness"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "吸入速度",
-      "min": 0.0,
-      "max": 4.0,
+      "min": 0,
+      "max": 4,
       "step": 0.05,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "inwardSpeed",
+      "aliases": {
+        "zh-CN": "吸入速度",
+        "en": "Inward speed"
+      }
     },
     {
       "slot": 4,
@@ -51,11 +71,16 @@
       "min": 0.02,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.18
+      "default": 0.18,
+      "variable": "centerRadius",
+      "aliases": {
+        "zh-CN": "中心半径",
+        "en": "Center radius"
+      }
     }
   ],
   "defaults": [
-    3.0,
+    3,
     0.09,
     2.2,
     0.5,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "漩涡之门",
+    "en": "Vortex Gate"
   }
 }

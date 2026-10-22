@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RibbonSpark",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "火花拖尾",
   "category": "ribbon",
@@ -12,19 +12,29 @@
       "slot": 0,
       "key": "R",
       "label": "火花密度",
-      "min": 10.0,
-      "max": 90.0,
-      "step": 2.0,
-      "default": 36.0
+      "min": 10,
+      "max": 90,
+      "step": 2,
+      "default": 36,
+      "variable": "sparkDensity",
+      "aliases": {
+        "zh-CN": "火花密度",
+        "en": "Spark density"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "闪烁速度",
-      "min": 0.0,
-      "max": 8.0,
+      "min": 0,
+      "max": 8,
       "step": 0.1,
-      "default": 2.2
+      "default": 2.2,
+      "variable": "flickerSpeed",
+      "aliases": {
+        "zh-CN": "闪烁速度",
+        "en": "Flicker speed"
+      }
     },
     {
       "slot": 2,
@@ -33,20 +43,30 @@
       "min": 0.05,
       "max": 0.6,
       "step": 0.01,
-      "default": 0.26
+      "default": 0.26,
+      "variable": "pointSize",
+      "aliases": {
+        "zh-CN": "点大小",
+        "en": "Point size"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "长度衰减",
       "min": 0.3,
-      "max": 4.0,
+      "max": 4,
       "step": 0.05,
-      "default": 1.5
+      "default": 1.5,
+      "variable": "lengthFalloff",
+      "aliases": {
+        "zh-CN": "长度衰减",
+        "en": "Length falloff"
+      }
     }
   ],
   "defaults": [
-    36.0,
+    36,
     2.2,
     0.26,
     1.5,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "火花拖尾",
+    "en": "Ribbon Spark"
   }
 }

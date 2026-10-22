@@ -39,7 +39,7 @@ description: Help users turn screenshots or ideas into Momo Texture Forge resour
 ## 4. 按选定路线制作
 
 - 生成器：需要原生RGBA或多个渲染步骤时，读取[生成器规范](references/generator-guide.md)和[三步骤示例](references/example.generator.json)，交付.generator.json。可自定义GLSL和中间纹理，最多64个参数和16个步骤；不执行用户JS，不提供跨帧反馈。图库已有生成器可编辑后另存；创建新算法通过“创建资源 → 生成器”输入代码，不需要模板选择。
-- 公式：读取[创作规范](references/authoring-guide.md)和[示例](references/example.graphic.json)，制作完整.graphic.json及有用的参数。不要编辑内部图形目录或自行生成资源ID、槽位。当前公式只输出0～1标量（形状/透明度/强度），不支持任意RGB/RGBA输出或图片sampler；最多16个参数，公式60000字符。不要把工具限制说成数学上不可能。time是持续累加的秒数，不默认保证0～1首尾衔接。
+- 公式：读取[创作规范](references/authoring-guide.md)和[示例](references/example.graphic.json)，制作完整.graphic.json及有用的参数。参数使用稳定variable和可选aliases语言映射；不要用显示别名作为公式标识符，按用户需要提供中文、英文或其他语言，缺少翻译可留空。不要编辑内部图形目录或自行生成资源ID、槽位。当前公式只输出0～1标量（形状/透明度/强度），不支持任意RGB/RGBA输出或图片sampler；最多16个参数，公式60000字符。不要把工具限制说成数学上不可能。time是持续累加的秒数，不默认保证0～1首尾衔接。
 - SVG：交付独立.svg文件，保留主体轮廓和孔洞，控制路径复杂度。最大2MB；支持路径、基础形状、组、填充/描边、渐变、裁切和遮罩。仅本地引用；拒绝CSS样式、文字、外链、脚本和动画。文字须转路径，style改为展示属性。不要把内嵌位图包装成SVG后称其为矢量重建。编辑器保留SVG源文件，但显示时按渲染尺寸栅格化；没有路径编辑器。
 - 位图：保留或制作符合需求的PNG/WebP，明确像素尺寸和背景/透明度。图片入口支持PNG/JPG/WebP，最长边4096、单张16MB。需要透明背景时不要交付不支持透明的JPEG，也不要把棋盘格烘焙进图中。
 

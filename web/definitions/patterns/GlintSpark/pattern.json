@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "GlintSpark",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "星光闪烁",
   "category": "shape",
@@ -15,16 +15,26 @@
       "min": 0.15,
       "max": 1.2,
       "step": 0.01,
-      "default": 0.85
+      "default": 0.85,
+      "variable": "armLength",
+      "aliases": {
+        "zh-CN": "臂长",
+        "en": "Arm length"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "尖度",
-      "min": 6.0,
-      "max": 64.0,
-      "step": 1.0,
-      "default": 26.0
+      "min": 6,
+      "max": 64,
+      "step": 1,
+      "default": 26,
+      "variable": "pointedness",
+      "aliases": {
+        "zh-CN": "尖度",
+        "en": "Pointedness"
+      }
     },
     {
       "slot": 2,
@@ -33,32 +43,47 @@
       "min": 0.01,
       "max": 0.25,
       "step": 0.005,
-      "default": 0.05
+      "default": 0.05,
+      "variable": "centerSize",
+      "aliases": {
+        "zh-CN": "芯大小",
+        "en": "Center size"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "臂数",
-      "min": 3.0,
-      "max": 8.0,
-      "step": 1.0,
-      "default": 4.0
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "default": 4,
+      "variable": "armCount",
+      "aliases": {
+        "zh-CN": "臂数",
+        "en": "Arm count"
+      }
     },
     {
       "slot": 4,
       "key": "D",
       "label": "闪烁速度",
-      "min": 0.0,
-      "max": 3.0,
+      "min": 0,
+      "max": 3,
       "step": 0.05,
-      "default": 1.2
+      "default": 1.2,
+      "variable": "flickerSpeed",
+      "aliases": {
+        "zh-CN": "闪烁速度",
+        "en": "Flicker speed"
+      }
     }
   ],
   "defaults": [
     0.85,
-    26.0,
+    26,
     0.05,
-    4.0,
+    4,
     1.2,
     0,
     0,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "星光闪烁",
+    "en": "Glint Spark"
   }
 }

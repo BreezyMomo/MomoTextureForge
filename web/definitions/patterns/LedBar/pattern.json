@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "LedBar",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "电平条",
   "category": "digital",
@@ -12,28 +12,43 @@
       "slot": 0,
       "key": "R",
       "label": "柱数",
-      "min": 4.0,
-      "max": 56.0,
-      "step": 2.0,
-      "default": 18.0
+      "min": 4,
+      "max": 56,
+      "step": 2,
+      "default": 18,
+      "variable": "barCount",
+      "aliases": {
+        "zh-CN": "柱数",
+        "en": "Bar count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "刷新率",
-      "min": 0.0,
-      "max": 8.0,
+      "min": 0,
+      "max": 8,
       "step": 0.1,
-      "default": 1.5
+      "default": 1.5,
+      "variable": "refreshRate",
+      "aliases": {
+        "zh-CN": "刷新率",
+        "en": "Refresh rate"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "段数",
-      "min": 8.0,
-      "max": 56.0,
-      "step": 2.0,
-      "default": 22.0
+      "min": 8,
+      "max": 56,
+      "step": 2,
+      "default": 22,
+      "variable": "segmentCount",
+      "aliases": {
+        "zh-CN": "段数",
+        "en": "Segment count"
+      }
     },
     {
       "slot": 3,
@@ -42,14 +57,19 @@
       "min": 0.3,
       "max": 1.6,
       "step": 0.02,
-      "default": 1.0
+      "default": 1,
+      "variable": "brightness",
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     }
   ],
   "defaults": [
-    18.0,
+    18,
     1.5,
-    22.0,
-    1.0,
+    22,
+    1,
     0,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "电平条",
+    "en": "Led Bar"
   }
 }

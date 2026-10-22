@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Shatter",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "破碎片",
   "category": "energy",
@@ -12,32 +12,47 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 1.0,
-      "max": 20.0,
+      "min": 1,
+      "max": 20,
       "step": 0.5,
-      "default": 6.0
+      "default": 6,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "扩散",
-      "min": 0.0,
-      "max": 3.0,
+      "min": 0,
+      "max": 3,
       "step": 0.05,
-      "default": 1.4
+      "default": 1.4,
+      "variable": "spread",
+      "aliases": {
+        "zh-CN": "扩散",
+        "en": "Spread"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "扰动",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.85
+      "default": 0.85,
+      "variable": "distortion",
+      "aliases": {
+        "zh-CN": "扰动",
+        "en": "Distortion"
+      }
     }
   ],
   "defaults": [
-    6.0,
+    6,
     1.4,
     0.85,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "破碎片",
+    "en": "Shatter"
   }
 }

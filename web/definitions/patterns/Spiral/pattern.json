@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Spiral",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "螺旋",
   "category": "radial",
@@ -13,9 +13,14 @@
       "key": "R",
       "label": "圈数",
       "min": 0.5,
-      "max": 8.0,
+      "max": 8,
       "step": 0.1,
-      "default": 2.5
+      "default": 2.5,
+      "variable": "turns",
+      "aliases": {
+        "zh-CN": "圈数",
+        "en": "Turns"
+      }
     },
     {
       "slot": 1,
@@ -24,16 +29,26 @@
       "min": 0.01,
       "max": 0.5,
       "step": 0.01,
-      "default": 0.18
+      "default": 0.18,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "速度",
-      "min": 0.0,
-      "max": 2.0,
+      "min": 0,
+      "max": 2,
       "step": 0.05,
-      "default": 0.2
+      "default": 0.2,
+      "variable": "speed",
+      "aliases": {
+        "zh-CN": "速度",
+        "en": "Speed"
+      }
     }
   ],
   "defaults": [
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "螺旋",
+    "en": "Spiral"
   }
 }

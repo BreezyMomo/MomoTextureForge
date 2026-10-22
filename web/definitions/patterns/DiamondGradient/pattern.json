@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "DiamondGradient",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "菱形渐变",
   "category": "gradient",
@@ -15,7 +15,12 @@
       "min": 0.02,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.62
+      "default": 0.62,
+      "variable": "gradientSize",
+      "aliases": {
+        "zh-CN": "渐变尺寸",
+        "en": "Gradient size"
+      }
     }
   ],
   "defaults": [
@@ -50,5 +55,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "菱形渐变",
+    "en": "Diamond Gradient"
   }
 }

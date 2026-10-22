@@ -1,3 +1,4 @@
+import {graphicAliasesField} from './graphic-name.js';
 import {validateEntry} from './graphics-library.js';
 export const REMOTE_SCHEMA='momo.texture-remote-library/v1';
 export const REMOTE_LIMITS={sources:32,entries:2000,index:8*1024*1024,bundle:64*1024*1024,thumbnail:2*1024*1024,timeout:15000,interval:300000};
@@ -8,7 +9,7 @@ export function validateRemoteIndex(raw,base){
  if(raw?.schema!==REMOTE_SCHEMA||!uuid.test(raw.libraryId)||typeof raw.name!=='string'||!raw.name.trim()||raw.name.length>80||!Array.isArray(raw.entries)||raw.entries.length>REMOTE_LIMITS.entries)throw Error('远程图库目录格式无效');
  const seen=new Set(),entries=raw.entries.map(e=>{if(!e||typeof e!=='object'||['category','description'].some(k=>e[k]!==undefined&&typeof e[k]!=='string'))throw Error('远程资源说明无效');validateEntry({...e,personalRevision:0,thumbnail:''});if(!/^[0-9a-f]{64}$/i.test(e.sha256)||typeof e.file!=='string'||seen.has(e.resourceId))throw Error('远程资源ID重复或校验值无效');seen.add(e.resourceId);let thumbnail='';if(e.thumbnail){if(typeof e.thumbnail!=='string')throw Error('缩略图无效');if(e.thumbnail.startsWith('data:')){validateEntry({...e,personalRevision:0});thumbnail=e.thumbnail;}else thumbnail=remoteURL(e.thumbnail,base);}
  if(e.tags!==undefined&&(!Array.isArray(e.tags)||e.tags.length>32||e.tags.some(t=>typeof t!=='string'||t.length>80)))throw Error('远程资源标签无效');if(e.imageMime!==undefined&&!['image/png','image/jpeg','image/webp','image/svg+xml'].includes(e.imageMime))throw Error('图片类型无效');
- return {resourceId:e.resourceId,versionId:e.versionId,personalRevision:0,name:e.name,kind:e.kind,category:e.category??'',description:e.description??'',file:remoteURL(e.file,base),sha256:e.sha256.toLowerCase(),thumbnail,tags:e.tags??[],...(e.imageMime?{imageMime:e.imageMime}:{})};});
+ return {resourceId:e.resourceId,versionId:e.versionId,personalRevision:0,name:e.name,...graphicAliasesField(e.aliases),kind:e.kind,category:e.category??'',description:e.description??'',file:remoteURL(e.file,base),sha256:e.sha256.toLowerCase(),thumbnail,tags:e.tags??[],...(e.imageMime?{imageMime:e.imageMime}:{})};});
  return {schema:REMOTE_SCHEMA,libraryId:raw.libraryId,name:raw.name,entries};
 }
 export const remoteBundleKey=item=>item.sourceId+':'+item.resourceId+'@'+item.versionId;

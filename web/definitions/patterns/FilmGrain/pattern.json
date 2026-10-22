@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "FilmGrain",
-  "revision": 2,
+  "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "胶片颗粒",
   "category": "vfx",
@@ -16,7 +16,11 @@
       "min": 0,
       "max": 99999,
       "step": 1,
-      "default": 7872
+      "default": 7872,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      }
     },
     {
       "slot": 1,
@@ -26,7 +30,11 @@
       "min": 0.05,
       "max": 3,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "颗粒大小",
+        "en": "Grain size"
+      }
     },
     {
       "slot": 2,
@@ -36,7 +44,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.55
+      "default": 0.55,
+      "aliases": {
+        "zh-CN": "强度",
+        "en": "Strength"
+      }
     },
     {
       "slot": 3,
@@ -46,7 +58,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "粗糙度",
+        "en": "Roughness"
+      }
     },
     {
       "slot": 4,
@@ -56,7 +72,11 @@
       "min": 0.1,
       "max": 3,
       "step": 0.01,
-      "default": 1.2
+      "default": 1.2,
+      "aliases": {
+        "zh-CN": "对比度",
+        "en": "Contrast"
+      }
     },
     {
       "slot": 5,
@@ -66,7 +86,11 @@
       "min": -0.5,
       "max": 0.5,
       "step": 0.01,
-      "default": 0
+      "default": 0,
+      "aliases": {
+        "zh-CN": "明暗偏移",
+        "en": "Brightness offset"
+      }
     },
     {
       "slot": 6,
@@ -81,13 +105,27 @@
       "options": [
         {
           "value": 1,
-          "label": "单色"
+          "label": "单色",
+          "variable": "value1",
+          "aliases": {
+            "zh-CN": "单色",
+            "en": "Monochrome"
+          }
         },
         {
           "value": 0,
-          "label": "彩色"
+          "label": "彩色",
+          "variable": "value0",
+          "aliases": {
+            "zh-CN": "彩色",
+            "en": "Color"
+          }
         }
-      ]
+      ],
+      "aliases": {
+        "zh-CN": "颜色模式",
+        "en": "Color mode"
+      }
     },
     {
       "slot": 7,
@@ -97,7 +135,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.4
+      "default": 0.4,
+      "aliases": {
+        "zh-CN": "色彩差异",
+        "en": "Color variation"
+      }
     },
     {
       "slot": 8,
@@ -112,13 +154,27 @@
       "options": [
         {
           "value": 0,
-          "label": "关闭"
+          "label": "关闭",
+          "variable": "value0",
+          "aliases": {
+            "zh-CN": "关闭",
+            "en": "Off"
+          }
         },
         {
           "value": 1,
-          "label": "开启"
+          "label": "开启",
+          "variable": "value1",
+          "aliases": {
+            "zh-CN": "开启",
+            "en": "On"
+          }
         }
-      ]
+      ],
+      "aliases": {
+        "zh-CN": "胶片结团",
+        "en": "Film clumping"
+      }
     },
     {
       "slot": 9,
@@ -128,7 +184,11 @@
       "min": 0.3,
       "max": 5,
       "step": 0.01,
-      "default": 1.5
+      "default": 1.5,
+      "aliases": {
+        "zh-CN": "结团大小",
+        "en": "Clump size"
+      }
     },
     {
       "slot": 10,
@@ -138,7 +198,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.1
+      "default": 0.1,
+      "aliases": {
+        "zh-CN": "尘斑数量",
+        "en": "Dust spot count"
+      }
     },
     {
       "slot": 11,
@@ -148,7 +212,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.4
+      "default": 0.4,
+      "aliases": {
+        "zh-CN": "尘斑大小",
+        "en": "Dust spot size"
+      }
     },
     {
       "slot": 12,
@@ -158,7 +226,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.4
+      "default": 0.4,
+      "aliases": {
+        "zh-CN": "尘斑模糊",
+        "en": "Dust spot blur"
+      }
     },
     {
       "slot": 13,
@@ -168,7 +240,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.1
+      "default": 0.1,
+      "aliases": {
+        "zh-CN": "划痕数量",
+        "en": "Scratch count"
+      }
     },
     {
       "slot": 14,
@@ -178,7 +254,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "划痕变化",
+        "en": "Scratch variation"
+      }
     },
     {
       "slot": 15,
@@ -188,7 +268,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.6
+      "default": 0.6,
+      "aliases": {
+        "zh-CN": "划痕长度",
+        "en": "Scratch length"
+      }
     },
     {
       "slot": 16,
@@ -203,13 +287,27 @@
       "options": [
         {
           "value": 0,
-          "label": "连续"
+          "label": "连续",
+          "variable": "value0",
+          "aliases": {
+            "zh-CN": "连续",
+            "en": "Continuous"
+          }
         },
         {
           "value": 1,
-          "label": "断续"
+          "label": "断续",
+          "variable": "value1",
+          "aliases": {
+            "zh-CN": "断续",
+            "en": "Intermittent"
+          }
         }
-      ]
+      ],
+      "aliases": {
+        "zh-CN": "划痕类型",
+        "en": "Scratch type"
+      }
     },
     {
       "slot": 17,
@@ -219,7 +317,11 @@
       "min": -1,
       "max": 1,
       "step": 0.01,
-      "default": 0.2
+      "default": 0.2,
+      "aliases": {
+        "zh-CN": "暗角",
+        "en": "Vignette"
+      }
     },
     {
       "slot": 18,
@@ -229,7 +331,11 @@
       "min": 0,
       "max": 3,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "动画速度",
+        "en": "Animation speed"
+      }
     }
   ],
   "defaults": [
@@ -282,5 +388,9 @@
       "color": "generator-grain-v1"
     },
     "usesTime": true
+  },
+  "aliases": {
+    "zh-CN": "胶片颗粒",
+    "en": "Film Grain"
   }
 }

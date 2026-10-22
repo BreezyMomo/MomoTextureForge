@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RibbonCore",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "双层拖尾",
   "category": "ribbon",
@@ -15,7 +15,12 @@
       "min": 0.02,
       "max": 0.35,
       "step": 0.005,
-      "default": 0.09
+      "default": 0.09,
+      "variable": "coreWidth",
+      "aliases": {
+        "zh-CN": "核心宽度",
+        "en": "Core width"
+      }
     },
     {
       "slot": 1,
@@ -24,25 +29,40 @@
       "min": 0.08,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.36
+      "default": 0.36,
+      "variable": "glowWidth",
+      "aliases": {
+        "zh-CN": "辉光宽度",
+        "en": "Glow width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "尾长衰减",
       "min": 0.3,
-      "max": 4.0,
+      "max": 4,
       "step": 0.05,
-      "default": 1.4
+      "default": 1.4,
+      "variable": "tailLengthFalloff",
+      "aliases": {
+        "zh-CN": "尾长衰减",
+        "en": "Tail length falloff"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "头部保持",
-      "min": 0.0,
+      "min": 0,
       "max": 0.85,
       "step": 0.01,
-      "default": 0.2
+      "default": 0.2,
+      "variable": "headHold",
+      "aliases": {
+        "zh-CN": "头部保持",
+        "en": "Head hold"
+      }
     }
   ],
   "defaults": [
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "双层拖尾",
+    "en": "Ribbon Core"
   }
 }

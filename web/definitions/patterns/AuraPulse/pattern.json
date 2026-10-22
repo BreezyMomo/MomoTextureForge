@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "AuraPulse",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "光环脉冲",
   "category": "energy",
@@ -12,19 +12,29 @@
       "slot": 0,
       "key": "R",
       "label": "环数",
-      "min": 1.0,
-      "max": 12.0,
+      "min": 1,
+      "max": 12,
       "step": 0.5,
-      "default": 3.0
+      "default": 3,
+      "variable": "ringCount",
+      "aliases": {
+        "zh-CN": "环数",
+        "en": "Ring count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "脉冲速度",
-      "min": 0.0,
-      "max": 4.0,
+      "min": 0,
+      "max": 4,
       "step": 0.05,
-      "default": 0.9
+      "default": 0.9,
+      "variable": "pulseSpeed",
+      "aliases": {
+        "zh-CN": "脉冲速度",
+        "en": "Pulse speed"
+      }
     },
     {
       "slot": 2,
@@ -33,23 +43,33 @@
       "min": 0.02,
       "max": 0.3,
       "step": 0.005,
-      "default": 0.09
+      "default": 0.09,
+      "variable": "ringWidth",
+      "aliases": {
+        "zh-CN": "环宽",
+        "en": "Ring width"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "亮度",
       "min": 0.3,
-      "max": 2.0,
+      "max": 2,
       "step": 0.02,
-      "default": 1.0
+      "default": 1,
+      "variable": "brightness",
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     }
   ],
   "defaults": [
-    3.0,
+    3,
     0.9,
     0.09,
-    1.0,
+    1,
     0,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "光环脉冲",
+    "en": "Aura Pulse"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "DiodeGrid",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "LED点阵",
   "category": "digital",
@@ -12,41 +12,61 @@
       "slot": 0,
       "key": "R",
       "label": "列数",
-      "min": 6.0,
-      "max": 48.0,
-      "step": 1.0,
-      "default": 18.0
+      "min": 6,
+      "max": 48,
+      "step": 1,
+      "default": 18,
+      "variable": "columns",
+      "aliases": {
+        "zh-CN": "列数",
+        "en": "Columns"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "点亮比",
       "min": 0.05,
-      "max": 1.0,
+      "max": 1,
       "step": 0.05,
-      "default": 0.55
+      "default": 0.55,
+      "variable": "litRatio",
+      "aliases": {
+        "zh-CN": "点亮比",
+        "en": "Lit ratio"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "扫描速度",
-      "min": 0.0,
-      "max": 2.0,
+      "min": 0,
+      "max": 2,
       "step": 0.05,
-      "default": 0.35
+      "default": 0.35,
+      "variable": "scanSpeed",
+      "aliases": {
+        "zh-CN": "扫描速度",
+        "en": "Scan speed"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "暗点亮度",
-      "min": 0.0,
+      "min": 0,
       "max": 0.4,
       "step": 0.01,
-      "default": 0.06
+      "default": 0.06,
+      "variable": "darkDotBrightness",
+      "aliases": {
+        "zh-CN": "暗点亮度",
+        "en": "Dark dot brightness"
+      }
     }
   ],
   "defaults": [
-    18.0,
+    18,
     0.55,
     0.35,
     0.06,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "LED点阵",
+    "en": "Diode Grid"
   }
 }

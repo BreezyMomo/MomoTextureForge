@@ -106,7 +106,7 @@ export async function exportPSD(project,{render,time=0,width=project.output.widt
   children.splice(0,children.length,{name:plan.project.name+' · 完整合成',imageData:composite});
   plan.stats={pixels:1,vectors:0,groups:0,merged:1};plan.warnings.push('拆层后的像素与完整画面不同，已保留完整合成图层。');
  }
- check();stage('正在生成 PSD 文件…');const bytes=writePsdUint8Array({width,height,children,imageData:composite},{trimImageData:false,generateThumbnail:false});check();
+ check();stage("export.encodingPSD");const bytes=writePsdUint8Array({width,height,children,imageData:composite},{trimImageData:false,generateThumbnail:false});check();
  return {bytes,stats:plan.stats,warnings:plan.warnings};
 }
 

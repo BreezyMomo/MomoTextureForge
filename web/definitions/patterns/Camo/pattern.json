@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Camo",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "迷彩",
   "category": "pattern",
@@ -13,18 +13,28 @@
       "key": "R",
       "label": "缩放",
       "min": 0.3,
-      "max": 8.0,
+      "max": 8,
       "step": 0.05,
-      "default": 2.2
+      "default": 2.2,
+      "variable": "scale",
+      "aliases": {
+        "zh-CN": "缩放",
+        "en": "Scale"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "扭曲",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.45
+      "default": 0.45,
+      "variable": "warp",
+      "aliases": {
+        "zh-CN": "扭曲",
+        "en": "Warp"
+      }
     },
     {
       "slot": 2,
@@ -33,25 +43,40 @@
       "min": 0.02,
       "max": 0.6,
       "step": 0.01,
-      "default": 0.16
+      "default": 0.16,
+      "variable": "edgeHardness",
+      "aliases": {
+        "zh-CN": "边缘硬度",
+        "en": "Edge hardness"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "旋转",
-      "min": 0.0,
+      "min": 0,
       "max": 6.28,
       "step": 0.02,
-      "default": 0.3
+      "default": 0.3,
+      "variable": "rotation",
+      "aliases": {
+        "zh-CN": "旋转",
+        "en": "Rotation"
+      }
     },
     {
       "slot": 4,
       "key": "D",
       "label": "色阶",
-      "min": 2.0,
-      "max": 5.0,
-      "step": 1.0,
-      "default": 2.0
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 2,
+      "variable": "levels",
+      "aliases": {
+        "zh-CN": "色阶",
+        "en": "Levels"
+      }
     }
   ],
   "defaults": [
@@ -59,7 +84,7 @@
     0.45,
     0.16,
     0.3,
-    2.0,
+    2,
     0,
     0,
     0,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "迷彩",
+    "en": "Camo"
   }
 }

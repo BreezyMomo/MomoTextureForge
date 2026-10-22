@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Fireflies",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "萤火",
   "category": "energy",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 2.0,
-      "max": 40.0,
-      "step": 1.0,
-      "default": 10.0
+      "min": 2,
+      "max": 40,
+      "step": 1,
+      "default": 10,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
@@ -24,29 +29,44 @@
       "min": 0.01,
       "max": 0.25,
       "step": 0.002,
-      "default": 0.12
+      "default": 0.12,
+      "variable": "size",
+      "aliases": {
+        "zh-CN": "大小",
+        "en": "Size"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "大小随机",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.7
+      "default": 0.7,
+      "variable": "sizeRandomness",
+      "aliases": {
+        "zh-CN": "大小随机",
+        "en": "Size randomness"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "闪烁速度",
-      "min": 0.0,
-      "max": 3.0,
+      "min": 0,
+      "max": 3,
       "step": 0.05,
-      "default": 0.8
+      "default": 0.8,
+      "variable": "flickerSpeed",
+      "aliases": {
+        "zh-CN": "闪烁速度",
+        "en": "Flicker speed"
+      }
     }
   ],
   "defaults": [
-    10.0,
+    10,
     0.12,
     0.7,
     0.8,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "萤火",
+    "en": "Fireflies"
   }
 }

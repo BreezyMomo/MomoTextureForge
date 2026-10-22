@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Glitch",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "故障条纹",
   "category": "digital",
@@ -12,44 +12,64 @@
       "slot": 0,
       "key": "R",
       "label": "行数",
-      "min": 4.0,
-      "max": 200.0,
-      "step": 1.0,
-      "default": 40.0
+      "min": 4,
+      "max": 200,
+      "step": 1,
+      "default": 40,
+      "variable": "rows",
+      "aliases": {
+        "zh-CN": "行数",
+        "en": "Rows"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "错位量",
-      "min": 0.0,
+      "min": 0,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.12
+      "default": 0.12,
+      "variable": "offsetAmount",
+      "aliases": {
+        "zh-CN": "错位量",
+        "en": "Offset amount"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "概率",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.35
+      "default": 0.35,
+      "variable": "probability",
+      "aliases": {
+        "zh-CN": "概率",
+        "en": "Probability"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "块密度",
-      "min": 2.0,
-      "max": 60.0,
-      "step": 1.0,
-      "default": 14.0
+      "min": 2,
+      "max": 60,
+      "step": 1,
+      "default": 14,
+      "variable": "blockDensity",
+      "aliases": {
+        "zh-CN": "块密度",
+        "en": "Block density"
+      }
     }
   ],
   "defaults": [
-    40.0,
+    40,
     0.12,
     0.35,
-    14.0,
+    14,
     0,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "故障条纹",
+    "en": "Glitch"
   }
 }

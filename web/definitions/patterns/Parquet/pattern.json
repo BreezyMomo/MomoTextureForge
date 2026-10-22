@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Parquet",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "拼花地板",
   "category": "pattern",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 2.0,
-      "max": 24.0,
-      "step": 1.0,
-      "default": 8.0
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 8,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
@@ -24,20 +29,30 @@
       "min": 0.01,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.28
+      "default": 0.28,
+      "variable": "gapWidth",
+      "aliases": {
+        "zh-CN": "缝宽",
+        "en": "Gap width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "旋转步进",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "rotationStep",
+      "aliases": {
+        "zh-CN": "旋转步进",
+        "en": "Rotation step"
+      }
     }
   ],
   "defaults": [
-    8.0,
+    8,
     0.28,
     0.5,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "拼花地板",
+    "en": "Parquet"
   }
 }

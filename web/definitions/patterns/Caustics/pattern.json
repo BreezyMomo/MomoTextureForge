@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Caustics",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "焦散",
   "category": "natural",
@@ -12,32 +12,47 @@
       "slot": 0,
       "key": "R",
       "label": "缩放",
-      "min": 1.0,
-      "max": 20.0,
+      "min": 1,
+      "max": 20,
       "step": 0.5,
-      "default": 6.0
+      "default": 6,
+      "variable": "scale",
+      "aliases": {
+        "zh-CN": "缩放",
+        "en": "Scale"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "锐度",
       "min": 0.3,
-      "max": 6.0,
+      "max": 6,
       "step": 0.05,
-      "default": 2.4
+      "default": 2.4,
+      "variable": "sharpness",
+      "aliases": {
+        "zh-CN": "锐度",
+        "en": "Sharpness"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "速度",
-      "min": 0.0,
-      "max": 2.0,
+      "min": 0,
+      "max": 2,
       "step": 0.02,
-      "default": 0.25
+      "default": 0.25,
+      "variable": "speed",
+      "aliases": {
+        "zh-CN": "速度",
+        "en": "Speed"
+      }
     }
   ],
   "defaults": [
-    6.0,
+    6,
     2.4,
     0.25,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "焦散",
+    "en": "Caustics"
   }
 }

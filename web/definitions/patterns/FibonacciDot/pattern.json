@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "FibonacciDot",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "黄金角点阵",
   "category": "pattern",
@@ -15,7 +15,12 @@
       "min": 1,
       "max": 64,
       "step": 1,
-      "default": 8
+      "default": 8,
+      "variable": "pointCountFactor",
+      "aliases": {
+        "zh-CN": "点数量系数",
+        "en": "Point count factor"
+      }
     },
     {
       "slot": 0,
@@ -24,7 +29,12 @@
       "min": 0.02,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.62
+      "default": 0.62,
+      "variable": "distributionRadius",
+      "aliases": {
+        "zh-CN": "分布半径",
+        "en": "Distribution radius"
+      }
     },
     {
       "slot": 1,
@@ -33,7 +43,12 @@
       "min": 0.001,
       "max": 0.5,
       "step": 0.001,
-      "default": 0.055
+      "default": 0.055,
+      "variable": "pointRadius",
+      "aliases": {
+        "zh-CN": "点半径",
+        "en": "Point radius"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,13 @@
       "min": 0.001,
       "max": 0.3,
       "step": 0.001,
-      "default": 0.006
+      "default": 0.006,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
@@ -77,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "黄金角点阵",
+    "en": "Fibonacci Dot"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "ChargeGather",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "蓄能",
   "category": "energy",
@@ -13,27 +13,42 @@
       "key": "R",
       "label": "强度",
       "min": 0.2,
-      "max": 3.0,
+      "max": 3,
       "step": 0.05,
-      "default": 1.2
+      "default": 1.2,
+      "variable": "strength",
+      "aliases": {
+        "zh-CN": "强度",
+        "en": "Strength"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "角向细节",
-      "min": 1.0,
-      "max": 12.0,
+      "min": 1,
+      "max": 12,
       "step": 0.5,
-      "default": 6.0
+      "default": 6,
+      "variable": "angularDetail",
+      "aliases": {
+        "zh-CN": "角向细节",
+        "en": "Angular detail"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "汇聚速度",
-      "min": 0.0,
-      "max": 2.0,
+      "min": 0,
+      "max": 2,
       "step": 0.05,
-      "default": 0.8
+      "default": 0.8,
+      "variable": "gatherSpeed",
+      "aliases": {
+        "zh-CN": "汇聚速度",
+        "en": "Gather speed"
+      }
     },
     {
       "slot": 3,
@@ -42,12 +57,17 @@
       "min": 0.05,
       "max": 0.9,
       "step": 0.01,
-      "default": 0.3
+      "default": 0.3,
+      "variable": "coreRadius",
+      "aliases": {
+        "zh-CN": "核半径",
+        "en": "Core radius"
+      }
     }
   ],
   "defaults": [
     1.2,
-    6.0,
+    6,
     0.8,
     0.3,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "蓄能",
+    "en": "Charge Gather"
   }
 }

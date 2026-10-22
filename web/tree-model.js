@@ -1,3 +1,6 @@
+import {graphicAliasesField} from './graphic-name.js';
+import {messageError} from './message-catalog.js';
+import {parameterRole} from './parameter-metadata.js';
 import {FX_SPECS,fxDefaults} from './post-fx.js';
 import {interpolateKeys,timeKey} from './animation-values.js';
 import { BY_ID } from './catalog.js';
@@ -5,12 +8,12 @@ import { generateArrangement } from './arrangement-layouts.js';
 import {fitInstances} from './instance-geometry.js';
 import {EXTRA_SPECS,EXTRA_ENUMS,EXTRA_BOOLS,extraDefaults,sanitizeExtra,sanitizeTreeArrangement,advancedRecords,modifyRecords} from './tree-arrangement.js';
 export const TREE_SCHEMA='momo.texture-tree/v1', PRESET_SCHEMA='momo.texture-subtree/v1';
-export const POST_SPECS=[['亮度',-.6,.6,0],['对比度',.1,3,1],['伽马',.1,4,1],['输入低',-.5,.95,0],['输入高',.05,1.5,1],['输出低',0,.9,0],['输出高',.1,1.6,1]];
+export const POST_SPECS=[["ui.brightness",-.6,.6,0],["library.imageContrast",.1,3,1],["ui.gamma",.1,4,1],["ui.inputLow",-.5,.95,0],["ui.inputHigh",.05,1.5,1],["ui.outputLow",0,.9,0],["ui.outputHigh",.1,1.6,1]];
 export const LIMITS={nodes:256,depth:12,tracks:64,frames:128};
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const num=(v,d,a=-10000,b=10000)=>clamp(Number.isFinite(Number(v))?Number(v):d,a,b);
 export const uid=()=>globalThis.crypto?.randomUUID?.()??`n-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
-export function shapeDefaults(type){const p=BY_ID.get(type)??BY_ID.get('Circle'),values=[...p.defaults];for(const spec of p.parameters)if(spec.label==='羽化')values[spec.slot]=0;return values;}
+export function shapeDefaults(type){const p=BY_ID.get(type)??BY_ID.get('Circle'),values=[...p.defaults];for(const spec of p.parameters)if(parameterRole(spec)==='feather')values[spec.slot]=0;return values;}
 export function node(kind='shape',type='Circle'){
  const padding=kind==='shape'?(BY_ID.get(type)?.definition.renderPadding??0):0,size=padding?1/(1+2*padding+.08):1;
  return {id:uid(),name:kind==='group'?'组合':BY_ID.get(type)?.zh??type,kind,enabled:true,type,params:shapeDefaults(type),
@@ -36,7 +39,7 @@ export function animationType(n,path){
  if(path==='color.low'||path==='color.high')return 'color';
  if(ANIMATION_ENUMS[path]||ANIMATION_BOOLS.includes(path))return 'discrete';
  if(path==='tileEdges'||path==='arrangeExtra.flowFrequency')return 'discrete';
- if(path==='params.0'&&BY_ID.get(n.type)?.parameters.find(p=>p.slot===0)?.label==='图片显示')return 'discrete';
+ if(path==='params.0'&&parameterRole(BY_ID.get(n.type)?.parameters.find(p=>p.slot===0)??{})==='image-mode')return 'discrete';
  if(n.type==='Gear'&&path==='params.8'||n.type==='Halftone'&&path==='params.4'||n.type==='RingPulse'&&path==='params.4'||n.type==='ConeGradient'&&path==='params.4'||n.type==='LineSegment'&&path==='params.5')return 'discrete';
  if(/^arrange\.(0|7|19|30|37|38|39|58)$/.test(path)||n.type==='Star'&&path==='params.5'||n.type==='BezierRibbon'&&path==='params.12')return 'discrete';
  return 'number';
@@ -51,7 +54,7 @@ export function fieldSpec(n,path){
  const post=/^post\.([0-6])$/.exec(path);if(post)return POST_SPECS[+post[1]].slice(1,3);
  if(fixed[path])return fixed[path];
  const uv=/^uv\.([0-6])$/.exec(path);if(uv)return [[.1,8],[-360,360],[-2,2],[-2,2],[-2,2],[-360,360],[-6.28,6.28]][+uv[1]];
- const m=/^params\.(\d+)$/.exec(path);if(m){const p=BY_ID.get(n.type)?.parameters.find(p=>p.slot===+m[1]);return p?[p.label==='羽化'?0:p.min,p.max]:null;}
+ const m=/^params\.(\d+)$/.exec(path);if(m){const p=BY_ID.get(n.type)?.parameters.find(p=>p.slot===+m[1]);return p?[parameterRole(p)==='feather'?0:p.min,p.max]:null;}
  const a=/^arrange\.(\d+)$/.exec(path);if(a&&+a[1]>=0&&+a[1]<59&&+a[1]!==39)return [-10000,10000];
  return null;
 }
@@ -65,12 +68,12 @@ export function canvasRoot(root){
  return result;
 }
 export function sanitizeTree(raw,{component=false}={}){
- if(raw?.schema!==TREE_SCHEMA)throw Error('需要节点树项目格式');
+ if(raw?.schema!==TREE_SCHEMA)throw messageError("ui.aNodeTreeProjectIsRequired");
  const seen=new Set();let count=0;
  function read(r,depth){
-  if(!r||depth>LIMITS.depth||++count>LIMITS.nodes)throw Error('节点树超出深度12或节点256上限');
-  if(!['shape','group'].includes(r.kind)||typeof r.id!=='string'||!r.id||seen.has(r.id))throw Error('节点类型或ID无效/重复');seen.add(r.id);
-  if(r.kind==='shape'&&!BY_ID.has(r.type))throw Error('未知图形：'+r.type);
+  if(!r||depth>LIMITS.depth||++count>LIMITS.nodes)throw messageError("ui.nodeTreeExceedsTheDepthOrNodeCountLimit");
+  if(!['shape','group'].includes(r.kind)||typeof r.id!=='string'||!r.id||seen.has(r.id))throw messageError("ui.invalidOrDuplicateNodeTypeID");seen.add(r.id);
+  if(r.kind==='shape'&&!BY_ID.has(r.type))throw messageError("errors.unknownGraphic", r.type);
   const n=node(r.kind,r.type);n.id=r.id;n.name=String(r.name??n.name).slice(0,80);n.enabled=r.enabled!==false;if(typeof r.resourceRef==='string')n.resourceRef=r.resourceRef.slice(0,96);
   for(const key of ['x','y','width','height','rotation','pivotX','pivotY']){const [min,max]=fieldSpec(n,'transform.'+key);n.transform[key]=num(r.transform?.[key],n.transform[key],min,max);}
   n.transform.lockAspect=!!r.transform?.lockAspect;n.transform.mirrorX=!!r.transform?.mirrorX;n.transform.fit=r.transform?.fit==='contain'?'contain':'stretch';n.opacity=num(r.opacity,1,0,1);n.blend=['over','add','max','multiply','subtract','screen','difference','overlay','softlight','dodge','mask','inverseMask'].includes(r.blend)?r.blend:'over';n.seamMode=r.seamMode===1?1:0;n.seamBlend=num(r.seamBlend,.2,.05,.45);
@@ -84,10 +87,10 @@ export function sanitizeTree(raw,{component=false}={}){
   n.animationEnabled=r.animationEnabled!==false;n.post=POST_SPECS.map((p,i)=>num(r.post?.[i],p[3],p[1],p[2]));n.invert=!!r.invert;n.maskInvert=!!r.maskInvert;
   if(Array.isArray(r.color?.stops))n.color.stops=r.color.stops.slice(0,8).filter(s=>/^#[0-9a-f]{6}$/i.test(s.color)).map(s=>({color:s.color,position:num(s.position,0,0,1)})).sort((a,b)=>a.position-b.position);
   n.uv=n.uv.map((v,i)=>num(r.uv?.[i],v,...fieldSpec(n,'uv.'+i)));n.polar=!!r.polar;
-  n.params=n.params.map((v,i)=>{const p=BY_ID.get(n.type)?.parameters.find(p=>p.slot===i);return p?num(r.params?.[i],v,p.label==='羽化'?0:p.min,p.max):v;});
+  n.params=n.params.map((v,i)=>{const p=BY_ID.get(n.type)?.parameters.find(p=>p.slot===i);return p?num(r.params?.[i],v,parameterRole(p)==='feather'?0:p.min,p.max):v;});
   n.arrange=sanitizeTreeArrangement(Array.from({length:59},(_,i)=>r.arrange?.[i]));n.arrangeExtra=sanitizeExtra(r.arrangeExtra);n.tileEdges=Math.round(num(r.tileEdges,0,0,15));n.arrangeFit=r.arrangeFit==='stretch'?'stretch':'contain';n.imageFit=r.imageFit==='stretch'?'stretch':'contain';n.instancePhase=num(r.instancePhase,0,-1,1);n.instanceContent=n.kind==='group'&&['random-child','cycle-child'].includes(r.instanceContent)?r.instanceContent:'all';n.scatterAvoidOverlap=r.scatterAvoidOverlap===true;n.scatterGap=num(r.scatterGap,0,0,.5);
   for(const key of ['start','end','from','to','at'])n.timing[key]=num(r.timing?.[key],n.timing[key],0,1);
-  if(n.timing.end<n.timing.start)throw Error('时间区间结束不能早于开始');
+  if(n.timing.end<n.timing.start)throw messageError("ui.theIntervalEndMustNotPrecedeItsStart");
   n.timing.curve=Array.isArray(r.timing?.curve)?r.timing.curve.filter(k=>Array.isArray(k)&&k.length===2&&k.every(Number.isFinite)).slice(0,128).map(k=>k.map(v=>clamp(v,0,1))).sort((a,b)=>a[0]-b[0]):[];
   n.timing.offset=num(r.timing?.offset,0,-1,1);n.timing.cycles=num(r.timing?.cycles,1,.01,64);for(const key of ['loop','pingpong','frozen'])n.timing[key]=!!r.timing?.[key];
   n.timing.ease=['linear','smooth','hold'].includes(r.timing?.ease)?r.timing.ease:'linear';n.timing.outside=r.timing?.outside==='hide'?'hide':'hold';
@@ -110,12 +113,12 @@ export function sanitizeTree(raw,{component=false}={}){
    if(type==='number'&&track.segments){const segments={};for(const [t]of clean.keys){const v=track.segments[timeKey(t)];if(!v)continue;segments[timeKey(t)]={ease:['linear','smooth','hold','cubic'].includes(v.ease)?v.ease:'linear'};for(const k of ['in','out'])if(Number.isFinite(v[k]))segments[timeKey(t)][k]=clamp(v[k],-1e6,1e6);}if(Object.keys(segments).length)clean.segments=segments;}
    n.tracks[path]=clean;
   }
-  if(r.children&&!Array.isArray(r.children))throw Error('子节点列表无效');
-  if(n.kind==='shape'&&r.children?.length)throw Error('图形节点不能持有普通子节点；请创建组合');
+  if(r.children&&!Array.isArray(r.children))throw messageError("ui.invalidChildNodeList");
+  if(n.kind==='shape'&&r.children?.length)throw messageError("ui.shapeNodesCannotContainOrdinaryChildrenCreateAGroup");
   n.children=(r.children??[]).map(c=>read(c,depth+1));if(r.mask)n.mask=read(r.mask,depth+1);return n;
  }
  const p=project();p.root=read(raw.root,0);
- if(raw.projectResources!==undefined){if(!Array.isArray(raw.projectResources))throw Error('图形列表格式无效');const ids=new Set();p.projectResources=raw.projectResources.map(entry=>{if(!entry||typeof entry.id!=='string'||ids.has(entry.id))throw Error('图形列表ID无效或重复');ids.add(entry.id);const clean=sanitizeTree({...project(),root:entry.root,projectResources:[]},{component:true}).root;return {id:entry.id,name:String(entry.name??clean.name).slice(0,80),category:String(entry.category??'图形列表').slice(0,80),description:String(entry.description??'').slice(0,2000),kind:['formula','image','composition'].includes(entry.kind)?entry.kind:'composition',resourceId:typeof entry.resourceId==='string'?entry.resourceId:uid(),versionId:Math.max(1,Math.floor(num(entry.versionId,1,1,1000000000))),personalRevision:Math.floor(num(entry.personalRevision,0,0,1000000000)),source:entry.source?{resourceId:String(entry.source.resourceId).slice(0,128),versionId:Math.max(1,Math.floor(num(entry.source.versionId,1,1,1000000000)))}:null,root:clean};});}
+ if(raw.projectResources!==undefined){if(!Array.isArray(raw.projectResources))throw messageError("ui.invalidGraphicsListFormat");const ids=new Set();p.projectResources=raw.projectResources.map(entry=>{if(!entry||typeof entry.id!=='string'||ids.has(entry.id))throw messageError("ui.invalidOrDuplicateGraphicsListID");ids.add(entry.id);const clean=sanitizeTree({...project(),root:entry.root,projectResources:[]},{component:true}).root;return {id:entry.id,name:String(entry.name??clean.name).slice(0,80),...graphicAliasesField(entry.aliases),category:String(entry.category??'图形列表').slice(0,80),description:String(entry.description??'').slice(0,2000),kind:['formula','image','composition'].includes(entry.kind)?entry.kind:'composition',resourceId:typeof entry.resourceId==='string'?entry.resourceId:uid(),versionId:Math.max(1,Math.floor(num(entry.versionId,1,1,1000000000))),personalRevision:Math.floor(num(entry.personalRevision,0,0,1000000000)),source:entry.source?{resourceId:String(entry.source.resourceId).slice(0,128),versionId:Math.max(1,Math.floor(num(entry.source.versionId,1,1,1000000000)))}:null,root:clean};});}
 if(!component)p.root=canvasRoot(p.root);p.name=String(raw.name??p.name).slice(0,80);
  for(const [key,min,max] of [['width',1,4096],['height',1,4096],['columns',1,32],['depth',8,16],['seconds',.05,600],['normal',0,20]])p.output[key]=num(raw.output?.[key],p.output[key],min,max);
  for(const key of ['width','height','columns'])p.output[key]=Math.round(p.output[key]);p.output.depth=p.output.depth===16?16:8;
@@ -141,8 +144,8 @@ export function localClock(timing,parentTime){
 export const keyValue=interpolateKeys;
 export function evaluateNode(n,parentTime,progressOverride){const clock=localClock(n.timing,parentTime);if(progressOverride!==undefined)clock.progress=progressOverride;const out={...n,transform:{...n.transform},color:{...n.color},contour:{...n.contour},shapeClock:{follow:true,speed:1,offset:0,value:0,...n.shapeClock},post:[...n.post],postFx:[...(n.postFx??fxDefaults())],arrangeExtra:{...extraDefaults(),...n.arrangeExtra},params:[...n.params],uv:[...n.uv],arrange:[...n.arrange]};for(const [path,track]of Object.entries(n.animationEnabled===false?{}:n.tracks)){const v=keyValue(track,clock.progress),bounds=fieldSpec(n,path);if(track.muted||v===null||!bounds)continue;if(animationType(n,path)!=='number'){pathSet(out,path,v);continue;}const base=pathGet(n,path);pathSet(out,path,clamp(track.mode==='add'?base+v:track.mode==='multiply'?base*v:v,...bounds));}out.arrange=sanitizeTreeArrangement(out.arrange);out.arrangeExtra=sanitizeExtra(out.arrangeExtra);return {node:out,...clock,visible:clock.visible&&out.enabled&&out.transform.width>0&&out.transform.height>0};}
 export function nodeClock(root,id,time){let result=null;function visit(n,t){const e=evaluateNode(n,t);if(n.id===id)result=e;for(const c of n.children)visit(c,e.progress);if(n.mask)visit(n.mask,e.progress);}visit(root,time);return result;}
-export function moveNode(root,id,parentId,index=Infinity){const source=find(root,id),target=find(root,parentId);if(!source?.parent||!target||target.node.kind!=='group')throw Error('请选择可移动节点和目标组合');if(find(source.node,parentId))throw Error('不能移入自身或后代');if(source.parent.mask===source.node)source.parent.mask=null;else source.parent.children.splice(source.parent.children.indexOf(source.node),1);target.node.children.splice(Math.min(index,target.node.children.length),0,source.node);}
-export function removeNode(root,id){const x=find(root,id);if(!x?.parent)throw Error('不能删除画布根节点');if(x.parent.mask===x.node)x.parent.mask=null;else x.parent.children.splice(x.parent.children.indexOf(x.node),1);}
+export function moveNode(root,id,parentId,index=Infinity){const source=find(root,id),target=find(root,parentId);if(!source?.parent||!target||target.node.kind!=='group')throw messageError("ui.selectMovableNodesAndATargetGroup");if(find(source.node,parentId))throw messageError("ui.cannotMoveANodeIntoItselfOrItsDescendants");if(source.parent.mask===source.node)source.parent.mask=null;else source.parent.children.splice(source.parent.children.indexOf(source.node),1);target.node.children.splice(Math.min(index,target.node.children.length),0,source.node);}
+export function removeNode(root,id){const x=find(root,id);if(!x?.parent)throw messageError("ui.cannotDeleteTheCanvasRoot");if(x.parent.mask===x.node)x.parent.mask=null;else x.parent.children.splice(x.parent.children.indexOf(x.node),1);}
 export const scatterOptions=(n,aspect=1)=>({avoidOverlap:n.scatterAvoidOverlap===true,gap:n.scatterGap??0,wrap:n.boundary==='repeat',aspect,fit:n.arrangeFit??'contain'});
 export function placements(a,n={},_time=0,_original=n,aspect=1){const records=rawPlacements(a,n,aspect),fitted=a[0]&&!([15,16].includes(a[0]))?fitInstances(records,aspect,n.arrangeFit??'contain'):records;return modifyRecords(fitted,{...n,arrange:a},aspect);}
 function rawPlacements(a,n={},aspect=1){
@@ -166,15 +169,15 @@ export function instanceChildren(n,index,record){
  h=Math.imul(h^(h>>>16),0x21f0aaad);h=Math.imul(h^(h>>>15),0x735a2d97);h=(h^(h>>>15))>>>0;
  return [pool[Math.floor(h/4294967296*pool.length)]];
 }
-export function expandInstances(root,id,time,records){const entry=find(root,id);if(!entry)throw Error('节点不存在');const n=entry.node,e=nodeClock(root,id,time);if(!n.arrange[0])throw Error('节点没有排列');
+export function expandInstances(root,id,time,records){const entry=find(root,id);if(!entry)throw messageError("ui.nodeNotFound");const n=entry.node,e=nodeClock(root,id,time);if(!n.arrange[0])throw messageError("ui.nodeHasNoArrangement");
  const points=records??placements(e.node.arrange,e.node),content=cloneNode(n);content.transform=node().transform;content.boundary=n.boundary==='repeat'?'visible':n.boundary;if(content.tracks.boundary)content.tracks.boundary.keys=content.tracks.boundary.keys.map(([t,v])=>[t,v==='repeat'?'visible':v]);content.opacity=1;content.blend='over';content.arrange[0]=0;if(content.color.mode==='remap')content.color.mode='own';content.instancePhase=0;content.mask=null;content.post=POST_SPECS.map(p=>p[3]);content.postFx=fxDefaults();content.contour=node().contour;content.invert=false;content.maskInvert=false;content.timing=node().timing;
  for(const path of Object.keys(content.tracks))if(path.startsWith('arrange.')||path.startsWith('arrangeExtra.')||path.startsWith('transform.')||path==='opacity'||(path.startsWith('post.')||path.startsWith('postFx.'))||path.startsWith('contour.'))delete content.tracks[path];
  const result=node('group');Object.assign(result,{id:n.id,name:n.name,transform:n.transform,boundary:n.boundary,opacity:n.opacity,blend:n.blend,seamMode:n.seamMode,seamBlend:n.seamBlend,timing:n.timing,animationEnabled:n.animationEnabled,mask:n.mask,maskInvert:n.maskInvert,post:n.post,postFx:n.postFx,contour:n.contour,invert:n.invert,color:n.color});result.tracks=Object.fromEntries(Object.entries(n.tracks).filter(([p])=>p.startsWith('transform.')||p==='boundary'||p==='opacity'||(p.startsWith('post.')||p.startsWith('postFx.'))||p.startsWith('contour.')));
  if(e.node.arrange[0]===14&&e.node.arrangeExtra.showSource)result.children=[cloneNode(n.children[0])];
  let size=0;walk(root,()=>size++);walk(n,()=>size--);walk(result,()=>size++);
- for(let i=0;i<points.length;i++){size++;for(const c of instanceChildren(e.node,i,points[i]))walk(c,()=>size++);if(size>LIMITS.nodes)throw Error('展开后超出256节点限制');}
+ for(let i=0;i<points.length;i++){size++;for(const c of instanceChildren(e.node,i,points[i]))walk(c,()=>size++);if(size>LIMITS.nodes)throw messageError("ui.expandingWouldExceedTheNodeLimit");}
  result.children.push(...points.map((p,i)=>{const c=cloneNode({...content,children:instanceChildren(e.node,i,p)});c.instanceContent='all';c.arrangeExtra=extraDefaults();c.opacity=p.opacity??1;c.name=`${n.name} ${i+1}`;c.transform={...c.transform,x:p.x,y:p.y,width:p.width,height:p.height,rotation:p.turn*180/Math.PI};c.transform.mirrorX=p.mirror<0;c.timing.offset=i*e.node.instancePhase%1;return c;}));
- walk(result,(_n,_p,d)=>{if(d+entry.depth>LIMITS.depth)throw Error('展开后超出节点深度限制');});
+ walk(result,(_n,_p,d)=>{if(d+entry.depth>LIMITS.depth)throw messageError("ui.expandingWouldExceedTheDepthLimit");});
  if(!entry.parent)return result;if(entry.parent.mask===n)entry.parent.mask=result;else entry.parent.children[entry.parent.children.indexOf(n)]=result;return root;
 }
 

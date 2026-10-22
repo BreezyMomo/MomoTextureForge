@@ -49,11 +49,11 @@ function vfxSamples(){
  coarse.params[0]=5;coarse.params[1]=4;fine.params[0]=18;fine.params[1]=3;fine.blend='multiply';fine.opacity=.35;dissolve.children=[coarse,fine];
  track(dissolve,'post.3',[[0,-.02],[.3,.3],[1,.95]]);track(dissolve,'post.4',[[0,.02],[.3,.34],[1,1]]);
  return [
-  {root:slash,description:'用于挥砍与剑气：刀光芯、噪声边缘和偏移尾丝叠加，旋转后逐渐淡出。透明 PNG 或单次序列。',tags:['刀光／拖尾','单次动画'],output:{seconds:.7,frames:22,loopExport:false}},
-  {root:impact,description:'用于技能命中：柔光、四角闪光与不规则火花分层爆开，随后收缩淡出。透明 PNG 或单次序列。',tags:['命中／爆闪','单次动画'],output:{seconds:.6,frames:19,loopExport:false}},
-  {root:shock,description:'用于落地与爆炸：噪声裁切圆环，扩张时保留破碎缺口并淡出。透明 PNG 或单次序列。',tags:['冲击波','噪声遮罩'],output:{seconds:1,frames:31,loopExport:false}},
-  {root:vortex,description:'用于蓄力与传送：三臂流线围绕透明涡眼旋转，边缘渐隐；整组转一圈可循环导出。',tags:['能量／传送','循环动画'],output:{seconds:3,frames:90,loopExport:true}},
-  {root:dissolve,description:'用于材质溶解：粗细噪声合成，通过色阶阈值从白到黑侵蚀。默认导出不透明黑白遮罩，可调整进度取单帧。',tags:['溶解／侵蚀','黑白遮罩'],output:{seconds:1.5,frames:46,loopExport:false,mode:'height',alpha:false}},
+  {nameKey:"examples.swordTrail.name",root:slash,description:"examples.forSlashesAndSwordEffectsABrightCoreNoisyEdgesAnd",tags:["examples.slashTrail","examples.oneShotAnimation"],output:{seconds:.7,frames:22,loopExport:false}},
+  {nameKey:"examples.hitFlash.name",root:impact,description:"examples.forAbilityImpactsGlowAFourPointFlashAndIrregularSparks",tags:["examples.tagHitFlash","examples.oneShotAnimation"],output:{seconds:.6,frames:19,loopExport:false}},
+  {nameKey:"examples.brokenShockwaveRing.name",root:shock,description:"examples.forLandingsAndExplosionsANoiseClippedRingExpandsWithBroken",tags:["examples.shockwave","examples.noiseMask"],output:{seconds:1,frames:31,loopExport:false}},
+  {nameKey:"examples.energyVortex.name",root:vortex,description:"examples.forChargingAndPortalsThreeFlowArmsRotateAroundATransparent",tags:["examples.energyPortal","examples.loopingAnimation"],output:{seconds:3,frames:90,loopExport:true}},
+  {nameKey:"examples.dissolveMask.name",root:dissolve,description:"examples.forMaterialDissolvesCombinesCoarseAndFineNoiseErodingFromWhite",tags:["examples.dissolveErosion","examples.grayscaleMask"],output:{seconds:1.5,frames:46,loopExport:false,mode:'height',alpha:false}},
  ];
 }
 function uiSamples(){
@@ -69,11 +69,11 @@ function uiSamples(){
  const cross=shape('Cross','十字定位点',1,'#6c809d');cross.params[0]=.016;cross.params[1]=.11;
  dots.children=[tile('规则圆点网格',dot,8),tile('稀疏十字网格',cross,4,.0625)];
  return [
-  {root:lattice,description:'用于面板、弹窗和卡片背景：细线菱形搭配中心小菱形，规则重复。可改线色、描边宽度与网格密度。'},
-  {root:bricks,description:'用于商店、背包或活动界面：两层深浅菱砖错半格排列，形成连续底纹。可分别替换两层颜色。'},
-  {root:stripes,description:'用于页签、进度条底板或科技界面：连续斜线与稀疏短划叠加，保持低对比。可修改线宽、密度和点缀。'},
-  {root:dots,description:'用于信息面板和科技卡片：细点阵叠加稀疏十字，适合作为文字下方的背景。可调整点径与网格密度。'},
- ].map(sample=>({...sample,tags:['UI 底纹','无缝平铺','静态 PNG'],output:{mode:'color',alpha:false,background:'#1b2638'}}));
+  {nameKey:"examples.diamondLattice.name",root:lattice,description:"examples.forPanelsPopupsAndCardsRepeatingFineDiamondOutlinesWithSmall"},
+  {nameKey:"examples.staggeredDiamondTiles.name",root:bricks,description:"examples.forShopsInventoriesAndEventScreensLightAndDarkDiamondLayers"},
+  {nameKey:"examples.diagonalBackground.name",root:stripes,description:"examples.forTabsProgressBarsOrTechInterfacesContinuousDiagonalLinesWith"},
+  {nameKey:"examples.dotBackground.name",root:dots,description:"examples.forInformationPanelsAndTechCardsAFineDotMatrixWith"},
+ ].map(sample=>({...sample,tags:["examples.uiBackgrounds","workspace.seamlessTiling","examples.staticPNG"],output:{mode:'color',alpha:false,background:'#1b2638'}}));
 }
 function overflowExamples(){
  const compare=group('内容边界对照');
@@ -90,9 +90,9 @@ function overflowExamples(){
  const rim=halo(.9,'#467d96'),light=shape('Star','伸到相邻格的星光',.52,'#b6f4ff');light.transform.x=.96;light.params[0]=.9;light.boundary='visible';light.postFx=[0,.65,20,.5,0,0,0];grid.children=[rim,light];
  const seamless=group('无缝光晕接续');seamless.boundary='repeat';seamless.postFx=[0,.5,16,.5,0,0,0];const flare=shape('Star','跨边界星光',.42,'#b9f3ff');flare.transform.x=.94;flare.transform.y=.9;flare.boundary='visible';flare.params[0]=1.25;flare.postFx=[3,.4,20,.5,0,0,0];const spark=shape('Circle','中央光点',.09,'#ffc976');spark.transform.x=.47;spark.params[0]=.9;seamless.children=[flare,spark];
  return [
-  {root:seamless,description:'子星光允许超出，外层组合选择无缝重复。右上角的星光及光晕会从左侧和下侧接回；开启平铺检查观察四边接续，切换边界处理比较三种模式。',tags:['无缝重复','子级超框','光晕回绕']},
-  {root:compare,description:'相同的内容：左侧裁切到节点区域，右侧允许超出。细方框标出逻辑区域；选左右组合 → 变换/排列 → 内容边界，切换后比较边缘星光与圆点。',tags:['裁切对照','图形／组合通用']},
-  {root:grid,description:'每格包含一个圆环和偏到右侧的星光，星光与泛光可跨格显示，三列三行的格距保持不变。切换外层组合的内容边界，比较最右侧星光。',tags:['跨格显示','光晕扩边','固定格距']}
+  {nameKey:"examples.seamlessGlowContinuity.name",root:seamless,description:"examples.childStarsAllowOverflowTheParentGroupRepeatsSeamlesslyTheUpper",tags:["editor.seamlessRepeat","examples.childOverflow","examples.glowWrapping"]},
+  {nameKey:"examples.contentBoundaryComparison.name",root:compare,description:"examples.identicalContentClippedToItsRegionOnTheLeftVisibleOverflow",tags:["examples.clippingComparison","examples.shapesGroups"]},
+  {nameKey:"examples.crossCellLightArrangement.name",root:grid,description:"examples.eachCellContainsARingAndARightOffsetStarStars",tags:["examples.crossCellRendering","examples.glowOverflow","examples.fixedCellSpacing"]}
  ].map(sample=>({...sample,category:'arrangement',output:{mode:'color',alpha:false,background:'#182438'}}));
 }
 
@@ -116,16 +116,16 @@ function arrangementExamples(){
  const puzzleStyles=group('拼图接口与圆角');
  puzzleStyles.children=['圆头凸耳','方头卡扣','梯形燕尾','波浪接口'].map((name,i)=>{const n=shape('PuzzlePiece',name,.32,['#76d9eb','#ffc778','#c0a1e8','#8fd1a5'][i]);Object.assign(n.transform,{x:i%2?.75:.25,y:i<2?.75:.25});Object.assign(n.params,{8:1,9:i,10:[1,.2,.45,.7][i],11:0,12:.18,13:.28,14:.08});return n;});
  return [
-  {root:puzzleStyles,description:'左上圆头、右上方头、左下燕尾、右下波浪；每块的左上角为直角，其他三角使用不同圆角大小。选单块切换接口样式、圆润度，再展开主体四角逐个调整。',tags:['四种接口','独立四角','可调圆润度']},
-  {root:puzzle,description:'只有一个拼图图形，使用现成的4×4网格排列。主体占满每格，凸耳伸入相邻格；增大凸耳半径不会改变格距。',tags:['单块拼图','凸耳越界','网格排列']},
-  {root:board,description:'九块独立配色的实心拼图，相邻边凹凸配对，最外侧设为平边。可分别编辑每块颜色、四边和凸耳大小。',tags:['拼图边块／角块','独立配色']},
-  {root:border,description:'沿圆角矩形周长等距放置灯点，短线跟随切线转向。调整边框宽高、圆角和数量，适合弹窗与卡牌装饰。',tags:['边框排列','UI 装饰']},
-  {root:outline,description:'第一个子节点提供星形轮廓，第二个子节点作为重复光点。可换成其他图形、组合或有透明轮廓的图片。',tags:['沿图形轮廓','自动等距']},
-  {root:herringbone,description:'2:1 长砖按人字规则交替转向，深浅两种图块顺序混排。调整重复块数和长砖外观制作可平铺背景。',tags:['人字排列','无缝平铺']},
-  {root:basket,description:'长砖横竖交替组成篮式编织。与人字纹共用编排入口，可修改颜色和单元留缝。',tags:['编织排列','无缝平铺']},
-  {root:gradient,description:'同一网格从左到右逐渐变大、变亮；渐变可叠加到现有排列，也可改成径向或按实例顺序变化。',tags:['渐变排列','UI 底纹']},
-  {root:flow,description:'规则网格沿波浪偏移并跟随局部方向转向。播放相位动画查看流动；也可切换旋涡扭转。',tags:['波浪／流场','循环动画'],output:{seconds:3,frames:90,loopExport:true}},
-  {root:pipes,description:'候选图块声明上、下、左、右接口，种子控制选择，相邻及跨边缘接口保持匹配。可拆解每块连接线或替换图块。',tags:['规则拼接','接口匹配']},
+  {nameKey:"examples.puzzleConnectorsCorners.name",root:puzzleStyles,description:"examples.roundUpperLeftSquareUpperRightDovetailLowerLeftAndWave",tags:["examples.fourConnectorStyles","examples.independentCorners","examples.adjustableRoundness"]},
+  {nameKey:"examples.singlePiecePuzzleGrid.name",root:puzzle,description:"examples.onePuzzleShapeUsesTheExistingGridArrangementItsBodyFills",tags:["examples.singlePuzzlePiece","examples.tabOverflow","examples.gridArrangement"]},
+  {nameKey:"examples.coloredPuzzleBoard.name",root:board,description:"examples.nineIndependentlyColoredSolidPiecesHaveMatchingNeighboringTabsAndSockets",tags:["examples.puzzleEdgesCorners","editor.independentColors"]},
+  {nameKey:"examples.roundedBorderLightStrip.name",root:border,description:"examples.evenlyPlacesLightsAroundARoundedRectangleOrientingShortLinesAlong",tags:["examples.borderPlacement","examples.uiDecoration"]},
+  {nameKey:"examples.starContourLights.name",root:outline,description:"examples.theFirstChildSuppliesTheStarContourTheSecondIsThe",tags:["examples.alongShapeContour","examples.automaticSpacing"]},
+  {nameKey:"examples.herringboneBackground.name",root:herringbone,description:"examples.bricksAlternateDirectionInAHerringbonePatternCyclingLightAndDark",tags:["examples.herringboneLayout","workspace.seamlessTiling"]},
+  {nameKey:"examples.basketWeaveBackground.name",root:basket,description:"examples.horizontalAndVerticalBricksAlternateInABasketWeaveUsesThe",tags:["examples.weaveLayout","workspace.seamlessTiling"]},
+  {nameKey:"examples.fadingDecorativeDots.name",root:gradient,description:"examples.aGridGraduallyGrowsLargerAndBrighterFromLeftToRight",tags:["examples.gradientLayout","examples.uiBackgrounds"]},
+  {nameKey:"examples.waveFlowLineArray.name",root:flow,description:"examples.aRegularGridFollowsWaveOffsetsAndLocalFlowDirectionPlay",tags:["examples.wavesFlowField","examples.loopingAnimation"],output:{seconds:3,frames:90,loopExport:true}},
+  {nameKey:"examples.connectorMatchedPipes.name",root:pipes,description:"examples.candidateTilesDeclareTopBottomLeftAndRightConnectorsSeededSelection",tags:["examples.ruleTiling","examples.connectorMatching"]},
  ].map(sample=>({...sample,category:'arrangement',output:{mode:'color',alpha:false,background:'#182438',...sample.output}}));
 }
 
@@ -143,11 +143,11 @@ export function treeSamples(){
  const flame=group('火焰法阵'),flames=node('shape','Bonfire');flames.name='中心火焰';flames.transform.width=flames.transform.height=.7;
  const fireStars=turn(shape('Star','旋转火星',1,'#ffc175'),-180);radial(fireStars,10,.4,.075);flame.children=[flames,halo(.91,'#ff9c52'),halo(.78,'#ffd385'),fireStars];
  return [...vfxSamples().map(s=>({...s,category:'vfx'})),...uiSamples().map(s=>({...s,category:'ui'})),...arrangementExamples(),...overflowExamples(),...vfxPresets(),
-  {root:summon,description:'同心脉冲圆环、旋转星阵与逐渐淡出的冲击波。',tags:['嵌套组合','关键帧']},
-  {root:radar,description:'三层同心环搭配绕中心运动的目标点，可拆解环形排列与旋转。',tags:['环形排列','旋转动画']},
-  {root:flower,description:'椭圆花瓣沿圆周朝外排列，叠加花蕊和外框制作徽章。',tags:['环形朝向','分层配色']},
-  {root:galaxy,description:'两种星尘交替铺成黄金角螺旋，整组缓慢旋转。',tags:['黄金角螺旋','子节点混排']},
-  {root:shield,description:'描边六边形铺成错列晶格，用圆形遮罩裁切在外围光环内。',tags:['六角网格','圆形遮罩','轮廓描边']},
-  {root:flame,description:'动态火焰生成器与几何圆环、旋转火星组合成完整特效。',tags:['生成器合成','旋转动画']},
+  {nameKey:"examples.summoningEffect.name",root:summon,description:"examples.concentricPulsingRingsARotatingStarArrayAndAFadingShockwave",tags:["examples.nestedGroups","editor.keyframe"]},
+  {nameKey:"examples.radarHalo.name",root:radar,description:"examples.threeConcentricRingsWithOrbitingTargetsInspectRadialPlacementAndRotation",tags:["examples.radialArrangement","examples.rotationAnimation"]},
+  {nameKey:"examples.petalBadge.name",root:flower,description:"examples.ellipsePetalsPointOutwardAroundACircleLayeredWithACenter",tags:["examples.radialOrientation","examples.layeredColors"]},
+  {nameKey:"examples.stardustSpiral.name",root:galaxy,description:"examples.twoAlternatingStardustShapesFormAGoldenAngleSpiralWithSlow",tags:["examples.goldenAngleSpiral","examples.mixedChildInstances"]},
+  {nameKey:"examples.honeycombShield.name",root:shield,description:"examples.outlinedHexagonsFormAStaggeredLatticeClippedByACircularMask",tags:["examples.hexagonalGrid","examples.circularMask","examples.contourOutline"]},
+  {nameKey:"examples.flameSigil.name",root:flame,description:"examples.anAnimatedFlameGeneratorGeometricRingsAndRotatingEmbersFormA",tags:["examples.generatorCompositing","examples.rotationAnimation"]},
  ].map(sample=>({...sample,name:sample.root.name,category:sample.category??'composition'}));
 }

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RibbonFade",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "拖尾衰减",
   "category": "ribbon",
@@ -13,9 +13,14 @@
       "key": "R",
       "label": "尾长衰减",
       "min": 0.3,
-      "max": 4.0,
+      "max": 4,
       "step": 0.05,
-      "default": 1.6
+      "default": 1.6,
+      "variable": "tailLengthFalloff",
+      "aliases": {
+        "zh-CN": "尾长衰减",
+        "en": "Tail length falloff"
+      }
     },
     {
       "slot": 1,
@@ -24,16 +29,26 @@
       "min": 0.02,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.16
+      "default": 0.16,
+      "variable": "horizontalSoftness",
+      "aliases": {
+        "zh-CN": "横向柔化",
+        "en": "Horizontal softness"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "头部保持",
-      "min": 0.0,
+      "min": 0,
       "max": 0.85,
       "step": 0.01,
-      "default": 0.25
+      "default": 0.25,
+      "variable": "headHold",
+      "aliases": {
+        "zh-CN": "头部保持",
+        "en": "Head hold"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,12 @@
       "min": 0.05,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.3
+      "default": 0.3,
+      "variable": "centerBandWidth",
+      "aliases": {
+        "zh-CN": "中心带宽",
+        "en": "Center band width"
+      }
     }
   ],
   "defaults": [
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "拖尾衰减",
+    "en": "Ribbon Fade"
   }
 }

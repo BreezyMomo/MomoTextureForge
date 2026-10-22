@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "TurbulentFlame",
-  "revision": 3,
+  "revision": 5,
   "abi": "momo-pattern/16-v1",
   "name": "湍流火焰",
   "category": "vfx",
@@ -16,7 +16,11 @@
       "min": 0,
       "max": 99999,
       "step": 1,
-      "default": 7872
+      "default": 7872,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      }
     },
     {
       "slot": 1,
@@ -26,7 +30,11 @@
       "min": 0.1,
       "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "火焰宽度",
+        "en": "Flame width"
+      }
     },
     {
       "slot": 2,
@@ -36,7 +44,11 @@
       "min": 0.1,
       "max": 1,
       "step": 0.01,
-      "default": 0.8
+      "default": 0.8,
+      "aliases": {
+        "zh-CN": "火焰高度",
+        "en": "Flame height"
+      }
     },
     {
       "slot": 3,
@@ -46,7 +58,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.7
+      "default": 0.7,
+      "aliases": {
+        "zh-CN": "焰尖高低差",
+        "en": "Flame tip variation"
+      }
     },
     {
       "slot": 4,
@@ -56,7 +72,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.55
+      "default": 0.55,
+      "aliases": {
+        "zh-CN": "收尖",
+        "en": "Taper"
+      }
     },
     {
       "slot": 5,
@@ -66,7 +86,11 @@
       "min": -0.2,
       "max": 0.5,
       "step": 0.01,
-      "default": 0.1
+      "default": 0.1,
+      "aliases": {
+        "zh-CN": "底部位置",
+        "en": "Base position"
+      }
     },
     {
       "slot": 6,
@@ -76,7 +100,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.65
+      "default": 0.65,
+      "aliases": {
+        "zh-CN": "湍流强度",
+        "en": "Turbulence strength"
+      }
     },
     {
       "slot": 7,
@@ -86,7 +114,11 @@
       "min": 1,
       "max": 12,
       "step": 0.1,
-      "default": 5.5
+      "default": 5.5,
+      "aliases": {
+        "zh-CN": "湍流尺度",
+        "en": "Turbulence scale"
+      }
     },
     {
       "slot": 8,
@@ -96,7 +128,11 @@
       "min": 1,
       "max": 8,
       "step": 1,
-      "default": 7
+      "default": 7,
+      "aliases": {
+        "zh-CN": "细节层数",
+        "en": "Detail layers"
+      }
     },
     {
       "slot": 9,
@@ -106,7 +142,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.35
+      "default": 0.35,
+      "aliases": {
+        "zh-CN": "明暗变化",
+        "en": "Brightness variation"
+      }
     },
     {
       "slot": 10,
@@ -116,7 +156,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "填充",
+        "en": "Fill"
+      }
     },
     {
       "slot": 11,
@@ -126,7 +170,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.82
+      "default": 0.82,
+      "aliases": {
+        "zh-CN": "焰芯温度",
+        "en": "Core temperature"
+      }
     },
     {
       "slot": 12,
@@ -136,7 +184,11 @@
       "min": 0,
       "max": 0.7,
       "step": 0.01,
-      "default": 0.35
+      "default": 0.35,
+      "aliases": {
+        "zh-CN": "边缘温度",
+        "en": "Edge temperature"
+      }
     },
     {
       "slot": 13,
@@ -146,7 +198,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.35
+      "default": 0.35,
+      "aliases": {
+        "zh-CN": "烟气混合",
+        "en": "Smoke blend"
+      }
     },
     {
       "slot": 14,
@@ -156,7 +212,11 @@
       "min": 0.5,
       "max": 4,
       "step": 0.05,
-      "default": 1.65
+      "default": 1.65,
+      "aliases": {
+        "zh-CN": "火焰强度",
+        "en": "Flame strength"
+      }
     },
     {
       "slot": 15,
@@ -166,7 +226,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "烟气密度",
+        "en": "Smoke density"
+      }
     },
     {
       "slot": 16,
@@ -176,7 +240,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.6
+      "default": 0.6,
+      "aliases": {
+        "zh-CN": "烟气上升",
+        "en": "Smoke rise"
+      }
     },
     {
       "slot": 17,
@@ -186,7 +254,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.4
+      "default": 0.4,
+      "aliases": {
+        "zh-CN": "烟气扩散",
+        "en": "Smoke spread"
+      }
     },
     {
       "slot": 18,
@@ -196,7 +268,11 @@
       "min": 0,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.6
+      "default": 0.6,
+      "aliases": {
+        "zh-CN": "底部雾气",
+        "en": "Base fog"
+      }
     },
     {
       "slot": 19,
@@ -206,7 +282,11 @@
       "min": 0,
       "max": 3,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "动画速度",
+        "en": "Animation speed"
+      }
     }
   ],
   "defaults": [
@@ -259,5 +339,9 @@
       "color": "generator-fire-v1"
     },
     "usesTime": true
+  },
+  "aliases": {
+    "zh-CN": "湍流火焰",
+    "en": "Turbulent Flame"
   }
 }

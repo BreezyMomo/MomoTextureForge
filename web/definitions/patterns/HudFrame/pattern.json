@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "HudFrame",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "HUD框线",
   "category": "digital",
@@ -15,7 +15,12 @@
       "min": 0.002,
       "max": 0.05,
       "step": 0.001,
-      "default": 0.006
+      "default": 0.006,
+      "variable": "borderWidth",
+      "aliases": {
+        "zh-CN": "边框宽",
+        "en": "Border width"
+      }
     },
     {
       "slot": 1,
@@ -24,31 +29,46 @@
       "min": 0.02,
       "max": 0.3,
       "step": 0.005,
-      "default": 0.12
+      "default": 0.12,
+      "variable": "cornerBracketLength",
+      "aliases": {
+        "zh-CN": "角括号长",
+        "en": "Corner bracket length"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "刻度数",
-      "min": 2.0,
-      "max": 60.0,
-      "step": 1.0,
-      "default": 20.0
+      "min": 2,
+      "max": 60,
+      "step": 1,
+      "default": 20,
+      "variable": "tickCount",
+      "aliases": {
+        "zh-CN": "刻度数",
+        "en": "Tick count"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "内缩",
-      "min": 0.0,
+      "min": 0,
       "max": 0.25,
       "step": 0.005,
-      "default": 0.06
+      "default": 0.06,
+      "variable": "inset",
+      "aliases": {
+        "zh-CN": "内缩",
+        "en": "Inset"
+      }
     }
   ],
   "defaults": [
     0.006,
     0.12,
-    20.0,
+    20,
     0.06,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "HUD框线",
+    "en": "Hud Frame"
   }
 }

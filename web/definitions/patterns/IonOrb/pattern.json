@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "IonOrb",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "离子球",
   "category": "energy",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "触须数",
-      "min": 4.0,
-      "max": 20.0,
-      "step": 1.0,
-      "default": 11.0
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "default": 11,
+      "variable": "tendrilCount",
+      "aliases": {
+        "zh-CN": "触须数",
+        "en": "Tendril count"
+      }
     },
     {
       "slot": 1,
@@ -24,16 +29,26 @@
       "min": 0.08,
       "max": 0.8,
       "step": 0.01,
-      "default": 0.3
+      "default": 0.3,
+      "variable": "ballRadius",
+      "aliases": {
+        "zh-CN": "球半径",
+        "en": "Ball radius"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "脉动速度",
-      "min": 0.0,
-      "max": 6.0,
+      "min": 0,
+      "max": 6,
       "step": 0.05,
-      "default": 1.6
+      "default": 1.6,
+      "variable": "pulsationSpeed",
+      "aliases": {
+        "zh-CN": "脉动速度",
+        "en": "Pulsation speed"
+      }
     },
     {
       "slot": 3,
@@ -42,20 +57,30 @@
       "min": 0.0015,
       "max": 0.02,
       "step": 0.0005,
-      "default": 0.004
+      "default": 0.004,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      }
     },
     {
       "slot": 4,
       "key": "D",
       "label": "内核亮度",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.85
+      "default": 0.85,
+      "variable": "coreBrightness",
+      "aliases": {
+        "zh-CN": "内核亮度",
+        "en": "Core brightness"
+      }
     }
   ],
   "defaults": [
-    11.0,
+    11,
     0.3,
     1.6,
     0.004,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "离子球",
+    "en": "Ion Orb"
   }
 }

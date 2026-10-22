@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "FresnelMask",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "菲涅尔遮罩",
   "category": "mask",
@@ -15,7 +15,12 @@
       "min": 0.1,
       "max": 1.3,
       "step": 0.01,
-      "default": 0.8
+      "default": 0.8,
+      "variable": "ballRadius",
+      "aliases": {
+        "zh-CN": "球半径",
+        "en": "Ball radius"
+      }
     },
     {
       "slot": 1,
@@ -24,16 +29,26 @@
       "min": 0.005,
       "max": 0.6,
       "step": 0.005,
-      "default": 0.22
+      "default": 0.22,
+      "variable": "edgeWidth",
+      "aliases": {
+        "zh-CN": "边缘宽度",
+        "en": "Edge width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "锐度",
       "min": 0.2,
-      "max": 6.0,
+      "max": 6,
       "step": 0.05,
-      "default": 1.2
+      "default": 1.2,
+      "variable": "sharpness",
+      "aliases": {
+        "zh-CN": "锐度",
+        "en": "Sharpness"
+      }
     }
   ],
   "defaults": [
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "菲涅尔遮罩",
+    "en": "Fresnel Mask"
   }
 }

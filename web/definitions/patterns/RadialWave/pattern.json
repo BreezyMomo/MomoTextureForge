@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RadialWave",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "环形波浪",
   "category": "radial",
@@ -12,28 +12,43 @@
       "slot": 0,
       "key": "R",
       "label": "波数",
-      "min": 3.0,
-      "max": 18.0,
-      "step": 1.0,
-      "default": 8.0
+      "min": 3,
+      "max": 18,
+      "step": 1,
+      "default": 8,
+      "variable": "waveCount",
+      "aliases": {
+        "zh-CN": "波数",
+        "en": "Wave count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "振幅",
-      "min": 0.0,
+      "min": 0,
       "max": 0.15,
       "step": 0.002,
-      "default": 0.05
+      "default": 0.05,
+      "variable": "amplitude",
+      "aliases": {
+        "zh-CN": "振幅",
+        "en": "Amplitude"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "相位",
-      "min": 0.0,
+      "min": 0,
       "max": 6.28,
       "step": 0.02,
-      "default": 0.6
+      "default": 0.6,
+      "variable": "phase",
+      "aliases": {
+        "zh-CN": "相位",
+        "en": "Phase"
+      }
     },
     {
       "slot": 3,
@@ -42,24 +57,34 @@
       "min": 0.002,
       "max": 0.03,
       "step": 0.001,
-      "default": 0.008
+      "default": 0.008,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      }
     },
     {
       "slot": 4,
       "key": "D",
       "label": "环数",
-      "min": 2.0,
-      "max": 24.0,
-      "step": 1.0,
-      "default": 7.0
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 7,
+      "variable": "ringCount",
+      "aliases": {
+        "zh-CN": "环数",
+        "en": "Ring count"
+      }
     }
   ],
   "defaults": [
-    8.0,
+    8,
     0.05,
     0.6,
     0.008,
-    7.0,
+    7,
     0,
     0,
     0,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "环形波浪",
+    "en": "Radial Wave"
   }
 }

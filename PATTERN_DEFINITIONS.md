@@ -34,8 +34,8 @@ web/definitions/
 | id / name | 稳定英文 ID 与中文显示名；ID 不重复 |
 | category / order / variant | 分类 ID、全目录索引、分类内索引；按原有顺序追加，不能重排现有 ID |
 | defaults | 16 个有限数值，保留旧槽位；可见槽位必须等于参数 default |
-| parameters | `{slot,key,label,min,max,step,default}`；最多 16 个，槽位不重复 |
-| parameters[].type / options | 公式也可声明 `type:"select"` 与 `{value,label}` 选项数组；值须为范围内整数，参数动画按离散值切换 |
+| parameters | `{slot,key,variable,aliases,min,max,step,default}`；最多 16 个，槽位不重复 |
+| parameters[].type / options | 公式也可声明 `type:"select"` 与 `{value,variable,aliases}` 选项数组；值须为范围内整数，参数动画按离散值切换 |
 | renderPadding | 可选0～0.5的对称渲染留白，仅标量公式可用；不改变主体的0～1坐标、轴心、选区或排列格距 |
 | outputs.scalar | 所有图案必需的标量公式描述，供混合/蒙版/排列/高度/法线使用 |
 | outputs.vector | 可选 `{library:"vector-v1"}`，图案输出模式使用矢量函数库，标量采样仍保留 |
@@ -126,3 +126,7 @@ OgeeFlowerTile 只绘制居中单体，使用body公式文件；周期复制由�
 `FlowingWater`、`WaterCaustics`、`Bonfire`、`AnimatedLightning`、`VolumeFlame`、`VolumeExplosion`、`VolumeSmoke` 使用 pipeline 与 time。体积效果使用24～96步有界采样，支持密度、湍流、光照和采样步数；爆炸按演化速度周期重启。连续流动效果不保证导出首尾相同。焦散核心改编自 pixy.js，MIT 许可随 GLSL 分发。
 
 节点 `postFx` 数组依次为模糊半径、Bloom强度、Bloom半径、Bloom阈值、锐化、色散距离、卡通阶数；默认值 `[0,0,16,0.6,0,0,0]`。组合先合成后处理；PSD 遇到启用滤镜的组合会合成为像素。`output` 内的 `normalAlgorithm`、`normalFlipX`、`normalFlipY`、`normalInvert` 和 `normalSmooth` 同时作用于法线与RGBA法线通道。旧画布缺省采用原来的 Sobel 输出。
+
+## 参数变量与别名
+
+variable 在图形内唯一，使用 GLSL 可用的 ASCII 标识符（最多80字符，允许下划线开头，拒绝关键字、gl_、双下划线及宿主保留名）。slot/key 是固定渲染绑定，不能按语言变动。aliases 为可选语言标签映射，按全局语言顺序选第一个非空值；全无匹配显示 variable。新定义必须有 variable；旧资源包的 key/label 仅在资源读取边界兼容，不改原哈希。role:feather 表示宿主羽化行为，role:edge-softness 仅标记导出轮廓时的软边提示，不改变默认值；role:image-mode 表示图片通道模式，禁止用显示名称决定逻辑。选项保留稳定 value，可提供 variable 与 aliases。具体格式和操作见[语言与参数别名](docs/12-language-and-aliases.md)。

@@ -1,3 +1,4 @@
+import {messageError} from './message-catalog.js';
 import {node} from './tree-model.js';
 
 // Curated presets use current definitions directly. No retired-ID redirects.
@@ -35,4 +36,4 @@ const SYNONYMS={CompassTick:'罗盘刻度 仪表刻度',Dots:'交错点阵',Half
 export const libraryVisible=id=>true;
 export const libraryVariants=id=>LIBRARY_PRESETS.filter(p=>p.type===id);
 export const libraryAliases=id=>[SYNONYMS[id]||'',...libraryVariants(id).map(p=>p.alias)].join(' ');
-export function libraryVariantNode(id){const p=LIBRARY_PRESETS.find(p=>p.id===id);if(!p)throw Error('不存在该图案预设');const n=node('shape',p.type);n.name=p.alias;for(const [slot,value] of Object.entries(p.params))n.params[slot]=value;return n;}
+export function libraryVariantNode(id){const p=LIBRARY_PRESETS.find(p=>p.id===id);if(!p)throw messageError("ui.patternPresetNotFound");const n=node('shape',p.type);n.name=p.alias;for(const [slot,value] of Object.entries(p.params))n.params[slot]=value;return n;}

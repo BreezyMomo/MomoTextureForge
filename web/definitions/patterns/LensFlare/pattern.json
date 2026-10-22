@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "LensFlare",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "镜头光斑",
   "category": "radial",
@@ -15,16 +15,26 @@
       "min": 0.05,
       "max": 0.6,
       "step": 0.01,
-      "default": 0.18
+      "default": 0.18,
+      "variable": "radius",
+      "aliases": {
+        "zh-CN": "半径",
+        "en": "Radius"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "光条长",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.6
+      "default": 0.6,
+      "variable": "streakLength",
+      "aliases": {
+        "zh-CN": "光条长",
+        "en": "Streak length"
+      }
     },
     {
       "slot": 2,
@@ -33,7 +43,12 @@
       "min": 0.005,
       "max": 0.1,
       "step": 0.001,
-      "default": 0.02
+      "default": 0.02,
+      "variable": "softness",
+      "aliases": {
+        "zh-CN": "柔和",
+        "en": "Softness"
+      }
     }
   ],
   "defaults": [
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "镜头光斑",
+    "en": "Lens Flare"
   }
 }

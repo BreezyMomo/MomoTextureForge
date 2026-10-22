@@ -1,3 +1,4 @@
+import {graphicAliasesField} from './graphic-name.js';
 import {validateEntry} from './graphics-library.js';
 import {decodeZIP,safePath} from './resource-zip.js';
 import {readResourcePack,encodeResourcePack} from './resource-pack.js';
@@ -15,7 +16,7 @@ export async function stageResourceFiles(files,thumbnail){
   else pending.push(bytes);
  }
  for(const bytes of pending){let pack;try{pack=await readResourcePack(bytes);pack.register();const p=pack.payload;if(p.graphicResource)validateEntry(p.graphicResource);const roots=p.schema==='momo.texture-library/v1'?p.presets.map(x=>x.root):p.root?[p.root]:[...pack.mapping.values()].map(id=>node('shape',id));
-  for(const root of roots){const asset=root.kind==='shape'?structuredClone(assetFor(root.type)):null,meta={...p.graphicResource,name:p.graphicResource?.name??root.name,category:p.graphicResource?.category??'我的图形',description:p.graphicResource?.description??'',kind:p.graphicResource?.kind??(asset?.kind??'composition')};const pic=thumbnail(root);const normalized=await encodeResourcePack({schema:PRESET_SCHEMA,name:meta.name,root:cloneNode(root),graphicResource:meta});staged.push({meta,asset,bytes:normalized,originalBytes:p.graphicResource&&roots.length===1?bytes:null,thumbnail:pic});}
+  for(const root of roots){const asset=root.kind==='shape'?structuredClone(assetFor(root.type)):null,meta={...p.graphicResource,name:p.graphicResource?.name??root.name,...graphicAliasesField(p.graphicResource?.aliases??asset?.definition.aliases),category:p.graphicResource?.category??'我的图形',description:p.graphicResource?.description??'',kind:p.graphicResource?.kind??(asset?.kind??'composition')};const pic=thumbnail(root);const normalized=await encodeResourcePack({schema:PRESET_SCHEMA,name:meta.name,root:cloneNode(root),graphicResource:meta});staged.push({meta,asset,bytes:normalized,originalBytes:p.graphicResource&&roots.length===1?bytes:null,thumbnail:pic});}
  }finally{pack?.rollback();}}
  return staged;
 }

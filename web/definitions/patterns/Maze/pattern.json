@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Maze",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "迷宫纹",
   "category": "pattern",
@@ -12,19 +12,29 @@
       "slot": 0,
       "key": "R",
       "label": "格数",
-      "min": 3.0,
-      "max": 20.0,
-      "step": 1.0,
-      "default": 7.0
+      "min": 3,
+      "max": 20,
+      "step": 1,
+      "default": 7,
+      "variable": "cellCount",
+      "aliases": {
+        "zh-CN": "格数",
+        "en": "Cell count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "通路比例",
-      "min": 0.0,
+      "min": 0,
       "max": 0.75,
       "step": 0.01,
-      "default": 0.34
+      "default": 0.34,
+      "variable": "pathRatio",
+      "aliases": {
+        "zh-CN": "通路比例",
+        "en": "Path ratio"
+      }
     },
     {
       "slot": 2,
@@ -33,7 +43,12 @@
       "min": 0.002,
       "max": 0.025,
       "step": 0.001,
-      "default": 0.006
+      "default": 0.006,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      }
     },
     {
       "slot": 3,
@@ -42,20 +57,30 @@
       "min": 0.2,
       "max": 1.2,
       "step": 0.02,
-      "default": 0.6
+      "default": 0.6,
+      "variable": "softness",
+      "aliases": {
+        "zh-CN": "柔化",
+        "en": "Softness"
+      }
     },
     {
       "slot": 4,
       "key": "D",
       "label": "边种子",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.37
+      "default": 0.37,
+      "variable": "edgeSeed",
+      "aliases": {
+        "zh-CN": "边种子",
+        "en": "Edge seed"
+      }
     }
   ],
   "defaults": [
-    7.0,
+    7,
     0.34,
     0.006,
     0.6,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "迷宫纹",
+    "en": "Maze"
   }
 }

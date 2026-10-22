@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Stripes",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "条纹",
   "category": "pattern",
@@ -15,7 +15,12 @@
       "min": 1,
       "max": 64,
       "step": 1,
-      "default": 8
+      "default": 8,
+      "variable": "stripeCount",
+      "aliases": {
+        "zh-CN": "条纹数量",
+        "en": "Stripe count"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,12 @@
       "min": 0.001,
       "max": 0.5,
       "step": 0.001,
-      "default": 0.12
+      "default": 0.12,
+      "variable": "stripeWidth",
+      "aliases": {
+        "zh-CN": "条纹宽度",
+        "en": "Stripe width"
+      }
     },
     {
       "slot": 3,
@@ -33,7 +43,13 @@
       "min": 0.001,
       "max": 0.3,
       "step": 0.001,
-      "default": 0.015
+      "default": 0.015,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
@@ -80,5 +96,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "条纹",
+    "en": "Stripes"
   }
 }

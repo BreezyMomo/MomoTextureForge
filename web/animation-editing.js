@@ -1,3 +1,4 @@
+import {messageError} from './message-catalog.js';
 import {BY_ID as CLOCK_TYPES} from './catalog.js';
 import {find,pathGet,fieldSpec,animationType,keyValue,ANIMATION_BOOLS,ANIMATION_ENUMS,LIMITS} from './tree-model.js';
 import {timeKey} from './animation-values.js';
@@ -5,16 +6,16 @@ export const roundTime=t=>Math.round(Math.max(0,Math.min(1,t))*1e6)/1e6;
 export const sameTime=(a,b)=>Math.abs(a-b)<1e-6;
 export function encodedValue(n,path,value,mode=n.tracks[path]?.mode??'absolute'){
  if(animationType(n,path)!=='number')return value;const base=pathGet(n,path);
- if(mode==='multiply'&&Math.abs(base)<1e-12)throw Error('基础值为0，不能录制乘法轨道。请将轨道作用切换为绝对值。');
+ if(mode==='multiply'&&Math.abs(base)<1e-12)throw messageError("ui.theBaseValueIsSoAMultiplyTrackCannotBeRecorded");
  return mode==='add'?value-base:mode==='multiply'?value/base:value;
 }
 export function recordValue(n,path,time,value){
- if(!fieldSpec(n,path))throw Error('此参数不支持动画');
- if(!n.tracks[path]&&Object.keys(n.tracks).length>=LIMITS.tracks)throw Error('本节点轨道数量已达上限');
+ if(!fieldSpec(n,path))throw messageError("ui.thisParameterCannotBeAnimated");
+ if(!n.tracks[path]&&Object.keys(n.tracks).length>=LIMITS.tracks)throw messageError("ui.thisNodeHasReachedTheTrackLimit");
  const type=animationType(n,path),t=roundTime(time),fresh=!n.tracks[path],track=n.tracks[path]??{mode:'absolute',ease:type==='discrete'?'hold':'linear',keys:[]};
- const v=encodedValue(n,path,value,track.mode);if(track.muted)throw Error('请先启用此轨道再录制');
- if(!n.animationEnabled)throw Error('请先启用本节点参数动画再录制');
- if(!track.keys.some(k=>sameTime(k[0],t))&&track.keys.length>=LIMITS.frames)throw Error('轨道关键帧数量已达上限');
+ const v=encodedValue(n,path,value,track.mode);if(track.muted)throw messageError("ui.enableThisTrackBeforeRecording");
+ if(!n.animationEnabled)throw messageError("ui.enableNodeParameterAnimationBeforeRecording");
+ if(!track.keys.some(k=>sameTime(k[0],t))&&track.keys.length>=LIMITS.frames)throw messageError("ui.trackKeyframeLimitReached");
  if(fresh&&t>0)track.keys.push([0,encodedValue(n,path,pathGet(n,path),track.mode)]);
  track.keys=track.keys.filter(k=>!sameTime(k[0],t));track.keys.push([t,v]);track.keys.sort((a,b)=>a[0]-b[0]);if(type!=='number')track.type=type;n.tracks[path]=track;
 }
@@ -31,22 +32,22 @@ export function snapTime(t,mode,others=[],frames=30,threshold=.008){
 }
 // Validate the whole transaction before applying any track; collisions never delete unrelated keys.
 export function editKeys(root,edits){
- const groups=new Map();for(const e of edits){const n=find(root,e.id)?.node,track=n?.tracks[e.path];if(!track)throw Error('轨道已不存在');const key=e.id+'|'+e.path;if(!groups.has(key))groups.set(key,{n,path:e.path,track,next:structuredClone(track),edits:[]});groups.get(key).edits.push(e);}
+ const groups=new Map();for(const e of edits){const n=find(root,e.id)?.node,track=n?.tracks[e.path];if(!track)throw messageError("ui.trackNoLongerExists");const key=e.id+'|'+e.path;if(!groups.has(key))groups.set(key,{n,path:e.path,track,next:structuredClone(track),edits:[]});groups.get(key).edits.push(e);}
  const result=[];
  for(const g of groups.values()){
   const removed=g.edits.filter(e=>e.from!==undefined).map(e=>e.from);
   g.next.keys=g.track.keys.filter(k=>!removed.some(t=>sameTime(t,k[0])));
   if(g.next.segments)for(const t of removed)delete g.next.segments[timeKey(t)];
-  for(const e of g.edits){if(e.remove)continue;const old=g.track.keys.find(k=>sameTime(k[0],e.from)),t=roundTime(e.to);if(!Number.isFinite(e.to)||e.to<0||e.to>1)throw Error('关键帧不能移出0～1范围');
-   if(g.next.keys.some(k=>sameTime(k[0],t)))throw Error('目标时间已有关键帧，请移到空位；本次操作未改变任何关键帧');
-   const value=e.value!==undefined?e.value:old?.[1];if(value===undefined)throw Error('关键帧已不存在');
+  for(const e of g.edits){if(e.remove)continue;const old=g.track.keys.find(k=>sameTime(k[0],e.from)),t=roundTime(e.to);if(!Number.isFinite(e.to)||e.to<0||e.to>1)throw messageError("ui.keyframesMustStayWithin");
+   if(g.next.keys.some(k=>sameTime(k[0],t)))throw messageError("ui.aKeyframeAlreadyExistsAtThatTimeMoveToAnEmpty");
+   const value=e.value!==undefined?e.value:old?.[1];if(value===undefined)throw messageError("ui.keyframeNoLongerExists");
    g.next.keys.push([t,value]);const segment=e.segment??g.track.segments?.[timeKey(e.from)];if(segment){g.next.segments??={};g.next.segments[timeKey(t)]=structuredClone(segment);}result.push({id:e.id,path:e.path,time:t});
   }
-  if(g.next.keys.length>LIMITS.frames)throw Error('轨道关键帧数量已达上限');g.next.keys.sort((a,b)=>a[0]-b[0]);
+  if(g.next.keys.length>LIMITS.frames)throw messageError("ui.trackKeyframeLimitReached");g.next.keys.sort((a,b)=>a[0]-b[0]);
  }
  for(const g of groups.values()){if(g.next.keys.length)g.n.tracks[g.path]=g.next;else delete g.n.tracks[g.path];}return result;
 }
-export function convertTrack(n,path,mode){const track=n.tracks[path];if(!track)return;if(animationType(n,path)!=='number'&&mode!=='absolute')throw Error('颜色和选项轨道只支持绝对值');
+export function convertTrack(n,path,mode){const track=n.tracks[path];if(!track)return;if(animationType(n,path)!=='number'&&mode!=='absolute')throw messageError("ui.colorAndOptionTracksSupportAbsoluteModeOnly");
  const base=pathGet(n,path),oldMode=track.mode,decode=v=>oldMode==='add'?base+v:oldMode==='multiply'?base*v:v;
  const values=track.keys.map(([t,v])=>[t,encodedValue(n,path,decode(v),mode)]);
  const factor=(oldMode==='multiply'?base:1)/(mode==='multiply'?base:1);if(track.segments)for(const s of Object.values(track.segments))for(const k of ['in','out'])if(s[k]!==undefined)s[k]*=factor;

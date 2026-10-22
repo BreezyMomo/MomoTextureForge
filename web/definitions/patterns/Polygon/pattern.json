@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Polygon",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "多边形",
   "category": "shape",
@@ -15,7 +15,12 @@
       "min": 3,
       "max": 32,
       "step": 1,
-      "default": 6
+      "default": 6,
+      "variable": "sideCount",
+      "aliases": {
+        "zh-CN": "边数",
+        "en": "Side count"
+      }
     },
     {
       "slot": 0,
@@ -24,7 +29,12 @@
       "min": 0.02,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.62
+      "default": 0.62,
+      "variable": "circumradius",
+      "aliases": {
+        "zh-CN": "外接半径",
+        "en": "Circumradius"
+      }
     },
     {
       "slot": 5,
@@ -33,7 +43,12 @@
       "min": -180,
       "max": 180,
       "step": 1,
-      "default": 0
+      "default": 0,
+      "variable": "rotationAngle",
+      "aliases": {
+        "zh-CN": "旋转角度",
+        "en": "Rotation angle"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,13 @@
       "min": 0.001,
       "max": 0.3,
       "step": 0.001,
-      "default": 0.015
+      "default": 0.015,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
@@ -78,5 +99,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "多边形",
+    "en": "Polygon"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "DottedWave",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "波浪点阵",
   "category": "pattern",
@@ -15,7 +15,12 @@
       "min": 1,
       "max": 64,
       "step": 1,
-      "default": 8
+      "default": 8,
+      "variable": "dotFrequency",
+      "aliases": {
+        "zh-CN": "点阵频率",
+        "en": "Dot frequency"
+      }
     },
     {
       "slot": 0,
@@ -24,7 +29,12 @@
       "min": 0.02,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.62
+      "default": 0.62,
+      "variable": "pointRadius",
+      "aliases": {
+        "zh-CN": "点半径",
+        "en": "Point radius"
+      }
     },
     {
       "slot": 5,
@@ -33,7 +43,12 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.25
+      "default": 0.25,
+      "variable": "waveAmplitude",
+      "aliases": {
+        "zh-CN": "波浪摆幅",
+        "en": "Wave amplitude"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,13 @@
       "min": 0.001,
       "max": 0.3,
       "step": 0.001,
-      "default": 0.015
+      "default": 0.015,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
@@ -77,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "波浪点阵",
+    "en": "Dotted Wave"
   }
 }

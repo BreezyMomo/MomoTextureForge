@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Truchet",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "特鲁谢瓷砖",
   "category": "pattern",
@@ -15,7 +15,12 @@
       "min": 1,
       "max": 64,
       "step": 1,
-      "default": 8
+      "default": 8,
+      "variable": "tileCount",
+      "aliases": {
+        "zh-CN": "瓷砖数量",
+        "en": "Tile count"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,12 @@
       "min": 0.001,
       "max": 0.5,
       "step": 0.001,
-      "default": 0.12
+      "default": 0.12,
+      "variable": "arcWidth",
+      "aliases": {
+        "zh-CN": "弧线宽",
+        "en": "Arc width"
+      }
     },
     {
       "slot": 6,
@@ -33,7 +43,12 @@
       "min": 1,
       "max": 999,
       "step": 1,
-      "default": 1
+      "default": 1,
+      "variable": "randomSeed",
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,13 @@
       "min": 0.001,
       "max": 0.3,
       "step": 0.001,
-      "default": 0.015
+      "default": 0.015,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
@@ -77,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "特鲁谢瓷砖",
+    "en": "Truchet"
   }
 }

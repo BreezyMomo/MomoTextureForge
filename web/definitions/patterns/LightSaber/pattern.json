@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "LightSaber",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "光刃",
   "category": "ribbon",
@@ -15,7 +15,12 @@
       "min": 0.01,
       "max": 0.2,
       "step": 0.005,
-      "default": 0.045
+      "default": 0.045,
+      "variable": "bladeWidth",
+      "aliases": {
+        "zh-CN": "刃宽",
+        "en": "Blade width"
+      }
     },
     {
       "slot": 1,
@@ -24,16 +29,26 @@
       "min": 0.05,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.22
+      "default": 0.22,
+      "variable": "glow",
+      "aliases": {
+        "zh-CN": "辉光",
+        "en": "Glow"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "端部收束",
-      "min": 0.0,
+      "min": 0,
       "max": 0.5,
       "step": 0.01,
-      "default": 0.12
+      "default": 0.12,
+      "variable": "endTaper",
+      "aliases": {
+        "zh-CN": "端部收束",
+        "en": "End taper"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,12 @@
       "min": 0.5,
       "max": 2.5,
       "step": 0.02,
-      "default": 1.2
+      "default": 1.2,
+      "variable": "brightness",
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     }
   ],
   "defaults": [
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "光刃",
+    "en": "Light Saber"
   }
 }

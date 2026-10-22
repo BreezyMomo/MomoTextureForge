@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "WaveformBar",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "音频频谱条",
   "category": "digital",
@@ -12,50 +12,75 @@
       "slot": 0,
       "key": "R",
       "label": "条数",
-      "min": 8.0,
-      "max": 48.0,
-      "step": 1.0,
-      "default": 22.0
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "default": 22,
+      "variable": "stripCount",
+      "aliases": {
+        "zh-CN": "条数",
+        "en": "Strip count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "最大高度",
       "min": 0.1,
-      "max": 1.0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.82
+      "default": 0.82,
+      "variable": "maximumHeight",
+      "aliases": {
+        "zh-CN": "最大高度",
+        "en": "Maximum height"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "跳动速度",
       "min": 0.2,
-      "max": 4.0,
+      "max": 4,
       "step": 0.05,
-      "default": 1.5
+      "default": 1.5,
+      "variable": "bounceSpeed",
+      "aliases": {
+        "zh-CN": "跳动速度",
+        "en": "Bounce speed"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "条宽比",
       "min": 0.2,
-      "max": 1.0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.68
+      "default": 0.68,
+      "variable": "stripWidthRatio",
+      "aliases": {
+        "zh-CN": "条宽比",
+        "en": "Strip width ratio"
+      }
     },
     {
       "slot": 4,
       "key": "D",
       "label": "峰值抖动",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.42
+      "default": 0.42,
+      "variable": "peakJitter",
+      "aliases": {
+        "zh-CN": "峰值抖动",
+        "en": "Peak jitter"
+      }
     }
   ],
   "defaults": [
-    22.0,
+    22,
     0.82,
     1.5,
     0.68,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "音频频谱条",
+    "en": "Waveform Bar"
   }
 }

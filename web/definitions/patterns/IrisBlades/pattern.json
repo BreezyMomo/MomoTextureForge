@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "IrisBlades",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "光阑叶片",
   "category": "radial",
@@ -15,7 +15,12 @@
       "min": 0.02,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.62
+      "default": 0.62,
+      "variable": "apertureRadius",
+      "aliases": {
+        "zh-CN": "光阑半径",
+        "en": "Aperture radius"
+      }
     },
     {
       "slot": 2,
@@ -24,7 +29,12 @@
       "min": 1,
       "max": 64,
       "step": 1,
-      "default": 8
+      "default": 8,
+      "variable": "bladeCount",
+      "aliases": {
+        "zh-CN": "叶片数量",
+        "en": "Blade count"
+      }
     },
     {
       "slot": 1,
@@ -33,7 +43,12 @@
       "min": 0.001,
       "max": 0.5,
       "step": 0.001,
-      "default": 0.025
+      "default": 0.025,
+      "variable": "bladeVariation",
+      "aliases": {
+        "zh-CN": "叶片起伏",
+        "en": "Blade variation"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,13 @@
       "min": 0.001,
       "max": 0.3,
       "step": 0.001,
-      "default": 0.015
+      "default": 0.015,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
@@ -77,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "光阑叶片",
+    "en": "Iris Blades"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "BlueNoise",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "抖动点阵",
   "category": "noise",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "缩放",
-      "min": 2.0,
-      "max": 60.0,
-      "step": 1.0,
-      "default": 14.0
+      "min": 2,
+      "max": 60,
+      "step": 1,
+      "default": 14,
+      "variable": "scale",
+      "aliases": {
+        "zh-CN": "缩放",
+        "en": "Scale"
+      }
     },
     {
       "slot": 1,
@@ -24,20 +29,30 @@
       "min": 0.1,
       "max": 1.2,
       "step": 0.01,
-      "default": 0.7
+      "default": 0.7,
+      "variable": "pointSize",
+      "aliases": {
+        "zh-CN": "点大小",
+        "en": "Point size"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "抖动",
       "min": 0.05,
-      "max": 1.0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.9
+      "default": 0.9,
+      "variable": "jitter",
+      "aliases": {
+        "zh-CN": "抖动",
+        "en": "Jitter"
+      }
     }
   ],
   "defaults": [
-    14.0,
+    14,
     0.7,
     0.9,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "抖动点阵",
+    "en": "Blue Noise"
   }
 }

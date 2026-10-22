@@ -1,3 +1,4 @@
+import {messageError,serializeMessageError,restoreMessageError} from './message-catalog.js';
 import {BY_ID} from './catalog.js';
 import source from './export-worker-source.js';
 // One worker per export: terminating it also interrupts synchronous contour fitting.
@@ -5,7 +6,7 @@ export function runExportWorker(kind,project,options,{render,stage=()=>{},signal
  return new Promise((resolve,reject)=>{
   let worker,url,settled=false;
   const finish=(error,result)=>{if(settled)return;settled=true;worker?.terminate();if(url)URL.revokeObjectURL(url);signal?.removeEventListener('abort',abort);error?reject(error):resolve(result);};
-  const abort=()=>finish(Error('导出已取消'));
+  const abort=()=>finish(messageError("editor.exportCanceled"));
   if(signal?.aborted){abort();return;}
   try{
    if(source)url=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));
@@ -20,12 +21,12 @@ export function runExportWorker(kind,project,options,{render,stage=()=>{},signal
     if(data.type==='ready'){try{worker.postMessage({type:'start',kind,project,options,definitions:kind.startsWith('encode-')?[]:[...BY_ID]});}catch(error){finish(error);}return;}
     if(data.type==='stage'){stage(data.message);return;}
     if(data.type==='done'){finish(null,data.result);return;}
-    if(data.type==='error'){finish(Error(data.message));return;}
+    if(data.type==='error'){finish(restoreMessageError(data));return;}
     if(data.type==='render')try{
-     stage('正在渲染图层…');await new Promise(r=>setTimeout(r,0));if(settled)return;
+     stage("export.renderingLayers");await new Promise(r=>setTimeout(r,0));if(settled)return;
      const pixels=await render(data.project,data.w,data.h,data.t);
      if(!settled)worker.postMessage({type:'pixels',pixels},[pixels.buffer]);
-    }catch(error){if(!settled)worker.postMessage({type:'pixels',error:error.message});}
+    }catch(error){if(!settled)worker.postMessage({type:'pixels',error:serializeMessageError(error)});}
    };
   }catch(error){finish(error);}
  });

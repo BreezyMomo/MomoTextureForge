@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "PowderNoise",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "粉末噪点",
   "category": "noise",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "云雾尺度",
-      "min": 1.0,
-      "max": 18.0,
+      "min": 1,
+      "max": 18,
       "step": 0.5,
-      "default": 4.0
+      "default": 4,
+      "variable": "cloudScale",
+      "aliases": {
+        "zh-CN": "云雾尺度",
+        "en": "Cloud scale"
+      }
     },
     {
       "slot": 1,
@@ -24,31 +29,46 @@
       "min": 0.02,
       "max": 0.6,
       "step": 0.01,
-      "default": 0.16
+      "default": 0.16,
+      "variable": "powderAmount",
+      "aliases": {
+        "zh-CN": "粉末量",
+        "en": "Powder amount"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "颗粒密度",
-      "min": 40.0,
-      "max": 420.0,
-      "step": 10.0,
-      "default": 160.0
+      "min": 40,
+      "max": 420,
+      "step": 10,
+      "default": 160,
+      "variable": "grainDensity",
+      "aliases": {
+        "zh-CN": "颗粒密度",
+        "en": "Grain density"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "云雾亮度",
-      "min": 0.0,
+      "min": 0,
       "max": 1.2,
       "step": 0.02,
-      "default": 0.45
+      "default": 0.45,
+      "variable": "cloudBrightness",
+      "aliases": {
+        "zh-CN": "云雾亮度",
+        "en": "Cloud brightness"
+      }
     }
   ],
   "defaults": [
-    4.0,
+    4,
     0.16,
-    160.0,
+    160,
     0.45,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "粉末噪点",
+    "en": "Powder Noise"
   }
 }

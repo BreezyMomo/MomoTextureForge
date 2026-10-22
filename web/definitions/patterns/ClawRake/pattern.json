@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "ClawRake",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "爪痕",
   "category": "ribbon",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "抓痕数",
-      "min": 1.0,
-      "max": 7.0,
-      "step": 1.0,
-      "default": 4.0
+      "min": 1,
+      "max": 7,
+      "step": 1,
+      "default": 4,
+      "variable": "clawMarkCount",
+      "aliases": {
+        "zh-CN": "抓痕数",
+        "en": "Claw mark count"
+      }
     },
     {
       "slot": 1,
@@ -24,29 +29,44 @@
       "min": 0.005,
       "max": 0.12,
       "step": 0.002,
-      "default": 0.035
+      "default": 0.035,
+      "variable": "markWidth",
+      "aliases": {
+        "zh-CN": "痕宽",
+        "en": "Mark width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "弯曲",
-      "min": 0.0,
+      "min": 0,
       "max": 0.8,
       "step": 0.01,
-      "default": 0.26
+      "default": 0.26,
+      "variable": "bend",
+      "aliases": {
+        "zh-CN": "弯曲",
+        "en": "Bend"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "尾部收尖",
-      "min": 0.0,
-      "max": 2.0,
+      "min": 0,
+      "max": 2,
       "step": 0.05,
-      "default": 0.9
+      "default": 0.9,
+      "variable": "tailTaper",
+      "aliases": {
+        "zh-CN": "尾部收尖",
+        "en": "Tail taper"
+      }
     }
   ],
   "defaults": [
-    4.0,
+    4,
     0.035,
     0.26,
     0.9,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "爪痕",
+    "en": "Claw Rake"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "DataStream",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "数据流",
   "category": "digital",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "行数",
-      "min": 4.0,
-      "max": 80.0,
-      "step": 1.0,
-      "default": 22.0
+      "min": 4,
+      "max": 80,
+      "step": 1,
+      "default": 22,
+      "variable": "rows",
+      "aliases": {
+        "zh-CN": "行数",
+        "en": "Rows"
+      }
     },
     {
       "slot": 1,
@@ -24,31 +29,46 @@
       "min": 0.02,
       "max": 0.8,
       "step": 0.005,
-      "default": 0.25
+      "default": 0.25,
+      "variable": "segmentLength",
+      "aliases": {
+        "zh-CN": "段长",
+        "en": "Segment length"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "密度",
-      "min": 2.0,
-      "max": 60.0,
-      "step": 1.0,
-      "default": 14.0
+      "min": 2,
+      "max": 60,
+      "step": 1,
+      "default": 14,
+      "variable": "density",
+      "aliases": {
+        "zh-CN": "密度",
+        "en": "Density"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "速度",
-      "min": 0.0,
-      "max": 3.0,
+      "min": 0,
+      "max": 3,
       "step": 0.05,
-      "default": 0.6
+      "default": 0.6,
+      "variable": "speed",
+      "aliases": {
+        "zh-CN": "速度",
+        "en": "Speed"
+      }
     }
   ],
   "defaults": [
-    22.0,
+    22,
     0.25,
-    14.0,
+    14,
     0.6,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "数据流",
+    "en": "Data Stream"
   }
 }

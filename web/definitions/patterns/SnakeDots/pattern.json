@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "SnakeDots",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "蛇形点阵",
   "category": "pattern",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "行数",
-      "min": 3.0,
-      "max": 30.0,
-      "step": 1.0,
-      "default": 12.0
+      "min": 3,
+      "max": 30,
+      "step": 1,
+      "default": 12,
+      "variable": "rows",
+      "aliases": {
+        "zh-CN": "行数",
+        "en": "Rows"
+      }
     },
     {
       "slot": 1,
@@ -24,32 +29,47 @@
       "min": 0.03,
       "max": 0.4,
       "step": 0.005,
-      "default": 0.2
+      "default": 0.2,
+      "variable": "pointSize",
+      "aliases": {
+        "zh-CN": "点大小",
+        "en": "Point size"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "蛇形幅度",
-      "min": 0.0,
-      "max": 3.0,
+      "min": 0,
+      "max": 3,
       "step": 0.05,
-      "default": 1.2
+      "default": 1.2,
+      "variable": "serpentineAmplitude",
+      "aliases": {
+        "zh-CN": "蛇形幅度",
+        "en": "Serpentine amplitude"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "列数",
-      "min": 3.0,
-      "max": 30.0,
-      "step": 1.0,
-      "default": 12.0
+      "min": 3,
+      "max": 30,
+      "step": 1,
+      "default": 12,
+      "variable": "columns",
+      "aliases": {
+        "zh-CN": "列数",
+        "en": "Columns"
+      }
     }
   ],
   "defaults": [
-    12.0,
+    12,
     0.2,
     1.2,
-    12.0,
+    12,
     0,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "蛇形点阵",
+    "en": "Snake Dots"
   }
 }

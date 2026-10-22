@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RingPulse",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "脉冲环",
   "category": "radial",
@@ -13,27 +13,42 @@
       "key": "R",
       "label": "环数",
       "min": 0.5,
-      "max": 12.0,
+      "max": 12,
       "step": 0.5,
-      "default": 4.0
+      "default": 4,
+      "variable": "ringCount",
+      "aliases": {
+        "zh-CN": "环数",
+        "en": "Ring count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "速度",
-      "min": -3.0,
-      "max": 3.0,
+      "min": -3,
+      "max": 3,
       "step": 0.05,
-      "default": 0.6
+      "default": 0.6,
+      "variable": "speed",
+      "aliases": {
+        "zh-CN": "速度",
+        "en": "Speed"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "锐度",
       "min": 0.3,
-      "max": 6.0,
+      "max": 6,
       "step": 0.1,
-      "default": 2.0
+      "default": 2,
+      "variable": "sharpness",
+      "aliases": {
+        "zh-CN": "锐度",
+        "en": "Sharpness"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,12 @@
       "min": 0.2,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.9
+      "default": 0.9,
+      "variable": "falloff",
+      "aliases": {
+        "zh-CN": "衰减",
+        "en": "Falloff"
+      }
     },
     {
       "slot": 4,
@@ -51,13 +71,39 @@
       "min": 0,
       "max": 1,
       "step": 1,
-      "default": 0
+      "default": 0,
+      "variable": "falloffMode",
+      "aliases": {
+        "zh-CN": "衰减模式（平滑/指数）",
+        "en": "Falloff mode"
+      },
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "variable": "value0",
+          "label": "平滑",
+          "aliases": {
+            "zh-CN": "平滑",
+            "en": "Smooth"
+          }
+        },
+        {
+          "value": 1,
+          "variable": "value1",
+          "label": "指数",
+          "aliases": {
+            "zh-CN": "指数",
+            "en": "Exponential"
+          }
+        }
+      ]
     }
   ],
   "defaults": [
-    4.0,
+    4,
     0.6,
-    2.0,
+    2,
     0.9,
     0,
     0,
@@ -87,5 +133,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "脉冲环",
+    "en": "Pulse ring"
   }
 }

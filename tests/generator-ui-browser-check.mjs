@@ -11,6 +11,11 @@ try{
  await page.getByRole('button',{name:'编辑 蓬松烟团',exact:true}).click();
  let dialog=page.locator('dialog.graphic-editor-dialog');await dialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
  assert.equal(await dialog.getByRole('slider').count(),26);
+ const aliases=dialog.locator('.parameter-aliases').first();await aliases.locator('summary').click();
+ assert.equal(await aliases.getByRole('button',{name:'＋ 添加语言 / Add language',exact:true}).isDisabled(),true);
+ assert.deepEqual(await aliases.getByRole('combobox').first().locator('option').evaluateAll(list=>list.map(o=>o.value)),['zh-CN','en']);
+ await aliases.getByRole('textbox',{name:'参数别名 / Parameter alias',exact:true}).last().fill('Seed alias');
+ await dialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
  const before=await dialog.locator('canvas').evaluate(canvas=>canvas.toDataURL());
  await dialog.getByRole('slider',{name:'扭曲强度滑动条',exact:true}).press('Home');
  await page.waitForFunction(before=>document.querySelector('dialog.graphic-editor-dialog canvas')?.toDataURL()!==before,before);

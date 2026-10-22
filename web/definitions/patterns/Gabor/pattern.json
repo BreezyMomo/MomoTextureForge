@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Gabor",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "多方向波纹",
   "category": "noise",
@@ -12,34 +12,49 @@
       "slot": 0,
       "key": "R",
       "label": "缩放",
-      "min": 1.0,
-      "max": 20.0,
+      "min": 1,
+      "max": 20,
       "step": 0.5,
-      "default": 5.0
+      "default": 5,
+      "variable": "scale",
+      "aliases": {
+        "zh-CN": "缩放",
+        "en": "Scale"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "频率",
       "min": 0.5,
-      "max": 3.0,
+      "max": 3,
       "step": 0.05,
-      "default": 1.0
+      "default": 1,
+      "variable": "frequency",
+      "aliases": {
+        "zh-CN": "频率",
+        "en": "Frequency"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "方向数",
-      "min": 1.0,
-      "max": 6.0,
-      "step": 1.0,
-      "default": 4.0
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "variable": "directionCount",
+      "aliases": {
+        "zh-CN": "方向数",
+        "en": "Direction count"
+      }
     }
   ],
   "defaults": [
-    5.0,
-    1.0,
-    4.0,
+    5,
+    1,
+    4,
     0,
     0,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "多方向波纹",
+    "en": "Gabor"
   }
 }

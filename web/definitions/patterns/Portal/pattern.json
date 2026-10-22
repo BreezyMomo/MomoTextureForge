@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Portal",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "传送门",
   "category": "energy",
@@ -15,25 +15,40 @@
       "min": 0.2,
       "max": 1.1,
       "step": 0.01,
-      "default": 0.7
+      "default": 0.7,
+      "variable": "radius",
+      "aliases": {
+        "zh-CN": "半径",
+        "en": "Radius"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "漩涡强度",
-      "min": 0.0,
-      "max": 12.0,
+      "min": 0,
+      "max": 12,
       "step": 0.1,
-      "default": 4.0
+      "default": 4,
+      "variable": "vortexStrength",
+      "aliases": {
+        "zh-CN": "漩涡强度",
+        "en": "Vortex strength"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "速度",
-      "min": -3.0,
-      "max": 3.0,
+      "min": -3,
+      "max": 3,
       "step": 0.05,
-      "default": 0.8
+      "default": 0.8,
+      "variable": "speed",
+      "aliases": {
+        "zh-CN": "速度",
+        "en": "Speed"
+      }
     },
     {
       "slot": 3,
@@ -42,12 +57,17 @@
       "min": 0.01,
       "max": 0.3,
       "step": 0.005,
-      "default": 0.06
+      "default": 0.06,
+      "variable": "ringThickness",
+      "aliases": {
+        "zh-CN": "环厚",
+        "en": "Ring thickness"
+      }
     }
   ],
   "defaults": [
     0.7,
-    4.0,
+    4,
     0.8,
     0.06,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "传送门",
+    "en": "Portal"
   }
 }

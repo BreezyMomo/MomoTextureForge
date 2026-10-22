@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "IslamicPattern",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "伊斯兰几何",
   "category": "pattern",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 2.0,
-      "max": 24.0,
-      "step": 1.0,
-      "default": 8.0
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 8,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
@@ -24,11 +29,16 @@
       "min": 0.004,
       "max": 0.15,
       "step": 0.002,
-      "default": 0.022
+      "default": 0.022,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      }
     }
   ],
   "defaults": [
-    8.0,
+    8,
     0.022,
     0,
     0,
@@ -60,5 +70,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "伊斯兰几何",
+    "en": "Islamic Pattern"
   }
 }

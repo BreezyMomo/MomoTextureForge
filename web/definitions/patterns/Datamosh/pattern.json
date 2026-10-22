@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Datamosh",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "数据错流",
   "category": "digital",
@@ -12,41 +12,61 @@
       "slot": 0,
       "key": "R",
       "label": "行数",
-      "min": 6.0,
-      "max": 60.0,
-      "step": 1.0,
-      "default": 20.0
+      "min": 6,
+      "max": 60,
+      "step": 1,
+      "default": 20,
+      "variable": "rows",
+      "aliases": {
+        "zh-CN": "行数",
+        "en": "Rows"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "撕裂量",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.45
+      "default": 0.45,
+      "variable": "tearAmount",
+      "aliases": {
+        "zh-CN": "撕裂量",
+        "en": "Tear amount"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "速度",
-      "min": 0.0,
-      "max": 4.0,
+      "min": 0,
+      "max": 4,
       "step": 0.05,
-      "default": 1.2
+      "default": 1.2,
+      "variable": "speed",
+      "aliases": {
+        "zh-CN": "速度",
+        "en": "Speed"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "块离散",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.4
+      "default": 0.4,
+      "variable": "blockDispersion",
+      "aliases": {
+        "zh-CN": "块离散",
+        "en": "Block dispersion"
+      }
     }
   ],
   "defaults": [
-    20.0,
+    20,
     0.45,
     1.2,
     0.4,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "数据错流",
+    "en": "Datamosh"
   }
 }

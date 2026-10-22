@@ -162,3 +162,22 @@ node tools/capture-docs.mjs colors
 [图形定义规范](../PATTERN_DEFINITIONS.md) · [本地图形库](../LOCAL_GRAPHICS_LIBRARY.md) · [资源包格式](../RESOURCE-PACK.md) · [远程图库技术说明](../REMOTE_LIBRARIES.md) · [AI CLI](../AI_AUTHORING_CLI.md)
 
 PSD 编码器许可见 [PSD-LICENSES.txt](../web/vendor/PSD-LICENSES.txt)，需要时运行 `npm run build:psd-vendor` 重建。
+
+## 参数变量与语言
+
+`web/parameter-metadata.js` 校验变量和别名；`web/language-config.json` 定义编译时语言编码、原生名称和默认语言，`web/language.js` 维护独立语言偏好与固定回退顺序；`web/ui-language.js` 只翻译应用声明的界面文案，不观察或重写任意用户内容。内置定义使用 `variable` 和 `aliases`，公式 ABI、slot、key 与动画路径保持原样。行为使用 `role`，不能再通过 label 判断羽化或图片模式。旧资源包仅在校验/显示边界兼容 label-only 定义，不能为迁移元数据直接改写旧资产，以免破坏原哈希。
+
+参数显示通过 `parameterLabel`，不要给已解析的别名再套界面字典，否则会破坏作者设置的回退语言。别名修改参与资源哈希，语言切换不参与。固定界面文案采用稳定语义 key，中英文分别放在 `web/locales/zh-CN.json`、`web/locales/en.json`，由 `web/locales/catalogs.js` 注册。调用 `uiText('menu.file')`，动态句子用 `uiFormat(key, ...values)` 插值，插入的用户名称保持原文。HTML 使用显式 `data-i18n` 及属性绑定，不按中文内容反查。`messageError(key, ...values)` 携带错误身份，界面用 `uiError` 显示；Worker 通过序列化保留身份和插值数据。修改措辞只修改对应语言文件，不能重命名稳定 key。构建时 `tools/i18n-audit.mjs` 校验语言文件同键、占位符一致和引用完整。内置图形通过 `graphicLabel` 显示英文，元数据保持原样；自定义资源名称不经过界面字典。下拉框翻译显示文本，不翻译选项值；不要用中文标题或翻译结果作逻辑判断与DOM选择器。界面支持简体中文与英文；全局入口和别名编辑器只允许选择该配置提供的语言，不能手输编码、增加类型或重排语言。导入资源中的未启用语言别名保留在资源内，但不作为当前构建的回退语言。英文帮助内容在 `web/locales/help-en.js`，仓库文档仍以中文为主。
+
+验证：`node --test tests/parameter-language.test.mjs`、`node tests/parameter-language-browser-check.mjs`；构建后再执行 `node tests/parameter-language-browser-check.mjs --built`，检查固定语言选项、非法选择拒绝、持久化、回退、项目/撤销/渲染不变和编辑器元数据。
+
+界面覆盖验证：`node tools/i18n-audit.mjs` 检查动态文案、静态标记、分类与词库；`node --test tests/ui-language.test.mjs` 检查词库和插值；`node tests/ui-language-browser-check.mjs` 检查实际面板、资源编辑、语言切换、示例及1600/1100/768宽度的顶栏。构建后加 `--built` 检查静态版。不要对整棵用户DOM做自动替换：启动静态标记须在用户内容挂载前注册，动态控件在其显示边界显式调用翻译。
+
+
+### 图形资源名称
+
+`web/graphic-name.js` 校验名称别名并提供纯数据解析与全语言搜索，`graphic-label.js` 按当前语言顺序显示，`graphic-name-editor.js` 复用固定语言选择控件。内置与导入定义的顶层 `aliases` 表示图形名称，参数各自的 `aliases` 仍表示参数名称；默认 `name` 必须保留。界面词库中不再存储 graphics.<id>.name。
+
+名称元数据覆盖公式/生成器创作 JSON、图形定义、graphicResource、图形列表与远程目录；构造派生图片/新公式时不得继承 Circle 模板的名称别名。未提供的字段不补写，已导入资源不因语言切换被改写。版本更新必须保留 aliases；名称/别名编辑属于内容修改，语言切换只改变视图。创建画布节点时取当前显示名称，之后按节点自己的 name 保存。
+
+验证：`node --test tests/graphic-name.test.mjs`，`node tests/graphic-name-browser-check.mjs` 及构建后的 `--built`。浏览器检查覆盖名称编辑、JSON/ZIP、跨语言搜索、列表持久化、节点名隔离与真实远程订阅。

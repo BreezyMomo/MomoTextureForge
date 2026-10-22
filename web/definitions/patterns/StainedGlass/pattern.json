@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "StainedGlass",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "彩窗铅条",
   "category": "pattern",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "密度",
-      "min": 2.0,
-      "max": 16.0,
+      "min": 2,
+      "max": 16,
       "step": 0.5,
-      "default": 6.0
+      "default": 6,
+      "variable": "density",
+      "aliases": {
+        "zh-CN": "密度",
+        "en": "Density"
+      }
     },
     {
       "slot": 1,
@@ -24,32 +29,47 @@
       "min": 0.01,
       "max": 0.25,
       "step": 0.005,
-      "default": 0.06
+      "default": 0.06,
+      "variable": "leadWidth",
+      "aliases": {
+        "zh-CN": "铅条宽",
+        "en": "Lead width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "纹理强度",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "textureStrength",
+      "aliases": {
+        "zh-CN": "纹理强度",
+        "en": "Texture strength"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "边柔化",
       "min": 0.2,
-      "max": 3.0,
+      "max": 3,
       "step": 0.05,
-      "default": 1.0
+      "default": 1,
+      "variable": "edgeSoftness",
+      "aliases": {
+        "zh-CN": "边柔化",
+        "en": "Edge softness"
+      }
     }
   ],
   "defaults": [
-    6.0,
+    6,
     0.06,
     0.5,
-    1.0,
+    1,
     0,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "彩窗铅条",
+    "en": "Stained Glass"
   }
 }

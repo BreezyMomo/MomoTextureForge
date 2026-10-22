@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "LayeredFog",
-  "revision": 2,
+  "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "层叠雾气",
   "category": "vfx",
@@ -16,7 +16,11 @@
       "min": 0,
       "max": 99999,
       "step": 1,
-      "default": 7872
+      "default": 7872,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      }
     },
     {
       "slot": 1,
@@ -26,7 +30,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "密度",
+        "en": "Density"
+      }
     },
     {
       "slot": 2,
@@ -36,7 +44,11 @@
       "min": 0.5,
       "max": 15,
       "step": 0.1,
-      "default": 5
+      "default": 5,
+      "aliases": {
+        "zh-CN": "尺度",
+        "en": "Scale"
+      }
     },
     {
       "slot": 3,
@@ -46,7 +58,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.4
+      "default": 0.4,
+      "aliases": {
+        "zh-CN": "湍流",
+        "en": "Turbulence"
+      }
     },
     {
       "slot": 4,
@@ -56,7 +72,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.3
+      "default": 0.3,
+      "aliases": {
+        "zh-CN": "立体深度",
+        "en": "Volume depth"
+      }
     },
     {
       "slot": 5,
@@ -66,7 +86,11 @@
       "min": 1,
       "max": 8,
       "step": 1,
-      "default": 5
+      "default": 5,
+      "aliases": {
+        "zh-CN": "噪声细节",
+        "en": "Noise detail"
+      }
     },
     {
       "slot": 6,
@@ -76,7 +100,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.15
+      "default": 0.15,
+      "aliases": {
+        "zh-CN": "后期扭曲",
+        "en": "Post warp"
+      }
     },
     {
       "slot": 7,
@@ -86,7 +114,11 @@
       "min": 0.5,
       "max": 12,
       "step": 0.1,
-      "default": 5
+      "default": 5,
+      "aliases": {
+        "zh-CN": "后期扭曲尺度",
+        "en": "Post warp scale"
+      }
     },
     {
       "slot": 8,
@@ -96,7 +128,11 @@
       "min": 1,
       "max": 8,
       "step": 1,
-      "default": 5
+      "default": 5,
+      "aliases": {
+        "zh-CN": "后期扭曲细节",
+        "en": "Post warp detail"
+      }
     },
     {
       "slot": 9,
@@ -106,7 +142,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.55
+      "default": 0.55,
+      "aliases": {
+        "zh-CN": "柔和度",
+        "en": "Softness"
+      }
     },
     {
       "slot": 10,
@@ -116,7 +156,11 @@
       "min": 0.3,
       "max": 3,
       "step": 0.01,
-      "default": 1.5
+      "default": 1.5,
+      "aliases": {
+        "zh-CN": "对比度",
+        "en": "Contrast"
+      }
     },
     {
       "slot": 11,
@@ -126,7 +170,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "边缘破碎",
+        "en": "Edge breakup"
+      }
     },
     {
       "slot": 12,
@@ -136,7 +184,11 @@
       "min": 0.1,
       "max": 3,
       "step": 0.01,
-      "default": 1.2
+      "default": 1.2,
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     },
     {
       "slot": 13,
@@ -146,7 +198,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.1
+      "default": 0.1,
+      "aliases": {
+        "zh-CN": "最终模糊",
+        "en": "Final blur"
+      }
     },
     {
       "slot": 14,
@@ -157,7 +213,11 @@
       "max": 16777215,
       "step": 1,
       "default": 16777215,
-      "type": "color"
+      "type": "color",
+      "aliases": {
+        "zh-CN": "雾气颜色",
+        "en": "Fog color"
+      }
     },
     {
       "slot": 15,
@@ -167,7 +227,11 @@
       "min": 0,
       "max": 3,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "动画速度",
+        "en": "Animation speed"
+      }
     }
   ],
   "defaults": [
@@ -218,5 +282,9 @@
       "color": "generator-fog-color-v1"
     },
     "usesTime": true
+  },
+  "aliases": {
+    "zh-CN": "层叠雾气",
+    "en": "Layered Fog"
   }
 }

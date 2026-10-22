@@ -7,7 +7,7 @@ export async function exportVectorTask(data,render){
  const result=await ({svg:exportContourSVG,'psd-vector':exportContourPSD,psd:exportPSD}[data.kind])(data.project,{
   ...data.options,render,
   stage:message=>self.postMessage({type:'stage',message}),
-  progress:(i,total)=>self.postMessage({type:'stage',message:`已处理图层 ${i}/${total}`})
+  progress:(i,total)=>self.postMessage({type:'stage',message:{key:'export.processedLayers',values:[i,total]}})
  });
  delete result.imageData;
  return result;

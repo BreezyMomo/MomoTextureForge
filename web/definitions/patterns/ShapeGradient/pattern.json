@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "ShapeGradient",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "形状渐变",
   "category": "gradient",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "形状",
-      "min": 0.0,
-      "max": 3.0,
-      "step": 1.0,
-      "default": 0.0
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "default": 0,
+      "variable": "shape",
+      "aliases": {
+        "zh-CN": "形状",
+        "en": "Shape"
+      }
     },
     {
       "slot": 1,
@@ -24,32 +29,47 @@
       "min": 0.1,
       "max": 1.6,
       "step": 0.01,
-      "default": 0.85
+      "default": 0.85,
+      "variable": "size",
+      "aliases": {
+        "zh-CN": "尺寸",
+        "en": "Size"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "衰减",
       "min": 0.2,
-      "max": 5.0,
+      "max": 5,
       "step": 0.05,
-      "default": 1.2
+      "default": 1.2,
+      "variable": "falloff",
+      "aliases": {
+        "zh-CN": "衰减",
+        "en": "Falloff"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "边数",
-      "min": 3.0,
-      "max": 12.0,
-      "step": 1.0,
-      "default": 6.0
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "default": 6,
+      "variable": "sideCount",
+      "aliases": {
+        "zh-CN": "边数",
+        "en": "Side count"
+      }
     }
   ],
   "defaults": [
-    0.0,
+    0,
     0.85,
     1.2,
-    6.0,
+    6,
     0,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "形状渐变",
+    "en": "Shape Gradient"
   }
 }

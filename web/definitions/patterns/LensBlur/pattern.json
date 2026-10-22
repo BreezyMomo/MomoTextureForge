@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "LensBlur",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "景深散焦",
   "category": "radial",
@@ -12,37 +12,57 @@
       "slot": 0,
       "key": "R",
       "label": "光斑数量",
-      "min": 4.0,
-      "max": 28.0,
-      "step": 1.0,
-      "default": 12.0
+      "min": 4,
+      "max": 28,
+      "step": 1,
+      "default": 12,
+      "variable": "bokehCount",
+      "aliases": {
+        "zh-CN": "光斑数量",
+        "en": "Bokeh count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "焦内半径",
-      "min": 0.0,
+      "min": 0,
       "max": 0.7,
       "step": 0.01,
-      "default": 0.22
+      "default": 0.22,
+      "variable": "focusRadius",
+      "aliases": {
+        "zh-CN": "焦内半径",
+        "en": "Focus radius"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "散焦增幅",
       "min": 0.2,
-      "max": 4.0,
+      "max": 4,
       "step": 0.05,
-      "default": 1.8
+      "default": 1.8,
+      "variable": "defocusAmount",
+      "aliases": {
+        "zh-CN": "散焦增幅",
+        "en": "Defocus amount"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "光圈叶片",
-      "min": 3.0,
-      "max": 12.0,
-      "step": 1.0,
-      "default": 6.0
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "default": 6,
+      "variable": "apertureBlades",
+      "aliases": {
+        "zh-CN": "光圈叶片",
+        "en": "Aperture blades"
+      }
     },
     {
       "slot": 4,
@@ -51,14 +71,19 @@
       "min": 0.3,
       "max": 1.4,
       "step": 0.02,
-      "default": 0.9
+      "default": 0.9,
+      "variable": "brightness",
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     }
   ],
   "defaults": [
-    12.0,
+    12,
     0.22,
     1.8,
-    6.0,
+    6,
     0.9,
     0,
     0,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "景深散焦",
+    "en": "Lens Blur"
   }
 }

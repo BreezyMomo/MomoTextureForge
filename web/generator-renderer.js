@@ -1,3 +1,4 @@
+import {messageError} from './message-catalog.js';
 import {generatorGeometry} from './generator-geometry.js';
 
 const vertex=`#version 300 es
@@ -78,7 +79,7 @@ export class GeneratorRenderer{
     for(const [index,pass]of spec.passes.entries()){
      const scale=pass.scale??1,target=index===spec.passes.length-1?output:this.target(Math.max(1,Math.round(w*scale)),Math.max(1,Math.round(h*scale)));
      if(target!==output)targets.push(target);
-     try{this.fullscreen(target,libraries[pass.program],common,parameters,pass.inputs.map(id=>outputs.get(id)));}catch(error){throw Error('生成器步骤 '+pass.id+'：'+error.message);}
+     try{this.fullscreen(target,libraries[pass.program],common,parameters,pass.inputs.map(id=>outputs.get(id)));}catch(error){throw messageError("errors.generatorStep", pass.id, error.message);}
      outputs.set(pass.id,target);
      const pending=new Set(spec.passes.slice(index+1).flatMap(p=>p.inputs));
      for(const [id,old]of outputs)if(old!==output&&!pending.has(id)){this.release(old);targets.splice(targets.indexOf(old),1);outputs.delete(id);}

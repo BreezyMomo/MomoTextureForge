@@ -60,6 +60,7 @@
 | 订阅、免编译搭建 GitHub Pages 图库、维护与发布 | [远程图库与管理器](docs/09-remote-libraries.md) |
 | 下载 Skill、提供图库目录、导入 AI 结果 | [AI 协作与帮助](docs/10-ai-and-help.md) |
 | 拖动、拆分、悬浮面板，保存自己的工作布局 | [自定义面板布局](docs/11-workspace-layout.md) |
+| 切换界面语言、参数变量与多语言别名 | [语言与参数别名](docs/12-language-and-aliases.md) |
 
 更多：[手册总目录](docs/README.md) · [常见问题](docs/faq.md) · [开发与部署](docs/development.md)。
 

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Brick",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "砖墙",
   "category": "pattern",
@@ -15,7 +15,12 @@
       "min": 1,
       "max": 64,
       "step": 1,
-      "default": 8
+      "default": 8,
+      "variable": "columns",
+      "aliases": {
+        "zh-CN": "列数",
+        "en": "Columns"
+      }
     },
     {
       "slot": 0,
@@ -24,7 +29,12 @@
       "min": 1,
       "max": 64,
       "step": 1,
-      "default": 12
+      "default": 12,
+      "variable": "rows",
+      "aliases": {
+        "zh-CN": "行数",
+        "en": "Rows"
+      }
     },
     {
       "slot": 1,
@@ -33,7 +43,12 @@
       "min": 0.01,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.12
+      "default": 0.12,
+      "variable": "mortar",
+      "aliases": {
+        "zh-CN": "灰缝",
+        "en": "Mortar"
+      }
     },
     {
       "slot": 5,
@@ -42,7 +57,12 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "rowOffset",
+      "aliases": {
+        "zh-CN": "行错位",
+        "en": "Row offset"
+      }
     },
     {
       "slot": 3,
@@ -51,7 +71,12 @@
       "min": 0,
       "max": 0.1,
       "step": 0.001,
-      "default": 0.005
+      "default": 0.005,
+      "variable": "softness",
+      "aliases": {
+        "zh-CN": "柔和",
+        "en": "Softness"
+      }
     }
   ],
   "defaults": [
@@ -98,5 +123,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "砖墙",
+    "en": "Brick"
   }
 }

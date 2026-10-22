@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Splat",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "溅射形",
   "category": "shape",
@@ -15,16 +15,26 @@
       "min": 0.05,
       "max": 0.9,
       "step": 0.01,
-      "default": 0.35
+      "default": 0.35,
+      "variable": "radius",
+      "aliases": {
+        "zh-CN": "半径",
+        "en": "Radius"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "刺数",
-      "min": 3.0,
-      "max": 24.0,
-      "step": 1.0,
-      "default": 9.0
+      "min": 3,
+      "max": 24,
+      "step": 1,
+      "default": 9,
+      "variable": "spikeCount",
+      "aliases": {
+        "zh-CN": "刺数",
+        "en": "Spike count"
+      }
     },
     {
       "slot": 2,
@@ -33,7 +43,12 @@
       "min": 0.05,
       "max": 1.2,
       "step": 0.01,
-      "default": 0.6
+      "default": 0.6,
+      "variable": "spikeLength",
+      "aliases": {
+        "zh-CN": "刺长",
+        "en": "Spike length"
+      }
     },
     {
       "slot": 3,
@@ -42,12 +57,18 @@
       "min": 0.001,
       "max": 0.1,
       "step": 0.001,
-      "default": 0.006
+      "default": 0.006,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
     0.35,
-    9.0,
+    9,
     0.6,
     0.006,
     0,
@@ -78,5 +99,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "溅射形",
+    "en": "Splat"
   }
 }

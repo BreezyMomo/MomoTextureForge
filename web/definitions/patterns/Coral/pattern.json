@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Coral",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "珊瑚",
   "category": "natural",
@@ -12,19 +12,29 @@
       "slot": 0,
       "key": "R",
       "label": "缩放",
-      "min": 1.0,
-      "max": 14.0,
+      "min": 1,
+      "max": 14,
       "step": 0.5,
-      "default": 5.0
+      "default": 5,
+      "variable": "scale",
+      "aliases": {
+        "zh-CN": "缩放",
+        "en": "Scale"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "层数",
-      "min": 1.0,
-      "max": 8.0,
-      "step": 1.0,
-      "default": 4.0
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 4,
+      "variable": "layers",
+      "aliases": {
+        "zh-CN": "层数",
+        "en": "Layers"
+      }
     },
     {
       "slot": 2,
@@ -33,23 +43,33 @@
       "min": 0.2,
       "max": 0.9,
       "step": 0.01,
-      "default": 0.55
+      "default": 0.55,
+      "variable": "threshold",
+      "aliases": {
+        "zh-CN": "阈值",
+        "en": "Threshold"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "对比",
       "min": 0.2,
-      "max": 4.0,
+      "max": 4,
       "step": 0.05,
-      "default": 1.0
+      "default": 1,
+      "variable": "contrast",
+      "aliases": {
+        "zh-CN": "对比",
+        "en": "Contrast"
+      }
     }
   ],
   "defaults": [
-    5.0,
-    4.0,
+    5,
+    4,
     0.55,
-    1.0,
+    1,
     0,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "珊瑚",
+    "en": "Coral"
   }
 }

@@ -1,3 +1,5 @@
+import {normalizeGraphicAliases} from './graphic-name.js';
+import {validateParameterMetadata} from './parameter-metadata.js';
 // Definitions are trusted local authoring resources, never JavaScript programs.
 import {validateGenerator,GENERATOR_LIMIT,generatorSlotKey} from './generator-schema.js';
 export const DEFINITION_SCHEMA = "momo.texture-pattern/v1";
@@ -53,7 +55,7 @@ export function validateIndex(raw) {
   }
   return raw;
 }
-export function validateLibrary(raw) {
+export function validateLibrary(raw,{legacyParameters=false}={}) {
   const categoryIds = validateHeader(raw, LIBRARY_SCHEMA);
   const ids = new Set(), variants = new Map(), periodicOrder = new Set();
   for (const [index, p] of raw.patterns.entries()) {
@@ -69,14 +71,17 @@ export function validateLibrary(raw) {
     require(Array.isArray(p.parameters) && p.parameters.length <= parameterLimit, `${p.id} 参数列表无效`);
     const slots = new Set();
     require(p.renderPadding===undefined||(finite(p.renderPadding)&&p.renderPadding>=0&&p.renderPadding<=.5&&!p.generator&&!p.outputs?.vector),`${p.id} 渲染留白需为0～0.5的公式图形参数`);
-    const generatorVariables=new Set();
+    const generatorVariables=new Set(), parameterVariables=new Set();
     for (const spec of p.parameters) {
+      const metadata=validateParameterMetadata(spec,{legacy:legacyParameters});
+      require(!parameterVariables.has(metadata.variable), `${p.id} 参数变量名重复`);parameterVariables.add(metadata.variable);
       require(object(spec) && Number.isInteger(spec.slot) && spec.slot >= 0 && spec.slot < p.defaults.length && !slots.has(spec.slot), `${p.id} 参数槽重复或无效`); slots.add(spec.slot);
-      require(spec.key === generatorSlotKey(spec.slot) && typeof spec.label === "string" && spec.label.trim(), `${p.id} 参数名称/绑定无效`);
-      if(spec.type==='select')require(Array.isArray(spec.options)&&spec.options.length>0&&spec.options.every(o=>Number.isInteger(o.value)&&o.value>=spec.min&&o.value<=spec.max&&typeof o.label==='string'),`${p.id} 选项无效`);
-      if(p.generator){require(typeof spec.variable==='string'&&/^[A-Za-z]\w*$/.test(spec.variable)&&!generatorVariables.has(spec.variable),`${p.id} 生成器参数标识无效或重复`);generatorVariables.add(spec.variable);require(!spec.type||['color','select'].includes(spec.type),`${p.id} 参数类型无效`);if(spec.type==='color')require(spec.min===0&&spec.max===16777215&&spec.step===1,`${p.id} 颜色范围无效`);if(spec.type==='select')require(Array.isArray(spec.options)&&spec.options.length>0&&spec.options.every(o=>Number.isInteger(o.value)&&o.value>=spec.min&&o.value<=spec.max&&typeof o.label==='string'),`${p.id} 选项无效`);}
+      require(spec.key === generatorSlotKey(spec.slot) && typeof metadata.label === "string" && metadata.label.trim(), `${p.id} 参数名称/绑定无效`);
+      if(spec.type==='select')require(Array.isArray(spec.options)&&spec.options.length>0&&spec.options.every(o=>Number.isInteger(o.value)&&o.value>=spec.min&&o.value<=spec.max&&(typeof o.label==='string'||o.aliases!==undefined)),`${p.id} 选项无效`);
+      if(p.generator){require(typeof spec.variable==='string'&&!generatorVariables.has(spec.variable),`${p.id} 生成器参数标识无效或重复`);generatorVariables.add(spec.variable);require(!spec.type||['color','select'].includes(spec.type),`${p.id} 参数类型无效`);if(spec.type==='color')require(spec.min===0&&spec.max===16777215&&spec.step===1,`${p.id} 颜色范围无效`);if(spec.type==='select')require(Array.isArray(spec.options)&&spec.options.length>0&&spec.options.every(o=>Number.isInteger(o.value)&&o.value>=spec.min&&o.value<=spec.max&&(typeof o.label==='string'||o.aliases!==undefined)),`${p.id} 选项无效`);}
       require([spec.min, spec.max, spec.step, spec.default].every(finite) && spec.min < spec.max && spec.step > 0 && spec.default >= spec.min && spec.default <= spec.max && p.defaults[spec.slot] === spec.default, `${p.id} 参数 ${spec.key} 范围/默认值无效`);
     }
+    normalizeGraphicAliases(p.aliases);
     require(object(p.outputs), `${p.id} 输出无效`);
     if(p.generator)require(generatorVariables.has('seed'),`${p.id} 生成器缺少随机种子`);
     source(p.outputs.scalar, raw.libraries, p.id);

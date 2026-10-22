@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "HexData",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "六角数据格",
   "category": "digital",
@@ -12,37 +12,57 @@
       "slot": 0,
       "key": "R",
       "label": "六角密度",
-      "min": 3.0,
-      "max": 20.0,
+      "min": 3,
+      "max": 20,
       "step": 0.5,
-      "default": 8.0
+      "default": 8,
+      "variable": "hexDensity",
+      "aliases": {
+        "zh-CN": "六角密度",
+        "en": "Hex density"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "填充亮度",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.8
+      "default": 0.8,
+      "variable": "fillBrightness",
+      "aliases": {
+        "zh-CN": "填充亮度",
+        "en": "Fill brightness"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "数据密度",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.45
+      "default": 0.45,
+      "variable": "dataDensity",
+      "aliases": {
+        "zh-CN": "数据密度",
+        "en": "Data density"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "发光层数",
-      "min": 0.0,
-      "max": 4.0,
-      "step": 1.0,
-      "default": 2.0
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "default": 2,
+      "variable": "glowLayers",
+      "aliases": {
+        "zh-CN": "发光层数",
+        "en": "Glow layers"
+      }
     },
     {
       "slot": 4,
@@ -51,14 +71,19 @@
       "min": 0.002,
       "max": 0.04,
       "step": 0.001,
-      "default": 0.008
+      "default": 0.008,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      }
     }
   ],
   "defaults": [
-    8.0,
+    8,
     0.8,
     0.45,
-    2.0,
+    2,
     0.008,
     0,
     0,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "六角数据格",
+    "en": "Hex Data"
   }
 }

@@ -1,3 +1,4 @@
+import {parameterRole} from './parameter-metadata.js';
 import {denoiseContourCoverage} from './contour-denoise.js';
 import {coverageContours} from './coverage-contours.js';
 import {canvasRoot,evaluateNode} from './tree-model.js';
@@ -13,7 +14,7 @@ export function planContourPSD(project,options={}){
  if(plan.width*plan.height*(plan.stats.pixels+1+(project.output.alpha?0:1))>33554432)throw Error('PSD 矢量轮廓超过总采样预算，请降低导出尺寸');
  function inspect(original,parentTime){
   const e=evaluateNode(original,parentTime),n=e.node;if(!e.visible)return;
-  if(BY_ID.get(n.type)?.parameters.some(p=>p.label.includes('羽化')&&n.params[p.slot]>0))warnings.add(`${n.name}：羽化按透明度阈值取轮廓，不保留柔边过渡`);
+  if(BY_ID.get(n.type)?.parameters.some(p=>['feather','edge-softness'].includes(parameterRole(p))&&n.params[p.slot]>0))warnings.add(`${n.name}：羽化按透明度阈值取轮廓，不保留柔边过渡`);
   if(n.mask||['mask','inverseMask'].includes(n.blend))warnings.add('遮罩结果转为轮廓与孔洞，不保留独立可编辑蒙版');
   for(const child of original.children)inspect(child,e.progress);if(original.mask)inspect(original.mask,e.progress);
  }inspect(source.root,options.time??0);
@@ -49,11 +50,11 @@ export async function buildContourDocument(project,{render,time=0,width=project.
   // Otherwise a 40%-opaque solid shape disappears at the default 50% boundary.
   function coverageRoot(n){if(n.id===item.contourNodeId){const tracks={...n.tracks};delete tracks.opacity;return {...n,opacity:1,tracks};}return {...n,children:n.children.map(coverageRoot)};}
   const snapshot={...plan.project,root:coverageRoot(item.root)};
-  stage('正在提取轮廓…');
-  const sw=width*scale,sh=height*scale,pixels=denoiseContourCoverage(await render(snapshot,sw,sh,time),sw,sh,Math.round(denoise*scale));check();stage('正在提取轮廓…');const {region,occupied,color}=occupiedPixels(pixels,sw,sh,threshold);
+  stage("export.extractingContours");
+  const sw=width*scale,sh=height*scale,pixels=denoiseContourCoverage(await render(snapshot,sw,sh,time),sw,sh,Math.round(denoise*scale));check();stage("export.extractingContours");const {region,occupied,color}=occupiedPixels(pixels,sw,sh,threshold);
   let layer=null;if(occupied){let {paths,vertices}=smooth&&threshold>0?coverageContours(pixels,sw,sh,threshold,{maxVertices:200000,maxEdges:600000}):pixelContours(region,sw,sh,{maxVertices:200000,maxEdges:600000});stats.rawVertices+=vertices;if(scale>1)paths=paths.map(p=>({...p,knots:p.knots.map(k=>({...k,points:k.points.map(v=>v/scale)}))}));
    let cache=scale>1||smooth&&threshold>0?rasterize(paths,width,height,color):null,outputRegion=cache?binary(cache):region;
-   if(smooth){stage('正在简化和平滑路径…');const reference=cache??outlineLayer('',region,width,height,color,paths).imageData,candidate=fitContourPathsIndividually(paths,rasterize,validFit,{tolerance:detail});
+   if(smooth){stage("export.fittingPaths");const reference=cache??outlineLayer('',region,width,height,color,paths).imageData,candidate=fitContourPathsIndividually(paths,rasterize,validFit,{tolerance:detail});
     stats.preservedPaths+=candidate.preserved;if(candidate.accepted){const imageData=rasterize(candidate.paths,width,height,color);
      if(validFit(reference,imageData,width,height)){paths=candidate.paths;vertices=candidate.vertices;cache=imageData;stats.smoothed++;stats.fittedPaths+=candidate.accepted;}
      else{
@@ -74,12 +75,12 @@ export async function buildContourDocument(project,{render,time=0,width=project.
  if(plan.tree)for(const item of plan.tree.children??[plan.tree]){const layer=await build(item);if(layer)children.push(layer);}
  stats.complexityWarning=stats.vertices>CONTOUR_LIMITS.vertices?'图形较复杂（'+stats.vertices+' 个锚点），预览和编辑可能较慢，可降低细节保留或采样尺寸':'';if(stats.complexityWarning)plan.warnings.push(stats.complexityWarning);
  if(!children.length)throw Error('当前进度没有超过阈值的可见区域，无法生成矢量轮廓');
- stage('正在合成图层…');const imageData=contourComposite(children,width,height);await pause();check();
+ stage("export.compositingLayers");const imageData=contourComposite(children,width,height);await pause();check();
  if(smooth)plan.warnings.push(`轮廓平滑：${stats.fittedPaths} 条路径已平滑，${stats.preservedPaths} 条路径保留原轮廓；精细采样 ${scale}×，允许约1像素的边缘偏差`);
  return {width,height,children,stats,warnings:plan.warnings,imageData};
 }
 
 export async function exportContourPSD(project,options={}){
  const result=await buildContourDocument(project,options);const {width,height,children,imageData}=result;
- options.stage?.('正在生成 PSD 文件…');const bytes=writePsdUint8Array({width,height,children,imageData},{trimImageData:false,generateThumbnail:false});options.check?.();return {bytes,stats:result.stats,warnings:result.warnings,imageData};
+ options.stage?.("export.encodingPSD");const bytes=writePsdUint8Array({width,height,children,imageData},{trimImageData:false,generateThumbnail:false});options.check?.();return {bytes,stats:result.stats,warnings:result.warnings,imageData};
 }

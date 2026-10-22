@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "BokehDust",
-  "revision": 2,
+  "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "散景浮尘",
   "category": "vfx",
@@ -16,7 +16,11 @@
       "min": 0,
       "max": 99999,
       "step": 1,
-      "default": 7872
+      "default": 7872,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      }
     },
     {
       "slot": 1,
@@ -26,7 +30,11 @@
       "min": 0.05,
       "max": 1,
       "step": 0.01,
-      "default": 0.4
+      "default": 0.4,
+      "aliases": {
+        "zh-CN": "密度",
+        "en": "Density"
+      }
     },
     {
       "slot": 2,
@@ -36,7 +44,11 @@
       "min": 0.1,
       "max": 2,
       "step": 0.01,
-      "default": 0.7
+      "default": 0.7,
+      "aliases": {
+        "zh-CN": "粒子大小",
+        "en": "Particle size"
+      }
     },
     {
       "slot": 3,
@@ -46,7 +58,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.8
+      "default": 0.8,
+      "aliases": {
+        "zh-CN": "大小差异",
+        "en": "Size variation"
+      }
     },
     {
       "slot": 4,
@@ -56,7 +72,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.65
+      "default": 0.65,
+      "aliases": {
+        "zh-CN": "柔和度",
+        "en": "Softness"
+      }
     },
     {
       "slot": 5,
@@ -66,7 +86,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.4
+      "default": 0.4,
+      "aliases": {
+        "zh-CN": "柔和差异",
+        "en": "Softness variation"
+      }
     },
     {
       "slot": 6,
@@ -76,7 +100,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.2
+      "default": 0.2,
+      "aliases": {
+        "zh-CN": "纤维比例",
+        "en": "Fiber ratio"
+      }
     },
     {
       "slot": 7,
@@ -86,7 +114,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.4
+      "default": 0.4,
+      "aliases": {
+        "zh-CN": "纤维长度",
+        "en": "Fiber length"
+      }
     },
     {
       "slot": 8,
@@ -96,7 +128,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.4
+      "default": 0.4,
+      "aliases": {
+        "zh-CN": "形状不规则",
+        "en": "Shape irregularity"
+      }
     },
     {
       "slot": 9,
@@ -106,7 +142,11 @@
       "min": 0.1,
       "max": 3,
       "step": 0.01,
-      "default": 1.4
+      "default": 1.4,
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     },
     {
       "slot": 10,
@@ -116,7 +156,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.7
+      "default": 0.7,
+      "aliases": {
+        "zh-CN": "亮度差异",
+        "en": "Brightness variation"
+      }
     },
     {
       "slot": 11,
@@ -126,7 +170,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.8
+      "default": 0.8,
+      "aliases": {
+        "zh-CN": "不透明度",
+        "en": "Opacity"
+      }
     },
     {
       "slot": 12,
@@ -136,7 +184,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "暖色程度",
+        "en": "Warmth"
+      }
     },
     {
       "slot": 13,
@@ -146,7 +198,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.4
+      "default": 0.4,
+      "aliases": {
+        "zh-CN": "聚集程度",
+        "en": "Clustering"
+      }
     },
     {
       "slot": 14,
@@ -156,7 +212,11 @@
       "min": 0,
       "max": 3,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "动画速度",
+        "en": "Animation speed"
+      }
     }
   ],
   "defaults": [
@@ -205,5 +265,9 @@
       "color": "generator-dust-v1"
     },
     "usesTime": true
+  },
+  "aliases": {
+    "zh-CN": "散景浮尘",
+    "en": "Bokeh Dust"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "SaltFlat",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "盐渍结晶",
   "category": "natural",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "晶格密度",
-      "min": 2.0,
-      "max": 14.0,
+      "min": 2,
+      "max": 14,
       "step": 0.5,
-      "default": 6.0
+      "default": 6,
+      "variable": "crystalDensity",
+      "aliases": {
+        "zh-CN": "晶格密度",
+        "en": "Crystal density"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,12 @@
       "min": 0.004,
       "max": 0.1,
       "step": 0.002,
-      "default": 0.03
+      "default": 0.03,
+      "variable": "crackWidth",
+      "aliases": {
+        "zh-CN": "裂纹宽度",
+        "en": "Crack width"
+      }
     },
     {
       "slot": 2,
@@ -33,29 +43,44 @@
       "min": 0.2,
       "max": 1.4,
       "step": 0.02,
-      "default": 0.95
+      "default": 0.95,
+      "variable": "crackBrightness",
+      "aliases": {
+        "zh-CN": "裂纹亮度",
+        "en": "Crack brightness"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "晶粒亮度",
-      "min": 0.0,
+      "min": 0,
       "max": 0.7,
       "step": 0.02,
-      "default": 0.26
+      "default": 0.26,
+      "variable": "crystalBrightness",
+      "aliases": {
+        "zh-CN": "晶粒亮度",
+        "en": "Crystal brightness"
+      }
     },
     {
       "slot": 4,
       "key": "D",
       "label": "破碎度",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.55
+      "default": 0.55,
+      "variable": "fracture",
+      "aliases": {
+        "zh-CN": "破碎度",
+        "en": "Fracture"
+      }
     }
   ],
   "defaults": [
-    6.0,
+    6,
     0.03,
     0.95,
     0.26,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "盐渍结晶",
+    "en": "Salt Flat"
   }
 }

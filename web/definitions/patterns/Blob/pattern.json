@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Blob",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "有机团块",
   "category": "shape",
@@ -15,25 +15,40 @@
       "min": 0.1,
       "max": 1.2,
       "step": 0.01,
-      "default": 0.62
+      "default": 0.62,
+      "variable": "radius",
+      "aliases": {
+        "zh-CN": "半径",
+        "en": "Radius"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "扰动",
-      "min": 0.0,
+      "min": 0,
       "max": 0.6,
       "step": 0.01,
-      "default": 0.24
+      "default": 0.24,
+      "variable": "distortion",
+      "aliases": {
+        "zh-CN": "扰动",
+        "en": "Distortion"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "频率",
       "min": 0.5,
-      "max": 12.0,
+      "max": 12,
       "step": 0.1,
-      "default": 3.2
+      "default": 3.2,
+      "variable": "frequency",
+      "aliases": {
+        "zh-CN": "频率",
+        "en": "Frequency"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,13 @@
       "min": 0.001,
       "max": 0.2,
       "step": 0.001,
-      "default": 0.01
+      "default": 0.01,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
@@ -78,5 +99,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "有机团块",
+    "en": "Blob"
   }
 }

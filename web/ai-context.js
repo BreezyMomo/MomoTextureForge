@@ -1,13 +1,14 @@
+import {graphicAliasesField} from './graphic-name.js';
 import {BY_ID} from './catalog.js';
 import {decodeZIP} from './resource-zip.js';
 import {formulaUsesTime} from './formula-time.js';
 
-const metadata=(d,time,kind='formula')=>({id:d.id,name:d.name,kind:d.generator?'generator':kind,version:d.revision,description:d.description??'',parameters:structuredClone(d.parameters),defaults:[...d.defaults],supportsTime:time,seamless:d.seamless.kind,...(d.generator?{generator:{schema:d.generator.schema,effect:d.generator.effect},parameterKeyframes:true}:{})});
+const metadata=(d,time,kind='formula')=>({id:d.id,name:d.name,...graphicAliasesField(d.aliases),kind:d.generator?'generator':kind,version:d.revision,description:d.description??'',parameters:structuredClone(d.parameters),defaults:[...d.defaults],supportsTime:time,seamless:d.seamless.kind,...(d.generator?{generator:{schema:d.generator.schema,effect:d.generator.effect},parameterKeyframes:true}:{})});
 export async function createLibraryAIContext(items,readBundle,{scope='selected',onProgress=()=>{}}={}){
  if(!items.length)throw Error('没有可导出的图形，请先选择资源或调整筛选条件。');
  const entries=[];
  for(const item of items){
-  const entry={resourceId:item.resourceId,version:item.versionId,name:item.name,category:item.category??'',description:item.description??'',tags:item.tags??[],kind:item.kind,source:item.builtin?'builtin':item.remote?'remote':'local',sourceName:item.sourceName??''};
+  const entry={resourceId:item.resourceId,version:item.versionId,name:item.name,...graphicAliasesField(item.aliases),category:item.category??'',description:item.description??'',tags:item.tags??[],kind:item.kind,source:item.builtin?'builtin':item.remote?'remote':'local',sourceName:item.sourceName??''};
   if(item.builtin){const p=BY_ID.get(item.builtin);if(!p)throw Error('缺少图形：'+item.name);entry.definitions=[metadata(p.definition,!!p.usesTime)];}
   else try{
    const bytes=await readBundle(item);

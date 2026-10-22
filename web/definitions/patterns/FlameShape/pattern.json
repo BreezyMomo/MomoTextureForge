@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "FlameShape",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "火焰轮廓",
   "category": "energy",
@@ -15,7 +15,12 @@
       "min": 0.2,
       "max": 1.4,
       "step": 0.01,
-      "default": 0.9
+      "default": 0.9,
+      "variable": "height",
+      "aliases": {
+        "zh-CN": "高度",
+        "en": "Height"
+      }
     },
     {
       "slot": 1,
@@ -24,32 +29,47 @@
       "min": 0.05,
       "max": 0.9,
       "step": 0.005,
-      "default": 0.34
+      "default": 0.34,
+      "variable": "width",
+      "aliases": {
+        "zh-CN": "宽度",
+        "en": "Width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "撕裂",
-      "min": 0.0,
+      "min": 0,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.16
+      "default": 0.16,
+      "variable": "tear",
+      "aliases": {
+        "zh-CN": "撕裂",
+        "en": "Tear"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "频率",
-      "min": 1.0,
-      "max": 20.0,
+      "min": 1,
+      "max": 20,
       "step": 0.5,
-      "default": 7.0
+      "default": 7,
+      "variable": "frequency",
+      "aliases": {
+        "zh-CN": "频率",
+        "en": "Frequency"
+      }
     }
   ],
   "defaults": [
     0.9,
     0.34,
     0.16,
-    7.0,
+    7,
     0,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "火焰轮廓",
+    "en": "Flame Shape"
   }
 }

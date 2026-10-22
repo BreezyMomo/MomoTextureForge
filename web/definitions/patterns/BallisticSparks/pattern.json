@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "BallisticSparks",
-  "revision": 2,
+  "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "喷射火花",
   "category": "vfx",
@@ -16,7 +16,11 @@
       "min": 0,
       "max": 99999,
       "step": 1,
-      "default": 7872
+      "default": 7872,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      }
     },
     {
       "slot": 1,
@@ -26,7 +30,11 @@
       "min": 0.1,
       "max": 2,
       "step": 0.05,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "火花数量",
+        "en": "Spark count"
+      }
     },
     {
       "slot": 2,
@@ -36,7 +44,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.7
+      "default": 0.7,
+      "aliases": {
+        "zh-CN": "散射",
+        "en": "Scattering"
+      }
     },
     {
       "slot": 3,
@@ -46,7 +58,11 @@
       "min": 0.1,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.8
+      "default": 0.8,
+      "aliases": {
+        "zh-CN": "轨迹长度",
+        "en": "Trail length"
+      }
     },
     {
       "slot": 4,
@@ -56,7 +72,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.3
+      "default": 0.3,
+      "aliases": {
+        "zh-CN": "加速度",
+        "en": "Acceleration"
+      }
     },
     {
       "slot": 5,
@@ -66,7 +86,11 @@
       "min": 0,
       "max": 2,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "辉光",
+        "en": "Glow"
+      }
     },
     {
       "slot": 6,
@@ -76,7 +100,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.9
+      "default": 0.9,
+      "aliases": {
+        "zh-CN": "温度",
+        "en": "Temperature"
+      }
     },
     {
       "slot": 7,
@@ -86,7 +114,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.6
+      "default": 0.6,
+      "aliases": {
+        "zh-CN": "轨迹紊乱",
+        "en": "Trail turbulence"
+      }
     },
     {
       "slot": 8,
@@ -96,7 +128,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.3
+      "default": 0.3,
+      "aliases": {
+        "zh-CN": "轨迹断裂",
+        "en": "Trail breaks"
+      }
     },
     {
       "slot": 9,
@@ -106,7 +142,11 @@
       "min": 1,
       "max": 8,
       "step": 1,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "分段",
+        "en": "Segments"
+      }
     },
     {
       "slot": 10,
@@ -116,7 +156,11 @@
       "min": 0,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.06
+      "default": 0.06,
+      "aliases": {
+        "zh-CN": "发射口宽度",
+        "en": "Emitter width"
+      }
     },
     {
       "slot": 11,
@@ -126,7 +170,11 @@
       "min": 0,
       "max": 360,
       "step": 1,
-      "default": 90
+      "default": 90,
+      "aliases": {
+        "zh-CN": "发射方向",
+        "en": "Emission direction"
+      }
     },
     {
       "slot": 12,
@@ -136,7 +184,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.7
+      "default": 0.7,
+      "aliases": {
+        "zh-CN": "碎屑",
+        "en": "Debris"
+      }
     },
     {
       "slot": 13,
@@ -146,7 +198,11 @@
       "min": 0,
       "max": 500,
       "step": 1,
-      "default": 165
+      "default": 165,
+      "aliases": {
+        "zh-CN": "余烬数量",
+        "en": "Ember count"
+      }
     },
     {
       "slot": 14,
@@ -156,7 +212,11 @@
       "min": 0.1,
       "max": 2,
       "step": 0.01,
-      "default": 0.69
+      "default": 0.69,
+      "aliases": {
+        "zh-CN": "余烬大小",
+        "en": "Ember size"
+      }
     },
     {
       "slot": 15,
@@ -166,7 +226,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.47
+      "default": 0.47,
+      "aliases": {
+        "zh-CN": "余烬漂移",
+        "en": "Ember drift"
+      }
     },
     {
       "slot": 16,
@@ -176,7 +240,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.55
+      "default": 0.55,
+      "aliases": {
+        "zh-CN": "余烬温度",
+        "en": "Ember temperature"
+      }
     },
     {
       "slot": 17,
@@ -186,7 +254,11 @@
       "min": 0,
       "max": 3,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "动画速度",
+        "en": "Animation speed"
+      }
     }
   ],
   "defaults": [
@@ -237,5 +309,9 @@
       "color": "generator-emission-v1"
     },
     "usesTime": true
+  },
+  "aliases": {
+    "zh-CN": "喷射火花",
+    "en": "Ballistic Sparks"
   }
 }

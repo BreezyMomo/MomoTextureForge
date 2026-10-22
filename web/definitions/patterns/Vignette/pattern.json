@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Vignette",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "暗角",
   "category": "radial",
@@ -12,24 +12,34 @@
       "slot": 0,
       "key": "R",
       "label": "起点",
-      "min": 0.0,
+      "min": 0,
       "max": 1.4,
       "step": 0.01,
-      "default": 0.55
+      "default": 0.55,
+      "variable": "start",
+      "aliases": {
+        "zh-CN": "起点",
+        "en": "Start"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "强度",
-      "min": 0.0,
-      "max": 2.0,
+      "min": 0,
+      "max": 2,
       "step": 0.05,
-      "default": 1.0
+      "default": 1,
+      "variable": "strength",
+      "aliases": {
+        "zh-CN": "强度",
+        "en": "Strength"
+      }
     }
   ],
   "defaults": [
     0.55,
-    1.0,
+    1,
     0,
     0,
     0,
@@ -60,5 +70,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "暗角",
+    "en": "Vignette"
   }
 }

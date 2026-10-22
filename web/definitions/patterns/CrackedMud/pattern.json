@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "CrackedMud",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "龟裂",
   "category": "natural",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "裂纹密度",
-      "min": 2.0,
-      "max": 24.0,
+      "min": 2,
+      "max": 24,
       "step": 0.5,
-      "default": 7.0
+      "default": 7,
+      "variable": "crackDensity",
+      "aliases": {
+        "zh-CN": "裂纹密度",
+        "en": "Crack density"
+      }
     },
     {
       "slot": 1,
@@ -24,29 +29,44 @@
       "min": 0.01,
       "max": 0.3,
       "step": 0.005,
-      "default": 0.09
+      "default": 0.09,
+      "variable": "crackWidth",
+      "aliases": {
+        "zh-CN": "裂缝宽",
+        "en": "Crack width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "面亮度",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.4
+      "default": 0.4,
+      "variable": "faceBrightness",
+      "aliases": {
+        "zh-CN": "面亮度",
+        "en": "Face brightness"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "扭曲",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.3
+      "default": 0.3,
+      "variable": "warp",
+      "aliases": {
+        "zh-CN": "扭曲",
+        "en": "Warp"
+      }
     }
   ],
   "defaults": [
-    7.0,
+    7,
     0.09,
     0.4,
     0.3,
@@ -91,5 +111,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "龟裂",
+    "en": "Cracked Mud"
   }
 }

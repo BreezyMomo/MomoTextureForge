@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "ScimitarRibbon",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "斩击弧光",
   "category": "ribbon",
@@ -15,7 +15,12 @@
       "min": 0.15,
       "max": 0.62,
       "step": 0.005,
-      "default": 0.52
+      "default": 0.52,
+      "variable": "arcRadius",
+      "aliases": {
+        "zh-CN": "弧半径",
+        "en": "Arc radius"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,12 @@
       "min": 0.4,
       "max": 3.2,
       "step": 0.05,
-      "default": 2.0
+      "default": 2,
+      "variable": "arcSpread",
+      "aliases": {
+        "zh-CN": "弧张角",
+        "en": "Arc spread"
+      }
     },
     {
       "slot": 2,
@@ -33,7 +43,12 @@
       "min": 0.01,
       "max": 0.25,
       "step": 0.005,
-      "default": 0.07
+      "default": 0.07,
+      "variable": "arcThickness",
+      "aliases": {
+        "zh-CN": "弧厚",
+        "en": "Arc thickness"
+      }
     },
     {
       "slot": 3,
@@ -42,12 +57,17 @@
       "min": 0.02,
       "max": 0.6,
       "step": 0.005,
-      "default": 0.22
+      "default": 0.22,
+      "variable": "endTaper",
+      "aliases": {
+        "zh-CN": "两端收束",
+        "en": "End taper"
+      }
     }
   ],
   "defaults": [
     0.52,
-    2.0,
+    2,
     0.07,
     0.22,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "斩击弧光",
+    "en": "Scimitar Ribbon"
   }
 }

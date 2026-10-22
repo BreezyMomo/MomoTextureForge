@@ -1,3 +1,4 @@
+import {validateUICatalogs} from './tools/i18n-audit.mjs';
 import {buildAuthoringKit} from './build-authoring-kit.mjs';
 import {readFile,writeFile,mkdir} from "node:fs/promises";
 import {resolve,dirname,join} from "node:path";
@@ -11,6 +12,7 @@ const toolRoot=dirname(fileURLToPath(import.meta.url)),webRoot=join(toolRoot,"we
 const args=process.argv.slice(2);
 if(args.length>1)throw new Error("Usage: node build-standalone.mjs [output-directory]");
 const output=resolve(args[0]||join(toolRoot,"dist"));
+await validateUICatalogs();
 await buildAuthoringKit();
 // Keep the support dialog offline-ready, using the same original as the docs.
 const appreciationCode=await readFile(join(toolRoot,'docs/images/wechat-appreciation.png'));
@@ -29,25 +31,26 @@ const serialize=value=>JSON.stringify(value).replaceAll("<","\\u003c");
 const runtime=`const freeze=(value)=>{if(value&&typeof value==='object'){Object.values(value).forEach(freeze);Object.freeze(value);}return value;};export const BUILTIN=freeze(${serialize(registry)});export const formulaText=spec=>spec.inline??BUILTIN.sources[spec.file];`;
 const entry=`
 import {startupStage,mountStartupContent,completeStartup,failStartup} from './startup.js';
+import {uiText} from './ui-language.js';
 (async()=>{
   const view=new URLSearchParams(location.search).get('view')||'editor';
   try {
     if(view==='examples'){
-      await startupStage('正在准备组合示例…');
-      document.title='Momo Texture Forge · 图形示例';
+      await startupStage(uiText('startup.preparingExamples'));
+      document.querySelector('title').dataset.i18n='ui.momoTextureForgeExamples';document.title=uiText('ui.momoTextureForgeExamples');
       mountStartupContent(${serialize(body(examplesHTML))});
       const style=document.createElement('style');style.textContent=${serialize(examplesStyle)};document.head.append(style);
       await import('./examples.js');
     }else if(view==='validate'){
-      await startupStage('正在准备验证工具…');
-      document.title='Momo Texture Forge · 浏览器验证';
+      await startupStage(uiText('startup.preparingValidation'));
+      document.querySelector('title').dataset.i18n='ui.momoTextureForgeValidation';document.title=uiText('ui.momoTextureForgeValidation');
       mountStartupContent(${serialize(body(validationHTML))});
       document.body.style.cssText='padding:24px;max-width:900px;margin:auto';
       await import('./validate.js');
     }else{
-      await startupStage('正在读取图形与本地资源…');
+      await startupStage(uiText('ui.readingGraphicsAndLocalResources'));
       const treeStyle=document.createElement('style');treeStyle.dataset.treeStyle='true';document.head.append(treeStyle);const {restoreAssets}=await import('./resource-assets.js');await restoreAssets();
-      await startupStage('正在准备编辑器…');await import('./tree-app.js');
+      await startupStage(uiText('ui.preparingEditor'));await import('./tree-app.js');
     }
     await completeStartup();
   }catch(error){

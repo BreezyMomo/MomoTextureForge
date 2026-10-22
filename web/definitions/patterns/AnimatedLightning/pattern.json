@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "AnimatedLightning",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "动态分叉闪电",
   "category": "vfx",
@@ -16,7 +16,11 @@
       "min": 0,
       "max": 99999,
       "step": 1,
-      "default": 123
+      "default": 123,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      }
     },
     {
       "slot": 1,
@@ -26,7 +30,11 @@
       "min": -3,
       "max": 3,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "流动速度",
+        "en": "Flow speed"
+      }
     },
     {
       "slot": 2,
@@ -36,7 +44,11 @@
       "min": 1,
       "max": 30,
       "step": 0.1,
-      "default": 15
+      "default": 15,
+      "aliases": {
+        "zh-CN": "折线密度",
+        "en": "Zigzag density"
+      }
     },
     {
       "slot": 3,
@@ -46,7 +58,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.8
+      "default": 0.8,
+      "aliases": {
+        "zh-CN": "摆动幅度",
+        "en": "Sway amplitude"
+      }
     },
     {
       "slot": 4,
@@ -56,7 +72,11 @@
       "min": 0.001,
       "max": 0.04,
       "step": 0.001,
-      "default": 0.004
+      "default": 0.004,
+      "aliases": {
+        "zh-CN": "核心宽度",
+        "en": "Core width"
+      }
     },
     {
       "slot": 5,
@@ -66,7 +86,11 @@
       "min": 0.002,
       "max": 0.15,
       "step": 0.001,
-      "default": 0.035
+      "default": 0.035,
+      "aliases": {
+        "zh-CN": "辉光宽度",
+        "en": "Glow width"
+      }
     },
     {
       "slot": 6,
@@ -76,7 +100,11 @@
       "min": 0,
       "max": 5,
       "step": 1,
-      "default": 3
+      "default": 3,
+      "aliases": {
+        "zh-CN": "分叉数",
+        "en": "Branch count"
+      }
     },
     {
       "slot": 7,
@@ -86,7 +114,11 @@
       "min": 0.1,
       "max": 3,
       "step": 0.01,
-      "default": 1.4
+      "default": 1.4,
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     }
   ],
   "defaults": [
@@ -142,5 +174,9 @@
         "program": "generator-animated-lightning-v1"
       }
     ]
+  },
+  "aliases": {
+    "zh-CN": "动态分叉闪电",
+    "en": "Animated Lightning"
   }
 }

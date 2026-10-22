@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "WeatheredPaint",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "剥落漆面",
   "category": "natural",
@@ -12,42 +12,62 @@
       "slot": 0,
       "key": "R",
       "label": "剥落量",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.4
+      "default": 0.4,
+      "variable": "peelingAmount",
+      "aliases": {
+        "zh-CN": "剥落量",
+        "en": "Peeling amount"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "块尺度",
-      "min": 2.0,
-      "max": 18.0,
+      "min": 2,
+      "max": 18,
       "step": 0.5,
-      "default": 6.0
+      "default": 6,
+      "variable": "blockScale",
+      "aliases": {
+        "zh-CN": "块尺度",
+        "en": "Block scale"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "边缘锐度",
       "min": 0.05,
-      "max": 1.0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.35
+      "default": 0.35,
+      "variable": "edgeSharpness",
+      "aliases": {
+        "zh-CN": "边缘锐度",
+        "en": "Edge sharpness"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "底噪",
-      "min": 0.0,
+      "min": 0,
       "max": 0.6,
       "step": 0.02,
-      "default": 0.16
+      "default": 0.16,
+      "variable": "baseNoise",
+      "aliases": {
+        "zh-CN": "底噪",
+        "en": "Base noise"
+      }
     }
   ],
   "defaults": [
     0.4,
-    6.0,
+    6,
     0.35,
     0.16,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "剥落漆面",
+    "en": "Weathered Paint"
   }
 }

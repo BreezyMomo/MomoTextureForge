@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RibbonWake",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "水尾迹",
   "category": "ribbon",
@@ -15,16 +15,26 @@
       "min": 0.15,
       "max": 1.2,
       "step": 0.02,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "spreadAngle",
+      "aliases": {
+        "zh-CN": "张角",
+        "en": "Spread angle"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "波纹密度",
-      "min": 2.0,
-      "max": 26.0,
-      "step": 1.0,
-      "default": 9.0
+      "min": 2,
+      "max": 26,
+      "step": 1,
+      "default": 9,
+      "variable": "rippleDensity",
+      "aliases": {
+        "zh-CN": "波纹密度",
+        "en": "Ripple density"
+      }
     },
     {
       "slot": 2,
@@ -33,21 +43,31 @@
       "min": 0.02,
       "max": 0.3,
       "step": 0.005,
-      "default": 0.1
+      "default": 0.1,
+      "variable": "rippleWidth",
+      "aliases": {
+        "zh-CN": "波纹宽度",
+        "en": "Ripple width"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "长度衰减",
       "min": 0.3,
-      "max": 4.0,
+      "max": 4,
       "step": 0.05,
-      "default": 1.1
+      "default": 1.1,
+      "variable": "lengthFalloff",
+      "aliases": {
+        "zh-CN": "长度衰减",
+        "en": "Length falloff"
+      }
     }
   ],
   "defaults": [
     0.5,
-    9.0,
+    9,
     0.1,
     1.1,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "水尾迹",
+    "en": "Ribbon Wake"
   }
 }

@@ -30,7 +30,7 @@ function acidSplash(){
 
 export function vfxPresets(){
  return [
-  [acidSplash(),'不规则酸液、飞溅液滴、气泡与反光组成一张透明贴图，可分别调整液滴及气泡。',['酸液','飞溅','静态 PNG']],
-  [streamers(),'三条分段贝塞尔彩带，通过明暗段表现卷曲。展开彩带组即可编辑控制点、线宽和配色。',['彩带','曲线','静态 PNG']],
- ].map(([root,description,tags])=>({name:root.name,root,description,tags,category:'presets',output:{mode:'color',alpha:true,seconds:3,frames:90,loopExport:true}}));
+  [acidSplash(),"presets.irregularAcidDropletsBubblesAndHighlightsFormATransparentTextureEdit",["presets.acid","presets.splash","examples.staticPNG"], 'examples.acidSplash.name'],
+  [streamers(),"presets.threeSegmentedBZierRibbonsUseLightAndDarkSectionsTo",["presets.ribbons","timeline.curves","examples.staticPNG"], 'examples.curledCelebrationStreamers.name'],
+ ].map(([root,description,tags,nameKey])=>({name:root.name,nameKey,root,description,tags,category:'presets',output:{mode:'color',alpha:true,seconds:3,frames:90,loopExport:true}}));
 }

@@ -1,61 +1,63 @@
+import {uiText,uiFormat} from './ui-language.js';
+import {parameterLabel} from './language.js';
 import { CATALOG } from "./catalog.js";
 import {ARRANGEMENT_LIMITS as LIMITS} from './arrangement-limits.js';
 // Numeric fields share the same keyframe/undo contract as pattern parameters.
 export const ARRANGEMENT_SPECS = [
-  ["排列方式", 0, 12, 1, 0],
-  ["网格列数", 1, LIMITS.grid, 1, 4],
-  ["网格行数", 1, LIMITS.grid, 1, 4],
-  ["实例数量", 1, LIMITS.simpleInstances, 1, 12],
-  ["实例尺寸", 0.01, 2, 0.01, 0.22],
-  ["布局半径", 0.02, 2, 0.01, 0.38],
-  ["整体旋转 °", -360, 360, 1, 0],
-  ["环形朝外", 0, 1, 1, 1],
-  ["位置随机", 0, 1, 0.01, 0],
-  ["尺寸随机", 0, 0.9, 0.01, 0],
-  ["旋转随机 °", 0, 180, 1, 0],
-  ["排列种子", 1, LIMITS.seed, 1, 1],
-  ["网格行错位", 0, 1, 0.01, 0],
-  ["排列中心 X", -1.5, 1.5, 0.01, 0],
-  ["排列中心 Y", -1.5, 1.5, 0.01, 0],
-  ["环覆盖比例", 0.05, 1, 0.01, 1],
-  ["发散角 °", 0, 360, 0.001, 137.507764],
-  ["中心留空", 0, 0.95, 0.01, 0],
-  ["外圈尺寸倍率", 0.1, 4, 0.01, 1],
-  ["螺旋朝向", 0, 2, 1, 0],
-  ["路径起点 X", -1.5, 1.5, .01, -.8],
-  ["路径起点 Y", -1.5, 1.5, .01, -.5],
-  ["路径控制1 X", -1.5, 1.5, .01, -.5],
-  ["路径控制1 Y", -1.5, 1.5, .01, .9],
-  ["路径控制2 X", -1.5, 1.5, .01, .5],
-  ["路径控制2 Y", -1.5, 1.5, .01, -.9],
-  ["路径终点 X", -1.5, 1.5, .01, .8],
-  ["路径终点 Y", -1.5, 1.5, .01, .5],
-  ["路径起始进度", 0, 1, .01, 0],
-  ["路径结束进度", 0, 1, .01, 1],
-  ["路径采样方式", 0, 1, 1, 0],
-  ["沿线间距", .005, 1, .005, .06],
-  ["最小中心距离", 0, 1, .005, .06],
-  ["圈数", 1, 32, 1, 3],
-  ["圈间错位 / 对称偏角 °", -180, 180, 1, 15],
-  ["螺旋圈数", .1, 24, .1, 3],
-  ["内半径比例", 0, 1, .01, .15],
-  ["镜像成对", 0, 1, 1, 1],
-  ["六角方向", 0, 1, 1, 0],
-  ["密度图案", 0, CATALOG.length-1, 1, 0],
-  ["密度阈值", 0, 1, .01, .1],
-  ["密度对比度", .1, 8, .1, 1],
-  ...Array.from({length:16},(_,i)=>["密度参数 "+i,-100,100,.01,CATALOG[0].defaults[i]]),
-  ["环形数量分布",0,1,1,1],
+  ["editor.arrangement", 0, 12, 1, 0],
+  ["editor.gridColumns", 1, LIMITS.grid, 1, 4],
+  ["editor.gridRows", 1, LIMITS.grid, 1, 4],
+  ["editor.instanceCount", 1, LIMITS.simpleInstances, 1, 12],
+  ["editor.instanceSize", 0.01, 2, 0.01, 0.22],
+  ["ui.layoutRadius", 0.02, 2, 0.01, 0.38],
+  ["editor.layoutRotation", -360, 360, 1, 0],
+  ["ui.faceRadiallyOutward", 0, 1, 1, 1],
+  ["ui.positionRandomness", 0, 1, 0.01, 0],
+  ["arrangement.sizeRandomness", 0, 0.9, 0.01, 0],
+  ["ui.rotationRandomness", 0, 180, 1, 0],
+  ["ui.arrangementSeed", 1, LIMITS.seed, 1, 1],
+  ["ui.gridRowOffset", 0, 1, 0.01, 0],
+  ["editor.layoutCenterX", -1.5, 1.5, 0.01, 0],
+  ["editor.layoutCenterY", -1.5, 1.5, 0.01, 0],
+  ["ui.ringCoverage", 0.05, 1, 0.01, 1],
+  ["arrangement.spreadAngleDegrees", 0, 360, 0.001, 137.507764],
+  ["examples.openCenter", 0, 0.95, 0.01, 0],
+  ["ui.outerRingSizeFactor", 0.1, 4, 0.01, 1],
+  ["ui.spiralOrientation", 0, 2, 1, 0],
+  ["ui.pathStartX", -1.5, 1.5, .01, -.8],
+  ["ui.pathStartY", -1.5, 1.5, .01, -.5],
+  ["ui.pathControlX", -1.5, 1.5, .01, -.5],
+  ["ui.pathControlY", -1.5, 1.5, .01, .9],
+  ["arrangement.controlPoint2X", -1.5, 1.5, .01, .5],
+  ["arrangement.controlPoint2Y", -1.5, 1.5, .01, -.9],
+  ["ui.pathEndX", -1.5, 1.5, .01, .8],
+  ["ui.pathEndY", -1.5, 1.5, .01, .5],
+  ["ui.pathStartProgress", 0, 1, .01, 0],
+  ["ui.pathEndProgress", 0, 1, .01, 1],
+  ["ui.pathSampling", 0, 1, 1, 0],
+  ["editor.pathSpacing", .005, 1, .005, .06],
+  ["ui.minimumCenterDistance", 0, 1, .005, .06],
+  ["ui.turns", 1, 32, 1, 3],
+  ["ui.ringOffsetSymmetryOffset", -180, 180, 1, 15],
+  ["ui.spiralTurns", .1, 24, .1, 3],
+  ["arrangement.innerRadiusRatio", 0, 1, .01, .15],
+  ["ui.mirroredPairs", 0, 1, 1, 1],
+  ["ui.hexOrientation", 0, 1, 1, 0],
+  ["editor.densityPattern", 0, CATALOG.length-1, 1, 0],
+  ["ui.densityThreshold", 0, 1, .01, .1],
+  ["ui.densityContrast", .1, 8, .1, 1],
+  ...Array.from({length:16},(_,i)=>[uiText('ui.densityParameter')+i,-100,100,.01,CATALOG[0].defaults[i]]),
+  ["ui.radialCountDistribution",0,1,1,1],
 ].map(([label, min, max, step, value], slot) => ({ label, min, max, step, default: value, slot }));
 export function arrangementSpec(mode, slot, values) {
   let spec = ARRANGEMENT_SPECS[slot];
-  const labels={3:mode===8?(values?.[58]===0?"每圈数量":"最外圈数量"):mode===10?"对称份数":null,4:mode===8&&values?.[33]>1?"内圈实例尺寸":null,5:mode===6?"路径缩放":null,18:mode===6?"末端尺寸倍率":null,19:mode>=6?"实例朝向":null,34:mode===8?"圈间错位 °":mode===10?"对称偏角 °":null};
+  const labels={3:mode===8?(values?.[58]===0?"ui.countPerRing":"ui.outermostRingCount"):mode===10?"ui.symmetryCopies":null,4:mode===8&&values?.[33]>1?"ui.innerRingInstanceSize":null,5:mode===6?"ui.pathScale":null,18:mode===6?"ui.endSizeFactor":null,19:mode>=6?"editor.instanceOrientation":null,34:mode===8?"ui.ringOffset":mode===10?"ui.symmetryOffset":null};
   if(labels[slot])spec={...spec,label:labels[slot]};
-  if(slot===39)return {...spec,max:CATALOG.length-1};
+  if(slot===39)return {...spec,label:uiText(spec.label),max:CATALOG.length-1};
   if (slot>=42&&slot<58) { const p=CATALOG[Math.min(CATALOG.length-1,Math.max(0,Math.round(Number(values?.[39])||0)))]??CATALOG[0];
     const field=p.parameters.find(p=>p.slot===slot-42);
-    return field?{...field,slot,label:"密度 · "+field.label}:{...spec,min:p.defaults[slot-42]??0,max:p.defaults[slot-42]??0,default:p.defaults[slot-42]??0}; }
-  return slot === 3 && Number(mode) >= 5 ? {...spec, max:LIMITS.instances} : spec;
+    return field?{...field,slot,label:uiText("editor.density")+parameterLabel(field)}:{...spec,min:p.defaults[slot-42]??0,max:p.defaults[slot-42]??0,default:p.defaults[slot-42]??0}; }
+  spec={...spec,label:uiText(spec.label)};return slot === 3 && Number(mode) >= 5 ? {...spec, max:LIMITS.instances} : spec;
 }
 export const defaultArrangement = () => ARRANGEMENT_SPECS.slice(0,16).map((s) => s.default);
 export function sanitizeArrangement(values) {
@@ -73,8 +75,8 @@ export function effectiveArrangement(values, seamless) {
   if (seamless && result[0]) result[4] = Math.min(result[4], 0.9 / Math.SQRT2 / (1 + result[9]) / ([5,6,7,8,9,12].includes(result[0]) && !(result[0]===8&&result[33]===1) ? Math.max(1,result[18]) : 1));
   return result;
 }
-export const ARRANGEMENT_NAMES = ["关闭", "网格", "环形", "随机", "斜向网格", "黄金角螺旋", "沿路径", "均匀随机", "多圈环形", "规则螺旋", "镜像 / 放射对称", "六角密排", "按密度散布"];
-export const ARRANGEMENT_FAMILIES = [[0,"关闭"],[1,"网格排列"],[7,"随机散布"],[8,"环形排列"],[5,"螺旋排列"],[6,"沿路径"],[10,"对称排列"]];
+export const ARRANGEMENT_NAMES = ["common.close", "ui.grid", "ui.radial", "ui.random", "ui.diagonalGrid", "examples.goldenAngleSpiral", "ui.alongPath", "ui.uniformRandom", "ui.concentricRings", "ui.regularSpiral", "ui.mirrorRadialSymmetry", "ui.hexPacking", "ui.densityScatter"];
+export const ARRANGEMENT_FAMILIES = [[0,"common.close"],[1,"examples.gridArrangement"],[7,"ui.randomScatter"],[8,"examples.radialArrangement"],[5,"ui.spiralArrangement"],[6,"ui.alongPath"],[10,"ui.symmetryArrangement"]];
 export const arrangementFamily = mode => [1,4,11].includes(mode)?1:[3,7,12].includes(mode)?7:[2,8].includes(mode)?8:[5,9].includes(mode)?5:mode;
 export function ringCounts(a){
  const radii=Array.from({length:a[33]},(_,i)=>a[36]+(1-a[36])*(a[33]===1?1:i/(a[33]-1)));
@@ -89,9 +91,9 @@ export function arrangementDescription(values, seamless) {
   let count = [1,4,11].includes(a[0]) ? a[1]*a[2] : a[3];
   if(a[0]===8)count=ringCounts(a).reduce((sum,n)=>sum+n,0);
   if(a[0]===10)count=Math.min(count,Math.floor(LIMITS.instances/(1+a[37])))*(1+a[37]);
-  const amount=a[0]===6&&a[30]?`按间距 ${a[31].toFixed(3)}（最多${LIMITS.instances}）`:`${[7,12].includes(a[0])?"目标 ":""}${count} 个`;
-  const name=[7,12].includes(a[0])?`随机散布${a[0]===12?" · 密度图案":""}${a[32]>0?" · 限制间距":""}`:a[0]===8?"环形排列":`${ARRANGEMENT_NAMES[a[0]]}排列`;
-  return `${name} · ${amount}${a[0]===4?` · ${a[1]}列×${a[2]}行 · 隔行半格`:""} · 实际尺寸 ${a[4].toFixed(2)}${seamless ? " · 跨边缘重复" : ""}`;
+  const amount=a[0]===6&&a[30]?uiFormat('arrangement.spacingAmount',a[31].toFixed(3),LIMITS.instances):uiFormat('arrangement.instanceAmount',[7,12].includes(a[0])?uiText('ui.target'):'',count);
+  const name=[7,12].includes(a[0])?uiFormat('arrangement.scatterName',a[0]===12?uiText('ui.densityPattern'):'',a[32]>0?uiText('ui.spacingLimited'):''):a[0]===8?uiText('examples.radialArrangement'):uiFormat('arrangement.name',uiText(ARRANGEMENT_NAMES[a[0]]));
+  return uiFormat('arrangement.summary',name,amount,a[0]===4?uiFormat('arrangement.diagonalGridSize',a[1],a[2]):'',a[4].toFixed(2),seamless?uiText('ui.repeatAcrossEdges'):'');
 }
 export const ARRANGEMENT_GLSL = `
 float sourceBilinear(highp sampler2D source,vec2 u){ivec2 size=textureSize(source,0);vec2 p=clamp(u,0.,1.)*vec2(size)-.5;ivec2 i=ivec2(floor(p));vec2 f=fract(p);ivec2 m=size-1;return mix(mix(texelFetch(source,clamp(i,ivec2(0),m),0).r,texelFetch(source,clamp(i+ivec2(1,0),ivec2(0),m),0).r,f.x),mix(texelFetch(source,clamp(i+ivec2(0,1),ivec2(0),m),0).r,texelFetch(source,clamp(i+ivec2(1),ivec2(0),m),0).r,f.x),f.y);}

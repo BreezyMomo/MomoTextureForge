@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "BezierRibbon",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "贝塞尔光带",
   "category": "shape",
@@ -15,7 +15,12 @@
       "min": -1.5,
       "max": 1.5,
       "step": 0.01,
-      "default": -0.8
+      "default": -0.8,
+      "variable": "startX",
+      "aliases": {
+        "zh-CN": "起点X",
+        "en": "Start X"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,12 @@
       "min": -1.5,
       "max": 1.5,
       "step": 0.01,
-      "default": -0.3
+      "default": -0.3,
+      "variable": "startY",
+      "aliases": {
+        "zh-CN": "起点Y",
+        "en": "Start Y"
+      }
     },
     {
       "slot": 2,
@@ -33,7 +43,12 @@
       "min": -1.5,
       "max": 1.5,
       "step": 0.01,
-      "default": -0.4
+      "default": -0.4,
+      "variable": "controlPoint1X",
+      "aliases": {
+        "zh-CN": "控制点1X",
+        "en": "Control point 1 X"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,12 @@
       "min": -1.5,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.8
+      "default": 0.8,
+      "variable": "controlPoint1Y",
+      "aliases": {
+        "zh-CN": "控制点1Y",
+        "en": "Control point 1 Y"
+      }
     },
     {
       "slot": 4,
@@ -51,7 +71,12 @@
       "min": -1.5,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.4
+      "default": 0.4,
+      "variable": "controlPoint2X",
+      "aliases": {
+        "zh-CN": "控制点2X",
+        "en": "Control point 2 X"
+      }
     },
     {
       "slot": 5,
@@ -60,7 +85,12 @@
       "min": -1.5,
       "max": 1.5,
       "step": 0.01,
-      "default": -0.8
+      "default": -0.8,
+      "variable": "controlPoint2Y",
+      "aliases": {
+        "zh-CN": "控制点2Y",
+        "en": "Control point 2 Y"
+      }
     },
     {
       "slot": 6,
@@ -69,7 +99,12 @@
       "min": -1.5,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.8
+      "default": 0.8,
+      "variable": "endX",
+      "aliases": {
+        "zh-CN": "终点X",
+        "en": "End X"
+      }
     },
     {
       "slot": 7,
@@ -78,7 +113,12 @@
       "min": -1.5,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.3
+      "default": 0.3,
+      "variable": "endY",
+      "aliases": {
+        "zh-CN": "终点Y",
+        "en": "End Y"
+      }
     },
     {
       "slot": 8,
@@ -87,7 +127,12 @@
       "min": 0.002,
       "max": 0.4,
       "step": 0.002,
-      "default": 0.08
+      "default": 0.08,
+      "variable": "startWidth",
+      "aliases": {
+        "zh-CN": "起始线宽",
+        "en": "Start width"
+      }
     },
     {
       "slot": 9,
@@ -96,7 +141,12 @@
       "min": 0,
       "max": 0.4,
       "step": 0.002,
-      "default": 0.015
+      "default": 0.015,
+      "variable": "endWidth",
+      "aliases": {
+        "zh-CN": "末端线宽",
+        "en": "End width"
+      }
     },
     {
       "slot": 10,
@@ -105,7 +155,13 @@
       "min": 0.001,
       "max": 0.1,
       "step": 0.001,
-      "default": 0.01
+      "default": 0.01,
+      "variable": "ribbonFeather",
+      "aliases": {
+        "zh-CN": "光带羽化",
+        "en": "Ribbon feather"
+      },
+      "role": "edge-softness"
     },
     {
       "slot": 11,
@@ -114,7 +170,12 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "variable": "drawProgress",
+      "aliases": {
+        "zh-CN": "绘制进度",
+        "en": "Draw progress"
+      }
     },
     {
       "slot": 12,
@@ -123,7 +184,33 @@
       "min": 0,
       "max": 1,
       "step": 1,
-      "default": 0
+      "default": 0,
+      "variable": "capShape",
+      "aliases": {
+        "zh-CN": "端点形状",
+        "en": "Cap shape"
+      },
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "variable": "value0",
+          "label": "圆头",
+          "aliases": {
+            "zh-CN": "圆头",
+            "en": "Round caps"
+          }
+        },
+        {
+          "value": 1,
+          "variable": "value1",
+          "label": "平头",
+          "aliases": {
+            "zh-CN": "平头",
+            "en": "Flat caps"
+          }
+        }
+      ]
     }
   ],
   "defaults": [
@@ -159,5 +246,9 @@
   },
   "editor": {
     "kind": "bezier"
+  },
+  "aliases": {
+    "zh-CN": "贝塞尔光带",
+    "en": "Bezier Ribbon"
   }
 }

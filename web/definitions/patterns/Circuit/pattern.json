@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Circuit",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "电路走线",
   "category": "pattern",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "密度",
-      "min": 3.0,
-      "max": 40.0,
-      "step": 1.0,
-      "default": 12.0
+      "min": 3,
+      "max": 40,
+      "step": 1,
+      "default": 12,
+      "variable": "density",
+      "aliases": {
+        "zh-CN": "密度",
+        "en": "Density"
+      }
     },
     {
       "slot": 1,
@@ -24,20 +29,30 @@
       "min": 0.02,
       "max": 0.5,
       "step": 0.01,
-      "default": 0.12
+      "default": 0.12,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "节点概率",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.35
+      "default": 0.35,
+      "variable": "nodeProbability",
+      "aliases": {
+        "zh-CN": "节点概率",
+        "en": "Node probability"
+      }
     }
   ],
   "defaults": [
-    12.0,
+    12,
     0.12,
     0.35,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "电路走线",
+    "en": "Circuit"
   }
 }

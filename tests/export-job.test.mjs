@@ -1,3 +1,6 @@
+import {messageError,serializeMessageError} from '../web/message-catalog.js';
+import {uiError} from '../web/ui-language.js';
+import {setLanguage} from '../web/language.js';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {runExportWorker} from '../web/export-job.js';
@@ -25,4 +28,12 @@ test('worker errors reject and release worker',async t=>{
  const previous=globalThis.Worker;globalThis.Worker=FakeWorker;t.after(()=>{if(previous)globalThis.Worker=previous;else delete globalThis.Worker;});
  const task=runExportWorker('svg',{},{}),w=FakeWorker.latest;
  await w.emit({type:'error',message:'bad contour'});await assert.rejects(task,/bad contour/);assert.equal(w.terminated,true);
+});
+
+test('worker error transport preserves message IDs and user interpolation for the selected UI language',async t=>{
+ const previous=globalThis.Worker;globalThis.Worker=FakeWorker;t.after(()=>{if(previous)globalThis.Worker=previous;else delete globalThis.Worker;setLanguage('zh-CN');});
+ setLanguage('en');const task=runExportWorker('svg',{},{}),worker=FakeWorker.latest;
+ await worker.emit({type:'error',...structuredClone(serializeMessageError(messageError('errors.invalidLanguageTag','用户数据')))});
+ await assert.rejects(task,error=>{assert.equal(uiError(error),'Invalid language tag: 用户数据');assert.equal(error.messageKey,'errors.invalidLanguageTag');return true;});
+ assert.equal(worker.terminated,true);
 });

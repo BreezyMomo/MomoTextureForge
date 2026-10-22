@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "GridMosaic",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "网格拼砖",
   "category": "pattern",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "密度",
-      "min": 2.0,
-      "max": 26.0,
+      "min": 2,
+      "max": 26,
       "step": 0.5,
-      "default": 8.0
+      "default": 8,
+      "variable": "density",
+      "aliases": {
+        "zh-CN": "密度",
+        "en": "Density"
+      }
     },
     {
       "slot": 1,
@@ -24,29 +29,44 @@
       "min": 0.02,
       "max": 0.3,
       "step": 0.005,
-      "default": 0.075
+      "default": 0.075,
+      "variable": "mortarWidth",
+      "aliases": {
+        "zh-CN": "灰缝宽",
+        "en": "Mortar width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "扰动",
-      "min": 0.0,
+      "min": 0,
       "max": 0.7,
       "step": 0.01,
-      "default": 0.12
+      "default": 0.12,
+      "variable": "distortion",
+      "aliases": {
+        "zh-CN": "扰动",
+        "en": "Distortion"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "亮度",
-      "min": 0.0,
+      "min": 0,
       "max": 1.5,
       "step": 0.02,
-      "default": 0.55
+      "default": 0.55,
+      "variable": "brightness",
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     }
   ],
   "defaults": [
-    8.0,
+    8,
     0.075,
     0.12,
     0.55,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "网格拼砖",
+    "en": "Grid Mosaic"
   }
 }

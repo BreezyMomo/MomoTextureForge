@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Bokeh",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "散景光斑",
   "category": "radial",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "光斑数量",
-      "min": 2.0,
-      "max": 14.0,
-      "step": 1.0,
-      "default": 7.0
+      "min": 2,
+      "max": 14,
+      "step": 1,
+      "default": 7,
+      "variable": "bokehCount",
+      "aliases": {
+        "zh-CN": "光斑数量",
+        "en": "Bokeh count"
+      }
     },
     {
       "slot": 1,
@@ -24,38 +29,58 @@
       "min": 0.02,
       "max": 0.3,
       "step": 0.005,
-      "default": 0.1
+      "default": 0.1,
+      "variable": "bokehSize",
+      "aliases": {
+        "zh-CN": "光斑尺寸",
+        "en": "Bokeh size"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "亮度差",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.05,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "brightnessVariation",
+      "aliases": {
+        "zh-CN": "亮度差",
+        "en": "Brightness variation"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "边缘柔化",
       "min": 0.05,
-      "max": 1.0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.55
+      "default": 0.55,
+      "variable": "edgeSoftness",
+      "aliases": {
+        "zh-CN": "边缘柔化",
+        "en": "Edge softness"
+      }
     },
     {
       "slot": 4,
       "key": "D",
       "label": "分布范围",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.85
+      "default": 0.85,
+      "variable": "distributionRange",
+      "aliases": {
+        "zh-CN": "分布范围",
+        "en": "Distribution range"
+      }
     }
   ],
   "defaults": [
-    7.0,
+    7,
     0.1,
     0.5,
     0.55,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "散景光斑",
+    "en": "Bokeh"
   }
 }

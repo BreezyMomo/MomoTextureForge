@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "FiberPaper",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "纤维纸纹",
   "category": "noise",
@@ -12,28 +12,43 @@
       "slot": 0,
       "key": "R",
       "label": "纤维密度",
-      "min": 20.0,
-      "max": 200.0,
-      "step": 5.0,
-      "default": 80.0
+      "min": 20,
+      "max": 200,
+      "step": 5,
+      "default": 80,
+      "variable": "fiberDensity",
+      "aliases": {
+        "zh-CN": "纤维密度",
+        "en": "Fiber density"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "纤维拉伸",
-      "min": 0.0,
+      "min": 0,
       "max": 0.5,
       "step": 0.01,
-      "default": 0.12
+      "default": 0.12,
+      "variable": "fiberStretch",
+      "aliases": {
+        "zh-CN": "纤维拉伸",
+        "en": "Fiber stretch"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "斑驳",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.4
+      "default": 0.4,
+      "variable": "mottling",
+      "aliases": {
+        "zh-CN": "斑驳",
+        "en": "Mottling"
+      }
     },
     {
       "slot": 3,
@@ -42,11 +57,16 @@
       "min": 0.3,
       "max": 1.2,
       "step": 0.02,
-      "default": 0.85
+      "default": 0.85,
+      "variable": "brightness",
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     }
   ],
   "defaults": [
-    80.0,
+    80,
     0.12,
     0.4,
     0.85,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "纤维纸纹",
+    "en": "Fiber Paper"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "LineSegment",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "线段",
   "category": "shape",
@@ -15,7 +15,12 @@
       "min": -1,
       "max": 1,
       "step": 0.01,
-      "default": -0.6
+      "default": -0.6,
+      "variable": "startX",
+      "aliases": {
+        "zh-CN": "起点 X",
+        "en": "Start X"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,12 @@
       "min": -1,
       "max": 1,
       "step": 0.01,
-      "default": 0
+      "default": 0,
+      "variable": "startY",
+      "aliases": {
+        "zh-CN": "起点 Y",
+        "en": "Start Y"
+      }
     },
     {
       "slot": 2,
@@ -33,7 +43,12 @@
       "min": -1,
       "max": 1,
       "step": 0.01,
-      "default": 0.6
+      "default": 0.6,
+      "variable": "endX",
+      "aliases": {
+        "zh-CN": "终点 X",
+        "en": "End X"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,12 @@
       "min": -1,
       "max": 1,
       "step": 0.01,
-      "default": 0
+      "default": 0,
+      "variable": "endY",
+      "aliases": {
+        "zh-CN": "终点 Y",
+        "en": "End Y"
+      }
     },
     {
       "slot": 4,
@@ -51,7 +71,12 @@
       "min": 0.001,
       "max": 1,
       "step": 0.001,
-      "default": 0.08
+      "default": 0.08,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      }
     },
     {
       "slot": 5,
@@ -60,7 +85,33 @@
       "min": 0,
       "max": 1,
       "step": 1,
-      "default": 1
+      "default": 1,
+      "variable": "roundCaps",
+      "aliases": {
+        "zh-CN": "圆头",
+        "en": "Round caps"
+      },
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "variable": "value0",
+          "label": "平头",
+          "aliases": {
+            "zh-CN": "平头",
+            "en": "Flat caps"
+          }
+        },
+        {
+          "value": 1,
+          "variable": "value1",
+          "label": "圆头",
+          "aliases": {
+            "zh-CN": "圆头",
+            "en": "Round caps"
+          }
+        }
+      ]
     },
     {
       "slot": 6,
@@ -69,7 +120,13 @@
       "min": 0,
       "max": 0.1,
       "step": 0.001,
-      "default": 0.003
+      "default": 0.003,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
@@ -105,5 +162,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "线段",
+    "en": "Line Segment"
   }
 }

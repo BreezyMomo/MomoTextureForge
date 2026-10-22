@@ -10,8 +10,9 @@
 
 - `name`、`category`、`description`：名称 1～80 字，分类默认“我的图形”，说明最多 2000 字。编辑器顶部名称、分类和说明用于最终保存。
 - `scalar`：`alpha` 或 `luminance`，决定遮罩、高度、法线等用途使用透明度还是亮度；原色预览保留 RGBA。
-- `parameters`：最多 64 项，每项含 `variable`、`label`、`min`、`max`、`step`、`default`。范围必须 min < max、step > 0，默认值在范围内。必须包含名为 `seed` 的随机种子参数；使用固定种子保持结果可复现。
+- `parameters`：最多 64 项，每项含 `variable`、可选 `aliases`、`min`、`max`、`step`、`default`。范围必须 min < max、step > 0，默认值在范围内。必须包含名为 `seed` 的随机种子参数；使用固定种子保持结果可复现。
 - 参数可加 `type: "color"`（24 位 RGB 整数，范围 0～16777215，步长 1），或 `type: "select"` 和 `options: [{value: 整数, label: 文字}]`。其余生成数字框和滑动条。参数均绑定为 float，整数用途显式转换。
+- `aliases`：语言标签到别名的映射，如 `{"zh-CN":"半径","en":"Radius"}`；可以只填一种语言、为空或省略。按用户全局语言顺序选择第一个非空别名，全部缺失时显示 variable。旧 `label` 作为中文别名读取；显式 aliases 不再隐式回退到 label。下拉 options 也支持 aliases 和稳定 variable，省略选项变量时按 value 自动生成。变量名必填且互不重复，可由字母或下划线开头，后续允许数字，最多80字符；排除 gl_、双下划线、GLSL关键字和宿主保留名称。
 - `helpers`：可选全局 GLSL 辅助函数，最多 1MB。辅助函数位于参数宏之前，通过函数参数接收可调值。
 - `passes`：1～16 个步骤，按数组顺序执行。每步包含唯一 ASCII `id`、`source`、可选 `inputs`、可选 `scale`。
 - `inputs`：之前步骤的 ID 数组，最多 3 个，按顺序绑定到 `input0`、`input1`、`input2`。不能引用自己、后面步骤或不存在的步骤。没有连接的输入不能采样。
@@ -41,3 +42,5 @@ node scripts/texforge.mjs check effect.generator.json --size 512 --output previe
 `validate` 只检查结构和连接；`render`、`check` 使用真实 WebGL2 渲染。仍需查看生成的 PNG，检查颜色、透明度、孔洞、边缘，以及参数默认值、最小值、中间值、最大值。测试参数变化时修改 JSON 中相应 default 后重新渲染；check 的不同时间帧不等于参数范围检查。没有执行能力时明确未完成哪些检查。
 
 限制循环次数和采样开销，避免除零及非法 sqrt/pow/normalize。错误提示中的步骤 ID 用于定位具体 GLSL；不能把结构校验通过说成编译或视觉验收通过。编辑器编译失败会保留上次预览，但不能保存错误代码。最终交付完整 JSON 和实际预览，说明入口、可调参数及尚存限制。
+
+生成器顶层可选 `aliases` 保存图形名称的多语言映射，例如 `{"zh-CN":"冰霜护盾","en":"Frost Shield"}`；每个名称最多80字。默认 `name` 仍必需，名称别名与参数自己的 `aliases` 独立，不填写界面消息 key。名称会随JSON和资源ZIP保存；未配置时使用默认名称。

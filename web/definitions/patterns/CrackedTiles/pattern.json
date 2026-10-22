@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "CrackedTiles",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "碎裂瓷砖",
   "category": "pattern",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 2.0,
-      "max": 30.0,
-      "step": 1.0,
-      "default": 8.0
+      "min": 2,
+      "max": 30,
+      "step": 1,
+      "default": 8,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
@@ -24,29 +29,44 @@
       "min": 0.01,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.24
+      "default": 0.24,
+      "variable": "gapWidth",
+      "aliases": {
+        "zh-CN": "缝宽",
+        "en": "Gap width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "扰动频率",
       "min": 0.2,
-      "max": 8.0,
+      "max": 8,
       "step": 0.1,
-      "default": 2.2
+      "default": 2.2,
+      "variable": "distortionFrequency",
+      "aliases": {
+        "zh-CN": "扰动频率",
+        "en": "Distortion frequency"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "扰动幅度",
-      "min": 0.0,
+      "min": 0,
       "max": 0.6,
       "step": 0.01,
-      "default": 0.22
+      "default": 0.22,
+      "variable": "distortionAmplitude",
+      "aliases": {
+        "zh-CN": "扰动幅度",
+        "en": "Distortion amplitude"
+      }
     }
   ],
   "defaults": [
-    8.0,
+    8,
     0.24,
     2.2,
     0.22,
@@ -91,5 +111,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "碎裂瓷砖",
+    "en": "Cracked Tiles"
   }
 }

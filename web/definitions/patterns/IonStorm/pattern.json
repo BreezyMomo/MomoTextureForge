@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "IonStorm",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "离子风暴",
   "category": "energy",
@@ -12,43 +12,63 @@
       "slot": 0,
       "key": "R",
       "label": "湍流",
-      "min": 1.0,
-      "max": 8.0,
+      "min": 1,
+      "max": 8,
       "step": 0.5,
-      "default": 3.5
+      "default": 3.5,
+      "variable": "turbulence",
+      "aliases": {
+        "zh-CN": "湍流",
+        "en": "Turbulence"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "闪现率",
-      "min": 0.0,
-      "max": 3.0,
+      "min": 0,
+      "max": 3,
       "step": 0.05,
-      "default": 1.0
+      "default": 1,
+      "variable": "flashRate",
+      "aliases": {
+        "zh-CN": "闪现率",
+        "en": "Flash rate"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "丝密度",
-      "min": 4.0,
-      "max": 40.0,
-      "step": 1.0,
-      "default": 14.0
+      "min": 4,
+      "max": 40,
+      "step": 1,
+      "default": 14,
+      "variable": "filamentDensity",
+      "aliases": {
+        "zh-CN": "丝密度",
+        "en": "Filament density"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "亮度",
       "min": 0.2,
-      "max": 4.0,
+      "max": 4,
       "step": 0.05,
-      "default": 1.5
+      "default": 1.5,
+      "variable": "brightness",
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     }
   ],
   "defaults": [
     3.5,
-    1.0,
-    14.0,
+    1,
+    14,
     1.5,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "离子风暴",
+    "en": "Ion Storm"
   }
 }

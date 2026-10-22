@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "PositionGradient",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "位置梯度",
   "category": "vector",
@@ -15,7 +15,12 @@
       "min": 0.01,
       "max": 2,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "variable": "coordinateScale",
+      "aliases": {
+        "zh-CN": "坐标倍率",
+        "en": "Coordinate scale"
+      }
     }
   ],
   "defaults": [
@@ -54,5 +59,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "位置梯度",
+    "en": "Position Gradient"
   }
 }

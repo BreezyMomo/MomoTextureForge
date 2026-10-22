@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Displacement",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "置换向量",
   "category": "vector",
@@ -12,33 +12,48 @@
       "slot": 0,
       "key": "R",
       "label": "缩放",
-      "min": 1.0,
-      "max": 16.0,
+      "min": 1,
+      "max": 16,
       "step": 0.5,
-      "default": 4.0
+      "default": 4,
+      "variable": "scale",
+      "aliases": {
+        "zh-CN": "缩放",
+        "en": "Scale"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "强度",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 1.0
+      "default": 1,
+      "variable": "strength",
+      "aliases": {
+        "zh-CN": "强度",
+        "en": "Strength"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "Z强度",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "zStrength",
+      "aliases": {
+        "zh-CN": "Z强度",
+        "en": "Z strength"
+      }
     }
   ],
   "defaults": [
-    4.0,
-    1.0,
+    4,
+    1,
     0.5,
     0,
     0,
@@ -72,5 +87,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "置换向量",
+    "en": "Displacement"
   }
 }

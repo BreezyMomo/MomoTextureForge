@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "PuzzlePiece",
-  "revision": 3,
+  "revision": 5,
   "abi": "momo-pattern/16-v1",
   "name": "拼图块",
   "category": "pattern",
@@ -20,17 +20,37 @@
       "options": [
         {
           "value": -1,
-          "label": "凹口"
+          "label": "凹口",
+          "variable": "valueMinus1",
+          "aliases": {
+            "zh-CN": "凹口",
+            "en": "Socket"
+          }
         },
         {
           "value": 0,
-          "label": "平边"
+          "label": "平边",
+          "variable": "value0",
+          "aliases": {
+            "zh-CN": "平边",
+            "en": "Flat edge"
+          }
         },
         {
           "value": 1,
-          "label": "凸耳"
+          "label": "凸耳",
+          "variable": "value1",
+          "aliases": {
+            "zh-CN": "凸耳",
+            "en": "Tab"
+          }
         }
-      ]
+      ],
+      "variable": "topEdge",
+      "aliases": {
+        "zh-CN": "上边",
+        "en": "Top edge"
+      }
     },
     {
       "slot": 1,
@@ -44,17 +64,37 @@
       "options": [
         {
           "value": -1,
-          "label": "凹口"
+          "label": "凹口",
+          "variable": "valueMinus1",
+          "aliases": {
+            "zh-CN": "凹口",
+            "en": "Socket"
+          }
         },
         {
           "value": 0,
-          "label": "平边"
+          "label": "平边",
+          "variable": "value0",
+          "aliases": {
+            "zh-CN": "平边",
+            "en": "Flat edge"
+          }
         },
         {
           "value": 1,
-          "label": "凸耳"
+          "label": "凸耳",
+          "variable": "value1",
+          "aliases": {
+            "zh-CN": "凸耳",
+            "en": "Tab"
+          }
         }
-      ]
+      ],
+      "variable": "rightEdge",
+      "aliases": {
+        "zh-CN": "右边",
+        "en": "Right edge"
+      }
     },
     {
       "slot": 2,
@@ -68,17 +108,37 @@
       "options": [
         {
           "value": -1,
-          "label": "凹口"
+          "label": "凹口",
+          "variable": "valueMinus1",
+          "aliases": {
+            "zh-CN": "凹口",
+            "en": "Socket"
+          }
         },
         {
           "value": 0,
-          "label": "平边"
+          "label": "平边",
+          "variable": "value0",
+          "aliases": {
+            "zh-CN": "平边",
+            "en": "Flat edge"
+          }
         },
         {
           "value": 1,
-          "label": "凸耳"
+          "label": "凸耳",
+          "variable": "value1",
+          "aliases": {
+            "zh-CN": "凸耳",
+            "en": "Tab"
+          }
         }
-      ]
+      ],
+      "variable": "bottomEdge",
+      "aliases": {
+        "zh-CN": "下边",
+        "en": "Bottom edge"
+      }
     },
     {
       "slot": 3,
@@ -92,17 +152,37 @@
       "options": [
         {
           "value": -1,
-          "label": "凹口"
+          "label": "凹口",
+          "variable": "valueMinus1",
+          "aliases": {
+            "zh-CN": "凹口",
+            "en": "Socket"
+          }
         },
         {
           "value": 0,
-          "label": "平边"
+          "label": "平边",
+          "variable": "value0",
+          "aliases": {
+            "zh-CN": "平边",
+            "en": "Flat edge"
+          }
         },
         {
           "value": 1,
-          "label": "凸耳"
+          "label": "凸耳",
+          "variable": "value1",
+          "aliases": {
+            "zh-CN": "凸耳",
+            "en": "Tab"
+          }
         }
-      ]
+      ],
+      "variable": "leftEdge",
+      "aliases": {
+        "zh-CN": "左边",
+        "en": "Left edge"
+      }
     },
     {
       "slot": 4,
@@ -111,7 +191,12 @@
       "min": 0.04,
       "max": 0.2,
       "step": 0.005,
-      "default": 0.12
+      "default": 0.12,
+      "variable": "connectorSize",
+      "aliases": {
+        "zh-CN": "接口大小",
+        "en": "Connector size"
+      }
     },
     {
       "slot": 5,
@@ -120,7 +205,12 @@
       "min": 0,
       "max": 0.92,
       "step": 0.01,
-      "default": 0.72
+      "default": 0.72,
+      "variable": "neckNarrowing",
+      "aliases": {
+        "zh-CN": "颈部收窄",
+        "en": "Neck narrowing"
+      }
     },
     {
       "slot": 6,
@@ -129,7 +219,12 @@
       "min": 0.001,
       "max": 0.025,
       "step": 0.001,
-      "default": 0.006
+      "default": 0.006,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      }
     },
     {
       "slot": 7,
@@ -138,7 +233,13 @@
       "min": 0,
       "max": 0.02,
       "step": 0.001,
-      "default": 0
+      "default": 0,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     },
     {
       "slot": 8,
@@ -152,13 +253,28 @@
       "options": [
         {
           "value": 0,
-          "label": "轮廓"
+          "label": "轮廓",
+          "variable": "value0",
+          "aliases": {
+            "zh-CN": "轮廓",
+            "en": "Outline"
+          }
         },
         {
           "value": 1,
-          "label": "实心"
+          "label": "实心",
+          "variable": "value1",
+          "aliases": {
+            "zh-CN": "实心",
+            "en": "Solid"
+          }
         }
-      ]
+      ],
+      "variable": "displayMode",
+      "aliases": {
+        "zh-CN": "显示方式",
+        "en": "Display mode"
+      }
     },
     {
       "slot": 9,
@@ -172,21 +288,46 @@
       "options": [
         {
           "value": 0,
-          "label": "圆头凸耳"
+          "label": "圆头凸耳",
+          "variable": "value0",
+          "aliases": {
+            "zh-CN": "圆头凸耳",
+            "en": "Round tab"
+          }
         },
         {
           "value": 1,
-          "label": "方头卡扣"
+          "label": "方头卡扣",
+          "variable": "value1",
+          "aliases": {
+            "zh-CN": "方头卡扣",
+            "en": "Square tab"
+          }
         },
         {
           "value": 2,
-          "label": "梯形燕尾"
+          "label": "梯形燕尾",
+          "variable": "value2",
+          "aliases": {
+            "zh-CN": "梯形燕尾",
+            "en": "Dovetail"
+          }
         },
         {
           "value": 3,
-          "label": "波浪接口"
+          "label": "波浪接口",
+          "variable": "value3",
+          "aliases": {
+            "zh-CN": "波浪接口",
+            "en": "Wave connector"
+          }
         }
-      ]
+      ],
+      "variable": "connectorStyle",
+      "aliases": {
+        "zh-CN": "接口样式",
+        "en": "Connector style"
+      }
     },
     {
       "slot": 10,
@@ -195,7 +336,12 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "variable": "connectorRoundness",
+      "aliases": {
+        "zh-CN": "接口圆润度",
+        "en": "Connector roundness"
+      }
     },
     {
       "slot": 11,
@@ -204,7 +350,12 @@
       "min": 0,
       "max": 0.4,
       "step": 0.005,
-      "default": 0
+      "default": 0,
+      "variable": "topLeftRounding",
+      "aliases": {
+        "zh-CN": "左上圆角",
+        "en": "Top left rounding"
+      }
     },
     {
       "slot": 12,
@@ -213,7 +364,12 @@
       "min": 0,
       "max": 0.4,
       "step": 0.005,
-      "default": 0
+      "default": 0,
+      "variable": "topRightRounding",
+      "aliases": {
+        "zh-CN": "右上圆角",
+        "en": "Top right rounding"
+      }
     },
     {
       "slot": 13,
@@ -222,7 +378,12 @@
       "min": 0,
       "max": 0.4,
       "step": 0.005,
-      "default": 0
+      "default": 0,
+      "variable": "bottomRightRounding",
+      "aliases": {
+        "zh-CN": "右下圆角",
+        "en": "Bottom right rounding"
+      }
     },
     {
       "slot": 14,
@@ -231,7 +392,12 @@
       "min": 0,
       "max": 0.4,
       "step": 0.005,
-      "default": 0
+      "default": 0,
+      "variable": "bottomLeftRounding",
+      "aliases": {
+        "zh-CN": "左下圆角",
+        "en": "Bottom left rounding"
+      }
     }
   ],
   "defaults": [
@@ -267,5 +433,9 @@
   "editor": {
     "kind": "parameters"
   },
-  "renderPadding": 0.46
+  "renderPadding": 0.46,
+  "aliases": {
+    "zh-CN": "拼图块",
+    "en": "Puzzle piece"
+  }
 }

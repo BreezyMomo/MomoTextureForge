@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RoofTiles",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "瓦片",
   "category": "pattern",
@@ -12,19 +12,29 @@
       "slot": 0,
       "key": "R",
       "label": "列数",
-      "min": 2.0,
-      "max": 24.0,
-      "step": 1.0,
-      "default": 8.0
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 8,
+      "variable": "columns",
+      "aliases": {
+        "zh-CN": "列数",
+        "en": "Columns"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "行数",
-      "min": 2.0,
-      "max": 32.0,
-      "step": 1.0,
-      "default": 14.0
+      "min": 2,
+      "max": 32,
+      "step": 1,
+      "default": 14,
+      "variable": "rows",
+      "aliases": {
+        "zh-CN": "行数",
+        "en": "Rows"
+      }
     },
     {
       "slot": 2,
@@ -33,12 +43,17 @@
       "min": 0.004,
       "max": 0.1,
       "step": 0.002,
-      "default": 0.014
+      "default": 0.014,
+      "variable": "gapWidth",
+      "aliases": {
+        "zh-CN": "缝宽",
+        "en": "Gap width"
+      }
     }
   ],
   "defaults": [
-    8.0,
-    14.0,
+    8,
+    14,
     0.014,
     0,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "瓦片",
+    "en": "Roof Tiles"
   }
 }

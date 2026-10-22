@@ -1,5 +1,5 @@
 export const PANEL_IDS=['nodes','library','canvas','inspector','timeline'];
-export const PANEL_TITLES={nodes:'节点树',library:'图形列表',canvas:'画布预览',inspector:'参数面板',timeline:'时间轴'};
+export const PANEL_TITLES={nodes:"layout.nodeTree",library:"layout.graphics",canvas:"layout.canvasPreview",inspector:"layout.inspector",timeline:"layout.timeline"};
 export const LAYOUT_KEY='momo-texture-forge:workspace-layouts:v1';
 let serial=0;
 const uid=prefix=>prefix+'-'+Date.now().toString(36)+'-'+(++serial);

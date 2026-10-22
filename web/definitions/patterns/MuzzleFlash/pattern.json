@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "MuzzleFlash",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "枪口闪光",
   "category": "energy",
@@ -15,39 +15,59 @@
       "min": 0.05,
       "max": 0.8,
       "step": 0.01,
-      "default": 0.28
+      "default": 0.28,
+      "variable": "radius",
+      "aliases": {
+        "zh-CN": "半径",
+        "en": "Radius"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "尖刺数",
-      "min": 3.0,
-      "max": 24.0,
-      "step": 1.0,
-      "default": 8.0
+      "min": 3,
+      "max": 24,
+      "step": 1,
+      "default": 8,
+      "variable": "spikeCount",
+      "aliases": {
+        "zh-CN": "尖刺数",
+        "en": "Spike count"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "尖刺长",
-      "min": 0.0,
-      "max": 2.0,
+      "min": 0,
+      "max": 2,
       "step": 0.05,
-      "default": 1.1
+      "default": 1.1,
+      "variable": "spikeLength",
+      "aliases": {
+        "zh-CN": "尖刺长",
+        "en": "Spike length"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "外晕",
-      "min": 0.0,
-      "max": 2.0,
+      "min": 0,
+      "max": 2,
       "step": 0.05,
-      "default": 0.85
+      "default": 0.85,
+      "variable": "outerHalo",
+      "aliases": {
+        "zh-CN": "外晕",
+        "en": "Outer halo"
+      }
     }
   ],
   "defaults": [
     0.28,
-    8.0,
+    8,
     1.1,
     0.85,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "枪口闪光",
+    "en": "Muzzle Flash"
   }
 }

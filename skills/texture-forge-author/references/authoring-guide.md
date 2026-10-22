@@ -18,7 +18,7 @@
 
 出现“缺少资源文件：manifest.json”时，先核对交付包类型：普通合集应解压后选择JSON；正式资源包应重新通过导出流程生成并复验。不能补一个空manifest.json，也不能用单个JSON的validate/render成功冒充整个ZIP导入成功。随附CLI支持公式和生成器JSON的validate/render/check，不提供资源包导出命令。下载的AI Skill ZIP用于加载技能，也不是图形资源包。
 
-字段：name（1～80字）、category（默认我的图形）、description（最多2000字）；formula={kind:expression或body,source:GLSL源码}；parameters数组（最多16项），每项variable、label、min、max、step、default；helpers为可选全局GLSL辅助函数文本。所有参数绑定float，整数用途在公式里显式转换；variable使用不保留的ASCII标识符，互不重复，不与函数重名。范围必须min<max，step>0，默认值在范围内。
+字段：name（默认名称，1～80字）、顶层aliases（可选的图形名称多语言映射，例如 {"zh-CN":"冰霜护盾","en":"Frost Shield"}，每个名称最多80字，随资源保存；未配置时显示默认name）、category（默认我的图形）、description（最多2000字）；formula={kind:expression或body,source:GLSL源码}；parameters数组（最多16项），每项variable、aliases、min、max、step、default；aliases为可选的语言标签到别名的映射，例如 {"zh-CN":"半径","en":"Radius"}，可以省略或为空；旧label作为中文别名读取。下拉参数可用type:select及options，每个选项保留value，可设置variable和aliases；无匹配别名时显示变量名；helpers为可选全局GLSL辅助函数文本。所有参数绑定float，整数用途在公式里显式转换；variable必填，使用字母或下划线开头、后续为字母数字下划线的不保留ASCII标识符（最多80字符，排除gl_前缀及双下划线），互不重复，不与函数重名。范围必须min<max，step>0，默认值在范围内。
 
 环境：GLSL ES 3.00。公式返回float 0～1，0透明、1实心；body必须return，expression只写表达式。u是0～1坐标；q=u*2.-1.；r=length(q)，angle=atan(q.y,q.x)；time为持续累加的秒数，不保证0～1循环。所有参数变量在公式作用域内可用。辅助函数在全局作用域，必须通过函数参数接收坐标、time和可调参数。不要声明main/uniform/sampler，不能访问文件、网络或引入JS、外部include；不要依赖未提供的函数。新图形不要使用a/b/c/d或R/W等内部槽别名。复制的已有图形可能含保留行为用的局部适配代码，可以保留它。
 

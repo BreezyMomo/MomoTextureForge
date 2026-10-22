@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Leaf",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "叶片",
   "category": "shape",
@@ -15,7 +15,12 @@
       "min": 0.1,
       "max": 1.3,
       "step": 0.01,
-      "default": 0.75
+      "default": 0.75,
+      "variable": "halfHeight",
+      "aliases": {
+        "zh-CN": "半高",
+        "en": "Half height"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,12 @@
       "min": 0.05,
       "max": 1,
       "step": 0.01,
-      "default": 0.35
+      "default": 0.35,
+      "variable": "halfWidth",
+      "aliases": {
+        "zh-CN": "半宽",
+        "en": "Half width"
+      }
     },
     {
       "slot": 4,
@@ -33,7 +43,12 @@
       "min": 0.4,
       "max": 3,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "variable": "fullnessExponent",
+      "aliases": {
+        "zh-CN": "饱满指数",
+        "en": "Fullness exponent"
+      }
     },
     {
       "slot": 5,
@@ -42,7 +57,12 @@
       "min": -0.8,
       "max": 0.8,
       "step": 0.01,
-      "default": 0.2
+      "default": 0.2,
+      "variable": "bend",
+      "aliases": {
+        "zh-CN": "弯曲",
+        "en": "Bend"
+      }
     },
     {
       "slot": 6,
@@ -51,7 +71,12 @@
       "min": -0.8,
       "max": 0.8,
       "step": 0.01,
-      "default": 0
+      "default": 0,
+      "variable": "asymmetry",
+      "aliases": {
+        "zh-CN": "不对称",
+        "en": "Asymmetry"
+      }
     },
     {
       "slot": 3,
@@ -60,7 +85,13 @@
       "min": 0.001,
       "max": 0.3,
       "step": 0.001,
-      "default": 0.015
+      "default": 0.015,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
@@ -96,5 +127,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "叶片",
+    "en": "Leaf"
   }
 }

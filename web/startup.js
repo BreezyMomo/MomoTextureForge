@@ -1,6 +1,7 @@
+import {uiText,localizeApplicationMarkup} from './ui-language.js';
 // Keep the initial screen across editor/view mounts, including partial startup failures.
 const screen=document.getElementById('startup-screen');
-const status=screen?.querySelector('#startup-status');
+const status=screen?.querySelector('#startup-status');if(screen)localizeApplicationMarkup(screen);
 const paint=()=>new Promise(resolve=>{
  const fallback=setTimeout(resolve,150);
  requestAnimationFrame(()=>requestAnimationFrame(()=>{clearTimeout(fallback);resolve();}));
@@ -34,7 +35,7 @@ export function failStartup(error){
  screen.classList.remove('startup-leaving');
  screen.dataset.state='error';
  screen.setAttribute('aria-busy','false');
- status.textContent='画布暂时未能打开';
+ status.textContent=uiText("ui.couldNotOpenTheCanvas");
  screen.querySelector('#startup-error').hidden=false;
  screen.querySelector('#startup-error-detail').textContent=error?.message??String(error);
  screen.querySelector('#startup-retry').onclick=()=>location.reload();

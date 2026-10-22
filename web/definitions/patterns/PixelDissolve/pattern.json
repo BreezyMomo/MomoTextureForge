@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "PixelDissolve",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "像素消融",
   "category": "digital",
@@ -12,19 +12,29 @@
       "slot": 0,
       "key": "R",
       "label": "块数",
-      "min": 4.0,
-      "max": 80.0,
-      "step": 1.0,
-      "default": 32.0
+      "min": 4,
+      "max": 80,
+      "step": 1,
+      "default": 32,
+      "variable": "blockCount",
+      "aliases": {
+        "zh-CN": "块数",
+        "en": "Block count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "阈值",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "threshold",
+      "aliases": {
+        "zh-CN": "阈值",
+        "en": "Threshold"
+      }
     },
     {
       "slot": 2,
@@ -33,7 +43,12 @@
       "min": -0.8,
       "max": 0.8,
       "step": 0.01,
-      "default": 0.0
+      "default": 0,
+      "variable": "radialBias",
+      "aliases": {
+        "zh-CN": "径向偏置",
+        "en": "Radial bias"
+      }
     },
     {
       "slot": 3,
@@ -42,13 +57,18 @@
       "min": 0.005,
       "max": 0.3,
       "step": 0.005,
-      "default": 0.05
+      "default": 0.05,
+      "variable": "edgeSoftness",
+      "aliases": {
+        "zh-CN": "边缘柔化",
+        "en": "Edge softness"
+      }
     }
   ],
   "defaults": [
-    32.0,
+    32,
     0.5,
-    0.0,
+    0,
     0.05,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "像素消融",
+    "en": "Pixel Dissolve"
   }
 }

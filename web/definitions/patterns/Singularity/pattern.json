@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Singularity",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "奇点",
   "category": "energy",
@@ -15,34 +15,54 @@
       "min": 0.05,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.16
+      "default": 0.16,
+      "variable": "eventHorizonRadius",
+      "aliases": {
+        "zh-CN": "视界半径",
+        "en": "Event horizon radius"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "旋转速度",
-      "min": 0.0,
-      "max": 5.0,
+      "min": 0,
+      "max": 5,
       "step": 0.05,
-      "default": 1.2
+      "default": 1.2,
+      "variable": "rotationSpeed",
+      "aliases": {
+        "zh-CN": "旋转速度",
+        "en": "Rotation speed"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "盘纹数",
-      "min": 3.0,
-      "max": 18.0,
-      "step": 1.0,
-      "default": 7.0
+      "min": 3,
+      "max": 18,
+      "step": 1,
+      "default": 7,
+      "variable": "diskStripeCount",
+      "aliases": {
+        "zh-CN": "盘纹数",
+        "en": "Disk stripe count"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "盘倾斜",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.62
+      "default": 0.62,
+      "variable": "diskTilt",
+      "aliases": {
+        "zh-CN": "盘倾斜",
+        "en": "Disk tilt"
+      }
     },
     {
       "slot": 4,
@@ -51,13 +71,18 @@
       "min": 0.6,
       "max": 2.4,
       "step": 0.05,
-      "default": 1.7
+      "default": 1.7,
+      "variable": "accretionDiskRadius",
+      "aliases": {
+        "zh-CN": "吸积盘半径",
+        "en": "Accretion disk radius"
+      }
     }
   ],
   "defaults": [
     0.16,
     1.2,
-    7.0,
+    7,
     0.62,
     1.7,
     0,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "奇点",
+    "en": "Singularity"
   }
 }

@@ -1,13 +1,14 @@
+import {messageError} from './message-catalog.js';
 import {sanitizeArrangement} from './arrangement.js';
 import {ARRANGEMENT_LIMITS as LIMITS} from './arrangement-limits.js';
 
-export const EXTRA_LAYOUTS=[[13,'边框排列'],[14,'沿图形轮廓'],[15,'人字 / 编织'],[16,'规则拼接']];
+export const EXTRA_LAYOUTS=[[13,"examples.borderPlacement"],[14,"examples.alongShapeContour"],[15,"ui.herringboneWeave"],[16,"examples.ruleTiling"]];
 export const EXTRA_SPECS={
- width:['边框宽',.05,1,.01,.84],height:['边框高',.05,1,.01,.68],corner:['圆角半径',0,.5,.005,.08],
- offset:['沿线偏移',-1,1,.01,0],threshold:['轮廓透明度阈值',.01,.99,.01,.5],contourOffset:['轮廓法向偏移',-.2,.2,.005,0],
- scaleFrom:['起始尺寸倍率',.01,4,.01,1],scaleTo:['结束尺寸倍率',.01,4,.01,1],opacityFrom:['起始透明度',0,1,.01,1],opacityTo:['结束透明度',0,1,.01,1],
- rotationFrom:['起始旋转 °',-360,360,1,0],rotationTo:['结束旋转 °',-360,360,1,0],
- flowAmount:['流场幅度',-.5,.5,.005,.05],flowFrequency:['波浪次数',1,24,1,2],flowPhase:['流场相位 °',-3600,3600,1,0],
+ width:["ui.borderWidth",.05,1,.01,.84],height:["ui.borderHeight",.05,1,.01,.68],corner:["ui.cornerRadius",0,.5,.005,.08],
+ offset:["ui.pathOffset",-1,1,.01,0],threshold:["editor.contourAlphaThreshold",.01,.99,.01,.5],contourOffset:["ui.contourNormalOffset",-.2,.2,.005,0],
+ scaleFrom:["ui.startSizeFactor",.01,4,.01,1],scaleTo:["arrangement.endSizeFactor",.01,4,.01,1],opacityFrom:["ui.startOpacity",0,1,.01,1],opacityTo:["ui.endOpacity",0,1,.01,1],
+ rotationFrom:["ui.startRotation",-360,360,1,0],rotationTo:["ui.endRotation",-360,360,1,0],
+ flowAmount:["ui.flowAmplitude",-.5,.5,.005,.05],flowFrequency:["arrangement.waveCount",1,24,1,2],flowPhase:["ui.flowPhase",-3600,3600,1,0],
 };
 export const EXTRA_ENUMS={gradient:['none','x','y','radial','index'],flow:['none','wave','vortex'],weave:['herringbone','basket']};
 export const EXTRA_BOOLS=['reverse','flowTurn','showSource'];
@@ -47,12 +48,12 @@ function weave(a,extra,aspect){
 }
 function random(seed){let n=seed>>>0;return ()=>{n=(Math.imul(n,1664525)+1013904223)>>>0;return n/4294967296;};}
 export function matchedTiles(n){
- if(n.kind!=='group')throw Error('规则拼接需要组合；请将带接口的图块放到直接子级');
+ if(n.kind!=='group')throw messageError("ui.ruleTilingRequiresAGroupWithConnectorTilesAsDirectChildren");
  const a=n.arrange,cols=a[1],rows=a[2],pool=n.children.map((child,index)=>({mask:child.tileEdges??0,index})).filter(c=>n.children[c.index].enabled),rng=random(a[11]);
  if(!pool.length)return [];
  const choices=Array.from({length:cols*rows},()=>pool.map(item=>({item,key:rng()})).sort((a,b)=>a.key-b.key).map(x=>x.item)),board=new Array(cols*rows);let attempts=0;
  const port=(item,bit)=>!!(item.mask&bit);
- function solve(i){if(i===board.length)return true;if(++attempts>50000)throw Error('规则拼接搜索超限：请补充接口图块、减小行列数或更换种子');const x=i%cols,y=Math.floor(i/cols);
+ function solve(i){if(i===board.length)return true;if(++attempts>50000)throw messageError("ui.ruleTilingSearchLimitReachedAddConnectorTilesReduceRowsColumns");const x=i%cols,y=Math.floor(i/cols);
   for(const tile of choices[i]){
    if(x&&port(board[i-1],1)!==port(tile,4)||y&&port(board[i-cols],2)!==port(tile,8))continue;
    if((n.boundary==='repeat')){if(x===cols-1&&port(tile,1)!==port(x?board[i-x]:tile,4))continue;if(y===rows-1&&port(tile,2)!==port(y?board[x]:tile,8))continue;}
@@ -60,7 +61,7 @@ export function matchedTiles(n){
    board[i]=tile;if(solve(i+1))return true;
   }return false;
  }
- if(!solve(0))throw Error('接口图块无法拼接：请补充转角、端点或空白图块，或调整无缝重复设置');
+ if(!solve(0))throw messageError("ui.cannotMatchTileConnectorsAddCornersEndpointsOrBlankTilesOr");
  return board.map((tile,i)=>({x:(i%cols+.5)/cols,y:(Math.floor(i/cols)+.5)/rows,width:1/cols,height:1/rows,turn:0,mirror:1,childIndex:tile.index}));
 }
 export function advancedRecords(n,aspect=1,loops=[]){

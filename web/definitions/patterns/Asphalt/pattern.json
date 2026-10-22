@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Asphalt",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "沥青颗粒",
   "category": "natural",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "石粒密度",
-      "min": 4.0,
-      "max": 24.0,
-      "step": 1.0,
-      "default": 11.0
+      "min": 4,
+      "max": 24,
+      "step": 1,
+      "default": 11,
+      "variable": "pebbleDensity",
+      "aliases": {
+        "zh-CN": "石粒密度",
+        "en": "Pebble density"
+      }
     },
     {
       "slot": 1,
@@ -24,16 +29,26 @@
       "min": 0.06,
       "max": 0.6,
       "step": 0.01,
-      "default": 0.26
+      "default": 0.26,
+      "variable": "pebbleSize",
+      "aliases": {
+        "zh-CN": "石粒大小",
+        "en": "Pebble size"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "石粒对比",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.62
+      "default": 0.62,
+      "variable": "pebbleContrast",
+      "aliases": {
+        "zh-CN": "石粒对比",
+        "en": "Pebble contrast"
+      }
     },
     {
       "slot": 3,
@@ -42,20 +57,30 @@
       "min": 0.002,
       "max": 0.06,
       "step": 0.001,
-      "default": 0.01
+      "default": 0.01,
+      "variable": "edgeSoftness",
+      "aliases": {
+        "zh-CN": "边缘柔化",
+        "en": "Edge softness"
+      }
     },
     {
       "slot": 4,
       "key": "D",
       "label": "砂底亮度",
-      "min": 0.0,
+      "min": 0,
       "max": 0.6,
       "step": 0.02,
-      "default": 0.22
+      "default": 0.22,
+      "variable": "sandBrightness",
+      "aliases": {
+        "zh-CN": "砂底亮度",
+        "en": "Sand brightness"
+      }
     }
   ],
   "defaults": [
-    11.0,
+    11,
     0.26,
     0.62,
     0.01,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "沥青颗粒",
+    "en": "Asphalt"
   }
 }

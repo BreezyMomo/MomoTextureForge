@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Moss",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "苔藓",
   "category": "natural",
@@ -12,32 +12,47 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 1.0,
-      "max": 20.0,
+      "min": 1,
+      "max": 20,
       "step": 0.5,
-      "default": 7.0
+      "default": 7,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "聚簇紧度",
       "min": 0.5,
-      "max": 4.0,
+      "max": 4,
       "step": 0.05,
-      "default": 1.8
+      "default": 1.8,
+      "variable": "clusterTightness",
+      "aliases": {
+        "zh-CN": "聚簇紧度",
+        "en": "Cluster tightness"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "覆盖",
       "min": 0.05,
-      "max": 1.0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.42
+      "default": 0.42,
+      "variable": "coverage",
+      "aliases": {
+        "zh-CN": "覆盖",
+        "en": "Coverage"
+      }
     }
   ],
   "defaults": [
-    7.0,
+    7,
     1.8,
     0.42,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "苔藓",
+    "en": "Moss"
   }
 }

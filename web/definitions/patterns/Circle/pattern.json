@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Circle",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "圆形",
   "category": "radial",
@@ -15,7 +15,12 @@
       "min": 0.02,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.62
+      "default": 0.62,
+      "variable": "radius",
+      "aliases": {
+        "zh-CN": "半径",
+        "en": "Radius"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,12 @@
       "min": 0,
       "max": 0.95,
       "step": 0.01,
-      "default": 0
+      "default": 0,
+      "variable": "innerRadius",
+      "aliases": {
+        "zh-CN": "内径",
+        "en": "Inner radius"
+      }
     },
     {
       "slot": 3,
@@ -33,7 +43,13 @@
       "min": 0.001,
       "max": 0.3,
       "step": 0.001,
-      "default": 0.015
+      "default": 0.015,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
@@ -69,5 +85,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "圆形",
+    "en": "Circle"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "GeyserBurst",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "间歇喷发",
   "category": "energy",
@@ -13,9 +13,14 @@
       "key": "R",
       "label": "喷发周期",
       "min": 0.5,
-      "max": 6.0,
+      "max": 6,
       "step": 0.1,
-      "default": 2.4
+      "default": 2.4,
+      "variable": "eruptionPeriod",
+      "aliases": {
+        "zh-CN": "喷发周期",
+        "en": "Eruption period"
+      }
     },
     {
       "slot": 1,
@@ -24,25 +29,40 @@
       "min": 0.02,
       "max": 0.3,
       "step": 0.01,
-      "default": 0.1
+      "default": 0.1,
+      "variable": "columnWidth",
+      "aliases": {
+        "zh-CN": "柱宽",
+        "en": "Column width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "上升速度",
       "min": 0.2,
-      "max": 3.0,
+      "max": 3,
       "step": 0.05,
-      "default": 1.1
+      "default": 1.1,
+      "variable": "riseSpeed",
+      "aliases": {
+        "zh-CN": "上升速度",
+        "en": "Rise speed"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "溅散",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.45
+      "default": 0.45,
+      "variable": "splashSpread",
+      "aliases": {
+        "zh-CN": "溅散",
+        "en": "Splash spread"
+      }
     }
   ],
   "defaults": [
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "间歇喷发",
+    "en": "Geyser Burst"
   }
 }

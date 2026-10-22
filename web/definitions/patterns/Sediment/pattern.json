@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Sediment",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "沉积层理",
   "category": "natural",
@@ -12,41 +12,61 @@
       "slot": 0,
       "key": "R",
       "label": "层数",
-      "min": 4.0,
-      "max": 40.0,
-      "step": 1.0,
-      "default": 14.0
+      "min": 4,
+      "max": 40,
+      "step": 1,
+      "default": 14,
+      "variable": "layers",
+      "aliases": {
+        "zh-CN": "层数",
+        "en": "Layers"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "扭曲",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.35
+      "default": 0.35,
+      "variable": "warp",
+      "aliases": {
+        "zh-CN": "扭曲",
+        "en": "Warp"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "层对比",
       "min": 0.2,
-      "max": 4.0,
+      "max": 4,
       "step": 0.05,
-      "default": 1.4
+      "default": 1.4,
+      "variable": "layerContrast",
+      "aliases": {
+        "zh-CN": "层对比",
+        "en": "Layer contrast"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "颗粒",
-      "min": 0.0,
+      "min": 0,
       "max": 0.8,
       "step": 0.02,
-      "default": 0.2
+      "default": 0.2,
+      "variable": "grain",
+      "aliases": {
+        "zh-CN": "颗粒",
+        "en": "Grain"
+      }
     }
   ],
   "defaults": [
-    14.0,
+    14,
     0.35,
     1.4,
     0.2,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "沉积层理",
+    "en": "Sediment"
   }
 }

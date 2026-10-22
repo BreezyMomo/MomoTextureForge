@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "ScaleKeratin",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "甲壳纹",
   "category": "natural",
@@ -12,19 +12,29 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 2.0,
-      "max": 24.0,
-      "step": 1.0,
-      "default": 9.0
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 9,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "光泽",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.55
+      "default": 0.55,
+      "variable": "sheen",
+      "aliases": {
+        "zh-CN": "光泽",
+        "en": "Sheen"
+      }
     },
     {
       "slot": 2,
@@ -33,20 +43,30 @@
       "min": 0.002,
       "max": 0.1,
       "step": 0.002,
-      "default": 0.016
+      "default": 0.016,
+      "variable": "strokeWidth",
+      "aliases": {
+        "zh-CN": "描边宽",
+        "en": "Stroke width"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "行错位",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "rowOffset",
+      "aliases": {
+        "zh-CN": "行错位",
+        "en": "Row offset"
+      }
     }
   ],
   "defaults": [
-    9.0,
+    9,
     0.55,
     0.016,
     0.5,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "甲壳纹",
+    "en": "Scale Keratin"
   }
 }

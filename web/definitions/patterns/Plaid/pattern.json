@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Plaid",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "苏格兰格纹",
   "category": "pattern",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "格数",
-      "min": 2.0,
-      "max": 16.0,
-      "step": 1.0,
-      "default": 6.0
+      "min": 2,
+      "max": 16,
+      "step": 1,
+      "default": 6,
+      "variable": "cellCount",
+      "aliases": {
+        "zh-CN": "格数",
+        "en": "Cell count"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,12 @@
       "min": 0.05,
       "max": 0.45,
       "step": 0.01,
-      "default": 0.26
+      "default": 0.26,
+      "variable": "mainStripWidth",
+      "aliases": {
+        "zh-CN": "主条宽",
+        "en": "Main strip width"
+      }
     },
     {
       "slot": 2,
@@ -33,32 +43,47 @@
       "min": 0.01,
       "max": 0.2,
       "step": 0.005,
-      "default": 0.055
+      "default": 0.055,
+      "variable": "fineStripWidth",
+      "aliases": {
+        "zh-CN": "细条宽",
+        "en": "Fine strip width"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "细条数量",
-      "min": 1.0,
-      "max": 4.0,
-      "step": 1.0,
-      "default": 2.0
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2,
+      "variable": "fineStripCount",
+      "aliases": {
+        "zh-CN": "细条数量",
+        "en": "Fine strip count"
+      }
     },
     {
       "slot": 4,
       "key": "D",
       "label": "交织对比",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.55
+      "default": 0.55,
+      "variable": "weaveContrast",
+      "aliases": {
+        "zh-CN": "交织对比",
+        "en": "Weave contrast"
+      }
     }
   ],
   "defaults": [
-    6.0,
+    6,
     0.26,
     0.055,
-    2.0,
+    2,
     0.55,
     0,
     0,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "苏格兰格纹",
+    "en": "Plaid"
   }
 }

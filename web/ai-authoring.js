@@ -1,20 +1,24 @@
+import {graphicAliasesField} from './graphic-name.js';
+import {messageError} from './message-catalog.js';
+import {normalizeParameter} from './parameter-metadata.js';
 import {builtinAsset,validateAsset} from './resource-assets.js';
 import {bindFormulaParameters} from './formula-parameters.js';
 import {SLOT_KEYS} from './definition-schema.js';
 export const AUTHORING_SCHEMA='momo.graphic-authoring/v1';
 export const AUTHORING_LIMIT=2*1024*1024;
 export const AUTHORING_EXAMPLE={schema:AUTHORING_SCHEMA,name:'呼吸圆环',category:'我的图形',description:'速度控制每秒呼吸次数；time 持续累加。',formula:{kind:'body',source:'float radius = baseRadius + sin(time * TAU * speed) * amplitude;\nreturn line(length(q)-radius, thickness, softness);'},parameters:[{variable:'baseRadius',label:'半径',min:.1,max:.85,step:.01,default:.5},{variable:'thickness',label:'线宽',min:.005,max:.2,step:.005,default:.04},{variable:'softness',label:'柔化',min:.001,max:.1,step:.001,default:.01},{variable:'speed',label:'速度',min:0,max:3,step:.1,default:1},{variable:'amplitude',label:'幅度',min:0,max:.1,step:.005,default:.05}],helpers:''};
+for(const p of AUTHORING_EXAMPLE.parameters){p.aliases={'zh-CN':p.label,en:({baseRadius:'Radius',thickness:'Line width',softness:'Softness',speed:'Speed',amplitude:'Amplitude'})[p.variable]};}
 const object=v=>v!==null&&typeof v==='object'&&!Array.isArray(v);
 function text(value,label,max,empty=false){if(typeof value!=='string'||value.length>max||(!empty&&!value.trim()))throw Error(label+'为空或超过长度限制');return value;}
 export function parseAuthoring(input){
- if(typeof input==='string'){if(input.length>AUTHORING_LIMIT||new TextEncoder().encode(input).length>AUTHORING_LIMIT)throw Error('创作文件超过2MB');let source=input.trim().replace(/^\uFEFF/,'');const fence=source.match(/^```(?:json)?\s*\n([\s\S]*?)\n```$/i);if(fence)source=fence[1];try{input=JSON.parse(source);}catch{throw Error('创作文件不是有效JSON，请粘贴完整JSON对象');}}
+ if(typeof input==='string'){if(input.length>AUTHORING_LIMIT||new TextEncoder().encode(input).length>AUTHORING_LIMIT)throw messageError("library.authoringFileExceedsMB");let source=input.trim().replace(/^\uFEFF/,'');const fence=source.match(/^```(?:json)?\s*\n([\s\S]*?)\n```$/i);if(fence)source=fence[1];try{input=JSON.parse(source);}catch{throw Error('创作文件不是有效JSON，请粘贴完整JSON对象');}}
  if(!object(input)||input.schema!==AUTHORING_SCHEMA)throw Error('不支持的创作文件版本');
- const draft={schema:AUTHORING_SCHEMA,name:text(input.name,'图形名称',80),category:text(input.category??'我的图形','分类',80),description:text(input.description??'','说明',2000,true),formula:input.formula,parameters:input.parameters,helpers:text(input.helpers??'','辅助函数',1048576,true)};
+ const draft={schema:AUTHORING_SCHEMA,...graphicAliasesField(input.aliases),name:text(input.name,'图形名称',80),category:text(input.category??'我的图形','分类',80),description:text(input.description??'','说明',2000,true),formula:input.formula,parameters:input.parameters,helpers:text(input.helpers??'','辅助函数',1048576,true)};
  if(!object(draft.formula)||!['body','expression'].includes(draft.formula.kind))throw Error('公式类型必须是body或expression');
  draft.formula={kind:draft.formula.kind,source:text(draft.formula.source,'公式',60000)};
  if(!Array.isArray(draft.parameters)||draft.parameters.length>16)throw Error('参数必须是数组，最多16个');
- draft.parameters=draft.parameters.map((p,i)=>{if(!object(p))throw Error('参数'+(i+1)+'无效');const spec={variable:text(p.variable,'变量名',80),label:text(p.label,'参数名称',80),min:p.min,max:p.max,step:p.step,default:p.default};if(![p.min,p.max,p.step,p.default].every(Number.isFinite)||p.min>=p.max||p.step<=0||p.default<p.min||p.default>p.max)throw Error('参数“'+spec.label+'”的范围、步长或默认值无效');return spec;});
- if(new TextEncoder().encode(JSON.stringify(draft)).length>AUTHORING_LIMIT)throw Error('创作文件超过2MB');
+ draft.parameters=draft.parameters.map((p,i)=>{if(!object(p))throw Error('参数'+(i+1)+'无效');const spec=normalizeParameter({...p,variable:text(p.variable,'变量名',80),min:p.min,max:p.max,step:p.step,default:p.default});if(![p.min,p.max,p.step,p.default].every(Number.isFinite)||p.min>=p.max||p.step<=0||p.default<p.min||p.default>p.max)throw Error('参数“'+spec.label+'”的范围、步长或默认值无效');return spec;});
+ if(new TextEncoder().encode(JSON.stringify(draft)).length>AUTHORING_LIMIT)throw messageError("library.authoringFileExceedsMB");
  // Run the same structural validation used by resource import; GPU compile remains a separate gate.
  assetFromAuthoring(draft);
  return draft;
@@ -23,7 +27,7 @@ export function assetFromAuthoring(draft){
  const asset=builtinAsset('Circle'),def=asset.definition;
  const parameters=draft.parameters.map((p,slot)=>({...p,slot,key:SLOT_KEYS[slot]})),binding=bindFormulaParameters(draft.formula.source,parameters,draft.formula.kind);
  asset.libraries={'math-v1':asset.libraries['math-v1']};if(draft.helpers)asset.libraries['author-helpers']=draft.helpers;
- def.id='AuthoredGraphic';def.revision=1;def.name=draft.name;def.parameters=parameters;def.defaults=Array(16).fill(0);for(const p of parameters)def.defaults[p.slot]=p.default;
+ def.id='AuthoredGraphic';def.revision=1;def.name=draft.name;delete def.aliases;Object.assign(def,graphicAliasesField(draft.aliases));def.parameters=parameters;def.defaults=Array(16).fill(0);for(const p of parameters)def.defaults[p.slot]=p.default;
  def.authoring={formula:draft.formula.source,kind:draft.formula.kind,portable:true};def.editor={kind:'parameters'};def.seamless={kind:'blend'};def.outputs={scalar:{kind:'body',inline:binding.compiled,libraries:Object.keys(asset.libraries)}};
  validateAsset(asset);return asset;
 }
@@ -38,7 +42,7 @@ export function authoringFromEditor(asset,meta,source,kind,specs,helpers){
   const vectors=['a','b','c','d'].map((v,i)=>'vec4 '+v+'=vec4('+values.slice(i*4,i*4+4).join(',')+');').join('\n');
   formula={kind:'body',source:vectors+'\n{float R=a.x,W=a.y,N=a.z,S=a.w,D=b.x,K=b.y,H=b.z,T=time*b.w;\n{\n'+(kind==='expression'?'return ('+source+');':source)+'\n}}'};
  }
- return {schema:AUTHORING_SCHEMA,...meta,formula,parameters:specs.map(({variable,label,min,max,step,default:value})=>({variable,label,min,max,step,default:value})),helpers};
+ return {schema:AUTHORING_SCHEMA,...meta,...graphicAliasesField(Object.hasOwn(meta,'aliases')?meta.aliases:asset.definition.aliases),formula,parameters:specs.map(({slot,key,...spec})=>spec),helpers};
 }
 export const AUTHORING_GUIDE=`# Momo Texture Forge 图形创作规范
 
@@ -60,7 +64,7 @@ export const AUTHORING_GUIDE=`# Momo Texture Forge 图形创作规范
 
 出现“缺少资源文件：manifest.json”时，先核对交付包类型：普通合集应解压后选择JSON；正式资源包应重新通过导出流程生成并复验。不能补一个空manifest.json，也不能用单个JSON的validate/render成功冒充整个ZIP导入成功。随附CLI支持公式和生成器JSON的validate/render/check，不提供资源包导出命令。下载的AI Skill ZIP用于加载技能，也不是图形资源包。
 
-字段：name（1～80字）、category（默认我的图形）、description（最多2000字）；formula={kind:expression或body,source:GLSL源码}；parameters数组（最多16项），每项variable、label、min、max、step、default；helpers为可选全局GLSL辅助函数文本。所有参数绑定float，整数用途在公式里显式转换；variable使用不保留的ASCII标识符，互不重复，不与函数重名。范围必须min<max，step>0，默认值在范围内。
+字段：name（默认名称，1～80字）、顶层aliases（可选的图形名称多语言映射，例如 {"zh-CN":"冰霜护盾","en":"Frost Shield"}，每个名称最多80字，随资源保存；未配置时显示默认name）、category（默认我的图形）、description（最多2000字）；formula={kind:expression或body,source:GLSL源码}；parameters数组（最多16项），每项variable、aliases、min、max、step、default；aliases为可选的语言标签到别名的映射，例如 {"zh-CN":"半径","en":"Radius"}，可以省略或为空；旧label作为中文别名读取。下拉参数可用type:select及options，每个选项保留value，可设置variable和aliases；无匹配别名时显示变量名；helpers为可选全局GLSL辅助函数文本。所有参数绑定float，整数用途在公式里显式转换；variable必填，使用字母或下划线开头、后续为字母数字下划线的不保留ASCII标识符（最多80字符，排除gl_前缀及双下划线），互不重复，不与函数重名。范围必须min<max，step>0，默认值在范围内。
 
 环境：GLSL ES 3.00。公式返回float 0～1，0透明、1实心；body必须return，expression只写表达式。u是0～1坐标；q=u*2.-1.；r=length(q)，angle=atan(q.y,q.x)；time为持续累加的秒数，不保证0～1循环。所有参数变量在公式作用域内可用。辅助函数在全局作用域，必须通过函数参数接收坐标、time和可调参数。不要声明main/uniform/sampler，不能访问文件、网络或引入JS、外部include；不要依赖未提供的函数。新图形不要使用a/b/c/d或R/W等内部槽别名。复制的已有图形可能含保留行为用的局部适配代码，可以保留它。
 
@@ -110,7 +114,7 @@ description: Help users turn screenshots or ideas into Momo Texture Forge resour
 ## 4. 按选定路线制作
 
 - 生成器：需要原生RGBA或多个渲染步骤时，读取[生成器规范](references/generator-guide.md)和[三步骤示例](references/example.generator.json)，交付.generator.json。可自定义GLSL和中间纹理，最多64个参数和16个步骤；不执行用户JS，不提供跨帧反馈。图库已有生成器可编辑后另存；创建新算法通过“创建资源 → 生成器”输入代码，不需要模板选择。
-- 公式：读取[创作规范](references/authoring-guide.md)和[示例](references/example.graphic.json)，制作完整.graphic.json及有用的参数。不要编辑内部图形目录或自行生成资源ID、槽位。当前公式只输出0～1标量（形状/透明度/强度），不支持任意RGB/RGBA输出或图片sampler；最多16个参数，公式60000字符。不要把工具限制说成数学上不可能。time是持续累加的秒数，不默认保证0～1首尾衔接。
+- 公式：读取[创作规范](references/authoring-guide.md)和[示例](references/example.graphic.json)，制作完整.graphic.json及有用的参数。参数使用稳定variable和可选aliases语言映射；不要用显示别名作为公式标识符，按用户需要提供中文、英文或其他语言，缺少翻译可留空。不要编辑内部图形目录或自行生成资源ID、槽位。当前公式只输出0～1标量（形状/透明度/强度），不支持任意RGB/RGBA输出或图片sampler；最多16个参数，公式60000字符。不要把工具限制说成数学上不可能。time是持续累加的秒数，不默认保证0～1首尾衔接。
 - SVG：交付独立.svg文件，保留主体轮廓和孔洞，控制路径复杂度。最大2MB；支持路径、基础形状、组、填充/描边、渐变、裁切和遮罩。仅本地引用；拒绝CSS样式、文字、外链、脚本和动画。文字须转路径，style改为展示属性。不要把内嵌位图包装成SVG后称其为矢量重建。编辑器保留SVG源文件，但显示时按渲染尺寸栅格化；没有路径编辑器。
 - 位图：保留或制作符合需求的PNG/WebP，明确像素尺寸和背景/透明度。图片入口支持PNG/JPG/WebP，最长边4096、单张16MB。需要透明背景时不要交付不支持透明的JPEG，也不要把棋盘格烘焙进图中。
 

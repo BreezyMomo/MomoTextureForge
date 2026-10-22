@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "BeveledShape",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "倒角形",
   "category": "shape",
@@ -15,16 +15,26 @@
       "min": 0.05,
       "max": 1.2,
       "step": 0.01,
-      "default": 0.7
+      "default": 0.7,
+      "variable": "radius",
+      "aliases": {
+        "zh-CN": "半径",
+        "en": "Radius"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "边数",
-      "min": 3.0,
-      "max": 16.0,
-      "step": 1.0,
-      "default": 6.0
+      "min": 3,
+      "max": 16,
+      "step": 1,
+      "default": 6,
+      "variable": "sideCount",
+      "aliases": {
+        "zh-CN": "边数",
+        "en": "Side count"
+      }
     },
     {
       "slot": 2,
@@ -33,21 +43,31 @@
       "min": 0.01,
       "max": 0.6,
       "step": 0.005,
-      "default": 0.18
+      "default": 0.18,
+      "variable": "bevelWidth",
+      "aliases": {
+        "zh-CN": "倒角宽",
+        "en": "Bevel width"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "旋转",
-      "min": 0.0,
+      "min": 0,
       "max": 6.28,
       "step": 0.01,
-      "default": 0.3
+      "default": 0.3,
+      "variable": "rotation",
+      "aliases": {
+        "zh-CN": "旋转",
+        "en": "Rotation"
+      }
     }
   ],
   "defaults": [
     0.7,
-    6.0,
+    6,
     0.18,
     0.3,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "倒角形",
+    "en": "Beveled Shape"
   }
 }

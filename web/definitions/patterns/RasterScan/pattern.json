@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RasterScan",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "光栅扫描",
   "category": "digital",
@@ -12,19 +12,29 @@
       "slot": 0,
       "key": "R",
       "label": "线数",
-      "min": 16.0,
-      "max": 360.0,
-      "step": 4.0,
-      "default": 90.0
+      "min": 16,
+      "max": 360,
+      "step": 4,
+      "default": 90,
+      "variable": "lineCount",
+      "aliases": {
+        "zh-CN": "线数",
+        "en": "Line count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "滚动速度",
-      "min": 0.0,
-      "max": 6.0,
+      "min": 0,
+      "max": 6,
       "step": 0.05,
-      "default": 1.2
+      "default": 1.2,
+      "variable": "scrollSpeed",
+      "aliases": {
+        "zh-CN": "滚动速度",
+        "en": "Scroll speed"
+      }
     },
     {
       "slot": 2,
@@ -33,20 +43,30 @@
       "min": 0.05,
       "max": 0.9,
       "step": 0.01,
-      "default": 0.45
+      "default": 0.45,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "扫描速度",
-      "min": 0.0,
-      "max": 4.0,
+      "min": 0,
+      "max": 4,
       "step": 0.05,
-      "default": 0.9
+      "default": 0.9,
+      "variable": "scanSpeed",
+      "aliases": {
+        "zh-CN": "扫描速度",
+        "en": "Scan speed"
+      }
     }
   ],
   "defaults": [
-    90.0,
+    90,
     1.2,
     0.45,
     0.9,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "光栅扫描",
+    "en": "Raster Scan"
   }
 }

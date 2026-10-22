@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Crystal",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "晶体",
   "category": "noise",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 1.0,
-      "max": 20.0,
+      "min": 1,
+      "max": 20,
       "step": 0.5,
-      "default": 5.0
+      "default": 5,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
@@ -24,31 +29,46 @@
       "min": 0.01,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.1
+      "default": 0.1,
+      "variable": "faceWidth",
+      "aliases": {
+        "zh-CN": "面宽",
+        "en": "Face width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "层数",
-      "min": 1.0,
-      "max": 12.0,
-      "step": 1.0,
-      "default": 3.0
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 3,
+      "variable": "layers",
+      "aliases": {
+        "zh-CN": "层数",
+        "en": "Layers"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "边缘",
-      "min": 0.0,
+      "min": 0,
       "max": 0.4,
       "step": 0.01,
-      "default": 0.06
+      "default": 0.06,
+      "variable": "edge",
+      "aliases": {
+        "zh-CN": "边缘",
+        "en": "Edge"
+      }
     }
   ],
   "defaults": [
-    5.0,
+    5,
     0.1,
-    3.0,
+    3,
     0.06,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "晶体",
+    "en": "Crystal"
   }
 }

@@ -1,8 +1,9 @@
+import {uiText} from './ui-language.js';
 import {startupStage,completeStartup,failStartup} from './startup.js';
 try {
- await startupStage('正在读取图形与本地资源…');
+ await startupStage(uiText("ui.readingGraphicsAndLocalResources"));
  const {restoreAssets}=await import('./resource-assets.js');await restoreAssets();
- await startupStage('正在准备编辑器…');
+ await startupStage(uiText("ui.preparingEditor"));
  await import('./tree-app.js');
  await completeStartup();
 }

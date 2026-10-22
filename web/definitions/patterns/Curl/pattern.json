@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Curl",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "旋度流场",
   "category": "vector",
@@ -12,19 +12,29 @@
       "slot": 0,
       "key": "R",
       "label": "缩放",
-      "min": 1.0,
-      "max": 20.0,
+      "min": 1,
+      "max": 20,
       "step": 0.5,
-      "default": 4.0
+      "default": 4,
+      "variable": "scale",
+      "aliases": {
+        "zh-CN": "缩放",
+        "en": "Scale"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "对比",
       "min": 0.2,
-      "max": 6.0,
+      "max": 6,
       "step": 0.1,
-      "default": 1.6
+      "default": 1.6,
+      "variable": "contrast",
+      "aliases": {
+        "zh-CN": "对比",
+        "en": "Contrast"
+      }
     },
     {
       "slot": 2,
@@ -33,11 +43,16 @@
       "min": 0.005,
       "max": 0.2,
       "step": 0.005,
-      "default": 0.03
+      "default": 0.03,
+      "variable": "stepSize",
+      "aliases": {
+        "zh-CN": "步长",
+        "en": "Step size"
+      }
     }
   ],
   "defaults": [
-    4.0,
+    4,
     1.6,
     0.03,
     0,
@@ -72,5 +87,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "旋度流场",
+    "en": "Curl"
   }
 }

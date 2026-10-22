@@ -1,9 +1,9 @@
 import {boundsSize} from './render-bounds.js';
 // Radii are measured in pixels at a 512-pixel canvas, so exports scale consistently.
 export const FX_SPECS=[
- ['模糊半径',0,32,0,.1],['Bloom 强度',0,3,0,.01],
- ['Bloom 半径',1,64,16,1],['Bloom 阈值',0,1,.6,.01],
- ['锐化强度',0,3,0,.01],['色散距离',0,24,0,.1],['卡通色阶',0,16,0,1]
+ ["ui.blurRadius",0,32,0,.1],["ui.bloomIntensity",0,3,0,.01],
+ ["ui.bloomRadius",1,64,16,1],["ui.bloomThreshold",0,1,.6,.01],
+ ["ui.sharpenIntensity",0,3,0,.01],["ui.chromaticAberrationDistance",0,24,0,.1],["ui.posterizeLevels",0,16,0,1]
 ];
 export const fxDefaults=()=>FX_SPECS.map(s=>s[3]);
 export const hasPostFx=n=>[0,1,4,5,6].some(i=>(n.postFx?.[i]??0)>0);

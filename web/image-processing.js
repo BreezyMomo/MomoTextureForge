@@ -1,3 +1,4 @@
+import {messageError} from './message-catalog.js';
 // Source bytes remain immutable; these settings are part of the asset content hash.
 export function validateImageProcessing(settings) {
  if(settings===undefined)return;
@@ -54,7 +55,7 @@ export function centerImagePixels(data,width,height){
 export async function prepareImageBitmap(asset) {
  const bytes=Uint8Array.from(atob(asset.data),c=>c.charCodeAt(0));
  const bitmap=await createImageBitmap(new Blob([bytes],{type:asset.mime}),{premultiplyAlpha:'none',imageOrientation:'flipY'});
- if(bitmap.width>4096||bitmap.height>4096||bitmap.width*bitmap.height>16777216){bitmap.close();throw Error('图片最大4096×4096');}
+ if(bitmap.width>4096||bitmap.height>4096||bitmap.width*bitmap.height>16777216){bitmap.close();throw messageError("library.maximumImageSizeIs");}
  if(!asset.imageProcessing||(asset.imageProcessing.mode==='none'&&!asset.imageProcessing.autoCenter))return bitmap;
  try {
   const canvas=new OffscreenCanvas(bitmap.width,bitmap.height),ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(bitmap,0,0);

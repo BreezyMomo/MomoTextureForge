@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Dots",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "圆点阵",
   "category": "pattern",
@@ -15,7 +15,12 @@
       "min": 1,
       "max": 64,
       "step": 1,
-      "default": 8
+      "default": 8,
+      "variable": "dotGridCount",
+      "aliases": {
+        "zh-CN": "点阵数量",
+        "en": "Dot grid count"
+      }
     },
     {
       "slot": 0,
@@ -24,7 +29,12 @@
       "min": 0.02,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.62
+      "default": 0.62,
+      "variable": "dotRadius",
+      "aliases": {
+        "zh-CN": "圆点半径",
+        "en": "Dot radius"
+      }
     },
     {
       "slot": 3,
@@ -33,7 +43,13 @@
       "min": 0.001,
       "max": 0.3,
       "step": 0.001,
-      "default": 0.015
+      "default": 0.015,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     },
     {
       "slot": 4,
@@ -42,7 +58,12 @@
       "min": 0,
       "max": 0.5,
       "step": 0.01,
-      "default": 0
+      "default": 0,
+      "variable": "alternateRowOffset",
+      "aliases": {
+        "zh-CN": "隔行错位",
+        "en": "Alternate row offset"
+      }
     }
   ],
   "defaults": [
@@ -90,5 +111,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "圆点阵",
+    "en": "Dots"
   }
 }

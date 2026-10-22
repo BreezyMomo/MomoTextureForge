@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Checker",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "棋盘格",
   "category": "pattern",
@@ -15,7 +15,12 @@
       "min": 1,
       "max": 64,
       "step": 1,
-      "default": 8
+      "default": 8,
+      "variable": "checkerCount",
+      "aliases": {
+        "zh-CN": "棋格数量",
+        "en": "Checker count"
+      }
     },
     {
       "slot": 3,
@@ -24,7 +29,12 @@
       "min": 0,
       "max": 0.25,
       "step": 0.005,
-      "default": 0
+      "default": 0,
+      "variable": "checkerSoftness",
+      "aliases": {
+        "zh-CN": "棋格柔和",
+        "en": "Checker softness"
+      }
     }
   ],
   "defaults": [
@@ -71,5 +81,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "棋盘格",
+    "en": "Checkerboard"
   }
 }

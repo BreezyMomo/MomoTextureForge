@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Marble",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "大理石",
   "category": "natural",
@@ -12,33 +12,48 @@
       "slot": 0,
       "key": "R",
       "label": "缩放",
-      "min": 1.0,
-      "max": 14.0,
+      "min": 1,
+      "max": 14,
       "step": 0.5,
-      "default": 4.0
+      "default": 4,
+      "variable": "scale",
+      "aliases": {
+        "zh-CN": "缩放",
+        "en": "Scale"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "纹理密度",
-      "min": 2.0,
-      "max": 60.0,
-      "step": 1.0,
-      "default": 12.0
+      "min": 2,
+      "max": 60,
+      "step": 1,
+      "default": 12,
+      "variable": "textureDensity",
+      "aliases": {
+        "zh-CN": "纹理密度",
+        "en": "Texture density"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "扭曲",
-      "min": 0.0,
+      "min": 0,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "warp",
+      "aliases": {
+        "zh-CN": "扭曲",
+        "en": "Warp"
+      }
     }
   ],
   "defaults": [
-    4.0,
-    12.0,
+    4,
+    12,
     0.5,
     0,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "大理石",
+    "en": "Marble"
   }
 }

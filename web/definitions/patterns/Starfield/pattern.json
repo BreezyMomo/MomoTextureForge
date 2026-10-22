@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Starfield",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "星场",
   "category": "energy",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "密度",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.22
+      "default": 0.22,
+      "variable": "density",
+      "aliases": {
+        "zh-CN": "密度",
+        "en": "Density"
+      }
     },
     {
       "slot": 1,
@@ -24,32 +29,47 @@
       "min": 0.005,
       "max": 0.15,
       "step": 0.002,
-      "default": 0.11
+      "default": 0.11,
+      "variable": "size",
+      "aliases": {
+        "zh-CN": "大小",
+        "en": "Size"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "闪烁",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.6
+      "default": 0.6,
+      "variable": "flicker",
+      "aliases": {
+        "zh-CN": "闪烁",
+        "en": "Flicker"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "层数",
-      "min": 1.0,
-      "max": 3.0,
-      "step": 1.0,
-      "default": 3.0
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 3,
+      "variable": "layers",
+      "aliases": {
+        "zh-CN": "层数",
+        "en": "Layers"
+      }
     }
   ],
   "defaults": [
     0.22,
     0.11,
     0.6,
-    3.0,
+    3,
     0,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "星场",
+    "en": "Starfield"
   }
 }

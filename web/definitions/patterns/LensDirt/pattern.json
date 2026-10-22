@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "LensDirt",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "镜头污渍",
   "category": "natural",
@@ -13,36 +13,56 @@
       "key": "R",
       "label": "横向拉伸",
       "min": 0.3,
-      "max": 3.0,
+      "max": 3,
       "step": 0.05,
-      "default": 1.1
+      "default": 1.1,
+      "variable": "horizontalStretch",
+      "aliases": {
+        "zh-CN": "横向拉伸",
+        "en": "Horizontal stretch"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "污渍覆盖",
       "min": 0.02,
-      "max": 1.0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "dirtCoverage",
+      "aliases": {
+        "zh-CN": "污渍覆盖",
+        "en": "Dirt coverage"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "划痕数",
-      "min": 0.0,
-      "max": 6.0,
-      "step": 1.0,
-      "default": 3.0
+      "min": 0,
+      "max": 6,
+      "step": 1,
+      "default": 3,
+      "variable": "scratchCount",
+      "aliases": {
+        "zh-CN": "划痕数",
+        "en": "Scratch count"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "尘点数",
-      "min": 0.0,
-      "max": 12.0,
-      "step": 1.0,
-      "default": 7.0
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "default": 7,
+      "variable": "dustCount",
+      "aliases": {
+        "zh-CN": "尘点数",
+        "en": "Dust count"
+      }
     },
     {
       "slot": 4,
@@ -51,15 +71,20 @@
       "min": 0.6,
       "max": 1.6,
       "step": 0.02,
-      "default": 1.0
+      "default": 1,
+      "variable": "radialFalloff",
+      "aliases": {
+        "zh-CN": "径向衰减",
+        "en": "Radial falloff"
+      }
     }
   ],
   "defaults": [
     1.1,
     0.5,
-    3.0,
-    7.0,
-    1.0,
+    3,
+    7,
+    1,
     0,
     0,
     0,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "镜头污渍",
+    "en": "Lens Dirt"
   }
 }

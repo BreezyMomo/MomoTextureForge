@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "PyroBurst",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "烟火爆发",
   "category": "energy",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "火花数",
-      "min": 6.0,
-      "max": 32.0,
-      "step": 1.0,
-      "default": 18.0
+      "min": 6,
+      "max": 32,
+      "step": 1,
+      "default": 18,
+      "variable": "sparkCount",
+      "aliases": {
+        "zh-CN": "火花数",
+        "en": "Spark count"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,12 @@
       "min": 0.01,
       "max": 0.15,
       "step": 0.002,
-      "default": 0.045
+      "default": 0.045,
+      "variable": "sparkThickness",
+      "aliases": {
+        "zh-CN": "火花粗细",
+        "en": "Spark thickness"
+      }
     },
     {
       "slot": 2,
@@ -33,32 +43,47 @@
       "min": 0.3,
       "max": 1.1,
       "step": 0.01,
-      "default": 0.92
+      "default": 0.92,
+      "variable": "maximumRadius",
+      "aliases": {
+        "zh-CN": "最大半径",
+        "en": "Maximum radius"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "爆发速度",
       "min": 0.05,
-      "max": 2.0,
+      "max": 2,
       "step": 0.05,
-      "default": 1.0
+      "default": 1,
+      "variable": "burstSpeed",
+      "aliases": {
+        "zh-CN": "爆发速度",
+        "en": "Burst speed"
+      }
     },
     {
       "slot": 4,
       "key": "D",
       "label": "尾迹长度",
       "min": 0.05,
-      "max": 1.0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.35
+      "default": 0.35,
+      "variable": "wakeLength",
+      "aliases": {
+        "zh-CN": "尾迹长度",
+        "en": "Wake length"
+      }
     }
   ],
   "defaults": [
-    18.0,
+    18,
     0.045,
     0.92,
-    1.0,
+    1,
     0.35,
     0,
     0,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "烟火爆发",
+    "en": "Pyro Burst"
   }
 }

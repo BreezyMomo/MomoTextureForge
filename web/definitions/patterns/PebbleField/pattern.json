@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "PebbleField",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "卵石地",
   "category": "natural",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "密度",
-      "min": 2.0,
-      "max": 22.0,
+      "min": 2,
+      "max": 22,
       "step": 0.5,
-      "default": 7.0
+      "default": 7,
+      "variable": "density",
+      "aliases": {
+        "zh-CN": "密度",
+        "en": "Density"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,13 @@
       "min": 0.02,
       "max": 0.2,
       "step": 0.005,
-      "default": 0.075
+      "default": 0.075,
+      "variable": "edgeFeather",
+      "aliases": {
+        "zh-CN": "边缘羽化",
+        "en": "Edge feather"
+      },
+      "role": "edge-softness"
     },
     {
       "slot": 2,
@@ -33,20 +44,30 @@
       "min": 0.2,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.4
+      "default": 0.4,
+      "variable": "grainSize",
+      "aliases": {
+        "zh-CN": "粒径",
+        "en": "Grain size"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "明暗",
-      "min": 0.0,
-      "max": 3.0,
+      "min": 0,
+      "max": 3,
       "step": 0.05,
-      "default": 1.4
+      "default": 1.4,
+      "variable": "brightness",
+      "aliases": {
+        "zh-CN": "明暗",
+        "en": "Brightness"
+      }
     }
   ],
   "defaults": [
-    7.0,
+    7,
     0.075,
     0.4,
     1.4,
@@ -78,5 +99,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "卵石地",
+    "en": "Pebble Field"
   }
 }

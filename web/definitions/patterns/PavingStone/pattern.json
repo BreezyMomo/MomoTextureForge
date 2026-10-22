@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "PavingStone",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "铺路石",
   "category": "pattern",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 2.0,
-      "max": 24.0,
-      "step": 1.0,
-      "default": 7.0
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 7,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
@@ -24,20 +29,30 @@
       "min": 0.004,
       "max": 0.2,
       "step": 0.002,
-      "default": 0.04
+      "default": 0.04,
+      "variable": "gapWidth",
+      "aliases": {
+        "zh-CN": "缝宽",
+        "en": "Gap width"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "扰动",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.85
+      "default": 0.85,
+      "variable": "distortion",
+      "aliases": {
+        "zh-CN": "扰动",
+        "en": "Distortion"
+      }
     }
   ],
   "defaults": [
-    7.0,
+    7,
     0.04,
     0.85,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "铺路石",
+    "en": "Paving Stone"
   }
 }

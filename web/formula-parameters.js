@@ -1,11 +1,11 @@
+import {validateVariable} from './parameter-metadata.js';
 // Bind in an outer lexical scope rather than rewriting identifiers in authored GLSL.
-const reserved=new Set('u q r time a b c d float int uint bool true false return if else for while do break continue const void vec2 vec3 vec4 ivec2 ivec3 ivec4 uvec2 uvec3 uvec4 bvec2 bvec3 bvec4 mat2 mat3 mat4 uniform in out inout gl_Position gl_FragCoord'.split(' '));
 const type=/^(?:float|int|uint|bool|[biu]?vec[234]|mat[234](?:x[234])?)$/;
 const lex=source=>[...source.replace(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g,' ').matchAll(/[A-Za-z_][A-Za-z0-9_]*|(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?|[^\s]/g)].map(m=>m[0]);
 export function bindFormulaParameters(source,parameters,kind='expression',additionalSlots=[]){
  const names=new Map(),used=new Set(),slots=new Map();
  for(const p of parameters){const name=p.variable;
-  if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(name)||name.startsWith('gl_')||name.includes('__')||reserved.has(name))throw Error('无效或保留的公式变量：'+name);
+  validateVariable(name);
   if(names.has(name))throw Error('公式变量重复：'+name);
   if(!Number.isInteger(p.slot)||p.slot<0||p.slot>15||slots.has(p.slot))throw Error('参数槽无效或重复');
   names.set(name,p);slots.set(p.slot,name);

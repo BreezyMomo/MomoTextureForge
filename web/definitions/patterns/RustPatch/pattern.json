@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RustPatch",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "锈斑铁器",
   "category": "natural",
@@ -12,42 +12,62 @@
       "slot": 0,
       "key": "R",
       "label": "锈蚀量",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "rustAmount",
+      "aliases": {
+        "zh-CN": "锈蚀量",
+        "en": "Rust amount"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "颗粒",
-      "min": 10.0,
-      "max": 160.0,
-      "step": 2.0,
-      "default": 52.0
+      "min": 10,
+      "max": 160,
+      "step": 2,
+      "default": 52,
+      "variable": "grain",
+      "aliases": {
+        "zh-CN": "颗粒",
+        "en": "Grain"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "蚀坑深度",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.45
+      "default": 0.45,
+      "variable": "pitDepth",
+      "aliases": {
+        "zh-CN": "蚀坑深度",
+        "en": "Pit depth"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "流动",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.02,
-      "default": 0.3
+      "default": 0.3,
+      "variable": "flow",
+      "aliases": {
+        "zh-CN": "流动",
+        "en": "Flow"
+      }
     }
   ],
   "defaults": [
     0.5,
-    52.0,
+    52,
     0.45,
     0.3,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "锈斑铁器",
+    "en": "Rust Patch"
   }
 }

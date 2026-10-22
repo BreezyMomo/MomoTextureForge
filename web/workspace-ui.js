@@ -1,3 +1,4 @@
+import {uiText,uiFormat} from './ui-language.js';
 import { BY_ID } from "./catalog.js";
 import { exportSummary } from "./workspace-model.js";
 
@@ -11,8 +12,8 @@ export function createWorkspace(actions, prefs) {
   const context=block('div',`<div class="context-heading"><strong id="editing-context"></strong><button id="context-visible" type="button"></button></div><div id="context-tabs-slot"></div><nav class="inspector-tabs" aria-label="编辑分区"><button data-pane="shape">图形</button><button data-pane="arrange">排列</button><button data-pane="compose">合成</button><button data-pane="output">输出</button></nav>`);
   context.className='inspector-context';inspector.prepend(context);$('context-tabs-slot').append($('layer-tabs'));
   const panes={};let pane='shape';
-  for(const [id, label] of [['shape','图形'],['arrange','排列'],['compose','合成'],['output','输出']]) {
-    const node=document.createElement('div');node.id=`pane-${id}`;node.className='inspector-pane';node.setAttribute('role','region');node.setAttribute('aria-label',`${label}设置`);inspector.append(node);panes[id]=node;
+  for(const [id, label] of [['shape',"inspector.shape"],['arrange',"workspace.arrangement"],['compose',"inspector.composite"],['output',"workspace.output"]]) {
+    const node=document.createElement('div');node.id=`pane-${id}`;node.className='inspector-pane';node.setAttribute('role','region');node.setAttribute('aria-label',uiFormat("workspace.valueSettings",label));inspector.append(node);panes[id]=node;
   }
   const advanced=(node,title)=>{const detail=block('details',`<summary>${title}</summary>`);detail.className='advanced-section';detail.append(node);return detail;};
   panes.shape.append(section('图层与参数'),advanced(section('UV 变换'),'高级：UV 变换'));
@@ -20,7 +21,7 @@ export function createWorkspace(actions, prefs) {
   panes.compose.append(section('图层混合'),section('配色渐变'),advanced(section('后处理'),'高级：后处理'),advanced(section('预设'),'预设管理'));
   const layerControls=document.createElement('div');layerControls.id='composition-controls';layerControls.className='layer-controls';section('图层混合').querySelector('.section-heading').after(layerControls);
   panes.output.append(section('输出'),section('动画与序列帧'));
-  section('动画与序列帧').querySelector('h2').textContent='序列帧设置';
+  section('动画与序列帧').querySelector('h2').textContent=uiText("workspace.frameSequenceSettings");
   const panelHead=block('div',`<label>导出内容<select id="export-kind"><option value="single">单张贴图</option><option value="atlas">翻转书图集</option><option value="frames">逐帧 PNG ZIP</option><option value="batch">批量三档 PNG ZIP</option></select></label><label>文件格式<select id="export-format"><option value="png">PNG</option><option value="exr">EXR</option></select></label><p id="export-summary" aria-live="polite"></p><button id="export-current" class="primary">导出当前输出</button>`);
   panelHead.className='export-overview';panes.output.prepend(panelHead);
   panes.output.append($('flipbook-preview'));
@@ -67,11 +68,11 @@ export function createWorkspace(actions, prefs) {
   window.addEventListener('resize',applyView);
   if(typeof ResizeObserver!=='undefined')new ResizeObserver(applyView).observe(stage);
   const animation=block('button','动画 / 时间轴');animation.id='animation-toggle';animation.setAttribute('aria-expanded','false');animation.className='animation-toggle';document.querySelector('.timeline').before(animation);
-  function showAnimation(open) {animationOpen=open;document.querySelector('.timeline').hidden=!open;animation.setAttribute('aria-expanded',String(open));animation.textContent=open?'收起时间轴':'动画 / 时间轴';}
+  function showAnimation(open) {animationOpen=open;document.querySelector('.timeline').hidden=!open;animation.setAttribute('aria-expanded',String(open));animation.textContent=(open ? uiText("workspace.collapseTimeline") : uiText("workspace.animationTimeline"));}
   animation.onclick=()=>{showAnimation(!animationOpen);if(!animationOpen)actions.pause();};
-  $('preview-size').closest('label').firstChild.textContent='预览分辨率 ';
-  $('random').textContent='随机图案';$('random-params').textContent='随机当前参数';
-  $('current-title').textContent='合成预览';
+  $('preview-size').closest('label').firstChild.textContent=uiText("workspace.previewResolution");
+  $('random').textContent=uiText("workspace.randomPattern");$('random-params').textContent=uiText("workspace.randomizeCurrentParameters");
+  $('current-title').textContent=uiText("editor.compositePreview");
   $('context-visible').onclick=actions.toggleVisible;
   function selectTab(id) {pane=id;for(const [key,node]of Object.entries(panes))node.hidden=key!==id;for(const button of context.querySelectorAll('[data-pane]')){button.classList.toggle('active',button.dataset.pane===id);button.setAttribute('aria-pressed',String(button.dataset.pane===id));}}
   for(const button of context.querySelectorAll('[data-pane]'))button.onclick=()=>selectTab(button.dataset.pane);
@@ -81,9 +82,9 @@ export function createWorkspace(actions, prefs) {
   if(!actions.canFloat())$('export-format').querySelector('[value="exr"]').disabled=true;
   function refresh(s,index,playing) {
     const layer=s.layers[index],type=BY_ID.get(layer.type);
-    $('editing-context').textContent=`图层 ${index+1} · ${type.zh}`;
+    $('editing-context').textContent=uiFormat("workspace.layerValueValue",index+1,type.zh);
     $('editing-context').title=type.id;
-    $('context-visible').textContent=layer.enabled?'显示中':'已隐藏';$('context-visible').setAttribute('aria-pressed',String(layer.enabled));
+    $('context-visible').textContent=(layer.enabled ? uiText("workspace.visible") : uiText("workspace.hidden"));$('context-visible').setAttribute('aria-pressed',String(layer.enabled));
     const blend=$(`layers-${index}-blend`)?.closest('label'),opacity=$(`layers-${index}-opacity`)?.closest('.param-row');
     if(blend&&opacity)layerControls.replaceChildren(blend,opacity);
     const enabled=$(`layers-${index}-enabled`)?.closest('label');if(enabled)enabled.hidden=true;

@@ -1,9 +1,10 @@
+import {uiText} from './ui-language.js';
 const NS = "http://www.w3.org/2000/svg";
 export function createCurveEditor(read, { begin, point, end, canEdit = () => true }) {
   const svg = document.createElementNS(NS, "svg");
   svg.setAttribute("viewBox", "0 0 300 300");
   svg.setAttribute("class", "curve-editor");
-  svg.setAttribute("aria-label", "贝塞尔控制点编辑器");
+  svg.setAttribute("aria-label", uiText("ui.bZierControlPointEditor"));
   const element = (name, attrs) => {
     const node = document.createElementNS(NS, name);
     for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
@@ -17,7 +18,7 @@ export function createCurveEditor(read, { begin, point, end, canEdit = () => tru
   const path = element("path", { class: "curve-path", fill: "none" });
   const handles = Array.from({ length: 4 }, (_, i) => element("circle", {
     r: 7, class: "curve-handle", "data-point": i, tabindex: 0, role: "button",
-    "aria-label": ["拖动起点", "拖动控制点 1", "拖动控制点 2", "拖动终点"][i],
+    "aria-label": uiText(["ui.dragStart", "ui.dragControlPoint", "canvas.dragControlPoint2", "ui.dragEnd"][i]),
   }));
   const coords = (p, i) => [150+p[i*2]*100, 150-p[i*2+1]*100];
   const update = () => {

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Scales",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "鳞片",
   "category": "pattern",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 2.0,
-      "max": 30.0,
-      "step": 1.0,
-      "default": 8.0
+      "min": 2,
+      "max": 30,
+      "step": 1,
+      "default": 8,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
@@ -24,7 +29,12 @@
       "min": 0.4,
       "max": 1.6,
       "step": 0.01,
-      "default": 0.72
+      "default": 0.72,
+      "variable": "scaleRadius",
+      "aliases": {
+        "zh-CN": "鳞片半径",
+        "en": "Scale radius"
+      }
     },
     {
       "slot": 2,
@@ -33,20 +43,30 @@
       "min": 0.002,
       "max": 0.1,
       "step": 0.002,
-      "default": 0.014
+      "default": 0.014,
+      "variable": "strokeWidth",
+      "aliases": {
+        "zh-CN": "描边宽",
+        "en": "Stroke width"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "行错位",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.5
+      "default": 0.5,
+      "variable": "rowOffset",
+      "aliases": {
+        "zh-CN": "行错位",
+        "en": "Row offset"
+      }
     }
   ],
   "defaults": [
-    8.0,
+    8,
     0.72,
     0.014,
     0.5,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "鳞片",
+    "en": "Scales"
   }
 }

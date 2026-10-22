@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RainGlass",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "雨滴玻璃",
   "category": "natural",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "雨滴数",
-      "min": 4.0,
-      "max": 24.0,
-      "step": 1.0,
-      "default": 12.0
+      "min": 4,
+      "max": 24,
+      "step": 1,
+      "default": 12,
+      "variable": "raindropCount",
+      "aliases": {
+        "zh-CN": "雨滴数",
+        "en": "Raindrop count"
+      }
     },
     {
       "slot": 1,
@@ -24,25 +29,40 @@
       "min": 0.01,
       "max": 0.12,
       "step": 0.002,
-      "default": 0.035
+      "default": 0.035,
+      "variable": "raindropSize",
+      "aliases": {
+        "zh-CN": "雨滴尺寸",
+        "en": "Raindrop size"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "尾迹长度",
       "min": 0.5,
-      "max": 6.0,
+      "max": 6,
       "step": 0.05,
-      "default": 2.2
+      "default": 2.2,
+      "variable": "wakeLength",
+      "aliases": {
+        "zh-CN": "尾迹长度",
+        "en": "Wake length"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "下落速度",
-      "min": 0.0,
-      "max": 3.0,
+      "min": 0,
+      "max": 3,
       "step": 0.05,
-      "default": 1.0
+      "default": 1,
+      "variable": "fallSpeed",
+      "aliases": {
+        "zh-CN": "下落速度",
+        "en": "Fall speed"
+      }
     },
     {
       "slot": 4,
@@ -51,14 +71,19 @@
       "min": 0.2,
       "max": 1.2,
       "step": 0.02,
-      "default": 0.85
+      "default": 0.85,
+      "variable": "edgeBrightness",
+      "aliases": {
+        "zh-CN": "边缘亮度",
+        "en": "Edge brightness"
+      }
     }
   ],
   "defaults": [
-    12.0,
+    12,
     0.035,
     2.2,
-    1.0,
+    1,
     0.85,
     0,
     0,
@@ -87,5 +112,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "雨滴玻璃",
+    "en": "Rain Glass"
   }
 }

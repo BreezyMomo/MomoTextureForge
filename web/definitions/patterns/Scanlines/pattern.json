@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Scanlines",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "扫描线",
   "category": "digital",
@@ -12,32 +12,47 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 2.0,
-      "max": 300.0,
-      "step": 1.0,
-      "default": 60.0
+      "min": 2,
+      "max": 300,
+      "step": 1,
+      "default": 60,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "柔和",
-      "min": 0.0,
+      "min": 0,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.05
+      "default": 0.05,
+      "variable": "softness",
+      "aliases": {
+        "zh-CN": "柔和",
+        "en": "Softness"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "速度",
-      "min": 0.0,
-      "max": 2.0,
+      "min": 0,
+      "max": 2,
       "step": 0.05,
-      "default": 0.2
+      "default": 0.2,
+      "variable": "speed",
+      "aliases": {
+        "zh-CN": "速度",
+        "en": "Speed"
+      }
     }
   ],
   "defaults": [
-    60.0,
+    60,
     0.05,
     0.2,
     0,
@@ -69,5 +84,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "扫描线",
+    "en": "Scanlines"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "PlumeSmoke",
-  "revision": 2,
+  "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "蓬松烟团",
   "category": "vfx",
@@ -16,7 +16,11 @@
       "min": 0,
       "max": 99999,
       "step": 1,
-      "default": 7872
+      "default": 7872,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      }
     },
     {
       "slot": 1,
@@ -31,17 +35,36 @@
       "options": [
         {
           "value": 0,
-          "label": "烟柱"
+          "label": "烟柱",
+          "variable": "value0",
+          "aliases": {
+            "zh-CN": "烟柱",
+            "en": "Smoke column"
+          }
         },
         {
           "value": 1,
-          "label": "独立烟团"
+          "label": "独立烟团",
+          "variable": "value1",
+          "aliases": {
+            "zh-CN": "独立烟团",
+            "en": "Smoke puff"
+          }
         },
         {
           "value": 2,
-          "label": "地面烟雾"
+          "label": "地面烟雾",
+          "variable": "value2",
+          "aliases": {
+            "zh-CN": "地面烟雾",
+            "en": "Ground smoke"
+          }
         }
-      ]
+      ],
+      "aliases": {
+        "zh-CN": "烟雾类型",
+        "en": "Smoke type"
+      }
     },
     {
       "slot": 2,
@@ -51,7 +74,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.46
+      "default": 0.46,
+      "aliases": {
+        "zh-CN": "立体深度",
+        "en": "Volume depth"
+      }
     },
     {
       "slot": 3,
@@ -61,7 +88,11 @@
       "min": 0.05,
       "max": 1,
       "step": 0.01,
-      "default": 0.51
+      "default": 0.51,
+      "aliases": {
+        "zh-CN": "宽度",
+        "en": "Width"
+      }
     },
     {
       "slot": 4,
@@ -71,7 +102,11 @@
       "min": 0.05,
       "max": 1,
       "step": 0.01,
-      "default": 0.48
+      "default": 0.48,
+      "aliases": {
+        "zh-CN": "长度",
+        "en": "Length"
+      }
     },
     {
       "slot": 5,
@@ -81,7 +116,11 @@
       "min": 0,
       "max": 360,
       "step": 1,
-      "default": 130
+      "default": 130,
+      "aliases": {
+        "zh-CN": "方向",
+        "en": "Direction"
+      }
     },
     {
       "slot": 6,
@@ -91,7 +130,11 @@
       "min": -1,
       "max": 1,
       "step": 0.01,
-      "default": 0.02
+      "default": 0.02,
+      "aliases": {
+        "zh-CN": "弯曲",
+        "en": "Bend"
+      }
     },
     {
       "slot": 7,
@@ -101,7 +144,11 @@
       "min": -1,
       "max": 1,
       "step": 0.01,
-      "default": -0.36
+      "default": -0.36,
+      "aliases": {
+        "zh-CN": "收尖",
+        "en": "Taper"
+      }
     },
     {
       "slot": 8,
@@ -111,7 +158,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.33
+      "default": 0.33,
+      "aliases": {
+        "zh-CN": "翻卷",
+        "en": "Roll"
+      }
     },
     {
       "slot": 9,
@@ -121,7 +172,11 @@
       "min": -1,
       "max": 1,
       "step": 0.01,
-      "default": -0.53
+      "default": -0.53,
+      "aliases": {
+        "zh-CN": "侧向漂移",
+        "en": "Lateral drift"
+      }
     },
     {
       "slot": 10,
@@ -131,7 +186,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.18
+      "default": 0.18,
+      "aliases": {
+        "zh-CN": "膨胀",
+        "en": "Expansion"
+      }
     },
     {
       "slot": 11,
@@ -141,7 +200,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.37
+      "default": 0.37,
+      "aliases": {
+        "zh-CN": "聚团",
+        "en": "Clumping"
+      }
     },
     {
       "slot": 12,
@@ -151,7 +214,11 @@
       "min": 10,
       "max": 2000,
       "step": 1,
-      "default": 310
+      "default": 310,
+      "aliases": {
+        "zh-CN": "烟团数量",
+        "en": "Puff count"
+      }
     },
     {
       "slot": 13,
@@ -161,7 +228,11 @@
       "min": 0.005,
       "max": 0.3,
       "step": 0.005,
-      "default": 0.07
+      "default": 0.07,
+      "aliases": {
+        "zh-CN": "最小烟团",
+        "en": "Minimum puff size"
+      }
     },
     {
       "slot": 14,
@@ -171,7 +242,11 @@
       "min": 0.01,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.13
+      "default": 0.13,
+      "aliases": {
+        "zh-CN": "最大烟团",
+        "en": "Maximum puff size"
+      }
     },
     {
       "slot": 15,
@@ -181,7 +256,11 @@
       "min": 0.001,
       "max": 0.3,
       "step": 0.001,
-      "default": 0.075
+      "default": 0.075,
+      "aliases": {
+        "zh-CN": "烟团不透明度",
+        "en": "Puff opacity"
+      }
     },
     {
       "slot": 16,
@@ -191,7 +270,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.65
+      "default": 0.65,
+      "aliases": {
+        "zh-CN": "扭曲强度",
+        "en": "Warp strength"
+      }
     },
     {
       "slot": 17,
@@ -201,7 +284,11 @@
       "min": 0.5,
       "max": 12,
       "step": 0.1,
-      "default": 4.6
+      "default": 4.6,
+      "aliases": {
+        "zh-CN": "扭曲尺度",
+        "en": "Warp scale"
+      }
     },
     {
       "slot": 18,
@@ -211,7 +298,11 @@
       "min": 1,
       "max": 8,
       "step": 1,
-      "default": 7
+      "default": 7,
+      "aliases": {
+        "zh-CN": "扭曲细节",
+        "en": "Warp detail"
+      }
     },
     {
       "slot": 19,
@@ -221,7 +312,11 @@
       "min": -1,
       "max": 1,
       "step": 0.01,
-      "default": 0.1
+      "default": 0.1,
+      "aliases": {
+        "zh-CN": "流向偏移",
+        "en": "Flow offset"
+      }
     },
     {
       "slot": 20,
@@ -231,7 +326,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.44
+      "default": 0.44,
+      "aliases": {
+        "zh-CN": "柔和度",
+        "en": "Softness"
+      }
     },
     {
       "slot": 21,
@@ -241,7 +340,11 @@
       "min": 0.3,
       "max": 3,
       "step": 0.01,
-      "default": 1.75
+      "default": 1.75,
+      "aliases": {
+        "zh-CN": "蓬松对比",
+        "en": "Billow contrast"
+      }
     },
     {
       "slot": 22,
@@ -251,7 +354,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0.73
+      "default": 0.73,
+      "aliases": {
+        "zh-CN": "边缘破碎",
+        "en": "Edge breakup"
+      }
     },
     {
       "slot": 23,
@@ -261,7 +368,11 @@
       "min": 0.1,
       "max": 3,
       "step": 0.01,
-      "default": 1.6
+      "default": 1.6,
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      }
     },
     {
       "slot": 24,
@@ -271,7 +382,11 @@
       "min": 0,
       "max": 1,
       "step": 0.01,
-      "default": 0
+      "default": 0,
+      "aliases": {
+        "zh-CN": "最终模糊",
+        "en": "Final blur"
+      }
     },
     {
       "slot": 25,
@@ -282,7 +397,11 @@
       "max": 16777215,
       "step": 1,
       "default": 16777215,
-      "type": "color"
+      "type": "color",
+      "aliases": {
+        "zh-CN": "烟雾颜色",
+        "en": "Smoke color"
+      }
     },
     {
       "slot": 26,
@@ -292,7 +411,11 @@
       "min": 0,
       "max": 3,
       "step": 0.01,
-      "default": 1
+      "default": 1,
+      "aliases": {
+        "zh-CN": "动画速度",
+        "en": "Animation speed"
+      }
     }
   ],
   "defaults": [
@@ -352,5 +475,9 @@
       "color": "generator-smoke-v1"
     },
     "usesTime": true
+  },
+  "aliases": {
+    "zh-CN": "蓬松烟团",
+    "en": "Plume Smoke"
   }
 }

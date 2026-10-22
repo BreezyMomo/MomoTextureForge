@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "Fingerprint",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "指纹",
   "category": "pattern",
@@ -12,43 +12,63 @@
       "slot": 0,
       "key": "R",
       "label": "扭曲缩放",
-      "min": 1.0,
-      "max": 8.0,
+      "min": 1,
+      "max": 8,
       "step": 0.5,
-      "default": 3.0
+      "default": 3,
+      "variable": "warpScale",
+      "aliases": {
+        "zh-CN": "扭曲缩放",
+        "en": "Warp scale"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "扭曲量",
-      "min": 0.0,
+      "min": 0,
       "max": 0.08,
       "step": 0.002,
-      "default": 0.025
+      "default": 0.025,
+      "variable": "warpAmount",
+      "aliases": {
+        "zh-CN": "扭曲量",
+        "en": "Warp amount"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "环密度",
-      "min": 8.0,
-      "max": 80.0,
-      "step": 1.0,
-      "default": 30.0
+      "min": 8,
+      "max": 80,
+      "step": 1,
+      "default": 30,
+      "variable": "ringDensity",
+      "aliases": {
+        "zh-CN": "环密度",
+        "en": "Ring density"
+      }
     },
     {
       "slot": 3,
       "key": "S",
       "label": "锐度",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.05,
-      "default": 0.7
+      "default": 0.7,
+      "variable": "sharpness",
+      "aliases": {
+        "zh-CN": "锐度",
+        "en": "Sharpness"
+      }
     }
   ],
   "defaults": [
-    3.0,
+    3,
     0.025,
-    30.0,
+    30,
     0.7,
     0,
     0,
@@ -78,5 +98,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "指纹",
+    "en": "Fingerprint"
   }
 }

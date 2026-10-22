@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RoundedRect",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "圆角矩形",
   "category": "shape",
@@ -15,7 +15,12 @@
       "min": 0.05,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.45
+      "default": 0.45,
+      "variable": "halfWidth",
+      "aliases": {
+        "zh-CN": "半宽",
+        "en": "Half width"
+      }
     },
     {
       "slot": 5,
@@ -24,7 +29,12 @@
       "min": 0.05,
       "max": 1.5,
       "step": 0.01,
-      "default": 0.45
+      "default": 0.45,
+      "variable": "halfHeight",
+      "aliases": {
+        "zh-CN": "半高",
+        "en": "Half height"
+      }
     },
     {
       "slot": 4,
@@ -33,7 +43,12 @@
       "min": 0,
       "max": 0.5,
       "step": 0.005,
-      "default": 0.08
+      "default": 0.08,
+      "variable": "cornerRadius",
+      "aliases": {
+        "zh-CN": "圆角半径",
+        "en": "Corner radius"
+      }
     },
     {
       "slot": 3,
@@ -42,7 +57,13 @@
       "min": 0.001,
       "max": 0.3,
       "step": 0.001,
-      "default": 0.015
+      "default": 0.015,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather"
     }
   ],
   "defaults": [
@@ -78,5 +99,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "圆角矩形",
+    "en": "Rounded Rect"
   }
 }

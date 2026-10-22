@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "CelticKnot",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "凯尔特结",
   "category": "pattern",
@@ -12,10 +12,15 @@
       "slot": 0,
       "key": "R",
       "label": "数量",
-      "min": 2.0,
-      "max": 24.0,
-      "step": 1.0,
-      "default": 6.0
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 6,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      }
     },
     {
       "slot": 1,
@@ -24,11 +29,16 @@
       "min": 0.02,
       "max": 0.3,
       "step": 0.005,
-      "default": 0.11
+      "default": 0.11,
+      "variable": "bandWidth",
+      "aliases": {
+        "zh-CN": "带宽",
+        "en": "Band width"
+      }
     }
   ],
   "defaults": [
-    6.0,
+    6,
     0.11,
     0,
     0,
@@ -60,5 +70,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "凯尔特结",
+    "en": "Celtic Knot"
   }
 }

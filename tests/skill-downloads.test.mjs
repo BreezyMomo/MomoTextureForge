@@ -24,3 +24,8 @@ test('effects download matches maintained references and uses dynamic context in
  assert.ok(!files.has(prefix+'references/patterns.md'));
  assert.ok(files.has(prefix+'references/ai-context.md'));
 });
+
+test('generated parameter guidance contains display labels rather than internal message IDs',async()=>{
+ const text=await readFile(new URL('../skills/texture-forge-effects/references/layout-parameters.md',import.meta.url),'utf8');
+ assert.ok(text.includes('网格列数'));assert.ok(!/\b(?:editor|ui|arrangement)\.[A-Za-z]/.test(text));
+});

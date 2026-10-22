@@ -1,3 +1,4 @@
+import {messageError} from './message-catalog.js';
 import {bounds,moveTransform} from './canvas-transform.js';
 import {BY_ID} from './catalog.js';
 
@@ -28,12 +29,12 @@ export function batchValues(n,path,value,read){
 export function validateSelectionValues(changes){
  for(const {values}of changes)for(const [path,value]of Object.entries(values)){
   const limit=path==='opacity'||/transform\.(width|height)$/.test(path)?[0,1]:/transform\.(x|y)$/.test(path)?[-2,2]:path==='transform.rotation'?[-3600,3600]:null;
-  if(limit&&(!Number.isFinite(value)||value<limit[0]-1e-9||value>limit[1]+1e-9))throw Error('部分节点会超出参数范围，本次操作已取消');
+  if(limit&&(!Number.isFinite(value)||value<limit[0]-1e-9||value>limit[1]+1e-9))throw messageError("ui.someNodesWouldExceedParameterLimitsTheOperationWasCancelled");
  }
 }
 export function layoutSelection(items,operation,reference='selection'){
- if(items.length<2)throw Error('请至少选择两个节点');
- if(items.some(x=>!x.region))throw Error('所选节点隐藏或有多个排列副本，请选择可见的独立节点或其外层组合');
+ if(items.length<2)throw messageError("ui.selectAtLeastTwoNodes");
+ if(items.some(x=>!x.region))throw messageError("ui.theSelectionIsHiddenOrHasMultipleArrangedCopiesSelectVisible");
  const all=bounds(items.map(x=>x.region)),target=reference==='canvas'?{min:[0,0],max:[1,1]}:all;
  const entries=items.map(x=>({...x,box:bounds([x.region])}));
  const delta=new Map(entries.map(x=>[x.id,[0,0]]));
@@ -41,8 +42,8 @@ export function layoutSelection(items,operation,reference='selection'){
  if(spec){const [axis,f]=spec,line=target.min[axis]+(target.max[axis]-target.min[axis])*f;
   for(const x of entries)delta.get(x.id)[axis]=line-(x.box.min[axis]+(x.box.max[axis]-x.box.min[axis])*f);
  }else{
-  if(!['distributeX','distributeY'].includes(operation))throw Error('未知对齐操作');
-  if(entries.length<3)throw Error('等距分布需要至少三个节点');
+  if(!['distributeX','distributeY'].includes(operation))throw messageError("ui.unknownAlignmentAction");
+  if(entries.length<3)throw messageError("ui.distributingSpacingRequiresAtLeastThreeNodes");
   const axis=operation==='distributeX'?0:1;
   entries.sort((a,b)=>a.box.min[axis]-b.box.min[axis]);
   const first=entries[0],last=entries.at(-1),span=last.box.max[axis]-first.box.min[axis],sizes=entries.map(x=>x.box.max[axis]-x.box.min[axis]);

@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "PolarFlow",
-  "revision": 1,
+  "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "极坐标流",
   "category": "vector",
@@ -12,34 +12,49 @@
       "slot": 0,
       "key": "R",
       "label": "环流比",
-      "min": 0.0,
-      "max": 1.0,
+      "min": 0,
+      "max": 1,
       "step": 0.01,
-      "default": 0.75
+      "default": 0.75,
+      "variable": "circulationRatio",
+      "aliases": {
+        "zh-CN": "环流比",
+        "en": "Circulation ratio"
+      }
     },
     {
       "slot": 1,
       "key": "W",
       "label": "环密度",
       "min": 0.5,
-      "max": 12.0,
+      "max": 12,
       "step": 0.1,
-      "default": 4.0
+      "default": 4,
+      "variable": "ringDensity",
+      "aliases": {
+        "zh-CN": "环密度",
+        "en": "Ring density"
+      }
     },
     {
       "slot": 2,
       "key": "N",
       "label": "强度",
       "min": 0.2,
-      "max": 2.0,
+      "max": 2,
       "step": 0.05,
-      "default": 1.0
+      "default": 1,
+      "variable": "strength",
+      "aliases": {
+        "zh-CN": "强度",
+        "en": "Strength"
+      }
     }
   ],
   "defaults": [
     0.75,
-    4.0,
-    1.0,
+    4,
+    1,
     0,
     0,
     0,
@@ -72,5 +87,9 @@
   },
   "editor": {
     "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "极坐标流",
+    "en": "Polar Flow"
   }
 }
