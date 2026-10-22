@@ -31,9 +31,9 @@ npm start -- --port 8799
 
 公共界面颜色在 `web/theme-tokens.css` 按背景、面板、控件、文字、边框与状态用途定义，各组件样式引用这些变量。画布辅助线、缩略图底色、用户色板和作品内容保持独立。启动入口在挂载编辑器前应用偏好；离线与静态构建内嵌同一份主题样式和逻辑。外观不进入项目模型、撤销记录、资源哈希或作品导出。
 
-偏好中的 `style`（`standard`、`minimal`、`soft`）和 `density`（`compact`、`comfortable`）独立于配色；旧偏好自动补为精致与紧凑。`standard` 的稳定值保持兼容，显示名为“精致”。根元素的 `data-interface-style`、`data-density` 驱动共享圆角与间距变量，简洁风格仅弱化内容模块边框，保留输入框、键盘焦点和停靠分隔条。密度调整触发现有预览尺寸观察器，不写入画布模型。
+偏好中的 `style`（`refined`、`standard`、`minimal`、`soft`）和 `density`（`compact`、`comfortable`）独立于配色。`standard` 始终对应“原版”，保留原来的语义配色和控件规则；旧配色偏好缺少风格时补为原版与紧凑，新浏览器默认使用独立的 `refined`（精致）。根元素的 `data-interface-style`、`data-density` 驱动共享圆角与间距变量，简洁风格仅弱化内容模块边框，保留输入框、键盘焦点和停靠分隔条。密度调整触发现有预览尺寸观察器，不写入画布模型。
 
-`web/editor-surfaces.css` 统一编辑器面板、控件与浮层的视觉层级；源码和静态包均在其他编辑器样式之后加载。背景、边框、选中态与阴影通过 `web/theme-tokens.css` 的语义变量组合，避免改动作品色板、透明棋盘和画布辅助线。视觉参考为 [Linear 的分层表面](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/linear.app/DESIGN.md) 与 [Raycast 的浮层](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/raycast/DESIGN.md)，按编辑器的紧凑布局调整，不使用官网的大字号与宣传区留白。
+`web/editor-surfaces.css` 仅在 `data-interface-style=refined` 时统一编辑器面板、控件与浮层的视觉层级，避免覆盖原版、简洁或柔和；源码和静态包均在其他编辑器样式之后加载。背景、边框、选中态与阴影通过 `web/theme-tokens.css` 的语义变量组合，避免改动作品色板、透明棋盘和画布辅助线。视觉参考为 [Linear 的分层表面](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/linear.app/DESIGN.md) 与 [Raycast 的浮层](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/raycast/DESIGN.md)，按编辑器的紧凑布局调整，不使用官网的大字号与宣传区留白。
 
 验证主题行为可运行 `node --test tests/appearance.test.mjs`、`node tests/appearance-browser-check.mjs`；静态构建后加 `--built` 检查发行版。浏览器检查覆盖预览、取消、保存恢复、系统变化、中英文入口、窄屏顶栏、画布像素与项目存储不变，截图位于 `test-results/appearance/`。
 

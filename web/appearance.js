@@ -1,13 +1,13 @@
 // User preferences never enter a canvas, its undo history, or resource identity.
 export const APPEARANCE_KEY='momo-texture-appearance:v1';
 export const THEME_IDS=Object.freeze(['system','classic','graphite','light']);
-export const STYLE_IDS=Object.freeze(['standard','minimal','soft']);
+export const STYLE_IDS=Object.freeze(['refined','standard','minimal','soft']);
 export const DENSITY_IDS=Object.freeze(['compact','comfortable']);
-const palettes={classic:{accent:'#dfae72',panel:'#1e2025',text:'#e8e9ed'},graphite:{accent:'#8ab4f8',panel:'#262729',text:'#eceeef'},light:{accent:'#3866af',panel:'#ffffff',text:'#242b35'}};
+const palettes={classic:{accent:'#dfae72',panel:'#1e2229',text:'#e5e9ef'},graphite:{accent:'#8ab4f8',panel:'#262729',text:'#eceeef'},light:{accent:'#3866af',panel:'#ffffff',text:'#242b35'}};
 export function normalizeAppearance(value){
  const theme=THEME_IDS.includes(value?.theme)?value.theme:'classic';
  const accent=typeof value?.accent==='string'&&/^#[a-f\d]{6}$/i.test(value.accent)?value.accent.toLowerCase():null;
- const style=STYLE_IDS.includes(value?.style)?value.style:'standard',density=DENSITY_IDS.includes(value?.density)?value.density:'compact';
+ const style=STYLE_IDS.includes(value?.style)?value.style:THEME_IDS.includes(value?.theme)?'standard':'refined',density=DENSITY_IDS.includes(value?.density)?value.density:'compact';
  return {theme,accent,style,density};
 }
 const rgb=hex=>[1,3,5].map(at=>parseInt(hex.slice(at,at+2),16));

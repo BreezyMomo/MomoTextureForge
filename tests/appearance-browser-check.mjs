@@ -20,11 +20,11 @@ try{
  await page.locator('[role=treeitem]').first().click();
  const snapshot=()=>page.evaluate(()=>({storage:Object.fromEntries(Object.entries(localStorage).filter(([key])=>key!=='momo-texture-appearance:v1')),hash:location.hash,undo:document.querySelector('#undo').disabled,redo:document.querySelector('#redo').disabled,pixels:document.querySelector('#tree-canvas').toDataURL(),guides:getComputedStyle(document.querySelector('#tree-preview-surface'),'::after').borderColor}));
  const before=await snapshot(),appearance=page.locator('#appearance-settings');
- assert.equal(await page.locator('html').getAttribute('data-interface-style'),'standard');
+ assert.equal(await page.locator('html').getAttribute('data-interface-style'),'refined');
  assert.notEqual(await page.locator('.dock-stack').first().evaluate(e=>getComputedStyle(e).boxShadow),'none');
  const open=async()=>{await appearance.click();await page.locator('.appearance-dialog').waitFor();};
  const theme=page.locator('#appearance-theme');
- await open();assert.equal(await page.locator('#appearance-style option[value=standard]').innerText(),'精致');assert.notEqual(await page.locator('.appearance-dialog').evaluate(e=>getComputedStyle(e).boxShadow),'none');await theme.selectOption('light');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
+ await open();assert.equal(await page.locator('#appearance-style option[value=refined]').innerText(),'精致');assert.equal(await page.locator('#appearance-style option[value=standard]').innerText(),'原版');assert.notEqual(await page.locator('.appearance-dialog').evaluate(e=>getComputedStyle(e).boxShadow),'none');await theme.selectOption('light');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
  assert.equal(await page.locator('.appearance-dialog').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
  await page.locator('#appearance-hex').fill('#ffff00');await page.locator('#appearance-hex').dispatchEvent('input');
  await page.locator('[data-save]').click();assert.equal(await page.locator('.appearance-dialog').count(),0);
@@ -39,7 +39,7 @@ try{
  await open();
  for(const themeId of ['classic','graphite','light']){
   await theme.selectOption(themeId);
-  for(const [styleId,radius]of [['standard','6px'],['minimal','2px'],['soft','8px']]){
+  for(const [styleId,radius]of [['refined','6px'],['standard','5px'],['minimal','2px'],['soft','8px']]){
    await style.selectOption(styleId);
    for(const densityId of ['compact','comfortable']){
     await density.selectOption(densityId);
@@ -47,7 +47,8 @@ try{
     assert.equal(await page.locator('#appearance-hex').evaluate(e=>getComputedStyle(e).borderRadius),radius);
     assert.equal(await page.locator('.inspector-module').first().evaluate(e=>getComputedStyle(e).borderLeftWidth),styleId==='minimal'?'0px':'1px');
     assert.equal(await page.locator('.inspector-module-body').first().evaluate(e=>getComputedStyle(e).paddingTop),densityId==='compact'?'9px':'14px');
-    assert.equal(await page.locator('.dock-stack').first().evaluate(e=>getComputedStyle(e).boxShadow==='none'),styleId==='minimal');
+    assert.equal(await page.locator('.dock-stack').first().evaluate(e=>getComputedStyle(e).boxShadow==='none'),styleId!=='refined');
+    assert.equal(await page.locator('.dock-workspace').evaluate(e=>getComputedStyle(e).paddingTop),styleId==='refined'?'6px':'3px');
     assert.equal(await page.locator('.tree-visibility').first().evaluate(e=>getComputedStyle(e).backgroundColor),'rgba(0, 0, 0, 0)');
     assert.deepEqual(await projectSnapshot(),stable);
    }
@@ -56,12 +57,12 @@ try{
  await style.selectOption('minimal');await density.selectOption('comfortable');await page.locator('[data-save]').click();
  await page.reload();await ready();assert.equal(await page.locator('html').getAttribute('data-interface-style'),'minimal');assert.equal(await page.locator('html').getAttribute('data-density'),'comfortable');
  await page.locator('[role=treeitem]').first().click();
- for(const styleId of ['standard','minimal','soft']){
+ for(const styleId of ['refined','standard','minimal','soft']){
   await open();await style.selectOption(styleId);await page.locator('[data-save]').click();
   await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-style-'+styleId+'.png',output))});
  }
  await open();await density.selectOption('compact');await theme.selectOption('graphite');assert.equal(await style.inputValue(),'soft');assert.equal(await density.inputValue(),'compact');await page.keyboard.press('Escape');assert.equal(await page.locator('html').getAttribute('data-density'),'comfortable');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
- await page.locator('#language-settings').selectOption('en');await open();assert.equal(await page.locator('#appearance-title').innerText(),'Appearance');assert.equal(await page.locator('#appearance-style option[value=standard]').innerText(),'Refined');assert.equal(await theme.locator('option').count(),4);await theme.selectOption('graphite');await page.locator('[data-save]').click();
+ await page.locator('#language-settings').selectOption('en');await open();assert.equal(await page.locator('#appearance-title').innerText(),'Appearance');assert.equal(await page.locator('#appearance-style option[value=refined]').innerText(),'Refined');assert.equal(await page.locator('#appearance-style option[value=standard]').innerText(),'Original');assert.equal(await theme.locator('option').count(),4);await theme.selectOption('graphite');await page.locator('[data-save]').click();
  await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-graphite.png',output))});
  for(const width of [1600,1100,768]){
   await page.setViewportSize({width,height:960});
@@ -77,5 +78,5 @@ try{
  await page.locator('[data-save]').click();await page.locator('#open-graphics-library').click();await page.locator('.graphics-card').first().waitFor();
  assert.equal(await page.locator('.graphics-dialog').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
  await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-library-light.png',output))});
- assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,checks:['live preview','custom accent','canvas/storage/history isolation','18 theme/style/density combinations','saved style/density restoration','cancel','system changes','English header 1600/1100/768','320px dialog','hex validation','library surfaces'],errors}));
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,checks:['live preview','custom accent','canvas/storage/history isolation','24 theme/style/density combinations','original and refined stay distinct','saved style/density restoration','cancel','system changes','English header 1600/1100/768','320px dialog','hex validation','library surfaces'],errors}));
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

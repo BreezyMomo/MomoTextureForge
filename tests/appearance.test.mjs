@@ -1,17 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {APPEARANCE_KEY,normalizeAppearance,appearancePalette,colorContrast,createAppearance} from '../web/appearance.js';
-const defaults={theme:'classic',accent:null,style:'standard',density:'compact'};
+const defaults={theme:'classic',accent:null,style:'refined',density:'compact'};
 
 test('appearance restores only supported themes and literal six-digit colors',()=>{
  for(const value of [null,[],{},'light',{theme:'unknown',accent:'url(https://example.com)',style:'unknown',density:'huge'}])assert.deepEqual(normalizeAppearance(value),defaults);
- assert.deepEqual(normalizeAppearance({theme:'light',accent:'#Aa00Ff',root:{children:[]}}),{...defaults,theme:'light',accent:'#aa00ff'});
+ assert.deepEqual(normalizeAppearance({theme:'light',accent:'#Aa00Ff',root:{children:[]}}),{...defaults,theme:'light',accent:'#aa00ff',style:'standard'});
  const controller=createAppearance({storage:{getItem(){throw Error('denied');}}});assert.deepEqual(controller.get(),defaults);assert.equal(controller.save({theme:'light'}),false);assert.equal(controller.palette().theme,'light');
 });
 
 test('custom colors retain readable button and accent text across every theme',()=>{
  for(const theme of ['classic','graphite','light'])for(const accent of ['#000000','#ffffff','#ffff00','#0000ff','#ff0000','#808080','#dfae72']){
-  const p=appearancePalette({theme,accent}),panel={classic:'#1e2025',graphite:'#262729',light:'#ffffff'}[theme];
+  const p=appearancePalette({theme,accent}),panel={classic:'#1e2229',graphite:'#262729',light:'#ffffff'}[theme];
   assert.ok(colorContrast(p.accent,p.onAccent)>=4.5,theme+' '+accent+' button');
   assert.ok(colorContrast(p.hover,p.onAccent)>=4.5,theme+' '+accent+' hover');
   assert.ok(colorContrast(p.accentText,panel)>=4.5,theme+' '+accent+' text');
@@ -42,4 +42,14 @@ test('existing color-only preferences migrate without losing their palette',()=>
  const controller=createAppearance({storage});assert.deepEqual(controller.get(),{...old,style:'standard',density:'compact'});
  const original=controller.get();controller.preview({...original,style:'minimal',density:'comfortable'});assert.deepEqual(controller.palette(),appearancePalette(old));
  controller.preview(original);assert.deepEqual(controller.get(),original);
+});
+
+test('saved original styling stays original while fresh profiles use a distinct refined preset',()=>{
+ const old={theme:'classic',accent:'#dfae72',style:'standard',density:'comfortable'};
+ const restored=createAppearance({storage:{getItem:()=>JSON.stringify(old)}});
+ assert.deepEqual(restored.get(),old);
+ assert.equal(normalizeAppearance({theme:'classic'}).style,'standard');
+ assert.equal(normalizeAppearance(null).style,'refined');
+ restored.preview({...old,style:'refined'});assert.equal(restored.get().style,'refined');
+ restored.preview(old);assert.deepEqual(restored.get(),old);
 });

@@ -2,8 +2,8 @@ import {appearance,THEME_IDS,STYLE_IDS,DENSITY_IDS,normalizeAppearance} from './
 import {uiText,localizeApplicationMarkup} from './ui-language.js';
 import {onLanguageChange} from './language.js';
 const themeKeys={system:'appearance.system',classic:'appearance.classic',graphite:'appearance.graphite',light:'appearance.light'};
-const styleKeys={standard:'appearance.standard',minimal:'appearance.minimal',soft:'appearance.soft'},densityKeys={compact:'appearance.compact',comfortable:'appearance.comfortable'};
-const descriptionKeys={standard:'appearance.standardDescription',minimal:'appearance.minimalDescription',soft:'appearance.softDescription'};
+const styleKeys={refined:'appearance.refined',standard:'appearance.standard',minimal:'appearance.minimal',soft:'appearance.soft'},densityKeys={compact:'appearance.compact',comfortable:'appearance.comfortable'};
+const descriptionKeys={refined:'appearance.refinedDescription',standard:'appearance.standardDescription',minimal:'appearance.minimalDescription',soft:'appearance.softDescription'};
 const swatches=[['#dfae72','appearance.amber'],['#79b8ff','appearance.blue'],['#b3a2ed','appearance.purple'],['#7ec5a5','appearance.green']];
 export function openAppearanceSettings(){
  const existing=document.querySelector('.appearance-dialog');if(existing){existing.focus();return;}
