@@ -2,7 +2,7 @@ export default {
 workspace:`# Workspace and resources
 
 ## Panels and layout
-The default workspace has a node tree and graphics list on the left, a canvas in the middle, and an inspector on the right. Selecting a node opens Shape, Color, Transform / arrangement, Animation and Composite tabs.
+The default workspace has a node tree and graphics list on the left, a canvas in the middle, and an inspector on the right. Selecting a node opens Shape (including coloring), Transform / arrangement, Animation and Composite tabs.
 Drag a panel tab to another panel's edge to split the area, or to its center to combine tabs. Drag separators to resize panels. Use the arrow button or Alt-drag to float a panel inside the browser. Escape cancels a drag. Closing a panel keeps its content; reopen it from Layout.
 Layout includes default, animation and focused-canvas presets. The current layout is saved in this browser. You can save up to 12 named layouts. Layouts are separate from projects and undo history.
 
@@ -16,8 +16,9 @@ Use File → Save project for an editable project backup. Library resource expor
 
 ## Selection and color
 Click to select, Ctrl/Cmd-click to toggle multiple nodes, or Shift-click for a range. Drag empty canvas space to select a rectangle. Multi-selection edits shared fields; matching shape types also expose their specific parameters. Mixed fields show Multiple values. Only changed fields are applied. When a parent and its descendant are selected, only the outermost selected node is edited.
-The color shortcut at the top of the inspector starts collapsed. Expand it to edit opacity and quick colors; Color contains full fill, gradient and color-stop settings. Inherited colors show their source. Independent child colors and group-wide remapping have different effects.
-Opacity belongs to Color and affects the entire node. Parent and child opacities multiply. Animated fields are locked in normal mode; use Record to add keys or Base values to edit their underlying values.
+Shape contains collapsible graphic parameters, UV, opacity, node colors, levels, inversion and channel curves. Color source uses a dropdown; solid/gradient fill uses a segmented control. Click the gradient strip to add sampled stops, drag stops to move them, and select a stop to edit color, HEX or position. Inherited colors identify their source; independent child colors and group-wide remapping have different effects.
+Click module titles to expand/collapse, and ? for independent help. Drag handles or use up/down arrows to reorder modules. Preferences stay in this browser, separate from projects, processing order and undo. Opacity is 0–1 for the entire node; parent and child opacities multiply. Animated fields lock normal editing; use Record or Base values.
+Double-click a tree name or press F2 to rename; Enter saves, Esc cancels. Row trash deletes the node, including children of a group, with undo. Drag to a graphic’s center to preview a virtual group: graphics cannot contain ordinary child nodes. Release to group; move away or Esc cancels without editing the project. Existing groups accept center drops; row edges reorder.
 
 ## Canvas tools
 Drag to move; double-click a group to enter it. Hold Shift to constrain movement or snap rotation to 15 degrees. Alt-click cycles overlapping nodes; right-click lists candidates. Space temporarily pans. Ctrl/Cmd+D duplicates, Ctrl/Cmd+G groups siblings, Delete removes, and Ctrl/Cmd+Z undoes.

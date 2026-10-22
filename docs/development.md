@@ -92,7 +92,13 @@ node tests/startup-browser-check.mjs
 
 面板布局回归：`node tests/dock-workspace-browser-check.mjs`；构建后加 `--standalone` 检查单文件版。覆盖实际拖动、标签合并、悬浮移动/缩放、保存与刷新恢复、三维上下文和 PNG 导出。布局模型在 `web/dock-layout.js`，DOM 控制器与样式在 `web/dock-workspace.js`、`web/dock-workspace.css`；只移动原有控件，布局本地存储与项目数据分开。
 
-颜色面板回归：`node tests/inspector-color-browser-check.mjs`，构建后可加 `--standalone`。检查继承来源、复制为独立配色的画面一致性、HEX与顶部快捷色块、透明度滑条与百分比同步、父子透明度合成、撤销/重做、颜色和透明度关键帧、多色色标和刷新恢复。
+参数与颜色面板回归：`node tests/inspector-color-browser-check.mjs --no-screenshots`，构建后加 `--standalone`。检查合并后的图形页签、继承来源、独立配色的画面一致性、透明度、HEX、撤销和关键帧、多色色标，以及图形/组合的可用设置。
+
+模块与贝塞尔回归分别运行 `node tests/inspector-sections-browser-check.mjs --no-screenshots` 和 `node tests/bezier-editor-browser-check.mjs --no-screenshots`；静态版加 `--built`。覆盖折叠与帮助独立、模块拖放/上下移动及本地顺序恢复、多段路径的缩放平移、点命中区域/光标/锁定、撤销和导出。展开状态使用 `momo-texture-tree:inspector-sections:v1`，排序使用 `momo-texture-tree:inspector-module-order:v1`，均不写入作品。
+
+节点树回归：`node tests/node-tree-actions-browser-check.mjs`，静态版加 `--built`。覆盖双击/F2 改名、Esc 取消、单行删除、真实拖放预览、预览期间无数据或撤销变更、移开/取消、松开确认、一次撤销、边缘排序和禁止循环嵌套。`web/node-drop-prompt.js` 只渲染不接收鼠标事件的预览，真正的结构修改由 `web/tree-selection.js` 在 drop 时执行。
+
+迭代期间可使用 `--no-screenshots` 关闭回归脚本截图；教程截图仅在明确整理文档或更新截图时通过下方工具统一生成。
 
 图库卡片使用 `web/builtin-thumbnails.js` 中预先生成的缩略图。修改内置图形的视觉公式后，先更新对应缩略图，再构建静态网站。例如更新“流动水纹”：
 
@@ -130,7 +136,10 @@ node tools/capture-docs.mjs colors
 | puzzle | 拼图接口样式、独立四角、凸耳越界与网格行列数 |
 | workspace | 总览、排列、合成和文件菜单 |
 | docking | 面板标签、网页内悬浮与布局保存菜单 |
-| colors | 颜色快捷区、继承来源、独立颜色页签、渐变和HEX |
+| colors | 图形页签内的透明度、配色来源、渐变色标、色阶/反相和 HEX |
+| node-tree | 行内改名、垃圾桶与松开确认的虚拟组合 |
+| inspector-modules | 模块折叠、独立帮助与模块排序 |
+| bezier-editor | 多段路径、放大编辑和控制点操作 |
 | library | 图库、生成器参数、图形列表 |
 | resources | 图片原图/去背景、公式、生成器 JSON、导入文件 |
 | animation | 实际录制的关键帧与曲线 |

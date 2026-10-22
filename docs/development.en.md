@@ -92,7 +92,13 @@ General overflow: `node tests/overflow-browser-check.mjs`, optionally `--standal
 
 Docking: `node tests/dock-workspace-browser-check.mjs`, optionally `--standalone`, covers dragging, merged tabs, floating move/resize, saved/reloaded layouts, 3D contexts and PNG export. Model/controller/styles are `web/dock-layout.js`, `web/dock-workspace.js`, `web/dock-workspace.css`. They move existing controls; layout storage stays separate from projects.
 
-Colors: `node tests/inspector-color-browser-check.mjs`, optionally `--standalone`, covers inheritance, visually identical independent copies, HEX/swatches, synchronized opacity sliders/numbers, multiplied parent alpha, undo, keys, multicolor stops and reload.
+Inspector/color regression: `node tests/inspector-color-browser-check.mjs --no-screenshots`; add `--standalone` after building. It covers the merged Shape tab, inheritance and visually identical independent copies, opacity, HEX, undo, keys, multicolor stops and graphic/group controls.
+
+Module and Bezier checks: `node tests/inspector-sections-browser-check.mjs --no-screenshots` and `node tests/bezier-editor-browser-check.mjs --no-screenshots`; add `--built` for the static site. These cover independent collapse/help, drag/arrow ordering and restored preferences, multisegment zoom/pan, point hit areas/cursors/locks, undo and export. Expansion uses `momo-texture-tree:inspector-sections:v1`; ordering uses `momo-texture-tree:inspector-module-order:v1`. Neither belongs to the project.
+
+Node-tree regression: `node tests/node-tree-actions-browser-check.mjs`, optionally `--built`. It checks double-click/F2 renaming, Esc, row-specific deletion, native drag previews, unchanged project/undo state during preview and cancellation, release-to-confirm, one-step undo, edge reordering and cycle rejection. `web/node-drop-prompt.js` renders a pointer-transparent preview; `web/tree-selection.js` changes the model only on drop.
+
+Use `--no-screenshots` during iteration. Regenerate manual screenshots with the tool below when documentation or screenshot updates are explicitly requested.
 
 Built-in cards use `web/builtin-thumbnails.js`. After changing a visual formula, regenerate its thumbnail before static builds:
 
@@ -130,7 +136,10 @@ node tools/capture-docs.mjs colors
 | puzzle | Connector styles, body corners, tabs and grid counts |
 | workspace | Overview, arrangements, composites and File |
 | docking | Panel tabs, floating and saved layouts |
-| colors | Quick controls, inheritance, Color tab, gradients and HEX |
+| colors | Opacity, color sources, gradient stops, levels/inversion and HEX in Shape |
+| node-tree | Inline rename, trash icons and release-to-confirm virtual groups |
+| inspector-modules | Module collapse, independent help and ordering |
+| bezier-editor | Multisegment paths, expanded editing and point interaction |
 | library | Library, generator parameters and list |
 | resources | Original/processed images, formula, generator JSON and import |
 | animation | Recorded keys and curves |

@@ -1,3 +1,4 @@
+import {bezierPoint} from './bezier-path.js';
 import {ARRANGEMENT_LIMITS as LIMITS} from './arrangement-limits.js';
 import { effectiveArrangement, ringCounts } from "./arrangement.js";
 import {visibleScatter} from './scatter-footprints.js';
@@ -30,11 +31,11 @@ export function densitySampler(pixels,size){
   return clamp(pixels[(iy*size+ix)*4]*scale);
  };
 }
-export function generateArrangement(values,{seamless=false,density=()=>1,avoidOverlap=false,gap=0,wrap=seamless,footprint=null,aspect=1,fit='contain'}={}){
+export function generateArrangement(values,{seamless=false,density=()=>1,avoidOverlap=false,gap=0,wrap=seamless,footprint=null,aspect=1,fit='contain',bezier=[]}={}){
  const a=effectiveArrangement(values,seamless),mode=a[0],count=Math.min(a[3],mode===10?Math.floor(LIMITS.instances/(1+a[37])):LIMITS.instances),radius=a[5],rng=random(a[11]);
  if([7,12].includes(mode)&&(footprint&&avoidOverlap||aspect!==1))return visibleScatter(a,{density,footprint:footprint??(()=>({x:0,y:0,radius:avoidOverlap?Math.SQRT1_2:0,empty:!avoidOverlap})),gap:avoidOverlap?gap:0,wrap:seamless||wrap,aspect,fit});
  let points=[];
- if(mode===6){const p=a.slice(20,28).map(v=>v*radius);points=arcSamples(t=>cubicPoint(p,t),a[28],a[29],count,a[30]?a[31]:0);}
+ if(mode===6){const p=[...a.slice(20,28),...bezier].map(v=>v*radius);points=arcSamples(t=>bezierPoint(p,t),a[28],a[29],count,a[30]?a[31]:0);}
  if(mode===9)points=arcSamples(t=>{const angle=t*TAU*a[35],r=radius*(a[36]+(1-a[36])*t);return [Math.cos(angle)*r,Math.sin(angle)*r];},0,1,count);
  if(mode===8){const counts=ringCounts(a);for(let ring=0;ring<a[33];ring++)for(let i=0;i<counts[ring]&&points.length<LIMITS.instances;i++){
    const t=a[33]===1?1:ring/(a[33]-1),r=radius*(a[36]+(1-a[36])*t),angle=TAU*i/counts[ring]*a[15]+ring*a[34]*DEG;

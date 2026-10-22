@@ -1,3 +1,5 @@
+import {BEZIER_SEGMENTS} from './bezier-path.js';
+import {BEZIER_PATH_GLSL} from './bezier-path-glsl.js';
 import {imageSamplingGLSL} from './image-processing.js';
 import {GeneratorRenderer} from './generator-renderer.js';
 import {resourceRegistry,resources,bitmaps} from './resource-assets.js';
@@ -70,7 +72,7 @@ export function fragmentGLSL(indices, mode = 0, seamMode = -1, layout = null) {
   // Independent vector guards can be specialized before helper pruning. Keeping
   // every flow/noise branch makes ANGLE compile unrelated noise octaves per tile.
   const MATH_GLSL=registry.libraries['math-v1'],VECTOR_GLSL=registry.vector.replace(/\btime\b/g,'formulaClock()').replace(/^if\(id==(\d+)\)[^\n]*\n/gm,(line,id)=>indices.includes(Number(id))?line:''),PERIODIC_GLSL=registry.libraries['periodic-v1']??'';
-  const patternGLSL=ids=>{const code=patternFunction(registry,ids);return imageAsset?code.replace(/texture\(assetImage,/g,'sampleAssetImage('):code;},additionalPatternGLSL=ids=>extraFormulaLibraries(registry,ids),vectorTypeCondition=e=>vectorCondition(registry,e);
+  const patternGLSL=ids=>{const code=patternFunction(registry,ids).replace(/ribbonShape\(q,a,b,c,d\)/g,layout?.bezier?'ribbonPathShape(q,a,b,c,d)':'ribbonShape(q,a,b,c,d)');return imageAsset?code.replace(/texture\(assetImage,/g,'sampleAssetImage('):code;},additionalPatternGLSL=ids=>extraFormulaLibraries(registry,ids),vectorTypeCondition=e=>vectorCondition(registry,e);
   const PERIODIC_PATTERNS=new Set(registry.catalog.filter(p=>p.definition.seamless.kind==='periodic').map(p=>p.id)),REPEATED_SHAPES=new Set(registry.catalog.filter(p=>p.definition.seamless.kind==='repeat').map(p=>p.id));
   const hasVector = indices.some((index) => CATALOG[index].vector);
   const generated=indices.filter(index=>CATALOG[index].definition.generator);
@@ -124,6 +126,7 @@ uniform vec4 postA;uniform vec3 postB;uniform float normalStrength,tile,seamBlen
 ${layout?.treeEdges ? MATH_GLSL.replace('float fill(float d,float s){return 1.-smoothstep(0.,max(s,.0001),d);}', 'float fill(float d,float s){float aa=max(fwidth(d),.00001);return 1.-smoothstep(-aa*.5,max(s,0.)+aa*.5,d);}') .replace('float line(float d,float w,float s){return 1.-smoothstep(w,w+max(s,.0001),abs(d));}', 'float line(float d,float w,float s){return fill(abs(d)-w,s);}') : MATH_GLSL}${additionalLibraries ? "\n" + additionalLibraries : ""}
 ${ARRANGEMENT_GLSL}${layout?.table?.some(Boolean)||layout?.maskTable?.some(Boolean)?TABLE_ARRANGEMENT_GLSL:""}${layout?.spiral?.some(Boolean)||layout?.maskSpiral?.some(Boolean)?"uniform vec4 spiral[3],maskSpiral[3];"+SPIRAL_ARRANGEMENT_GLSL:""}${layout?.diagonal?.some(Boolean)||layout?.maskDiagonal?.some(Boolean)?DIAGONAL_ARRANGEMENT_GLSL:""}
 ${imageAsset?imageSamplingGLSL(imageAsset.imageProcessing,imageAsset.imageTransform,imageAsset.imageColor):''}
+${layout?.bezier?BEZIER_PATH_GLSL:''}
 ${patternGLSL(rawIndices)}
 ${patternGLSL(seamMode === 0 ? indices.filter((i) => REPEATED_SHAPES.has(CATALOG[i].id)) : []).replace("float pattern(", "float shapePattern(")}
 ${PERIODIC_GLSL}
@@ -317,7 +320,7 @@ export class Renderer {
       s.output.mode === 4 ? 0 : s.output.mode,
       s.output.seamless ? s.output.seamMode : -1,
       !!heightTexture,
-      { treeEdges, types, masks, order: s.order, enabled: s.layers.map((l) => l.enabled), arranged: s.layers.map((l) => !!l.arrange?.[0]), maskArranged: s.layers.map((l) => !!l.mask && !!l.maskArrange?.[0]), table:s.layers.map(l=>l.arrange?.[0]>=6), maskTable:s.layers.map(l=>!!l.mask&&l.maskArrange?.[0]>=6), spiral:s.layers.map(l=>l.arrange?.[0]===5), maskSpiral:s.layers.map(l=>!!l.mask&&l.maskArrange?.[0]===5), diagonal:s.layers.map(l=>l.arrange?.[0]===4), maskDiagonal:s.layers.map(l=>!!l.mask&&l.maskArrange?.[0]===4) },
+      { treeEdges, bezier:!!s.layers[0].bezierTail?.length, types, masks, order: s.order, enabled: s.layers.map((l) => l.enabled), arranged: s.layers.map((l) => !!l.arrange?.[0]), maskArranged: s.layers.map((l) => !!l.mask && !!l.maskArrange?.[0]), table:s.layers.map(l=>l.arrange?.[0]>=6), maskTable:s.layers.map(l=>!!l.mask&&l.maskArrange?.[0]>=6), spiral:s.layers.map(l=>l.arrange?.[0]===5), maskSpiral:s.layers.map(l=>!!l.mask&&l.maskArrange?.[0]===5), diagonal:s.layers.map(l=>l.arrange?.[0]===4), maskDiagonal:s.layers.map(l=>!!l.mask&&l.maskArrange?.[0]===4) },
     );
     gl.useProgram(entry.p);
     const loc = (name) => {
@@ -325,6 +328,7 @@ export class Renderer {
         entry.locations.set(name, gl.getUniformLocation(entry.p, name));
       return entry.locations.get(name);
     };
+    if(s.layers[0].bezierTail?.length){const tail=new Float32Array((BEZIER_SEGMENTS-1)*6);tail.set(s.layers[0].bezierTail);gl.uniform2fv(loc('bezierTail'),tail);gl.uniform1i(loc('bezierSegmentCount'),1+s.layers[0].bezierTail.length/6);}
     let generatorUnit=8;for(const [id,target]of generatedTextures){gl.activeTexture(gl.TEXTURE0+generatorUnit);gl.bindTexture(gl.TEXTURE_2D,target.tex);gl.uniform1i(loc('generatedTexture'+id),generatorUnit++);}
     const imageId=used.map(i=>CATALOG[i].id).find(id=>bitmaps.has(id));
     if(imageId){const bitmap=bitmaps.get(imageId);bitmap.ensureSize?.(Math.min(this.maxSize,Math.max(w,h)));this.assetTextureSizes??=new WeakMap();this.assetTextures??=new Map();const sizeKey=bitmap.width+'x'+bitmap.height;let tex=this.assetTextures.get(imageId);if(tex&&this.assetTextureSizes.get(tex)!==sizeKey){gl.deleteTexture(tex);this.assetTextures.delete(imageId);tex=null;}if(!tex){tex=gl.createTexture();gl.activeTexture(gl.TEXTURE15);gl.bindTexture(gl.TEXTURE_2D,tex);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,bitmaps.get(imageId));gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);this.assetTextures.set(imageId,tex);this.assetTextureSizes.set(tex,sizeKey);}gl.activeTexture(gl.TEXTURE15);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(loc('assetImage'),15);}

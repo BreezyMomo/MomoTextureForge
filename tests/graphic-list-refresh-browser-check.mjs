@@ -29,7 +29,7 @@ try{
  });
  const baseline=await stats();
  await first.locator('.graphic-favorite').click();assert.equal(await first.locator('.graphic-favorite').getAttribute('aria-pressed'),'true');assert.equal(await first.locator('.component-more').getAttribute('open'),'');
- await page.locator('#node-tree .tree-node button:last-child').first().click();await page.locator('#inspector-tabs').getByRole('button',{name:'变换/排列',exact:true}).click();
+ await page.locator('#node-tree .tree-node .tree-node-name').first().click();await page.locator('#inspector-tabs').getByRole('button',{name:'变换/排列',exact:true}).click();
  for(const value of ['0.55','0.60','0.65']){const input=page.getByRole('spinbutton',{name:'位置 X',exact:true});await input.fill(value);await input.press('Tab');}
  await page.locator('#undo').click();await page.locator('#redo').click();
  assert.deepEqual(await stats(),baseline,'Favorite, parameter editing, selection and undo must not redraw or reload gallery previews');
@@ -45,7 +45,7 @@ try{
  // Filter/view changes reattach existing cards; their ready images never reload.
  await page.locator('#library-filter [data-value=favorites]').click();assert.equal(await cards.count(),1);await page.locator('#library-filter [data-value=all]').click();await page.locator('#shape-search').fill('Test ring');assert.equal(await cards.count(),1);await page.locator('#shape-search').fill('');await page.locator('#shape-library-view').selectOption('list');await page.locator('#shape-library-view').selectOption('grid');assert.deepEqual(await stats(),beforeRename);
  // Reused buttons must insert the latest renamed resource and its saved parameters.
- await first.locator(':scope>button:nth-of-type(2)').click();assert.match(await page.locator('#node-tree .tree-node button:last-child').last().textContent(),/Renamed circle/);assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('momo-texture-tree:draft:v1')).root.children.at(-1).transform.x),.65);assert.deepEqual(await stats(),beforeRename);
+ await first.locator(':scope>button:nth-of-type(2)').click();assert.match(await page.locator('#node-tree .tree-node .tree-node-name').last().textContent(),/Renamed circle/);assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('momo-texture-tree:draft:v1')).root.children.at(-1).transform.x),.65);assert.deepEqual(await stats(),beforeRename);
  // Removing one entry releases only its thumbnail; undo reconstructs only that entry.
  const beforeRemove=await stats();await cards.last().locator('.component-more summary').click();await cards.last().getByRole('button',{name:'Remove from graphics list',exact:true}).click();assert.equal(await cards.count(),2);assert.deepEqual(await stats(),beforeRemove);await page.locator('#undo').click();await page.waitForFunction(()=>document.querySelectorAll('#shape-library img[data-ready=true]').length===3);assert.equal((await stats()).draws-beforeRemove.draws,1);
  assert.deepEqual(errors,[]);const report={built,baseline,updated,checks:['stable card/image DOM','zero redraw/load/loading on favorite and parameters','undo/redo reuse','one preview for real content update','rename and language without redraw','cached filtering and grid/list switching','single-entry removal and undo']};await mkdir('test-results/graphic-list-refresh',{recursive:true});await writeFile('test-results/graphic-list-refresh/'+(built?'built':'source')+'.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));

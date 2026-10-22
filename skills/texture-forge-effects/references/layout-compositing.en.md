@@ -103,9 +103,15 @@ Inspect Tile preview, then enable the target node's Seamless repeat.
 
 Spatial repetition does not establish a temporal loop.
 
+### Multisegment Bezier editing
+
+Bezier Ribbon and Along path share the expanded editor: zoom with the wheel/buttons, pan empty space, and Fit all to reveal points. Points use a move cursor and hover highlight; background uses a hand, locked points a prohibited cursor. Insert anchor subdivides a span without initially changing its shape; Extend adds a span. Keep 1–8 cubic spans with shared anchors and coordinates −8…8. Anchors carry adjacent handles. Point edits support undo/keys; topology edits lock during recording or existing point animation.
+
+The first span stays in `params[0…7]` for ribbon shape or `arrange[40…47]` for layout. Extra spans use the flat `bezier.shape` / `bezier.layout` tail: six numbers per additional span (two handles and its endpoint). Existing single-span projects remain valid.
+
 ## Compositing, color and masks
 
-Opacity is in Color (0–1), with collapsed quick controls expandable to 0–100%. Groups apply it to their composite and multiply through parents. Palettes inherit or become custom; groups preserve child colors or recolor together. Visit an inheritance source or copy its evaluated palette independently. Use child preservation for differing child colors. Composite contains blends, masks, contours and filters.
+Shape contains Opacity (0–1, multiplied through parents, with keys) and Node colors. Color source is a dropdown for inherited/custom palettes; groups can preserve child colors or remap together. Visit the inheritance source or copy its evaluated palette independently. Levels, Invert and Channel curves are in Shape. Composite contains blends, masks, contours and image filters.
 
 Solid fill preserves color while edges affect alpha. Value gradients map pattern intensity, not horizontal location. Two-to-eight stops have positions 0–1, palettes and reset to endpoints. Use a gradient graphic for spatial coloring.
 
@@ -130,7 +136,7 @@ Levels: brightness −0.6–0.6, contrast 0.1–3, gamma 0.1–4, input/output r
 
 ## Channel curves
 
-Select a graphic or group and open **Color → Channel curves**. Nodes inheriting a palette can use curves too. Groups composite their children before applying curves.
+Select a graphic or group and open **Shape → Channel curves**. Nodes inheriting a palette can use curves too. Groups composite their children before applying curves.
 
 - Choose **Luminance / height, Master RGB, Red R, Green G, Blue B, or Alpha**. Luminance adjusts brightness and height; RGB changes color only. Alpha changes coverage and scales the height contribution accordingly.
 - Click the graph to add a point, drag or use arrow keys to move it, or enter input/output values from 0–255. Endpoint inputs stay at 0 and 255; their outputs remain editable. Internal points can be deleted. Up to 16 points use smooth cubic interpolation through the controls, with continuous tangents and no overshoot. The graph, preview and exports share the same shape. Two-point curves remain straight.

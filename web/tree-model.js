@@ -1,3 +1,4 @@
+import {sanitizeBezierTail,BEZIER_LIMIT} from './bezier-path.js';
 import {graphicAliasesField} from './graphic-name.js';
 import {curveDefaults,sanitizeCurves} from './channel-curves.js';
 import {sanitizeChannelSources} from './output-channels.js';
@@ -20,7 +21,7 @@ export function node(kind='shape',type='Circle'){
  const padding=kind==='shape'?(BY_ID.get(type)?.definition.renderPadding??0):0,size=padding?1/(1+2*padding+.08):1;
  return {id:uid(),name:kind==='group'?'组合':BY_ID.get(type)?.zh??type,kind,enabled:true,type,params:shapeDefaults(type),
  transform:{x:.5,y:.5,width:size,height:size,rotation:0,mirrorX:false,pivotX:.5,pivotY:.5,fit:'stretch',lockAspect:false},boundary:padding?'visible':'clip',opacity:1,blend:'over',seamMode:0,seamBlend:.2,
- uv:[1,0,0,0,0,0,0],polar:false,
+ uv:[1,0,0,0,0,0,0],polar:false,bezier:{shape:[],layout:[]},
  color:{mode:kind==='group'?'preserve':'inherit',fill:'gradient',low:'#000000',high:'#ffffff'},
  arrange:sanitizeTreeArrangement([0,...Array(58).fill(undefined)]),arrangeExtra:extraDefaults(),tileEdges:0,arrangeFit:'contain',imageFit:'contain',instancePhase:0,instanceContent:'all',scatterAvoidOverlap:false,scatterGap:0,
  timing:{start:0,end:1,from:0,to:1,cycles:1,loop:false,pingpong:false,ease:'linear',outside:'hold',frozen:false,at:0,offset:0,curve:[]},
@@ -47,6 +48,7 @@ export function animationType(n,path){
  return 'number';
 }
 export function fieldSpec(n,path){
+ const bezier=/^bezier\.(shape|layout)\.(\d+)$/.exec(path);if(bezier)return +bezier[2]<(n.bezier?.[bezier[1]]?.length??0)?[-BEZIER_LIMIT,BEZIER_LIMIT]:null;
  if(ANIMATION_BOOLS.includes(path)||ANIMATION_ENUMS[path]||path==='color.low'||path==='color.high')return [0,1];
  if(path==='tileEdges')return [0,15];
  if(path.startsWith('arrangeExtra.')){const spec=EXTRA_SPECS[path.slice(13)];return spec?spec.slice(1,3):null;}
@@ -91,6 +93,7 @@ export function sanitizeTree(raw,{component=false}={}){
   if(Array.isArray(r.color?.stops))n.color.stops=r.color.stops.slice(0,8).filter(s=>/^#[0-9a-f]{6}$/i.test(s.color)).map(s=>({color:s.color,position:num(s.position,0,0,1)})).sort((a,b)=>a.position-b.position);
   n.uv=n.uv.map((v,i)=>num(r.uv?.[i],v,...fieldSpec(n,'uv.'+i)));n.polar=!!r.polar;
   n.params=n.params.map((v,i)=>{const p=BY_ID.get(n.type)?.parameters.find(p=>p.slot===i);return p?num(r.params?.[i],v,parameterRole(p)==='feather'?0:p.min,p.max):v;});
+  n.bezier={shape:sanitizeBezierTail(r.bezier?.shape),layout:sanitizeBezierTail(r.bezier?.layout)};
   n.arrange=sanitizeTreeArrangement(Array.from({length:59},(_,i)=>r.arrange?.[i]));n.arrangeExtra=sanitizeExtra(r.arrangeExtra);n.tileEdges=Math.round(num(r.tileEdges,0,0,15));n.arrangeFit=r.arrangeFit==='stretch'?'stretch':'contain';n.imageFit=r.imageFit==='stretch'?'stretch':'contain';n.instancePhase=num(r.instancePhase,0,-1,1);n.instanceContent=n.kind==='group'&&['random-child','cycle-child'].includes(r.instanceContent)?r.instanceContent:'all';n.scatterAvoidOverlap=r.scatterAvoidOverlap===true;n.scatterGap=num(r.scatterGap,0,0,.5);
   for(const key of ['start','end','from','to','at'])n.timing[key]=num(r.timing?.[key],n.timing[key],0,1);
   if(n.timing.end<n.timing.start)throw messageError("ui.theIntervalEndMustNotPrecedeItsStart");
@@ -146,11 +149,11 @@ export function localClock(timing,parentTime){
  return {local,progress:t.from+(t.to-t.from)*p,visible};
 }
 export const keyValue=interpolateKeys;
-export function evaluateNode(n,parentTime,progressOverride){const clock=localClock(n.timing,parentTime);if(progressOverride!==undefined)clock.progress=progressOverride;const out={...n,transform:{...n.transform},color:{...n.color},contour:{...n.contour},shapeClock:{follow:true,speed:1,offset:0,value:0,...n.shapeClock},post:[...n.post],postFx:[...(n.postFx??fxDefaults())],arrangeExtra:{...extraDefaults(),...n.arrangeExtra},params:[...n.params],uv:[...n.uv],arrange:[...n.arrange]};for(const [path,track]of Object.entries(n.animationEnabled===false?{}:n.tracks)){const v=keyValue(track,clock.progress),bounds=fieldSpec(n,path);if(track.muted||v===null||!bounds)continue;if(animationType(n,path)!=='number'){pathSet(out,path,v);continue;}const base=pathGet(n,path);pathSet(out,path,clamp(track.mode==='add'?base+v:track.mode==='multiply'?base*v:v,...bounds));}out.arrange=sanitizeTreeArrangement(out.arrange);out.arrangeExtra=sanitizeExtra(out.arrangeExtra);return {node:out,...clock,visible:clock.visible&&out.enabled&&out.transform.width>0&&out.transform.height>0};}
+export function evaluateNode(n,parentTime,progressOverride){const clock=localClock(n.timing,parentTime);if(progressOverride!==undefined)clock.progress=progressOverride;const out={...n,bezier:{shape:[...(n.bezier?.shape??[])],layout:[...(n.bezier?.layout??[])]},transform:{...n.transform},color:{...n.color},contour:{...n.contour},shapeClock:{follow:true,speed:1,offset:0,value:0,...n.shapeClock},post:[...n.post],postFx:[...(n.postFx??fxDefaults())],arrangeExtra:{...extraDefaults(),...n.arrangeExtra},params:[...n.params],uv:[...n.uv],arrange:[...n.arrange]};for(const [path,track]of Object.entries(n.animationEnabled===false?{}:n.tracks)){const v=keyValue(track,clock.progress),bounds=fieldSpec(n,path);if(track.muted||v===null||!bounds)continue;if(animationType(n,path)!=='number'){pathSet(out,path,v);continue;}const base=pathGet(n,path);pathSet(out,path,clamp(track.mode==='add'?base+v:track.mode==='multiply'?base*v:v,...bounds));}out.arrange=sanitizeTreeArrangement(out.arrange);out.arrangeExtra=sanitizeExtra(out.arrangeExtra);return {node:out,...clock,visible:clock.visible&&out.enabled&&out.transform.width>0&&out.transform.height>0};}
 export function nodeClock(root,id,time){let result=null;function visit(n,t){const e=evaluateNode(n,t);if(n.id===id)result=e;for(const c of n.children)visit(c,e.progress);if(n.mask)visit(n.mask,e.progress);}visit(root,time);return result;}
 export function moveNode(root,id,parentId,index=Infinity){const source=find(root,id),target=find(root,parentId);if(!source?.parent||!target||target.node.kind!=='group')throw messageError("ui.selectMovableNodesAndATargetGroup");if(find(source.node,parentId))throw messageError("ui.cannotMoveANodeIntoItselfOrItsDescendants");if(source.parent.mask===source.node)source.parent.mask=null;else source.parent.children.splice(source.parent.children.indexOf(source.node),1);target.node.children.splice(Math.min(index,target.node.children.length),0,source.node);}
 export function removeNode(root,id){const x=find(root,id);if(!x?.parent)throw messageError("ui.cannotDeleteTheCanvasRoot");if(x.parent.mask===x.node)x.parent.mask=null;else x.parent.children.splice(x.parent.children.indexOf(x.node),1);}
-export const scatterOptions=(n,aspect=1)=>({avoidOverlap:n.scatterAvoidOverlap===true,gap:n.scatterGap??0,wrap:n.boundary==='repeat',aspect,fit:n.arrangeFit??'contain'});
+export const scatterOptions=(n,aspect=1)=>({avoidOverlap:n.scatterAvoidOverlap===true,gap:n.scatterGap??0,wrap:n.boundary==='repeat',aspect,fit:n.arrangeFit??'contain',bezier:n.bezier?.layout??[]});
 export function placements(a,n={},_time=0,_original=n,aspect=1){const records=rawPlacements(a,n,aspect),fitted=a[0]&&!([15,16].includes(a[0]))?fitInstances(records,aspect,n.arrangeFit??'contain'):records;return modifyRecords(fitted,{...n,arrange:a},aspect);}
 function rawPlacements(a,n={},aspect=1){
  if(a[0]>=13)return advancedRecords({...n,arrange:a},aspect);
@@ -175,7 +178,7 @@ export function instanceChildren(n,index,record){
 }
 export function expandInstances(root,id,time,records){const entry=find(root,id);if(!entry)throw messageError("ui.nodeNotFound");const n=entry.node,e=nodeClock(root,id,time);if(!n.arrange[0])throw messageError("ui.nodeHasNoArrangement");
  const points=records??placements(e.node.arrange,e.node),content=cloneNode(n);content.transform=node().transform;content.boundary=n.boundary==='repeat'?'visible':n.boundary;if(content.tracks.boundary)content.tracks.boundary.keys=content.tracks.boundary.keys.map(([t,v])=>[t,v==='repeat'?'visible':v]);content.opacity=1;content.blend='over';content.arrange[0]=0;if(content.color.mode==='remap')content.color.mode='own';content.instancePhase=0;content.mask=null;content.post=POST_SPECS.map(p=>p[3]);content.postFx=fxDefaults();content.contour=node().contour;content.invert=false;content.maskInvert=false;content.timing=node().timing;
- for(const path of Object.keys(content.tracks))if(path.startsWith('arrange.')||path.startsWith('arrangeExtra.')||path.startsWith('transform.')||path==='opacity'||(path.startsWith('post.')||path.startsWith('postFx.'))||path.startsWith('contour.'))delete content.tracks[path];
+ for(const path of Object.keys(content.tracks))if(path.startsWith('arrange.')||path.startsWith('arrangeExtra.')||path.startsWith('bezier.layout.')||path.startsWith('transform.')||path==='opacity'||(path.startsWith('post.')||path.startsWith('postFx.'))||path.startsWith('contour.'))delete content.tracks[path];
  const result=node('group');Object.assign(result,{id:n.id,name:n.name,transform:n.transform,boundary:n.boundary,opacity:n.opacity,blend:n.blend,seamMode:n.seamMode,seamBlend:n.seamBlend,timing:n.timing,animationEnabled:n.animationEnabled,mask:n.mask,maskInvert:n.maskInvert,post:n.post,postFx:n.postFx,contour:n.contour,invert:n.invert,color:n.color});result.tracks=Object.fromEntries(Object.entries(n.tracks).filter(([p])=>p.startsWith('transform.')||p==='boundary'||p==='opacity'||(p.startsWith('post.')||p.startsWith('postFx.'))||p.startsWith('contour.')));
  if(e.node.arrange[0]===14&&e.node.arrangeExtra.showSource)result.children=[cloneNode(n.children[0])];
  let size=0;walk(root,()=>size++);walk(n,()=>size--);walk(result,()=>size++);

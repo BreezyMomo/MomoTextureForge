@@ -13,9 +13,9 @@ export function seamlessKind(type, mode = 0) {
         ? 2
         : 0;
 }
-export function shapeExtent(type, p) {
+export function shapeExtent(type, p, tail=[]) {
   const shape = BY_ID.get(type).definition.seamless.extent;
-  if (shape === "bezier") return Math.max(...[0, 2, 4, 6].map((i) => Math.hypot(p[i], p[i + 1]))) + Math.max(p[8], p[9]) * 0.5 + p[10];
+  if (shape === "bezier") {const points=[...p.slice(0,8),...tail];let radius=0;for(let i=0;i<points.length;i+=2)radius=Math.max(radius,Math.hypot(points[i],points[i+1]));return radius+Math.max(p[8],p[9])*.5+p[10];}
   const [r, w, , s, d, k] = p;
   if (shape === "profile") return Math.hypot(r, w * 2 * (1 + Math.abs(p[6])) + Math.abs(k) * r) + s;
   let radius = r;

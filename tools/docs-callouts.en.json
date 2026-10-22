@@ -67,7 +67,7 @@
     "Alignment and distribution"
   ],
   "selection-colors": [
-    "Color tab",
+    "Edit colors in the Shape tab",
     "Batch opacity",
     "Custom or inherited coloring",
     "Change only fill color"
@@ -119,21 +119,23 @@
     "Child independently allows overflow"
   ],
   "color-collapsed": [
-    "Expand color and opacity"
+    "Shape and coloring share the Shape tab",
+    "Expand Node colors"
   ],
   "color-inheritance": [
-    "Persistent quick controls",
-    "Make independent or visit source"
+    "Choose inherited or custom colors",
+    "Copy the visible palette for independent editing",
+    "Visit the parent palette source"
   ],
   "color-gradient": [
-    "Color tab",
-    "Gradient endpoint values",
-    "Palette presets"
+    "Click the strip to add stops; drag stops to move them",
+    "Edit the selected stop color",
+    "Choose a built-in gradient"
   ],
   "color-solid": [
-    "Edit color across tabs",
-    "Solid or gradient",
-    "Hexadecimal input"
+    "Choose the node’s color source",
+    "Choose solid or gradient",
+    "Enter a hexadecimal color"
   ],
   "compositing": [
     "Bloom strength",
@@ -235,5 +237,36 @@
   "vfx-presets": [
     "Choose the material presets category",
     "Edit a preset on the canvas"
+  ],
+  "inspector-modules": [
+    "Graphic-specific parameters share one module",
+    "Click the question mark for help",
+    "Click the header to expand or collapse UV",
+    "Drag the handle or use arrows to reorder modules"
+  ],
+  "inspector-layout-modules": [
+    "Collapse common region settings separately",
+    "Arrangement parameter module",
+    "Help stays hidden until requested"
+  ],
+  "bezier-editor": [
+    "Fit all points; wheel to zoom and drag empty space to pan",
+    "Insert an anchor to subdivide a span, or extend the path",
+    "Select an anchor or handle and enter exact coordinates"
+  ],
+  "color-levels": [
+    "Expand Levels for black/white points, gamma and output range",
+    "Adjust gamma",
+    "Invert node value and height"
+  ],
+  "node-rename": [
+    "Double-click or press F2 to rename; Enter saves, Esc cancels",
+    "Delete this row’s node; undo is available"
+  ],
+  "node-auto-group": [
+    "Virtual group; the project is unchanged",
+    "Why a group is needed for ordinary child nodes",
+    "Preview the nodes that will be grouped",
+    "Release to group; move away or press Esc to cancel"
   ]
 }

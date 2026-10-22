@@ -1,3 +1,4 @@
+import {messageError} from './message-catalog.js';
 import {find,walk,cloneNode,removeNode,node} from './tree-model.js';
 
 // Operations act on a forest: an explicitly selected descendant of a selected
@@ -22,4 +23,12 @@ export function moveSelection(root,ids,parentId,index=Infinity){
  const targetIndex=Number.isFinite(index)?index:parent.children.length;
  const before=nodes.filter(n=>find(root,n.id).parent===parent&&parent.children.indexOf(n)>=0&&parent.children.indexOf(n)<targetIndex).length;
  for(const n of nodes)removeNode(root,n.id);parent.children.splice(Math.max(0,targetIndex-before),0,...nodes);return nodes.map(n=>n.id);
+}
+export function groupWithTarget(root,ids,targetId,name){
+ const target=find(root,targetId),sources=selectionRoots(root,ids);
+ if(!target?.parent||target.node.kind!=='shape'||target.parent.mask===target.node||!sources.length||sources.some(source=>find(source,targetId)))throw messageError('nodeTree.invalidGroupTarget');
+ const order=selectionRoots(root,[...sources.map(source=>source.id),targetId]).map(n=>n.id),group=node('group');
+ if(name)group.name=name;group.boundary='visible';group.children=[target.node];
+ target.parent.children.splice(target.parent.children.indexOf(target.node),1,group);
+ moveSelection(root,sources.map(source=>source.id),group.id);group.children.sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id));return group.id;
 }

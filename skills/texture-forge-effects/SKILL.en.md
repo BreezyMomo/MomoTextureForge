@@ -41,4 +41,4 @@ Answers may use an approach, operation table, adjustment directions and export a
 
 For image-to-normal, raised patterns or 3D questions, distinguish color from height/normal usage. Preview channel controls inspection. Normal generation settings persist and affect exports, but export content must still be selected separately. Color mode prints patterns flat; Normal lights a neutral material. Do not direct users to removed bump-strength/parallax-depth preview sliders.
 
-Channel curves remap pixel values in the Color tab; they are distinct from animation curves. See [layout/compositing](references/layout-compositing.en.md). For per-node RGBA packing and source semantics, see [animation/export](references/animation-export.en.md).
+Channel curves remap pixel values in the Shape tab; they are distinct from animation curves. See [layout/compositing](references/layout-compositing.en.md). For per-node RGBA packing and source semantics, see [animation/export](references/animation-export.en.md).

@@ -24,7 +24,7 @@ Change canvas aspect while retaining instance design aspect. The region expands 
 ## Breathing halo
 
 1. Add a suitable ring graphic. For compatible controls, radius 0.62 and inner diameter 0.5 form a ring, with zero feather for crisp edges.
-2. Use Custom coloring and Solid fill in Color, or quick-color controls.
+2. Use Shape → Node colors → Custom coloring and Solid fill.
 3. Set alpha 0.35 at progress 0, record 1 at 0.5 and 0.35 at 1, with smooth interpolation. Stop recording and play.
 4. Duplicate for softer outside light with reduced alpha/extra feather, keeping the hole open. Choose additive only for the intended brightness.
 5. Export 3 seconds at 24 FPS. These alpha endpoints match; added time-based motion still needs checking.

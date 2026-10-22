@@ -163,7 +163,7 @@ export class TreeRenderer{
   const uv=n.uv??[1,0,0,0,0,0,0],plain=!n.polar&&uv.every((v,i)=>v===[1,0,0,0,0,0,0][i]);
   let range=need??UNIT_BOUNDS;
   if(def?.renderPadding&&plain)range=expandBounds(UNIT_BOUNDS,def.renderPadding);
-  else if(def?.seamless.extent&&!n.polar&&!uv.slice(2).some(Boolean))range=expandBounds(UNIT_BOUNDS,Math.max(0,(shapeExtent(n.type,n.params)*uv[0]-1)*.5));
+  else if(def?.seamless.extent&&!n.polar&&!uv.slice(2).some(Boolean))range=expandBounds(UNIT_BOUNDS,Math.max(0,(shapeExtent(n.type,n.params,n.bezier?.shape)*uv[0]-1)*.5));
   return need?neededBounds(range,need):range;
  }
  let bounds=UNIT_BOUNDS;
@@ -198,7 +198,7 @@ export class TreeRenderer{
   }
   const definition=CATALOG.find(p=>p.id===n.type)?.definition,imageResource=resources.get(n.type)?.kind==='image',fit=imageResource&&n.imageFit!=='stretch'&&Math.abs(aspect-1)>1e-9,framed=fit||!unitBounds(out.bounds)&&(imageResource||definition?.generator||definition?.outputs.vector);
   const [cw,ch]=fit?fitted({fit:'contain',width:1,height:1},aspect,1):[1,1],sw=framed?Math.max(1,Math.ceil(w*cw)):out.w,sh=framed?Math.max(1,Math.ceil(h*ch)):out.h,design=framed?this.target(sw,sh,false,fit?1:aspect):out;
-  const s=defaults();s.layers[0]=newLayer(n.type);s.layers[0].params=n.params;s.layers[0].uv=n.uv;s.layers[0].polar=n.polar;s.output.mode=1;s.output.seamless=CATALOG.find(p=>p.id===n.type)?.definition.renderPadding?false:(n.boundary==='repeat');s.output.seamMode=n.seamMode;s.output.seamBlend=n.seamBlend;s.animation.duration=1;s.animation.speed=1;
+  const s=defaults();s.layers[0]=newLayer(n.type);s.layers[0].params=n.params;if(n.type==='BezierRibbon')s.layers[0].bezierTail=n.bezier?.shape;s.layers[0].uv=n.uv;s.layers[0].polar=n.polar;s.output.mode=1;s.output.seamless=CATALOG.find(p=>p.id===n.type)?.definition.renderPadding?false:(n.boundary==='repeat');s.output.seamMode=n.seamMode;s.output.seamBlend=n.seamBlend;s.animation.duration=1;s.animation.speed=1;
   const raw=this.base.draw(s,sw,sh,{time:progress,formulaTime:formulaTime(n,this.formulaSeconds),float:this.float,retainTexture:true,preserveSeamlessScale:true,treeEdges:true,sampleOffset:design.bounds.slice(0,2),sampleScale:boundsSize(design.bounds)});let vector=null;const image=(resources.get(n.type)?.kind==='image'&&n.params[0]<.5&&n.color.mode==='inherit')||!!CATALOG.find(p=>p.id===n.type)?.definition.generator;try{if(image||CATALOG.find(p=>p.id===n.type)?.vector){s.output.mode=0;vector=this.base.draw(s,sw,sh,{time:progress,formulaTime:formulaTime(n,this.formulaSeconds),float:this.float,retainTexture:true,preserveSeamlessScale:true,treeEdges:true,sampleOffset:design.bounds.slice(0,2),sampleScale:boundsSize(design.bounds)});}this.pass(design,{source:{textures:[vector?.texture??raw.texture,raw.texture]},op:image?9:vector?5:0,palette,imageLuminance:imageResource&&n.params[0]<.5&&n.color.mode==='inherit',recolor:!!CATALOG.find(p=>p.id===n.type)?.definition.generator&&['own','remap'].includes(n.color.mode)});}finally{this.gl.deleteTexture(raw.texture);if(vector)this.gl.deleteTexture(vector.texture);}if(framed){out=this.composite(out,design,{op:1,box:[.5,.5,cw,ch],repeat:(n.boundary==='repeat')});this.release(design);}return out;
  }
  for(const child of n.children){if(this.packSelection&&!this.packSelection.ids.has(child.id))continue;const e=evaluateNode(child,progress);if(!e.visible)continue;const t=e.node.transform,[cw,ch]=fitted(t,aspect,1);

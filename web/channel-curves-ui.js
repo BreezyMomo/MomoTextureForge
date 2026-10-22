@@ -3,8 +3,8 @@ import {CURVE_CHANNELS,curveDefaults,identityCurve,curveTangents} from './channe
 const channelKey=k=>'curves.'+k;
 export function createChannelCurvesEditor({read,edit,begin,change,end,cancel,canEdit=()=>true,view={channel:'luminance',index:0}}){
  const el=(tag,props={})=>{const e=document.createElement(tag);for(const [k,v]of Object.entries(props))if(k==='text')e.textContent=v;else e.setAttribute(k,v);return e;};
- const host=el('section',{class:'channel-curves-editor'}),title=el('h3',{text:uiText('curves.title')}),enabled=el('input',{type:'checkbox','aria-label':uiText('curves.enable')}),label=el('label',{class:'tree-field'});enabled.checked=read().enabled;label.append(enabled,document.createTextNode(uiText('curves.enable')));enabled.onchange=()=>edit(c=>c.enabled=enabled.checked);host.append(title,label);
- const controls=el('div',{class:'channel-curve-controls'}),select=el('select',{'aria-label':uiText('curves.channel')});
+ const host=el('section',{class:'channel-curves-editor'}),title=el('h3',{text:uiText('curves.title')}),enabled=el('input',{type:'checkbox','aria-label':uiText('curves.enable')}),label=el('label',{class:'tree-check channel-curves-toggle'});enabled.checked=read().enabled;label.append(enabled,document.createTextNode(uiText('curves.enable')));enabled.onchange=()=>edit(c=>c.enabled=enabled.checked);host.append(title,label);
+ const controls=el('div',{class:'channel-curve-controls channel-curve-toolbar'}),select=el('select',{'aria-label':uiText('curves.channel')});
  for(const k of CURVE_CHANNELS)select.append(el('option',{value:k,text:uiText(channelKey(k))}));
  let channel=view.channel,index=view.index,drag=null;select.value=channel;
  const preset=el('select',{'aria-label':uiText('curves.preset')});for(const key of ['choose','linear','contrast','soft','brighten','invert'])preset.append(el('option',{value:key,text:uiText('curves.'+key)}));

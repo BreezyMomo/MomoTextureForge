@@ -13,8 +13,42 @@ Open the [summoning-circle example](examples/summoning-circle.json) and select t
 - Click a node or canvas graphic to select it. Ctrl/Cmd-click toggles multiple selections; Shift selects a range; drag empty canvas space for box selection.
 - **+ Group** creates a container. Ctrl/Cmd+G groups siblings. Groups let you move, rotate and repeat coordinated decorations together.
 - Double-click a group to enter it; use the path above the preview to return.
-- Drop a tree node in the center to reparent it, or near an upper/lower edge to reorder it. Later nodes composite over earlier content.
+- Drop in the center of a group row to reparent, or near a row’s upper/lower edge to reorder. Later nodes composite over earlier content.
 - Alt-click cycles overlapping candidates; Esc cancels the current drag.
+
+### Rename, delete and create groups in the node tree
+
+Double-click a node name or press **F2** to rename it inline. **Enter** saves, **Esc** cancels, and leaving the field saves a valid name. Each row’s trash icon deletes that node; deleting a group also removes its children. Other selected nodes stay intact. Renaming and deletion support undo.
+
+![Inline node renaming and deletion](images/en/node-rename.png)
+
+> Callouts: 1 Double-click or press F2 to rename; Enter saves, Esc cancels; 2 Delete this row’s node; undo is available.
+
+Drag onto the center of a graphic row to show a virtual group marked **Preview**, listing the dragged nodes and target graphic. The preview explains why: **graphics cannot contain ordinary child nodes; groups can**. Release over that target to create the group. Move away or press **Esc** to cancel. Previewing does not edit the project or undo history, receive pointer events, or shift the underlying rows. Multiple nodes can be dragged together; selected descendants of selected ancestors are moved only once. A parent cannot be moved into its own descendants.
+
+![Release to confirm, move away to cancel](images/en/node-auto-group.png)
+
+> Callouts: 1 Virtual group; the project is unchanged; 2 Why a group is needed for ordinary child nodes; 3 Preview the nodes that will be grouped; 4 Release to group; move away or press Esc to cancel.
+
+The new group retains the existing nodes and parameters. One undo reverses grouping. Existing groups accept center drops directly; upper/lower edges still reorder nodes.
+
+### Collapsible Inspector modules
+
+The inspector has four tabs: **Shape**, **Transform / Layout**, **Animation**, and **Composite**. Shape and coloring share **Shape**: graphic selection, parameters, UV, opacity, node colors, levels, inversion and channel curves are separate modules. There is no additional quick-color area above the tabs. Built-in and custom graphics keep their specific parameters together under “Graphic name · Parameters,” using the existing parameter list.
+
+![Collapsible graphic parameter modules](images/en/inspector-modules.png)
+
+> Callouts: 1 Graphic-specific parameters share one module; 2 Click the question mark for help; 3 Click the header to expand or collapse UV; 4 Drag the handle or use arrows to reorder modules.
+
+Click a module header to expand or collapse it, or **?** to show or hide help. These controls are independent: help does not expand parameters, and help remains available while parameters are collapsed. Collapsing changes only panel visibility; parameters and animation remain active. Common modules retain expansion across nodes; graphic-specific parameter modules remember each graphic type separately. Preferences stay in this browser across language changes and reloads, outside project files and undo history.
+
+![Separate region and arrangement modules](images/en/inspector-layout-modules.png)
+
+> Callouts: 1 Collapse common region settings separately; 2 Arrangement parameter module; 3 Help stays hidden until requested.
+
+Drag the **⠿** handle beside a module title, or use **↑ / ↓**, to change module order within the tab. Order is saved per tab in this browser, shared between single and batch editing, and retained across nodes, languages and reloads. Temporarily unavailable modules return to their saved positions. Ordering changes panel layout only, leaving compositing/filter order, project files and undo history unaffected.
+
+Sliders, number inputs, resets, and keyframe buttons remain available inside modules. Multiselection uses the same module presentation with the existing batch-editing rules.
 
 ### Batch editing, alignment and even distribution
 
@@ -23,7 +57,7 @@ Open the [summoning-circle example](examples/summoning-circle.json) and select t
 > Callouts: 1 Ctrl/Cmd-select nodes; 2 Existing tabs remain available; 3 Change mixed values together; 4 Alignment and distribution.
 
 1. Ctrl/Cmd-select nodes or box-select on empty canvas. The inspector switches to **Batch editing**.
-2. Use the same **Shape / Color / Transform / Layout / Animation / Composite** tabs. Different values show **Multiple values**; mixed checkboxes show a dash. Only adjusted fields are overwritten. Choose **Edit primary selection** for individual edits, then return to batch mode.
+2. Use the same **Shape**, **Transform / Layout**, **Animation**, and **Composite** tabs. Different values show **Multiple values**; mixed checkboxes show a dash. Only adjusted fields are overwritten. Choose **Edit primary selection** for individual edits, then return to batch mode.
 3. Under **Transform / Layout → Alignment & distribution**, choose Selection bounds or Canvas and align left/right/top/bottom or center horizontally/vertically.
 4. With at least three nodes, distribute horizontally or vertically with equal edge-to-edge gaps. The outer nodes stay fixed. Insufficient space permits overlap.
 
@@ -33,11 +67,10 @@ Batch changes affect only outermost selected nodes, avoiding double edits when p
 
 | Tab | Batch-editable settings |
 | --- | --- |
-| Shape | Shape-specific radius/width when all nodes share a shape; UV/polar for shapes; built-in motion when all support it |
-| Color | Opacity, coloring mode, solid/gradient, endpoints, palettes and multicolor stops |
+| Shape | Matching graphics’ specific parameters; compatible UV, polar and motion settings; opacity, color source, solid/gradient fills, stops, levels and inversion |
 | Transform / Layout | Position, dimensions, pivot, mirror, fit, boundary handling, arrangement and its random/gradient/flow settings, tile interfaces, alignment and distribution |
 | Animation | Parent interval, loops/ping-pong, outside visibility, source progress, fixed progress and parameter-animation switch |
-| Composite | Blending, contour, levels/invert, image filters and compatible masks |
+| Composite | Blending, contour, image filters and compatible masks |
 
 Mixed shapes do not expose the primary shape's exclusive parameters. Shared tabs remain usable. UV does not affect groups, so mixed group selections explain this limitation. Rule tiling, contour arrangements and group-only coloring require all selected items to be groups. Unify differing arrangement/density types before editing dependent fields. Each group keeps its own children; candidates and contour sources are not generated automatically.
 
@@ -47,7 +80,7 @@ In ordinary editing, a field controlled by any selected animation cannot be batc
 
 ![Batch color and opacity](images/en/selection-colors.png)
 
-> Callouts: 1 Color tab; 2 Batch opacity; 3 Custom or inherited coloring; 4 Change only fill color.
+> Callouts: 1 Edit colors in the Shape tab; 2 Batch opacity; 3 Custom or inherited coloring; 4 Change only fill color.
 
 ![Batch radius and line width for matching shapes](images/en/selection-shape.png)
 
@@ -89,6 +122,20 @@ Canvas tools support moving, rotating and pivot editing. Shift locks movement ax
 | Rule tiling | Candidate child tiles with declared edge interfaces |
 
 A shape repeats itself; an arranged group repeats the entire group by default.
+
+### Bezier paths: expanded and multisegment editing
+
+Bezier Ribbon and Along path arrangements share a path editor. Choose **Expand editor** for a larger window. Zoom with the wheel or plus/minus buttons, drag empty space to pan, and use **Fit all** to reveal every point. View changes do not edit the artwork. Point coordinates range from −8 to 8, beyond the edges of the original small viewport.
+
+![Expanded Bezier path editor](images/en/bezier-editor.png)
+
+> Callouts: 1 Fit all points; wheel to zoom and drag empty space to pan; 2 Insert an anchor to subdivide a span, or extend the path; 3 Select an anchor or handle and enter exact coordinates.
+
+**Insert anchor** subdivides the selected span while initially preserving its shape. **Extend path** adds a span from the endpoint. Each span is cubic, neighboring spans share an anchor, and a path supports up to eight spans. Moving an anchor carries its adjacent handles; handles can also move independently. Select a point to enter exact X/Y values. Select an anchor to delete it; at least one span remains.
+
+Path edits support undo, save and export. Ribbon widths and draw progress apply to the entire path; Along path arrangements sample all spans by count or spacing. Points and their surrounding hit areas use a move cursor and highlight on hover. Empty space uses a hand cursor, changing to a grabbing hand while panning; locked points show a prohibited cursor. Grabbing near a point’s edge preserves the initial pointer offset to prevent jumps.
+
+Points support parameter recording. Adding or deleting anchors is disabled while recording or when point keyframes exist, so tracks cannot silently target different points. Moving points and navigating the view remain available.
 
 ### New arrangements and examples
 
@@ -190,17 +237,17 @@ Images, vectors and generators retain their own resource content bounds; overflo
 
 ### Color controls
 
-![Collapsed quick color controls](images/en/color-collapsed.png)
+![Color modules in the Shape tab](images/en/color-collapsed.png)
 
-> Callouts: 1 Expand color and opacity.
+> Callouts: 1 Shape and coloring share the Shape tab; 2 Expand Node colors.
 
-The inspector's persistent quick-color row starts collapsed, showing color and opacity summaries. Expand with its arrow. The open state persists while switching nodes/tabs during the session and resets on reload. Its gradient strip or **Color settings →** opens the **Color** tab; solid swatches can be edited directly.
+Edit geometry and coloring together in **Shape**. The **Opacity** module uses 0–1 sliders and numbers for the entire node or group; parent and child opacity multiply. It supports reset, keys, undo/redo and saving.
 
-**Opacity** also appears at the top of Color as 0–1. Expanded quick controls use synchronized 0–100% controls. It works with solid, gradient, inherited and preserved colors and applies to the entire node/group; parent and child opacity multiply. Reset, keys, undo/redo and project saving are supported.
+Open **Node colors** and use the **Color source** dropdown for inherited or custom colors. Groups also offer preserving child colors or remapping the group. **Color fill** uses a segmented control for solid or value-gradient fills. Choose custom colors before editing the local palette; inherited nodes show their source and related actions.
 
-![Quick colors and inheritance source](images/en/color-inheritance.png)
+![Inheritance source in Node colors](images/en/color-inheritance.png)
 
-> Callouts: 1 Persistent quick controls; 2 Make independent or visit source.
+> Callouts: 1 Choose inherited or custom colors; 2 Copy the visible palette for independent editing; 3 Visit the parent palette source.
 
 - **Inherited from [group]** identifies the source. Visit it to edit all nodes inheriting that palette.
 - **Make independent** copies the visible palette locally, leaving the parent and others unchanged.
@@ -210,13 +257,21 @@ The inspector's persistent quick-color row starts collapsed, showing color and o
 
 ![Gradient endpoints and presets](images/en/color-gradient.png)
 
-> Callouts: 1 Color tab; 2 Gradient endpoint values; 3 Palette presets.
+> Callouts: 1 Click the strip to add stops; drag stops to move them; 2 Edit the selected stop color; 3 Choose a built-in gradient.
 
-**Color → Fill mode** offers solid or value gradient. Use native color pickers or HEX such as `#80DFFF` or `F80`. Presets display color bands. Added stops show color and position directly, up to eight. Multicolor stops do not support keys; restore a two-color gradient to animate its low/high colors.
+**Shape → Node colors → Color fill** offers solid or value gradient. Click the strip to add a stop sampled from the current ramp. Drag stops or enter position percentages to redistribute them. Select a stop to change its color using the swatch or HEX, such as `#80DFFF` or `F80`. Keep 2–8 stops. Arrow keys nudge; Delete removes the selected stop. **Reverse gradient** mirrors stop positions, and **Built-in gradients** offers palette presets.
+
+Multiselection preserves other stops and edits only the selected one. If stop counts differ, choose a shared preset or restore two-color gradients first. Two-color endpoints support keyframes; multicolor stops are not keyframed. Restore two colors to continue editing low/high color animation.
+
+![Levels and inversion in the Shape tab](images/en/color-levels.png)
+
+> Callouts: 1 Expand Levels for black/white points, gamma and output range; 2 Adjust gamma; 3 Invert node value and height.
+
+**Levels** and **Invert** appear in Shape and retain the existing postprocessing data. Levels starts collapsed and includes input black/white points, gamma, brightness, contrast and output range. Invert changes node value/height to `1 − original value`, also affecting alpha derived from that value. Both support keys, undo and saving. Use **Reverse gradient** beside the strip when you only need to swap the ramp direction.
 
 ![Solid fill and HEX](images/en/color-solid.png)
 
-> Callouts: 1 Edit color across tabs; 2 Solid or gradient; 3 Hexadecimal input.
+> Callouts: 1 Choose the node’s color source; 2 Choose solid or gradient; 3 Enter a hexadecimal color.
 
 A value gradient maps low/high pattern values, not left/right canvas position. Use a spatial-gradient graphic when position-based color is required.
 
@@ -226,10 +281,10 @@ A value gradient maps low/high pattern values, not left/right canvas position. U
 
 > Callouts: 1 Bloom strength; 2 Bloom radius.
 
-1. Select a node and open **Composite** for blending, contour and filters. Opacity, palettes and gradients are in **Color**.
+1. Select a node and open **Composite** for blending, contour and filters. Opacity, palettes and gradients are in **Shape**.
 2. Set a parent palette and inherit it for coordinated colors, or use independent node palettes.
 3. A mask affects only previously composited content in the same group. Reorder nodes to verify its scope.
-4. Expand postprocessing for brightness, levels, invert, blur, Bloom, sharpening, chromatic aberration and toon levels.
+4. Adjust Levels and Invert in **Shape**. Open **Composite → Image filters** for blur, Bloom, sharpening, chromatic aberration and toon levels.
 
 Filters support keys. Groups composite children before filtering. Radii such as blur are normalized to a 512-pixel canvas and scale with export resolution. Bloom enhances bright regions; it does not change the underlying shape radius.
 
@@ -259,7 +314,7 @@ Canvas transform and UV dragging pause in effect preview; inspector edits remain
 
 ## Channel curves
 
-Select a graphic or group and open **Color → Channel curves**. Nodes inheriting a palette can use curves too. Groups composite their children before applying curves.
+Select a graphic or group and open **Shape → Channel curves**. Nodes inheriting a palette can use curves too. Groups composite their children before applying curves.
 
 - Choose **Luminance / height, Master RGB, Red R, Green G, Blue B, or Alpha**. Luminance adjusts brightness and height; RGB changes color only. Alpha changes coverage and scales the height contribution accordingly.
 - Click the graph to add a point, drag or use arrow keys to move it, or enter input/output values from 0–255. Endpoint inputs stay at 0 and 255; their outputs remain editable. Internal points can be deleted. Up to 16 points use smooth cubic interpolation through the controls, with continuous tangents and no overshoot. The graph, preview and exports share the same shape. Two-point curves remain straight.

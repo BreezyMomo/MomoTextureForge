@@ -26,14 +26,14 @@ These are shared definitions, not controls visible in every mode. Some advanced 
 | Open center | 0 | 0 | 0.95 | 0.01 |
 | Outer-ring size factor | 1 | 0.1 | 4 | 0.01 |
 | Spiral orientation | 0 | 0 | 2 | 1 |
-| Path start X | -0.8 | -1.5 | 1.5 | 0.01 |
-| Path start Y | -0.5 | -1.5 | 1.5 | 0.01 |
-| Path control 1 X | -0.5 | -1.5 | 1.5 | 0.01 |
-| Path control 1 Y | 0.9 | -1.5 | 1.5 | 0.01 |
-| Path control 2 X | 0.5 | -1.5 | 1.5 | 0.01 |
-| Path control 2 Y | -0.9 | -1.5 | 1.5 | 0.01 |
-| Path end X | 0.8 | -1.5 | 1.5 | 0.01 |
-| Path end Y | 0.5 | -1.5 | 1.5 | 0.01 |
+| Path start X | -0.8 | -8 | 8 | 0.01 |
+| Path start Y | -0.5 | -8 | 8 | 0.01 |
+| Path control 1 X | -0.5 | -8 | 8 | 0.01 |
+| Path control 1 Y | 0.9 | -8 | 8 | 0.01 |
+| Path control 2 X | 0.5 | -8 | 8 | 0.01 |
+| Path control 2 Y | -0.9 | -8 | 8 | 0.01 |
+| Path end X | 0.8 | -8 | 8 | 0.01 |
+| Path end Y | 0.5 | -8 | 8 | 0.01 |
 | Path start progress | 0 | 0 | 1 | 0.01 |
 | Path end progress | 1 | 0 | 1 | 0.01 |
 | Path sampling | 0 | 0 | 1 | 1 |
