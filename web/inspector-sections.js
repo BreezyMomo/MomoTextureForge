@@ -1,4 +1,5 @@
 import {uiText,uiFormat} from './ui-language.js';
+import {animateUI,animateLayout,layoutRects,createReorderPreview,dragAutoScroll} from './editor-motion.js';
 
 export const INSPECTOR_SECTIONS_KEY='momo-texture-tree:inspector-sections:v1';
 export const INSPECTOR_ORDER_KEY='momo-texture-tree:inspector-module-order:v1';
@@ -36,8 +37,9 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false}){
   const help=make('span','tree-note inspector-module-description'),heading=make('span','inspector-module-heading'),button=make('button','inspector-module-help'),arrow=make('span','inspector-module-arrow');arrow.setAttribute('aria-hidden','true');
   const notes=[...body.querySelectorAll(':scope>p[data-inspector-help]')];if(notes.length){help.textContent=notes.map(note=>note.textContent).join('\n');notes.forEach(note=>note.remove());}else help.textContent=uiText(descriptions[key]??'modules.sectionHelp');help.hidden=!state.help.has(id);button.type='button';button.textContent='?';button.title=uiFormat('modules.helpTitle',title);button.setAttribute('aria-label',button.title);button.setAttribute('aria-expanded',String(!help.hidden));
   heading.append(label,button,arrow);summary.replaceChildren(heading,help);summary.setAttribute('aria-label',title);details.append(body);details.open=state.open(id,defaultOpen);summary.setAttribute('aria-expanded',String(details.open));
-  const remember=()=>{state.remember(id,details.open);summary.setAttribute('aria-expanded',String(details.open));};
-  const previous=details.ontoggle;details.ontoggle=()=>{if(details.isConnected){summary.setAttribute('aria-expanded',String(details.open));previous?.();}};
+  body.inert=!details.open;
+  const remember=()=>{state.remember(id,details.open);summary.setAttribute('aria-expanded',String(details.open));body.inert=!details.open;};
+  const previous=details.ontoggle;details.ontoggle=()=>{if(details.isConnected){summary.setAttribute('aria-expanded',String(details.open));body.inert=!details.open;previous?.();}};
   summary.onkeydown=event=>{if(event.key===' '||event.key==='Enter')event.stopPropagation();};
   summary.onclick=event=>{event.preventDefault();if(event.target.closest('.inspector-module-description'))return;details.open=!details.open;remember();};
   button.onclick=event=>{event.preventDefault();event.stopPropagation();help.hidden=!help.hidden;help.hidden?state.help.delete(id):state.help.add(id);button.setAttribute('aria-expanded',String(!help.hidden));};
@@ -60,18 +62,26 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false}){
  const modules=()=>[...host.children].filter(child=>child.matches('details.inspector-module'));
  const ordered=state.order(tab,modules().map(module=>module.dataset.module));
  const byKey=new Map(modules().map(module=>[module.dataset.module,module]));for(const key of ordered)host.append(byKey.get(key));
- let dragging=null;
+ let dragging=null,preview=null,dragEvents=null,ghost=null,capture=null,scroll=null;
  function update(){const list=modules();list.forEach((module,index)=>{module.querySelector(':scope>summary .module-move-up').disabled=index===0;module.querySelector(':scope>summary .module-move-down').disabled=index===list.length-1;});}
  function save(){state.rememberOrder(tab,modules().map(module=>module.dataset.module));update();}
- function clear(){for(const module of modules()){module.classList.remove('module-drop-before','module-drop-after','module-dragging');}dragging=null;}
+ function clear(commit=false){dragEvents?.abort();dragEvents=null;scroll?.stop();scroll=null;if(capture?.grip.hasPointerCapture?.(capture.id))capture.grip.releasePointerCapture(capture.id);capture=null;const source=dragging;if(commit)preview?.commit();else preview?.cancel();if(ghost){const image=ghost,from=image.getBoundingClientRect(),to=source?.querySelector(':scope>summary').getBoundingClientRect(),animation=to&&animateUI(image,[{transform:'none',opacity:1},{transform:`translate(${to.left-from.left}px,${to.top-from.top}px)`,opacity:0}],{duration:commit?100:160});if(animation)animation.finished.then(()=>image.remove(),()=>image.remove());else image.remove();}ghost=null;preview=null;dragging=null;}
  for(const module of modules()){
   const header=module.querySelector(':scope>summary .inspector-module-heading'),title=module.querySelector(':scope>summary .inspector-module-title').textContent;
-  const grip=make('button','module-drag-handle'),actions=make('span','module-order-actions');grip.type='button';grip.draggable=true;grip.textContent='⠿';grip.title=uiFormat('modules.dragToReorder',title);grip.setAttribute('aria-label',grip.title);grip.onclick=event=>{event.preventDefault();event.stopPropagation();};
-  grip.ondragstart=event=>{event.stopPropagation();dragging=module;event.dataTransfer.setData('text/plain',module.dataset.module);event.dataTransfer.effectAllowed='move';module.classList.add('module-dragging');};grip.ondragend=clear;
-  for(const [direction,text,key]of [[-1,'↑','modules.moveUp'],[1,'↓','modules.moveDown']]){const button=make('button',direction<0?'module-move-up':'module-move-down');button.type='button';button.textContent=text;button.title=uiFormat(key,title);button.setAttribute('aria-label',button.title);button.onclick=event=>{event.preventDefault();event.stopPropagation();const list=modules(),target=list[list.indexOf(module)+direction];if(!target)return;direction<0?host.insertBefore(module,target):host.insertBefore(module,target.nextSibling);save();button.focus();};actions.append(button);}
+  const grip=make('button','module-drag-handle'),actions=make('span','module-order-actions');grip.type='button';grip.draggable=false;grip.textContent='⠿';grip.title=uiFormat('modules.dragToReorder',title);grip.setAttribute('aria-label',grip.title);grip.onclick=event=>{event.preventDefault();event.stopPropagation();};
+  grip.onpointerdown=start=>{
+   if(start.button!==0)return;start.preventDefault();start.stopPropagation();clear();grip.setPointerCapture?.(start.pointerId);capture={grip,id:start.pointerId};dragEvents=new AbortController();const options={capture:true,signal:dragEvents.signal};
+   let pointerY=start.clientY;
+   document.addEventListener('pointermove',event=>{if(event.pointerId!==start.pointerId)return;event.preventDefault();if(!dragging){if(Math.hypot(event.clientX-start.clientX,event.clientY-start.clientY)<6)return;dragging=module;preview=createReorderPreview(host,modules(),module);scroll=dragAutoScroll(host.closest('.tree-inspector')??host,()=>preview?.preview(pointerY));module.classList.add('module-dragging');ghost=make('div','module-drag-ghost');ghost.setAttribute('aria-hidden','true');ghost.append((preview.dragImage??header).cloneNode(true));ghost.style.width=module.getBoundingClientRect().width+'px';doc.body.append(ghost);}pointerY=event.clientY;ghost.style.left=Math.max(8,Math.min(event.clientX-20,window.innerWidth-ghost.offsetWidth-8))+'px';ghost.style.top=(event.clientY-12)+'px';preview.preview(pointerY);scroll.update(pointerY);},options);
+   document.addEventListener('pointerup',event=>{if(event.pointerId!==start.pointerId)return;const bounds=(host.closest('.tree-inspector')??host).getBoundingClientRect(),commit=!!dragging&&dragging.isConnected&&event.clientX>=bounds.left&&event.clientX<=bounds.right&&event.clientY>=bounds.top&&event.clientY<=bounds.bottom;clear(commit);if(commit)save();grip.focus({preventScroll:true});},options);
+   document.addEventListener('pointercancel',event=>{if(event.pointerId===start.pointerId)clear();},options);
+   grip.addEventListener('lostpointercapture',()=>clear(),options);
+   window.addEventListener('blur',()=>clear(),{signal:dragEvents.signal});
+   window.addEventListener('resize',()=>clear(),{signal:dragEvents.signal});
+   document.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();clear();grip.focus({preventScroll:true});}else if(dragging){if([' ','Enter','Tab'].includes(event.key))event.preventDefault();event.stopPropagation();}},options);
+  };
+  for(const [direction,text,key]of [[-1,'↑','modules.moveUp'],[1,'↓','modules.moveDown']]){const button=make('button',direction<0?'module-move-up':'module-move-down');button.type='button';button.textContent=text;button.title=uiFormat(key,title);button.setAttribute('aria-label',button.title);button.onclick=event=>{event.preventDefault();event.stopPropagation();const list=modules(),target=list[list.indexOf(module)+direction];if(!target)return;const before=layoutRects(list);direction<0?host.insertBefore(module,target):host.insertBefore(module,target.nextSibling);save();animateLayout(list,before);button.focus();};actions.append(button);}
   header.prepend(grip);header.insertBefore(actions,header.querySelector('.inspector-module-arrow'));
-  module.ondragover=event=>{if(!dragging||dragging===module)return;event.preventDefault();event.stopPropagation();event.dataTransfer.dropEffect='move';for(const item of modules())item.classList.remove('module-drop-before','module-drop-after');const rect=module.querySelector(':scope>summary').getBoundingClientRect();module.classList.add(event.clientY<rect.y+rect.height/2?'module-drop-before':'module-drop-after');};
-  module.ondrop=event=>{if(!dragging||dragging===module)return;event.preventDefault();event.stopPropagation();const before=module.classList.contains('module-drop-before');host.insertBefore(dragging,before?module:module.nextSibling);clear();save();};
  }
  update();
 }

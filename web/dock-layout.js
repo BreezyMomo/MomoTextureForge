@@ -8,9 +8,11 @@ const validId=id=>typeof id==='string'&&/^[a-zA-Z0-9_-]{1,79}$/.test(id);
 const stack=panels=>({kind:'stack',id:uid('stack'),panels,active:panels[0]});
 const split=(axis,ratio,first,second)=>({kind:'split',id:uid('split'),axis,ratio,first,second});
 export function layoutPreset(name='default'){
- const left=split('y',.42,stack(['nodes']),stack(['library']));
+ const animation=name==='animation';
+ // Default: full-height graphics list, node tree, canvas, and inspector.
+ const left=animation?split('y',.42,stack(['nodes']),stack(['library'])):split('x',.565,stack(['library']),stack(['nodes']));
  const center=name==='animation'?split('y',.55,stack(['canvas']),stack(['timeline'])):stack(['canvas']);
- return {root:name==='focus'?center:split('x',.21,left,split('x',.73,center,stack(['inspector']))),floats:[]};
+ return {root:name==='focus'?center:split('x',animation?.21:.235,left,split('x',animation?.73:.765,center,stack(['inspector']))),floats:[]};
 }
 export function sanitizeLayout(raw){
  const panels=new Set(),ids=new Set();let count=0;

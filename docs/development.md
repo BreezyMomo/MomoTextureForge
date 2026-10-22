@@ -25,6 +25,16 @@ npm start -- --port 8799
 
 启动页的布局与首屏样式在 `web/index.html`，无需等待脚本下载即可显示。`web/startup.js` 负责真实阶段提示、界面切换与失败重试；源码入口和单文件构建共用这套逻辑，不显示虚构百分比，也不设置最短等待时间。初始化失败时保留错误详情与重新加载入口，不清除本地草稿或资源。
 
+## 界面主题
+
+`web/appearance.js` 管理版本化的浏览器偏好 `momo-texture-appearance:v1`，只接受内置主题 ID 和六位十六进制强调色。跟随系统模式监听系统明暗变化；强调色生成可读的按钮文字、面板强调文字和选中底色。`web/appearance-settings.js` 提供实时预览、取消还原和显式保存，存储不可用时保留预览并显示提示。
+
+公共界面颜色在 `web/theme-tokens.css` 按背景、面板、控件、文字、边框与状态用途定义，各组件样式引用这些变量。画布辅助线、缩略图底色、用户色板和作品内容保持独立。启动入口在挂载编辑器前应用偏好；离线与静态构建内嵌同一份主题样式和逻辑。外观不进入项目模型、撤销记录、资源哈希或作品导出。
+
+偏好中的 `style`（`standard`、`minimal`、`soft`）和 `density`（`compact`、`comfortable`）独立于配色；旧偏好自动补为标准与紧凑。根元素的 `data-interface-style`、`data-density` 驱动共享圆角与间距变量，简洁风格仅弱化内容模块边框，保留输入框、键盘焦点和停靠分隔条。密度调整触发现有预览尺寸观察器，不写入画布模型。
+
+验证主题行为可运行 `node --test tests/appearance.test.mjs`、`node tests/appearance-browser-check.mjs`；静态构建后加 `--built` 检查发行版。浏览器检查覆盖预览、取消、保存恢复、系统变化、中英文入口、窄屏顶栏、画布像素与项目存储不变，截图位于 `test-results/appearance/`。
+
 ## 构建离线版
 
 ```sh

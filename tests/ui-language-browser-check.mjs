@@ -56,6 +56,36 @@ try{
  await page.locator('.header-help summary').click();await page.locator('#tool-help').click();for(const b of await page.locator('.user-help-dialog nav button').all()){await b.click();await english('help-'+await b.getAttribute('data-section'),'.user-help-dialog');}await page.locator('.user-help-dialog header button').last().click();
  await page.locator('#support-project').click();await english('support','.support-dialog');await page.locator('.support-dialog button').click();
  await mkdir(new URL('../test-results/languages/',import.meta.url),{recursive:true});
+ // Dropdown labels must stay centered like adjacent buttons at either density.
+ for(const locale of ['zh-CN','en']){
+  await language(locale);
+  for(const density of ['compact','comfortable']){
+   await page.locator('#appearance-settings').click();await page.locator('#appearance-density').selectOption(density);await page.locator('.appearance-dialog [data-save]').click();
+   for(const width of [1600,1100,768]){
+    await page.setViewportSize({width,height:1000});
+    async function alignedHeader(){
+     const groups=await page.locator('.tree-canvas-actions,.tree-resource-actions,.tree-tool-actions').evaluateAll(groups=>groups.map(group=>Array.from(group.querySelectorAll(':scope > button,:scope > select,:scope > details > summary')).filter(e=>e.checkVisibility()).map(e=>{
+      const box=e.getBoundingClientRect(),walk=document.createTreeWalker(e,NodeFilter.SHOW_TEXT),centers=[];
+      while(walk.nextNode()){const text=walk.currentNode;if(!text.textContent.trim()||text.parentElement.closest('svg,option'))continue;const range=document.createRange();range.selectNodeContents(text);const r=range.getBoundingClientRect();if(r.height)centers.push(r.y+r.height/2);}
+      return {label:e.id||e.textContent.trim(),center:box.y+box.height/2,text:centers};
+     })));
+     for(const controls of groups){
+      const centers=controls.map(c=>c.center),text=controls.flatMap(c=>c.text);
+      assert.ok(Math.max(...centers)-Math.min(...centers)<1,`Control alignment: ${locale}/${density}/${width} ${JSON.stringify(controls)}`);
+      assert.ok(Math.max(...text)-Math.min(...text)<1,`Text alignment: ${locale}/${density}/${width} ${JSON.stringify(controls)}`);
+     }
+    }
+    await alignedHeader();
+    for(const menu of await page.locator('.tree-header .header-dropdown').all())if(await menu.isVisible()){
+     await menu.locator('summary').click();await alignedHeader();await menu.locator('summary').click();
+    }
+    if(locale==='zh-CN'&&width===1600&&!process.argv.includes('--no-screenshots')){
+     const box=await page.locator('.tree-header').boundingBox();await page.screenshot({path:fileURLToPath(new URL(`../test-results/languages/${built?'built':'source'}-toolbar-${density}.png`,import.meta.url)),clip:box});
+    }
+   }
+  }
+ }
+ await language('en');
  for(const width of [1600,1100,768]){await page.setViewportSize({width,height:1000});const boxes=await page.locator('.tree-brand,.tree-canvas-actions,.tree-tool-actions').evaluateAll(els=>els.map(e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom};}));for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++)assert.ok(Math.min(boxes[i].right,boxes[j].right)-Math.max(boxes[i].x,boxes[j].x)<1||Math.min(boxes[i].bottom,boxes[j].bottom)-Math.max(boxes[i].y,boxes[j].y)<1,'header overlap at '+width);assert.equal(await page.locator('#inspector-color-quick').count(),0);if(!process.argv.includes('--no-screenshots'))await page.screenshot({path:fileURLToPath(new URL(`../test-results/languages/${built?'built':'source'}-english-${width}.png`,import.meta.url))});}
  const examples=page;await examples.setViewportSize({width:1400,height:1000});await examples.goto(address+(built?'?view=examples':'examples.html'));await examples.waitForFunction(()=>document.querySelector('#samples')?.children.length>20&&/generated/.test(document.querySelector('#status').textContent),null,{timeout:180000});const texts=await examples.locator('body').innerText();assert.ok(!/[\u3400-\u9fff]/.test(texts),texts.slice(0,500));assert.ok(!/\b(?:examples|presets|ui|editor)\.[A-Za-z][A-Za-z0-9.]*/.test(texts),'Example message IDs must resolve');for(const title of await examples.locator('#samples h2').allTextContents())assert.ok(title.trim(),'Every example has a localized title');assert.ok(await examples.locator('#samples a').count()>20);await examples.close();
  assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,views:Object.keys(report),errors}));

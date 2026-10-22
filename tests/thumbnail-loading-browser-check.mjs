@@ -18,7 +18,7 @@ try{
  // A pending preview detached by filtering must resume when the same card returns.
  await firstImage.evaluate(img=>window.pendingThumbnail=img);await page.locator('#shape-search').fill('__no_matching_graphic__');await page.evaluate(()=>{let remaining=100;while(window.thumbnailIdle.length&&remaining--)window.thumbnailIdle.shift()();});await page.locator('#shape-search').fill('');await page.waitForFunction(()=>window.thumbnailIdle.length>0);assert.equal(await firstImage.evaluate(img=>img===window.pendingThumbnail),true);
  await page.evaluate(()=>window.thumbnailIdle.shift()());await page.waitForFunction(()=>document.querySelector('.tree-thumbnail-preview[data-state=ready] img')?.naturalWidth>0);
- assert.equal(await first.getAttribute('data-state'),'ready');assert.equal(await first.getAttribute('aria-busy'),'false');assert.equal(await firstImage.evaluate(e=>getComputedStyle(e).opacity),'1');assert.equal(await first.locator('.tree-thumbnail-indicator').evaluate(e=>getComputedStyle(e).display),'none');
+ assert.equal(await first.getAttribute('data-state'),'ready');assert.equal(await first.getAttribute('aria-busy'),'false');await page.waitForFunction(()=>getComputedStyle(document.querySelector('#shape-library .tree-thumbnail-preview img')).opacity==='1');assert.equal(await first.locator('.tree-thumbnail-indicator').evaluate(e=>getComputedStyle(e).display),'none');
  // A renderer failure must end loading and leave the original resource usable.
  await frames.nth(1).locator('img').evaluate(img=>img.component=null);await page.evaluate(()=>window.thumbnailIdle.shift()());
  assert.equal(await frames.nth(1).getAttribute('data-state'),'error');assert.match(await frames.nth(1).getAttribute('title'),/仍可点击查看或添加/);

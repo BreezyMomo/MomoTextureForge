@@ -1,5 +1,6 @@
 import {onLanguageChange} from './language.js';
 import {uiText,uiFormat} from './ui-language.js';
+import {animateUI,animateLayout,layoutRects,reducedMotion} from './editor-motion.js';
 import {PANEL_IDS,PANEL_TITLES,LAYOUT_KEY,layoutPreset,sanitizeLayoutSettings,panelStack,findLayoutNode,closePanel,activatePanel,dockPanel,floatPanel,showPanel} from './dock-layout.js';
 
 const element=(tag,className,text)=>{const e=document.createElement(tag);if(className)e.className=className;if(text)e.textContent=uiText(text);return e;};
@@ -29,7 +30,9 @@ export function createDockWorkspace({host,menuHost,panels,onChange=()=>{},onMess
  saveForm.onsubmit=e=>{e.preventDefault();const title=name.value.trim();if(!title){status.textContent=uiText("layout.enterALayoutName");name.focus();return;}const existing=settings.named.find(s=>s.name===title);if(!existing&&settings.named.length>=12){status.textContent=uiText("layout.upToLayoutsDeleteAnUnusedLayoutFirst");return;}const item={name:title,layout:structuredClone(layout)};if(existing)settings.named[settings.named.indexOf(existing)]=item;else settings.named.push(item);const saved=persist();updateMenu(title);if(saved)status.textContent=(uiText("layout.layoutSaved") + title);};
  function updateMenu(selected=named.value){for(const id of PANEL_IDS)checks.get(id).checked=!!panelStack(layout,id);named.replaceChildren();if(!settings.named.length){const o=element('option','',uiText("layout.noSavedLayouts"));o.value='';named.append(o);}else for(const item of settings.named){const o=element('option');o.textContent=item.name;o.value=item.name;named.append(o);}if(settings.named.some(n=>n.name===selected))named.value=selected;load.disabled=remove.disabled=!settings.named.length;}
  function persist(){settings.current=layout;try{localStorage.setItem(LAYOUT_KEY,JSON.stringify(settings));return true;}catch{status.textContent=uiText("layout.couldNotSaveTheLayoutCurrentLayoutIsStillUsable");return false;}}
- function apply(next,{focus=null}={}){layout=next;render();persist();if(focus)host.querySelector(`[data-panel-tab="${focus}"]`)?.focus();}
+ let motionTimer;
+ const stackKey=element=>element.querySelector('.dock-tab[aria-selected=true]')?.dataset.panelTab;
+ function apply(next,{focus=null,motion=true}={}){const before=motion?layoutRects(host.querySelectorAll('.dock-stack'),stackKey):null;layout=next;render();persist();if(before&&animateLayout(host.querySelectorAll('.dock-stack'),before,{key:stackKey,resize:true,duration:200})){clearTimeout(motionTimer);host.classList.add('dock-motion');motionTimer=setTimeout(()=>host.classList.remove('dock-motion'),220);}if(focus)host.querySelector(`[data-panel-tab="${focus}"]`)?.focus();}
  function show(id){apply(showPanel(layout,id),{focus:id});}
  function active(id){const stack=panelStack(layout,id);return stack?.active===id;}
  function render(){
@@ -48,7 +51,7 @@ export function createDockWorkspace({host,menuHost,panels,onChange=()=>{},onMess
    const container=element('div','dock-split dock-split-'+n.axis);container.dataset.splitId=n.id;
    const first=element('div','dock-branch'),second=element('div','dock-branch');first.style.flex=`0 0 calc(${n.ratio*100}% - 3px)`;second.style.flex='1 1 0';first.append(renderTree(n.first));second.append(renderTree(n.second));
    const handle=element('div','dock-splitter');handle.tabIndex=0;handle.setAttribute('role','separator');handle.setAttribute('aria-label',(n.axis==='x' ? uiText("layout.resizePanelWidth") : uiText("layout.resizePanelHeight")));handle.setAttribute('aria-orientation',n.axis==='x'?'vertical':'horizontal');handle.setAttribute('aria-valuemin','12');handle.setAttribute('aria-valuemax','88');handle.setAttribute('aria-valuenow',String(Math.round(n.ratio*100)));
-   handle.onpointerdown=e=>splitGesture(e,container,first,n);handle.onkeydown=e=>{const keys=n.axis==='x'?['ArrowLeft','ArrowRight']:['ArrowUp','ArrowDown'];if(![...keys,'Home','End'].includes(e.key))return;e.preventDefault();e.stopPropagation();n.ratio=e.key==='Home'?.12:e.key==='End'?.88:clamp(n.ratio+(e.key===keys[0]?-.02:.02),.12,.88);apply(layout);host.querySelector(`[data-split-id="${n.id}"] > .dock-splitter`)?.focus();};container.append(first,handle,second);return container;
+   handle.onpointerdown=e=>splitGesture(e,container,first,n);handle.onkeydown=e=>{const keys=n.axis==='x'?['ArrowLeft','ArrowRight']:['ArrowUp','ArrowDown'];if(![...keys,'Home','End'].includes(e.key))return;e.preventDefault();e.stopPropagation();n.ratio=e.key==='Home'?.12:e.key==='End'?.88:clamp(n.ratio+(e.key===keys[0]?-.02:.02),.12,.88);apply(layout,{motion:false});host.querySelector(`[data-split-id="${n.id}"] > .dock-splitter`)?.focus();};container.append(first,handle,second);return container;
   }
   const container=element('section','dock-stack');container.dataset.stackId=n.id;
   const head=element('div','dock-stack-header'),tabs=element('div','dock-tabs');tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label',uiText("layout.panelTabs"));
@@ -66,13 +69,13 @@ export function createDockWorkspace({host,menuHost,panels,onChange=()=>{},onMess
  }
  function splitGesture(e,container,first,n){
   if(e.button!==0)return;e.preventDefault();e.stopPropagation();const rect=container.getBoundingClientRect(),before=n.ratio;document.body.classList.add('dock-is-dragging');
-  listenGesture(e,event=>{if(event.pointerId!==e.pointerId)return;const size=n.axis==='x'?rect.width:rect.height,pos=n.axis==='x'?event.clientX-rect.left:event.clientY-rect.top;n.ratio=clamp(pos/Math.max(1,size),.12,.88);first.style.flexBasis=`calc(${n.ratio*100}% - 3px)`;onChange();},()=>apply(layout),()=>{n.ratio=before;render();});
+  listenGesture(e,event=>{if(event.pointerId!==e.pointerId)return;const size=n.axis==='x'?rect.width:rect.height,pos=n.axis==='x'?event.clientX-rect.left:event.clientY-rect.top;n.ratio=clamp(pos/Math.max(1,size),.12,.88);first.style.flexBasis=`calc(${n.ratio*100}% - 3px)`;onChange();},()=>apply(layout,{motion:false}),()=>{n.ratio=before;render();});
  }
  function windowGesture(e,win,f,kind){
   if(e.button!==0)return;e.preventDefault();e.stopPropagation();const rect=host.getBoundingClientRect(),before={x:f.x,y:f.y,w:f.w,h:f.h};document.body.classList.add('dock-is-dragging');
   listenGesture(e,event=>{if(event.pointerId!==e.pointerId)return;const dx=(event.clientX-e.clientX)/Math.max(1,rect.width),dy=(event.clientY-e.clientY)/Math.max(1,rect.height);
    if(kind==='move'){f.x=clamp(before.x+dx,0,1-f.w);f.y=clamp(before.y+dy,0,1-f.h);}else{f.w=clamp(before.w+dx,.2,1-f.x);f.h=clamp(before.h+dy,.15,1-f.y);}placeFloat(win,f);onChange();
-  },()=>{persist();onChange();},()=>{Object.assign(f,before);placeFloat(win,f);onChange();});
+  },()=>{persist();onChange();},()=>{const current=layoutRects([win]);Object.assign(f,before);placeFloat(win,f);animateLayout([win],current,{resize:true});onChange();});
  }
  function dropTarget(x,y,forceFloat){
   if(forceFloat)return null;const rect=host.getBoundingClientRect();if(x<rect.left||x>rect.right||y<rect.top||y>rect.bottom)return null;
@@ -81,11 +84,11 @@ export function createDockWorkspace({host,menuHost,panels,onChange=()=>{},onMess
   const edge=dx<.23?'left':dx>.77?'right':dy<.23?'top':dy>.77?'bottom':'center';return {id:hit.dataset.stackId,edge,rect:r};
  }
  function drawDrop(){
-  overlay?.remove();overlay=null;if(!target)return;const root=host.getBoundingClientRect(),r=target.rect;overlay=element('div','dock-drop-preview');overlay.textContent=(target.edge==='center' ? uiText("layout.mergeAsTabs") : uiText(({left:"layout.dockLeft",right:"layout.dockRight",top:"layout.dockAbove",bottom:"layout.dockBelow"})[target.edge]));
+  if(!target){overlay?.remove();overlay=null;return;}const root=host.getBoundingClientRect(),r=target.rect;if(!overlay){overlay=element('div','dock-drop-preview');host.append(overlay);}overlay.textContent=(target.edge==='center' ? uiText("layout.mergeAsTabs") : uiText(({left:"layout.dockLeft",right:"layout.dockRight",top:"layout.dockAbove",bottom:"layout.dockBelow"})[target.edge]));
   const width=['left','right'].includes(target.edge)?r.width*.3:r.width,height=['top','bottom'].includes(target.edge)?r.height*.3:r.height;
-  Object.assign(overlay.style,{left:(r.left-root.left+(target.edge==='right'?r.width-width:0))+'px',top:(r.top-root.top+(target.edge==='bottom'?r.height-height:0))+'px',width:width+'px',height:height+'px'});host.append(overlay);
+  Object.assign(overlay.style,{left:(r.left-root.left+(target.edge==='right'?r.width-width:0))+'px',top:(r.top-root.top+(target.edge==='bottom'?r.height-height:0))+'px',width:width+'px',height:height+'px'});
  }
- function clearDrag(){drag=null;target=null;overlay?.remove();ghost?.remove();overlay=ghost=null;}
+ function clearDrag(cancel=false){const source=drag&&host.querySelector(`[data-panel-tab="${drag.panel}"]`);drag=null;target=null;overlay?.remove();if(ghost&&cancel&&source&&!reducedMotion()){const image=ghost,from=image.getBoundingClientRect(),to=source.getBoundingClientRect(),animation=animateUI(image,[{transform:'none',opacity:1},{transform:`translate(${to.left-from.left}px,${to.top-from.top}px)`,opacity:0}],{duration:180});if(animation)animation.finished.then(()=>image.remove(),()=>image.remove());else image.remove();}else ghost?.remove();overlay=ghost=null;}
  function panelGesture(e,id){
   if(e.button!==0)return;const start={x:e.clientX,y:e.clientY};let moved=false;
   listenGesture(e,event=>{if(event.pointerId!==e.pointerId)return;if(!moved&&Math.hypot(event.clientX-start.x,event.clientY-start.y)<6)return;
@@ -94,7 +97,7 @@ export function createDockWorkspace({host,menuHost,panels,onChange=()=>{},onMess
    // Suppress the click generated after a completed drag, preserving the drop destination.
    const suppress=event=>{event.preventDefault();event.stopImmediatePropagation();};
    document.addEventListener('click',suppress,{once:true,capture:true});setTimeout(()=>document.removeEventListener('click',suppress,true),0);
-  },clearDrag);
+  },()=>clearDrag(true));
  }
  onLanguageChange(()=>{menu.querySelector('summary').textContent=uiText("menu.layout");tip.textContent=uiText("layout.dragPanelTabsToDockAltDragToFloat");for(const [i,title]of ["layout.restoreDefaultLayout","layout.animationLayout","layout.focusCanvas"].entries())menuBody.querySelectorAll(':scope > button')[i].textContent=uiText(title);for(const id of PANEL_IDS){const input=checks.get(id);input.nextSibling.nodeValue=uiText(PANEL_TITLES[id]);input.setAttribute('aria-label',uiText("layout.show")+uiText(PANEL_TITLES[id]));shells.get(id).setAttribute('aria-label',uiText(PANEL_TITLES[id]));}name.placeholder=uiText("layout.eGMyTwoColumnLayout");name.setAttribute('aria-label',uiText("layout.layoutName"));named.setAttribute('aria-label',uiText("layout.savedLayouts"));status.textContent=uiText("layout.layoutIsSavedInThisBrowserSeparatelyFromTheCanvasProject");save.textContent=uiText("layout.saveCurrentLayout");load.textContent=uiText("layout.applyLayout");remove.textContent=uiText("layout.deleteSavedLayout");render();});
  render();return {show,hide:id=>apply(closePanel(layout,id)),toggle:id=>panelStack(layout,id)?apply(closePanel(layout,id)):show(id),active,has:id=>!!panelStack(layout,id),isRestoring:()=>restoring};

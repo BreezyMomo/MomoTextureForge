@@ -25,6 +25,16 @@ Browser storage is not automatically shared between online/offline origins, port
 
 Startup markup/styles in `web/index.html` display before scripts finish downloading. `web/startup.js` drives real loading stages, transition and retry for source and standalone builds. There are no invented percentages or artificial minimum waits. Failures retain details and reload controls without clearing drafts/resources.
 
+## Interface themes
+
+`web/appearance.js` manages versioned browser preferences at `momo-texture-appearance:v1`, accepting only built-in theme IDs and six-digit hex accent colors. System mode follows OS appearance changes. Accents generate readable button text, panel accent text, and selection surfaces. `web/appearance-settings.js` provides live preview, cancellation, and explicit saving; unavailable storage keeps the preview usable and displays a message.
+
+`web/theme-tokens.css` defines shared interface colors by background, panel, control, text, border, and status roles. Component styles reference these tokens. Canvas guides, thumbnail backgrounds, user palettes, and artwork retain independent colors. Startup applies preferences before mounting the editor; offline and static builds embed the same styles and logic. Appearance never enters the project model, undo history, resource hashes, or artwork exports.
+
+Preferences include independent `style` (`standard`, `minimal`, `soft`) and `density` (`compact`, `comfortable`) values; older preferences default to Standard and Compact. Root `data-interface-style` and `data-density` attributes drive shared radius and spacing tokens. Minimal styling quiets module borders while retaining input borders, keyboard focus, and docking separators. Density changes use the existing preview resize observer without writing to the canvas model.
+
+Run `node --test tests/appearance.test.mjs` and `node tests/appearance-browser-check.mjs` to verify theme behavior; add `--built` after a static build to check the distribution. Browser checks cover preview, cancellation, saved restoration, system changes, localized controls, narrow headers, unchanged canvas pixels and project storage. Screenshots are in `test-results/appearance/`.
+
 ## Build offline
 
 ```sh

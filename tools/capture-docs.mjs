@@ -64,8 +64,10 @@ try{
   await shot('composition-examples');await page.getByRole('combobox',{name:label('ui.exampleCategory'),exact:true}).selectOption('arrangement');await page.setViewportSize({width:1400,height:2200});await shot('arrangement-examples');await page.setViewportSize({width:1600,height:1050});
  });
  await run('presets',async()=>{await page.setViewportSize({width:1400,height:1100});await page.goto(url+'examples.html?category=presets');await page.waitForFunction(count=>document.querySelectorAll('#samples img').length===count,treeSamples().length,{timeout:180000});await page.locator('#samples article[data-category=presets] img').evaluateAll(images=>Promise.all(images.map(image=>image.decode())));await shot('vfx-presets');await page.setViewportSize({width:1600,height:1050});});
- await run('workspace',async()=>{
+ const workspaceOverviewOnly=only.has('workspace-overview');
+ await run(workspaceOverviewOnly?'workspace-overview':'workspace',async()=>{
   await load(spell);await page.getByRole('button',{name:label('editor.select')+demoName('环形星光'),exact:true}).click();await shot('workspace');
+  if(workspaceOverviewOnly)return;
   await page.getByRole('button',{name:label('inspector.transformLayout'),exact:true}).click();await shot('transform-region');await page.getByLabel(label('editor.instanceSize'),{exact:true}).scrollIntoViewIfNeeded();await shot('arrangement');
   await page.getByRole('button',{name:label('editor.select')+demoName('外环'),exact:true}).click();await page.getByRole('button',{name:label('inspector.composite'),exact:true}).click();await page.getByText(label('modules.imageFilters'),{exact:true}).click();await changeNumber(label('ui.bloomIntensity'),.35);await page.getByLabel(label('ui.bloomIntensity'),{exact:true}).evaluate(e=>e.scrollIntoView({block:'center'}));await shot('compositing');
   await page.locator('details.header-dropdown > summary').filter({hasText:label('menu.file')}).click();await shot('project-files',null,{x:600,y:0,width:650,height:520});
