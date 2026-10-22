@@ -49,9 +49,13 @@ npm run build:pages
 
 `build:pages` 额外内嵌 `web/site-analytics.js`，并仅为统计脚本允许 `https://hm.baidu.com`。`build:standalone` 的离线 HTML/ZIP 不含统计代码。脚本按 HTTPS 域名和路径白名单选择两个独立的百度统计站点：GitHub Pages（站点 23623715）和 WorkBuddy（站点 23623719）。本地、其他部署域名、其他 GitHub 项目及验证视图不统计。
 
-每次打开页面仅手动发送一次 PV：编辑器与组合示例分别使用固定路径；不将查询参数、`sharecode` 或画布 `#tree` 放入 PV 地址，来源只保留域名。关闭自动 PV 和自动点击采集，统计脚本使用 `referrerPolicy=origin`，Referer 仅发送站点来源（协议和域名），不含路径、查询参数或画布数据。不能设为 `no-referrer`：百度会返回 HTTP 200 的空脚本，导致没有访问上报。当前不添加导出、参数编辑等行为事件，也不主动上报画布名称、图片或节点内容。百度服务仍会处理访问统计所需的网络/浏览器信息和访客标识；不能将其描述为完全无数据采集。
+每次打开页面仅手动发送一次 PV：编辑器与组合示例分别使用固定路径；不将查询参数、`sharecode` 或画布 `#tree` 放入 PV 地址，来源只保留域名。关闭自动 PV 和自动点击采集，统计脚本使用 `referrerPolicy=origin`，Referer 仅发送站点来源（协议和域名），不含路径、查询参数或画布数据。不能设为 `no-referrer`：百度会返回 HTTP 200 的空脚本，导致没有访问上报。仅在导出文件生成并触发下载、或图片写入剪贴板成功后添加固定行为事件；不统计参数编辑，也不主动上报画布名称、文件名、图片或节点内容。百度服务仍会处理访问统计所需的网络/浏览器信息和访客标识；不能将其描述为完全无数据采集。
 
-统计失败不阻塞编辑器启动。核验时分别访问两个正式站点，在百度统计对应网站的“代码安装检查”和访问报告中查看；新站点脚本及报表可能延迟生效，不能仅凭插入了 script 标签判定数据已入库。修改统计后运行 `node --test tests/site-analytics.test.mjs` 和 `node tests/site-analytics-browser-check.mjs`，后者检查静态包的白名单、CSP、请求来源与离线隔离。
+导出事件由 `web/export-events.js` 发出本地完成信号，仅正式站点的统计入口监听并调用 `_trackEvent`。在百度统计 **报告 → 访问分析 → 事件跟踪/事件分析** 中，选择类别 `export`：操作 `download` 为下载、`clipboard` 为复制成功；标签使用固定的 `格式/通道`，例如 `png/normal`、`frames/color`。可查看事件总次数和唯一事件访客数；同一访客多次导出会增加次数。格式为 `png`、`exr`、`svg`、`psd`、`psd-vector`、`frames`、`atlas`、`atlas-exr`、`batch`、`batch-atlas`，通道为导出时选择的 `color`、`height`、`normal`、`rgba`；矢量轮廓仍按透明度提取，不因通道标签改变算法。
+
+一次序列帧 ZIP 或三档尺寸 ZIP 只计一次。取消、失败、仅查看图集预览及保存项目/图库 ZIP 均不计入；复制失败而回退 PNG 下载时只记 `download` + `png/通道`。浏览器不能确认最终写入用户硬盘，因此这里统计的是“生成完成并发起下载”，不是文件最终保存成功。统计组件被拦截或网络不可用时可能漏报，不影响导出。标签严格限制在上述枚举，不使用用户名称或分享 URL。新增导出格式时同步更新枚举与回归检查。
+
+统计失败不阻塞编辑器启动。核验时分别访问两个正式站点，在百度统计对应网站的“代码安装检查”和访问报告中查看；新站点脚本及报表可能延迟生效，不能仅凭插入了 script 标签判定数据已入库。修改统计后运行 `node --test tests/site-analytics.test.mjs` 和 `node tests/site-analytics-browser-check.mjs`，后者检查静态包的白名单、CSP、请求来源、事件字段与离线隔离；加 `--real-sdk` 使用真实百度 SDK，并在本地拦截所有统计请求核验上报 URL，不发送测试访问/事件。运行 `node tests/export-analytics-browser-check.mjs` 验证实际十种格式下载、四种通道、复制/回退及取消/失败/预览不计数。
 
 `.github/workflows/pages.yml` 在推送 `main` 后执行检查、构建和 Pages 部署。首次配置在 GitHub 仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**；也可在 Actions 中手动运行部署。实际部署状态以 Actions 结果为准。
 

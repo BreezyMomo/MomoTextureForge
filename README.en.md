@@ -10,7 +10,7 @@ Create graphics, textures and animated effects in your browser. Compose nodes, a
 
 Users in mainland China can try WorkBuddy first. Keep the `sharecode` parameter when sharing the link: a browser that has visited before may open the root address, while new visitors may still need the full link. WorkBuddy synchronizes periodically and may lag behind GitHub Pages.
 
-The two official online deployments use Baidu Analytics for basic traffic statistics. Pageview URLs exclude shared canvas data and `sharecode`. The app does not actively report canvas content or enable automatic click collection. Offline builds, local development and deployments on other domains do not load analytics. See [development documentation](docs/development.en.md#official-site-analytics).
+The two official online deployments use Baidu Analytics for basic traffic statistics and completed-export counts by format/channel, with clipboard copies counted separately. Pageview URLs exclude shared canvas data and `sharecode`. The app does not actively report canvas content or enable automatic click collection. Offline builds, local development and deployments on other domains do not load analytics. See [development documentation](docs/development.en.md#official-site-analytics).
 
 Source and documentation: [GitHub primary repository](https://github.com/BreezyMomo/MomoTextureForge) · [Gitee mirror](https://gitee.com/BreezyMomo/MomoTextureForge). Both use the same Git history. If GitHub is difficult to reach, use Gitee to read the documentation or download the repository.
 

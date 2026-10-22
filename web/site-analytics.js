@@ -1,5 +1,6 @@
 // Only the official HTTPS deployments use the owner's public Baidu site IDs.
 // This module is injected by build-pages.mjs, never by the offline build.
+import {EXPORT_COMPLETED_EVENT,exportEventData} from './export-events.js';
 export function analyticsTarget(href){
  const url=new URL(href);
  if(url.protocol!=='https:'||url.port)return null;
@@ -33,6 +34,13 @@ export function startSiteAnalytics(win=window,doc=document){
   script.referrerPolicy='origin';
   script.src='https://hm.baidu.com/hm.js?'+target.id;
   doc.head.append(script);
+  win.addEventListener?.(EXPORT_COMPLETED_EVENT,event=>{
+   try{
+    // Fixed, bounded labels only: never forward project names or event extras.
+    const detail=exportEventData(event.detail);
+    if(detail)win._hmt?.push(['_trackEvent','export',detail.action,detail.format+'/'+detail.channel]);
+   }catch{/* Tracking must not affect an already completed export. */}
+  });
   return true;
  }catch{return false;}
 }
