@@ -9,11 +9,11 @@ import {project,node} from '../web/tree-model.js';
 const built=process.argv.includes('--built'),root=fileURLToPath(new URL(built?'../site/':'../web/',import.meta.url));
 const types={'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.glsl':'text/plain','.svg':'image/svg+xml'};
 const server=http.createServer(async(req,res)=>{try{let url=new URL(req.url,'http://localhost').pathname;if(built)url=url.replace(/^\/MomoTextureForge\//,'/');const file=path.resolve(root,'.'+(url==='/'?'/index.html':url));if(!file.startsWith(root)||!types[path.extname(file)])throw Error();res.setHeader('Content-Type',types[path.extname(file)]);res.end(await readFile(file));}catch{res.writeHead(404);res.end();}});
-await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));let browser;
+await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));let browser,page;
 const report={},errors=[];
 try{
  browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-webgl','--ignore-gpu-blocklist']});
- const context=await browser.newContext({viewport:{width:1400,height:1000}});const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
+ const context=await browser.newContext({viewport:{width:1400,height:1000}});page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
  const address=`http://127.0.0.1:${server.address().port}${built?'/MomoTextureForge/':'/'}`;
  const draft=project();draft.name='文件';draft.root.name='画布';draft.root.children=[node('shape','Circle'),node('shape','Circle')];draft.root.children[0].name='颜色';draft.root.children[1].name='保存';
  draft.root.children[0].tracks['params.0']={mode:'absolute',ease:'linear',keys:[[0,.3],[1,.8]]};
@@ -23,7 +23,7 @@ try{
  await eye.click();assert.equal(await eye.getAttribute('aria-pressed'),'false');assert.equal(await eye.locator('svg path').count(),2);assert.equal(await eye.getAttribute('title'),'显示 颜色');
  await eye.click();assert.equal(await eye.getAttribute('aria-pressed'),'true');assert.equal(await eye.locator('svg path').count(),1);
  const initial=await page.evaluate(()=>({saved:localStorage.getItem('momo-texture-tree:draft:v1'),undo:document.querySelector('#undo').disabled,hash:location.hash}));
- async function language(first){const select=page.locator('#language-settings');assert.deepEqual(await select.locator('option').evaluateAll(options=>options.map(o=>({code:o.value,name:o.textContent}))),[{code:'zh-CN',name:'简体中文'},{code:'en',name:'English'}]);await select.selectOption(first);assert.equal(await page.locator('#detailed-help').getAttribute('href'),'https://github.com/BreezyMomo/MomoTextureForge/blob/main/'+(first==='zh-CN'?'README.md':'README.en.md'));for(const [id,host]of [['github-repository','github.com'],['gitee-repository','gitee.com']])assert.equal(await page.locator('#'+id).getAttribute('href'),'https://'+host+'/BreezyMomo/MomoTextureForge'+(first==='zh-CN'?'':'/blob/main/README.en.md'));assert.equal(await page.locator('.language-dialog').count(),0);}
+ async function language(first){if(process.argv.includes('--trace'))console.log('language',first,page.viewportSize().width,new URL(page.url()).pathname+new URL(page.url()).search);const select=page.locator('#language-settings');assert.deepEqual(await select.locator('option').evaluateAll(options=>options.map(o=>({code:o.value,name:o.textContent}))),[{code:'zh-CN',name:'简体中文'},{code:'en',name:'English'}]);await select.selectOption(first);assert.equal(await page.locator('#detailed-help').getAttribute('href'),'https://github.com/BreezyMomo/MomoTextureForge/blob/main/'+(first==='zh-CN'?'README.md':'README.en.md'));for(const [id,host]of [['github-repository','github.com'],['gitee-repository','gitee.com']])assert.equal(await page.locator('#'+id).getAttribute('href'),'https://'+host+'/BreezyMomo/MomoTextureForge'+(first==='zh-CN'?'':'/blob/main/README.en.md'));assert.equal(await page.locator('.language-dialog').count(),0);}
  await language('en');assert.equal(await page.locator('#project-name').inputValue(),'文件');assert.equal(await eye.getAttribute('title'),'Hide 颜色');assert.equal(await eye.getAttribute('aria-label'),'Node visibility: 颜色');assert.deepEqual(await page.locator('#node-tree .tree-node .tree-node-name').allTextContents(),['◇ 颜色','◇ 保存']);
  assert.deepEqual(await page.evaluate(()=>({saved:localStorage.getItem('momo-texture-tree:draft:v1'),undo:document.querySelector('#undo').disabled,hash:location.hash})),initial);
  async function english(label,scope='body'){
@@ -56,8 +56,41 @@ try{
  await page.locator('.header-help summary').click();await page.locator('#tool-help').click();for(const b of await page.locator('.user-help-dialog nav button').all()){await b.click();await english('help-'+await b.getAttribute('data-section'),'.user-help-dialog');}await page.locator('.user-help-dialog header button').last().click();
  await page.locator('#support-project').click();await english('support','.support-dialog');await page.locator('.support-dialog button').click();
  await mkdir(new URL('../test-results/languages/',import.meta.url),{recursive:true});
+ // Dropdown labels must stay centered like adjacent buttons at either density.
+ for(const locale of ['zh-CN','en']){
+  await language(locale);
+  for(const density of ['compact','comfortable']){
+   await page.locator('#appearance-settings').click();await page.locator('#appearance-density').selectOption(density);await page.locator('.appearance-dialog [data-save]').click();
+   for(const width of [1600,1100,768]){
+    await page.setViewportSize({width,height:1000});
+    async function alignedHeader(){
+     const groups=await page.locator('.tree-canvas-actions,.tree-resource-actions,.tree-tool-actions').evaluateAll(groups=>groups.map(group=>Array.from(group.querySelectorAll(':scope > button,:scope > select,:scope > details > summary')).filter(e=>e.checkVisibility()).map(e=>{
+      const box=e.getBoundingClientRect(),walk=document.createTreeWalker(e,NodeFilter.SHOW_TEXT),centers=[];
+      while(walk.nextNode()){const text=walk.currentNode;if(!text.textContent.trim()||text.parentElement.closest('svg,option'))continue;const range=document.createRange();range.selectNodeContents(text);const r=range.getBoundingClientRect();if(r.height)centers.push(r.y+r.height/2);}
+      return {label:e.id||e.textContent.trim(),center:box.y+box.height/2,text:centers};
+     })));
+     for(const controls of groups){
+      const centers=controls.map(c=>c.center),text=controls.flatMap(c=>c.text);
+      assert.ok(Math.max(...centers)-Math.min(...centers)<1,`Control alignment: ${locale}/${density}/${width} ${JSON.stringify(controls)}`);
+      assert.ok(Math.max(...text)-Math.min(...text)<1,`Text alignment: ${locale}/${density}/${width} ${JSON.stringify(controls)}`);
+     }
+    }
+    await alignedHeader();
+    for(const menu of await page.locator('.tree-header .header-dropdown').all())if(await menu.isVisible()){
+     await menu.locator('summary').click();await alignedHeader();await menu.locator('summary').click();
+    }
+    if(locale==='zh-CN'&&width===1600&&!process.argv.includes('--no-screenshots')){
+     const box=await page.locator('.tree-header').boundingBox();await page.screenshot({path:fileURLToPath(new URL(`../test-results/languages/${built?'built':'source'}-toolbar-${density}.png`,import.meta.url)),clip:box});
+    }
+   }
+  }
+ }
+ await language('en');
  for(const width of [1600,1100,768]){await page.setViewportSize({width,height:1000});const boxes=await page.locator('.tree-brand,.tree-canvas-actions,.tree-tool-actions').evaluateAll(els=>els.map(e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom};}));for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++)assert.ok(Math.min(boxes[i].right,boxes[j].right)-Math.max(boxes[i].x,boxes[j].x)<1||Math.min(boxes[i].bottom,boxes[j].bottom)-Math.max(boxes[i].y,boxes[j].y)<1,'header overlap at '+width);assert.equal(await page.locator('#inspector-color-quick').count(),0);if(!process.argv.includes('--no-screenshots'))await page.screenshot({path:fileURLToPath(new URL(`../test-results/languages/${built?'built':'source'}-english-${width}.png`,import.meta.url))});}
  const examples=page;await examples.setViewportSize({width:1400,height:1000});await examples.goto(address+(built?'?view=examples':'examples.html'));await examples.waitForFunction(()=>document.querySelector('#samples')?.children.length>20&&/generated/.test(document.querySelector('#status').textContent),null,{timeout:180000});const texts=await examples.locator('body').innerText();assert.ok(!/[\u3400-\u9fff]/.test(texts),texts.slice(0,500));assert.ok(!/\b(?:examples|presets|ui|editor)\.[A-Za-z][A-Za-z0-9.]*/.test(texts),'Example message IDs must resolve');for(const title of await examples.locator('#samples h2').allTextContents())assert.ok(title.trim(),'Every example has a localized title');assert.ok(await examples.locator('#samples a').count()>20);await examples.close();
  assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,views:Object.keys(report),errors}));
-}catch(error){await mkdir(new URL('../test-results/languages/',import.meta.url),{recursive:true});await writeFile(new URL('../test-results/languages/ui-coverage-failure.json',import.meta.url),JSON.stringify({built,report,error:String(error)},null,2));throw error;}
+}catch(error){
+ const state=page&&!page.isClosed()?{url:page.url().split('#')[0],viewport:page.viewportSize(),body:await page.locator('body').innerText({timeout:3000}).then(text=>text.slice(0,2200)).catch(()=>null)}:null;
+ await mkdir(new URL('../test-results/languages/',import.meta.url),{recursive:true});await writeFile(new URL('../test-results/languages/ui-coverage-failure.json',import.meta.url),JSON.stringify({built,report,error:String(error),page:state},null,2));throw error;
+}
 finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

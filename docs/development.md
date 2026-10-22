@@ -25,6 +25,16 @@ npm start -- --port 8799
 
 启动页的布局与首屏样式在 `web/index.html`，无需等待脚本下载即可显示。`web/startup.js` 负责真实阶段提示、界面切换与失败重试；源码入口和单文件构建共用这套逻辑，不显示虚构百分比，也不设置最短等待时间。初始化失败时保留错误详情与重新加载入口，不清除本地草稿或资源。
 
+## 界面主题
+
+`web/appearance.js` 管理版本化的浏览器偏好 `momo-texture-appearance:v1`，只接受内置主题 ID 和六位十六进制强调色。跟随系统模式监听系统明暗变化；强调色生成可读的按钮文字、面板强调文字和选中底色。`web/appearance-settings.js` 提供实时预览、取消还原和显式保存，存储不可用时保留预览并显示提示。
+
+公共界面颜色在 `web/theme-tokens.css` 按背景、面板、控件、文字、边框与状态用途定义，各组件样式引用这些变量。画布辅助线、缩略图底色、用户色板和作品内容保持独立。启动入口在挂载编辑器前应用偏好；离线与静态构建内嵌同一份主题样式和逻辑。外观不进入项目模型、撤销记录、资源哈希或作品导出。
+
+偏好中的 `style`（`standard`、`minimal`、`soft`）和 `density`（`compact`、`comfortable`）独立于配色；旧偏好自动补为标准与紧凑。根元素的 `data-interface-style`、`data-density` 驱动共享圆角与间距变量，简洁风格仅弱化内容模块边框，保留输入框、键盘焦点和停靠分隔条。密度调整触发现有预览尺寸观察器，不写入画布模型。
+
+验证主题行为可运行 `node --test tests/appearance.test.mjs`、`node tests/appearance-browser-check.mjs`；静态构建后加 `--built` 检查发行版。浏览器检查覆盖预览、取消、保存恢复、系统变化、中英文入口、窄屏顶栏、画布像素与项目存储不变，截图位于 `test-results/appearance/`。
+
 ## 构建离线版
 
 ```sh
@@ -126,6 +136,7 @@ node tools/capture-docs.mjs workspace library combinations
 node tools/capture-docs.mjs resources animation normal export remote-ai manager
 node tools/capture-docs.mjs docking
 node tools/capture-docs.mjs colors
+node tools/capture-docs.mjs shortcuts ribbons appearance
 ```
 
 | 组 | 画面 |
@@ -135,17 +146,28 @@ node tools/capture-docs.mjs colors
 | overflow | 三种边界处理、逻辑蓝框、超出内容和无缝光晕接续 |
 | puzzle | 拼图接口样式、独立四角、凸耳越界与网格行列数 |
 | workspace | 总览、排列、合成和文件菜单 |
+| workspace-overview | 只更新编辑器总览 |
+| project-files | 只更新文件菜单，按实际控件位置自动取景 |
 | docking | 面板标签、网页内悬浮与布局保存菜单 |
 | colors | 图形页签内的透明度、配色来源、渐变色标、色阶/反相和 HEX |
 | node-tree | 行内改名、垃圾桶与松开确认的虚拟组合 |
 | inspector-modules | 模块折叠、独立帮助与模块排序 |
 | bezier-editor | 多段路径、放大编辑和控制点操作 |
+| shortcuts | 节点快捷区、全部适用菜单和可移动通道曲线窗口 |
+| ribbons | 折叠线束的宽画布、风格预设与参数 |
+| appearance | 浅色主题、界面风格、密度与强调色 |
 | library | 图库、生成器参数、图形列表 |
+| library-filters | 全部/收藏/最近/动态、分类多选与动态标记 |
+| parameter-states | 动画控制状态与录制/基础值操作 |
+| selection-editing | 多选、批量改色、同类参数与对齐分布 |
 | resources | 图片原图/去背景、公式、生成器 JSON、导入文件 |
 | animation | 实际录制的关键帧与曲线 |
 | normal | 高度、法线与三维受光 |
+| effect | 特效背景与透明/相加混合对比 |
 | export | PNG、序列帧图集设置、实际图集、矢量轮廓 |
-| remote-ai | 远程订阅、AI 图形目录与帮助菜单 |
+| remote-ai | 远程订阅与 AI 图形目录 |
+| help | 帮助菜单与投币支持入口 |
+| presets | 素材预设分类与可编辑入口 |
 | manager | 独立演示图库的真实管理器与编辑窗口 |
 
 使用 `--language en` 拍摄英文界面和英文演示名称，`--language zh-CN` 拍摄中文（默认）。例如：`node tools/capture-docs.mjs --language en workspace library`。也支持环境变量 `DOCS_LANGUAGE`。中文截图保存在 `docs/images/`，英文截图保存在 `docs/images/en/`，每次只同步对应语言文档的图下注解。英文标记文案维护在 `tools/docs-callouts.en.json`。
@@ -155,6 +177,8 @@ node tools/capture-docs.mjs colors
 图片保存到 `docs/images/`，示例项目保存到 `docs/examples/`，临时图库和诊断只写入忽略的 `test-results/`。管理器示例通过隔离浏览器的文件系统 API 提供演示目录，不会弹出用户电脑上的目录选择器。
 
 更新后逐张检查关键画面是否完成渲染、参数与图文是否对应、链接是否存在。界面变化时修改教程和生成脚本，再拍截图；不要用旧截图说明新的入口。
+
+文档拍摄遵循“减少动态效果”，等待真实控件与预览完成后再标注；不会修改用户浏览器的草稿、外观或布局。节点快捷区与主题合并后的回归检查使用 `node tests/shortcut-appearance-browser-check.mjs`，静态构建后加 `--built`，验证主题切换不改作品、菜单配色、窗口移动和参数撤销。
 
 ## GitHub 与 Gitee 同步
 

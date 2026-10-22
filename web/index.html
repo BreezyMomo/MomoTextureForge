@@ -1,30 +1,31 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title data-i18n="ui.momoTextureForgeWorkspace">Momo Texture Forge · 节点组合工作台</title>
 <style>
-html,body{margin:0;background:#15171b;color:#ece8df}
-#startup-screen{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;box-sizing:border-box;padding:28px;background:radial-gradient(ellipse at 50% 38%,#28252b 0,transparent 55%),#15171b;font:14px/1.6 "Segoe UI","Microsoft YaHei",sans-serif;transition:opacity .18s ease}
+html,body{margin:0;background:var(--ui-bg);color:var(--ui-text)}
+#startup-screen{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;box-sizing:border-box;padding:28px;background:radial-gradient(ellipse at 50% 38%,var(--ui-panel) 0,transparent 55%),var(--ui-bg);font:14px/1.6 "Segoe UI","Microsoft YaHei",sans-serif;transition:opacity .18s ease}
 #startup-screen *{box-sizing:border-box}
 #startup-screen.startup-leaving{opacity:0;pointer-events:none}
 #startup-screen .startup-card{width:min(100%,360px);text-align:center}
-#startup-screen .startup-symbol{display:block;width:76px;height:76px;margin:0 auto 25px;color:#dfae72;filter:drop-shadow(0 0 22px #dfae7220)}
-#startup-screen .startup-brand{margin:0;color:#dfae72;font-size:11px;letter-spacing:.3em}
-#startup-screen h1{margin:6px 0 28px;color:#ece8df;font-size:23px;font-weight:600;letter-spacing:.09em}
-#startup-screen .startup-track{height:2px;overflow:hidden;border-radius:2px;background:#343943}
-#startup-screen .startup-track:after{content:"";display:block;width:36%;height:100%;background:linear-gradient(90deg,transparent,#dfae72,transparent);animation:startup-sweep 1.5s ease-in-out infinite}
-#startup-screen #startup-status{margin:18px 0 0;color:#bac0cb;font-size:13px}
-#startup-screen .startup-caption{margin:38px 0 0;color:#717b8b;font-size:11px;letter-spacing:.12em}
+#startup-screen .startup-symbol{display:block;width:76px;height:76px;margin:0 auto 25px;color:var(--ui-accent-text);filter:drop-shadow(0 0 22px var(--ui-selected))}
+#startup-screen .startup-brand{margin:0;color:var(--ui-accent-text);font-size:11px;letter-spacing:.3em}
+#startup-screen h1{margin:6px 0 28px;color:var(--ui-text);font-size:23px;font-weight:600;letter-spacing:.09em}
+#startup-screen .startup-track{height:2px;overflow:hidden;border-radius:2px;background:var(--ui-hover)}
+#startup-screen .startup-track:after{content:"";display:block;width:36%;height:100%;background:linear-gradient(90deg,transparent,var(--ui-selected),transparent);animation:startup-sweep 1.5s ease-in-out infinite}
+#startup-screen #startup-status{margin:18px 0 0;color:var(--ui-muted);font-size:13px}
+#startup-screen .startup-caption{margin:38px 0 0;color:var(--ui-subtle);font-size:11px;letter-spacing:.12em}
 #startup-screen[data-state="error"] .startup-track{display:none}
-#startup-screen[data-state="error"] #startup-status{color:#e8b58f}
-#startup-screen #startup-error{margin-top:18px;text-align:left;color:#939caa;font-size:12px}
+#startup-screen[data-state="error"] #startup-status{color:var(--ui-danger)}
+#startup-screen #startup-error{margin-top:18px;text-align:left;color:var(--ui-danger);font-size:12px}
 #startup-screen #startup-error[hidden]{display:none}
 #startup-screen details{margin:16px 0}
 #startup-screen summary{cursor:pointer}
-#startup-screen pre{max-height:180px;overflow:auto;padding:12px;border:1px solid #343943;border-radius:6px;background:#1d2026;color:#bac0cb;white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 monospace}
-#startup-screen button{display:block;margin:20px auto 0;padding:8px 22px;border:1px solid #dfae72;border-radius:6px;background:#dfae72;color:#191b20;font:inherit;cursor:pointer}
-#startup-screen button:focus-visible{outline:2px solid #fff;outline-offset:4px}
+#startup-screen pre{max-height:180px;overflow:auto;padding:12px;border:1px solid var(--ui-line);border-radius:6px;background:var(--ui-panel);color:var(--ui-muted);white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 monospace}
+#startup-screen button{display:block;margin:20px auto 0;padding:8px 22px;border:1px solid var(--ui-accent);border-radius:6px;background:var(--ui-selected);color:var(--ui-subtle);font:inherit;cursor:pointer}
+#startup-screen button:focus-visible{outline:2px solid var(--ui-accent-text);outline-offset:4px}
 @keyframes startup-sweep{from{transform:translateX(-100%)}to{transform:translateX(380%)}}
 @media(prefers-reduced-motion:reduce){#startup-screen{transition:none}#startup-screen .startup-track:after{animation:none;width:100%;opacity:.6}}
 </style>
+<link rel="stylesheet" href="theme-tokens.css" />
 <link rel="stylesheet" href="style.css" />
 </head><body>
 <section id="startup-screen" aria-label="正在打开 Momo Texture Forge" data-i18n-aria-label="ui.openingMomoTextureForge" aria-busy="true">

@@ -1,3 +1,4 @@
+import './appearance.js';
 import {uiText} from './ui-language.js';
 import {startupStage,completeStartup,failStartup} from './startup.js';
 try {

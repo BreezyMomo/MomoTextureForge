@@ -268,5 +268,27 @@
     "Why a group is needed for ordinary child nodes",
     "Preview the nodes that will be grouped",
     "Release to group; move away or press Esc to cancel"
+  ],
+  "node-shortcuts": [
+    "Pin a module to the current node",
+    "Choose the current node or all nodes",
+    "Edit the selected node through its shortcuts"
+  ],
+  "channel-curves-dialog": [
+    "Drag the header or use arrow keys to move the window",
+    "Add and drag control points on the grid",
+    "Choose a channel curve preset"
+  ],
+  "ribbon-parameters": [
+    "Preview a transparent trail on a wide canvas",
+    "Start with a trail style preset",
+    "Adjust graphic-specific parameters"
+  ],
+  "appearance-settings": [
+    "Choose interface colors",
+    "Choose an interface style",
+    "Set interface density",
+    "Customize the accent color",
+    "Save appearance preferences in this browser"
   ]
 }

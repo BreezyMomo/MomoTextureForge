@@ -50,6 +50,24 @@ Drag the **⠿** handle beside a module title, or use **↑ / ↓**, to change m
 
 Sliders, number inputs, resets, and keyframe buttons remain available inside modules. Multiselection uses the same module presentation with the existing batch-editing rules.
 
+### Pin common settings to the node tree
+
+With one node selected, click the **pin** on a module header to show its controls beneath that node in the tree. Click again to unpin. Shortcuts share values, resets and keyframe actions with the inspector, and edits support undo. Pinning creates no nodes and leaves processing order unchanged.
+
+![Node shortcuts and their scope](images/en/node-shortcuts.png)
+
+> Callouts: 1 Pin a module to the current node; 2 Choose the current node or all nodes; 3 Edit the selected node through its shortcuts.
+
+The **▾** beside the pin offers **Current node** and **All nodes, including new nodes**. You can unpin a module for an individual node after enabling it globally. Inapplicable modules hide temporarily while retaining the preference. Graphic parameters, UV, opacity, colors, levels, inversion, curves, and actionable layout, compositing and animation modules can be pinned. Node and graphic selection modules have no shortcut pin.
+
+Shortcuts follow the single selection and hide during multiselection. Bindings stay in this browser. Adding a library preview to the canvas, duplicating a node, or saving and reinserting a graphic in the same browser carries its bindings along. These workspace preferences are outside project and resource files and do not automatically sync across browsers or devices.
+
+Channel curves show a compact preview in the shortcut area. Choose **Edit curves** for the full window. Drag its header to move it away from the canvas, or focus the header and use arrow keys; **Shift** increases the step. Moving the window changes neither the curves nor undo history.
+
+![Movable channel curves window](images/en/channel-curves-dialog.png)
+
+> Callouts: 1 Drag the header or use arrow keys to move the window; 2 Add and drag control points on the grid; 3 Choose a channel curve preset.
+
 ### Batch editing, alignment and even distribution
 
 ![Multi-selection parameters and alignment](images/en/selection-editing.png)
@@ -129,6 +147,10 @@ Search the **Graphics library** for “Folded ribbon strands”, “Refractive m
 
 Choose a **Trail style preset** in the graphic parameters module, then adjust the controls:
 
+![Folded ribbon style presets and parameters](images/en/ribbon-parameters.png)
+
+> Callouts: 1 Preview a transparent trail on a wide canvas; 2 Start with a trail style preset; 3 Adjust graphic-specific parameters.
+
 - **Folded ribbon strands:** continuous strands gather into folds. Presets: Moonlit silk, Cyan energy and Drifting wisps.
 - **Refractive membrane:** a continuous sheet with separate interior opacity, edge width/brightness, crease brightness, membrane tint and edge color. Presets: Ice blue membrane, Violet gold sheen and Moonlit veil. Inherited colors retain its original palette; node colors can override it.
 - **Particle strands:** independently phased strands, with width and opacity variation controlled by Strand variation. Presets: Soft white strands, Blue flowing strands and Dusty wisps.
@@ -140,6 +162,8 @@ Styles also set the palette; use the shared node color, opacity, channel curves 
 ### Bezier paths: expanded and multisegment editing
 
 Bezier Ribbon and Along path arrangements share a path editor. Choose **Expand editor** for a larger window. Zoom with the wheel or plus/minus buttons, drag empty space to pan, and use **Fit all** to reveal every point. View changes do not edit the artwork. Point coordinates range from −8 to 8, beyond the edges of the original small viewport.
+
+Drag the expanded window's header to move the entire window. Dragging empty graph space pans only the path view; dragging a highlighted point edits the path. Focus the header and use arrow keys to move the window, with **Shift** for larger steps.
 
 ![Expanded Bezier path editor](images/en/bezier-editor.png)
 

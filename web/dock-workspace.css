@@ -1,24 +1,24 @@
 /* Workspace state is independent from the authored canvas and its export bounds. */
-.tree-editor .tree-workspace.dock-workspace{display:block;position:relative;flex:1;min-width:0;min-height:0;height:auto;overflow:hidden;background:#14171c;padding:3px}
+.tree-editor .tree-workspace.dock-workspace{display:block;position:relative;flex:1;min-width:0;min-height:0;height:auto;overflow:hidden;background:var(--ui-bg);padding:3px}
 .dock-split{display:flex;width:100%;height:100%;min-width:0;min-height:0;overflow:hidden}
 .dock-split-x{flex-direction:row}.dock-split-y{flex-direction:column}
 .dock-branch{min-width:0;min-height:0;overflow:hidden}
-.dock-splitter{flex:0 0 6px;background:#15191f;position:relative;touch-action:none;outline:none}
+.dock-splitter{flex:0 0 6px;background:var(--ui-inset);position:relative;touch-action:none;outline:none}
 .dock-split-x>.dock-splitter{cursor:col-resize}.dock-split-y>.dock-splitter{cursor:row-resize}
-.dock-splitter:hover,.dock-splitter:focus-visible{background:#628a9d}
-.dock-stack{display:flex;flex-direction:column;width:100%;height:100%;min-width:0;min-height:0;border:1px solid #363e4a;border-radius:4px;background:#1e222a;overflow:hidden}
-.dock-stack-header{flex:none;display:flex;align-items:stretch;min-width:0;height:32px;background:#191d24;border-bottom:1px solid #343d49;gap:2px}
+.dock-splitter:hover,.dock-splitter:focus-visible{background:var(--ui-hover)}
+.dock-stack{display:flex;flex-direction:column;width:100%;height:100%;min-width:0;min-height:0;border:1px solid var(--ui-line);border-radius:var(--ui-pane-radius);background:var(--ui-panel);overflow:hidden}
+.dock-stack-header{flex:none;display:flex;align-items:stretch;min-width:0;height:var(--ui-tab-height);background:var(--ui-inset);border-bottom:1px solid var(--ui-line);gap:2px}
 .dock-tabs{display:flex;min-width:0;flex:1;overflow:auto;scrollbar-width:thin;align-items:stretch}
-.tree-editor .dock-tab{flex-shrink:0;border:0;border-radius:0;padding:5px 11px;background:transparent;color:#9eacbf;font-size:12px;cursor:grab;white-space:nowrap;touch-action:none}
-.tree-editor .dock-tab[aria-selected=true]{color:#efd1a2;background:#2b323d;box-shadow:inset 0 2px #ddb276}
-.tree-editor .dock-tab:focus-visible{outline:1px solid #8ecbd6;outline-offset:-3px}
+.tree-editor .dock-tab{flex-shrink:0;border:0;border-radius:0;padding:5px 11px;background:transparent;color:var(--ui-muted);font-size:12px;cursor:grab;white-space:nowrap;touch-action:none}
+.tree-editor .dock-tab[aria-selected=true]{color:var(--ui-accent-text);background:var(--ui-selected);box-shadow:inset 0 2px var(--ui-accent-text)}
+.tree-editor .dock-tab:focus-visible{outline:1px solid var(--ui-accent-text);outline-offset:-3px}
 .dock-stack-actions{display:flex;flex:none;align-items:center;padding-right:2px;gap:1px}
-.tree-editor .dock-stack-actions button{padding:2px 6px;border:0;background:transparent;color:#9fadb9;font-size:15px;line-height:23px;min-width:24px}
-.tree-editor .dock-stack-actions button:hover{background:#394351;color:#fff}
+.tree-editor .dock-stack-actions button{padding:2px 6px;border:0;background:transparent;color:var(--ui-muted);font-size:15px;line-height:23px;min-width:24px}
+.tree-editor .dock-stack-actions button:hover{background:var(--ui-hover);color:var(--ui-text)}
 .dock-panel-body{flex:1;min-height:0;min-width:0;overflow:hidden;position:relative}
 .dock-panel-body[hidden]{display:none!important}
-.dock-panel-body>.tree-left,.dock-panel-body>.tree-inspector{height:100%;max-height:none;overflow:auto;padding:12px;border:0}
-.tree-node-count{margin-left:auto;align-self:center;color:#8ca1b6;font-size:11px;white-space:nowrap}
+.dock-panel-body>.tree-left,.dock-panel-body>.tree-inspector{height:100%;max-height:none;overflow:auto;padding:var(--ui-pane-padding);border:0}
+.tree-node-count{margin-left:auto;align-self:center;color:var(--ui-muted);font-size:11px;white-space:nowrap}
 .dock-panel-body>.tree-preview{height:100%;min-height:0;max-height:none;overflow:hidden;padding:10px}
 .dock-workspace .preview-heading{flex-wrap:wrap;gap:7px;margin-bottom:8px}
 .dock-workspace .preview-heading strong{font-size:15px}
@@ -30,23 +30,23 @@
 .dock-workspace .tree-toolbar button,.dock-workspace .tree-toolbar select{padding:5px}
 .dock-workspace .tree-timeline{gap:7px;padding:7px}
 .dock-workspace .tree-timeline input[type=range]{min-width:50px}
-.tree-editor .dock-open-timeline{align-self:flex-start;padding:6px 10px;margin-top:5px;color:#a9c3d8;font-size:12px}
+.tree-editor .dock-open-timeline{align-self:flex-start;padding:6px 10px;margin-top:5px;color:var(--ui-text);font-size:12px}
 .dock-workspace #animation-panel{height:100%;min-height:0;max-height:none;resize:none;overflow:auto;margin:0}
 .dock-workspace #animation-panel>summary[hidden]{display:none}
 .dock-animation-content{height:100%;min-height:0}
 .dock-workspace #node-animation-editor .animation-workspace{min-height:190px}
-.dock-floating{position:absolute;min-width:0;min-height:0;box-shadow:0 14px 40px #0009;border:1px solid #778b9f;border-radius:5px;overflow:hidden;background:#20252d}
+.dock-floating{position:absolute;min-width:0;min-height:0;box-shadow:0 14px 40px var(--ui-shadow);border:1px solid var(--ui-line-strong);border-radius:var(--ui-window-radius);overflow:hidden;background:var(--ui-panel)}
 .dock-floating .dock-tabs{padding-left:20px}
-.tree-editor .dock-window-move{position:absolute;top:2px;left:1px;padding:1px 4px;border:0;background:transparent;color:#9ab2c6;cursor:move;touch-action:none;font-size:17px;line-height:24px}
-.tree-editor .dock-window-resize{position:absolute;bottom:0;right:0;padding:0 2px;border:0;border-radius:0;background:#2a3444;color:#b3c5d9;cursor:nwse-resize;touch-action:none;font-size:13px;line-height:18px}
+.tree-editor .dock-window-move{position:absolute;top:2px;left:1px;padding:1px 4px;border:0;background:transparent;color:var(--ui-muted);cursor:move;touch-action:none;font-size:17px;line-height:24px}
+.tree-editor .dock-window-resize{position:absolute;bottom:0;right:0;padding:0 2px;border:0;border-radius:0;background:var(--ui-hover);color:var(--ui-text);cursor:nwse-resize;touch-action:none;font-size:13px;line-height:18px}
 .dock-is-dragging,.dock-is-dragging *{user-select:none!important}
-.dock-drag-ghost{position:fixed;z-index:10000;pointer-events:none;padding:7px 14px;background:#30465f;border:1px solid #9ccae1;border-radius:4px;color:#eef7ff;font-size:13px;box-shadow:0 4px 15px #0008}
-.dock-drop-preview{position:absolute;z-index:1000;pointer-events:none;border:2px solid #81c3ee;background:#569bdd42;color:#e4f6ff;display:grid;place-items:center;font-size:14px;font-weight:600;box-sizing:border-box}
-.dock-empty{height:100%;display:grid;place-items:center;text-align:center;color:#8e9eaf;padding:30px}
+.dock-drag-ghost{position:fixed;z-index:10000;pointer-events:none;padding:7px 14px;background:var(--ui-hover);border:1px solid var(--ui-line-strong);border-radius:var(--ui-control-radius);color:var(--ui-text);font-size:13px;box-shadow:0 4px 15px var(--ui-shadow)}
+.dock-drop-preview{position:absolute;z-index:1000;pointer-events:none;border:2px solid var(--ui-line-strong);background:var(--ui-selected);color:var(--ui-text);display:grid;place-items:center;font-size:14px;font-weight:600;box-sizing:border-box}
+.dock-empty{height:100%;display:grid;place-items:center;text-align:center;color:var(--ui-muted);padding:30px}
 .dock-layout-menu>.header-dropdown-panel{left:auto;right:0;width:280px;max-width:calc(100vw - 12px);max-height:calc(100dvh - 90px);overflow:auto}
-.dock-menu-tip{margin:6px 4px;color:#92a7bd;font-size:11px;line-height:1.7;white-space:normal}
+.dock-menu-tip{margin:6px 4px;color:var(--ui-muted);font-size:11px;line-height:1.7;white-space:normal}
 .dock-panel-toggles{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:8px 4px}
-.dock-panel-toggles label{display:flex;align-items:center;gap:7px;color:#c3cfdf;font-size:12px}
+.dock-panel-toggles label{display:flex;align-items:center;gap:7px;color:var(--ui-text);font-size:12px}
 .tree-header .dock-panel-toggles input{width:auto;max-width:none;flex:none}
 .dock-save-form{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0}
 .tree-header .dock-save-form input{width:100%;max-width:none;min-width:0;flex:1 1 100%}
@@ -55,7 +55,7 @@
 @media(max-width:850px){
  .tree-editor:has(.dock-workspace){height:100dvh;display:flex;flex-direction:column;overflow:hidden}
  .tree-workspace.dock-workspace{min-height:300px}
- .dock-workspace .tree-preview{padding:6px}.dock-workspace .preview-actions{max-height:65px;overflow:auto}
- .dock-workspace .tree-hint{display:none}.dock-panel-body>.tree-left,.dock-panel-body>.tree-inspector{padding:6px}
+ .dock-workspace .tree-preview{padding:var(--ui-pane-padding)}.dock-workspace .preview-actions{max-height:65px;overflow:auto}
+ .dock-workspace .tree-hint{display:none}.dock-panel-body>.tree-left,.dock-panel-body>.tree-inspector{padding:var(--ui-pane-padding)}
  .dock-tab{max-width:140px;overflow:hidden;text-overflow:ellipsis}
 }

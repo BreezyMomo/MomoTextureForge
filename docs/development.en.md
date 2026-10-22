@@ -25,6 +25,16 @@ Browser storage is not automatically shared between online/offline origins, port
 
 Startup markup/styles in `web/index.html` display before scripts finish downloading. `web/startup.js` drives real loading stages, transition and retry for source and standalone builds. There are no invented percentages or artificial minimum waits. Failures retain details and reload controls without clearing drafts/resources.
 
+## Interface themes
+
+`web/appearance.js` manages versioned browser preferences at `momo-texture-appearance:v1`, accepting only built-in theme IDs and six-digit hex accent colors. System mode follows OS appearance changes. Accents generate readable button text, panel accent text, and selection surfaces. `web/appearance-settings.js` provides live preview, cancellation, and explicit saving; unavailable storage keeps the preview usable and displays a message.
+
+`web/theme-tokens.css` defines shared interface colors by background, panel, control, text, border, and status roles. Component styles reference these tokens. Canvas guides, thumbnail backgrounds, user palettes, and artwork retain independent colors. Startup applies preferences before mounting the editor; offline and static builds embed the same styles and logic. Appearance never enters the project model, undo history, resource hashes, or artwork exports.
+
+Preferences include independent `style` (`standard`, `minimal`, `soft`) and `density` (`compact`, `comfortable`) values; older preferences default to Standard and Compact. Root `data-interface-style` and `data-density` attributes drive shared radius and spacing tokens. Minimal styling quiets module borders while retaining input borders, keyboard focus, and docking separators. Density changes use the existing preview resize observer without writing to the canvas model.
+
+Run `node --test tests/appearance.test.mjs` and `node tests/appearance-browser-check.mjs` to verify theme behavior; add `--built` after a static build to check the distribution. Browser checks cover preview, cancellation, saved restoration, system changes, localized controls, narrow headers, unchanged canvas pixels and project storage. Screenshots are in `test-results/appearance/`.
+
 ## Build offline
 
 ```sh
@@ -126,6 +136,7 @@ node tools/capture-docs.mjs workspace library combinations
 node tools/capture-docs.mjs resources animation normal export remote-ai manager
 node tools/capture-docs.mjs docking
 node tools/capture-docs.mjs colors
+node tools/capture-docs.mjs shortcuts ribbons appearance
 ```
 
 | Group | Content |
@@ -135,17 +146,28 @@ node tools/capture-docs.mjs colors
 | overflow | Three boundary modes, logical bounds and seamless halo |
 | puzzle | Connector styles, body corners, tabs and grid counts |
 | workspace | Overview, arrangements, composites and File |
+| workspace-overview | Editor overview only |
+| project-files | File menu only, framed from actual control positions |
 | docking | Panel tabs, floating and saved layouts |
 | colors | Opacity, color sources, gradient stops, levels/inversion and HEX in Shape |
 | node-tree | Inline rename, trash icons and release-to-confirm virtual groups |
 | inspector-modules | Module collapse, independent help and ordering |
 | bezier-editor | Multisegment paths, expanded editing and point interaction |
+| shortcuts | Node shortcuts, all-node scope menu and movable channel curves |
+| ribbons | Wide-canvas folded ribbon, style presets and parameters |
+| appearance | Light theme, interface style, density and accent color |
 | library | Library, generator parameters and list |
+| library-filters | All/Favorites/Recent/Animated, category multiselect and animation badge |
+| parameter-states | Animation-controlled fields and Record/Base values |
+| selection-editing | Multiselection, batch colors/matching parameters and alignment |
 | resources | Original/processed images, formula, generator JSON and import |
 | animation | Recorded keys and curves |
 | normal | Height, normals and 3D lighting |
+| effect | Effect backgrounds and alpha/additive comparisons |
 | export | PNG, sequence/atlas settings, generated atlas and contours |
-| remote-ai | Subscriptions, AI catalog and Help |
+| remote-ai | Subscriptions and AI catalog |
+| help | Help menu and support entry |
+| presets | Material-preset category and editing entry |
 | manager | Isolated demonstration directory and real manager dialogs |
 
 [tools/docs-annotations.mjs](../tools/docs-annotations.mjs) locates actual controls for numbered boxes and synchronizes captions in the captured language. English callout copy lives in `tools/docs-callouts.en.json`. Pass `--language en` to capture the real English interface and English demonstration names, or `--language zh-CN` for Chinese (the default). For example: `node tools/capture-docs.mjs --language en workspace library`. `DOCS_LANGUAGE` is also supported. Each run updates captions only in its own edition. Annotations are injected only for capture. Hidden targets fail capture: scroll or split images instead of inventing coordinates. Recheck locations after UI changes.
@@ -153,6 +175,8 @@ node tools/capture-docs.mjs colors
 Chinese screenshots live in `docs/images/`, English screenshots in `docs/images/en/`, shared examples in `docs/examples/`, temporary libraries/diagnostics in ignored `test-results/`. The manager demo uses isolated filesystem handles without opening the user's native directory picker.
 
 Inspect rendering, parameters, captions and links after capture. Update both documentation and capture scripts when controls move; do not explain new operations using obsolete screenshots.
+
+Capture honors reduced motion and waits for real controls and previews before annotating them. It leaves the user's browser drafts, appearance and layout untouched. Run `node tests/shortcut-appearance-browser-check.mjs`, then add `--built` after building, to check pinned controls with themes: artwork isolation, menu colors, window movement, parameter editing and undo.
 
 ## GitHub and Gitee synchronization
 

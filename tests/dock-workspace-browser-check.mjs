@@ -19,7 +19,7 @@ try{
  await page.getByRole('tab',{name:'画布预览',exact:true}).waitFor();
  await page.getByRole('button',{name:'选择 测试星形',exact:true}).click();
  await page.getByRole('button',{name:'变换/排列',exact:true}).click();await page.getByRole('spinbutton',{name:'区域宽',exact:true}).fill('0.65');await page.getByRole('spinbutton',{name:'区域宽',exact:true}).press('Tab');
- const frame=()=>page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+ const frame=async()=>{await page.waitForFunction(()=>!document.querySelector('.dock-motion'));await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));};
  const stored=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),LAYOUT_KEY);
  const stack=id=>page.locator('.dock-stack').filter({has:page.locator(`[data-panel-tab="${id}"]`)}).first();
  const menu=page.locator('#workspace-layout-menu');const openMenu=async()=>{if(!await menu.evaluate(e=>e.open))await menu.locator('summary').click();const box=await menu.locator('.header-dropdown-panel').boundingBox();assert.ok(box.x>=0&&box.x+box.width<=page.viewportSize().width,'layout menu remains inside the viewport');};
@@ -29,6 +29,14 @@ try{
  const point=async(locator,x=.5,y=.5)=>{const r=await locator.boundingBox();return {x:r.x+r.width*x,y:r.y+r.height*y};};
  const assertCanvas=async()=>{await frame();assert.ok(await page.locator('#tree-canvas').isVisible());assert.ok((await page.locator('#tree-canvas').boundingBox()).height>60);assert.equal(await page.locator('#preview-error').isVisible(),false);assert.equal(await page.locator('#project-name').inputValue(),p.name);assert.match(await page.locator('#selected-heading').innerText(),/测试星形/);};
  await assertCanvas();await mkdir('test-results/docking',{recursive:true});await page.screenshot({path:'test-results/docking/default.png'});
+ const assertDefaultColumns=async()=>{
+  const ids=['library','nodes','canvas','inspector'],boxes=await Promise.all(ids.map(id=>stack(id).boundingBox()));
+  for(let i=1;i<boxes.length;i++){assert.ok(boxes[i].x>=boxes[i-1].x+boxes[i-1].width,'four panels are ordered left to right');assert.ok(Math.abs(boxes[i].y-boxes[0].y)<1);assert.ok(Math.abs(boxes[i].height-boxes[0].height)<1);}
+  const width=await page.locator('.dock-workspace').evaluate(e=>e.clientWidth);
+  for(const [i,expected]of [.13,.10,.59,.18].entries())assert.ok(Math.abs(boxes[i].width/width-expected)<.015);
+ };
+ await assertDefaultColumns();await page.setViewportSize({width:2448,height:1276});await frame();await assertDefaultColumns();
+ await page.screenshot({path:`test-results/docking/${standalone?'built-':''}default-four-columns.png`});await page.setViewportSize({width:1600,height:1000});await frame();
  await drag('library',await point(stack('inspector')));assert.equal(await stack('inspector').getByRole('tab').count(),2);assert.equal(await page.locator('#shape-search').isVisible(),true);
  await page.getByRole('tab',{name:'参数面板',exact:true}).click();assert.equal(await page.locator('#inspector').isVisible(),true);
  await drag('library',await point(stack('canvas'),.5,.9));assert.equal(await stack('inspector').getByRole('tab').count(),1);assert.equal(await page.locator('.dock-split-y').count(),1);
@@ -53,6 +61,6 @@ try{
  await page.locator('#export-now').click();const downloading=page.waitForEvent('download');await page.locator('#confirm-export').click();const download=await downloading;assert.equal(await download.failure(),null);assert.deepEqual([...((await readFile(await download.path())).subarray(0,8))],[137,80,78,71,13,10,26,10]);await page.locator('#close-global').click();
  await openMenu();await menu.getByRole('button',{name:'动画布局',exact:true}).click();await page.screenshot({path:'test-results/docking/animation.png'});
  await page.setViewportSize({width:900,height:700});await assertCanvas();await page.setViewportSize({width:1600,height:1000});
- await openMenu();await menu.getByRole('button',{name:'恢复默认布局',exact:true}).click();assert.equal(await page.getByRole('tab').count(),4);await assertCanvas();assert.deepEqual(errors,[]);
+ await openMenu();await menu.getByRole('button',{name:'恢复默认布局',exact:true}).click();assert.equal(await page.getByRole('tab').count(),4);await assertDefaultColumns();await assertCanvas();assert.deepEqual(errors,[]);
  console.log({standalone,dragDockMerge:true,floatMoveResize:true,saveReload:true,projectUnchanged:true,material:true,png:true,errors});
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

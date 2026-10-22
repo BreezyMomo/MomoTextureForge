@@ -24,6 +24,24 @@ try{
   await stack.evaluate((e,w)=>{e.style.width=w+'px';e.style.maxWidth='none';e.style.minWidth='0';e.style.left='350px';e.style.top='12px';e.style.height='850px';},width);
   const grid=page.locator('#shape-library .tree-pattern-cards').filter({has:page.locator('.tree-pattern-card')}).first();
   const measured=await grid.evaluate(e=>({width:e.getBoundingClientRect().width,columns:getComputedStyle(e).gridTemplateColumns.split(' ').length,overflow:e.scrollWidth>e.clientWidth+1}));report.columns.push(measured);assert.equal(measured.overflow,false);
+  const cardSize=await cards.first().evaluate(e=>{const card=e.getBoundingClientRect(),preview=e.querySelector('.tree-thumbnail-preview').getBoundingClientRect(),image=e.querySelector('img').getBoundingClientRect();return {width:card.width,height:card.height,previewWidth:preview.width,previewHeight:preview.height,imageWidth:image.width,overflow:e.scrollWidth>e.clientWidth+1};});
+  assert.ok(cardSize.previewWidth>=cardSize.width-2,'Grid artwork fills the card width');assert.ok(Math.abs(cardSize.previewWidth-cardSize.previewHeight)<1,'Grid preview stays square');assert.ok(cardSize.previewHeight/cardSize.height>.6,'Artwork occupies most of the card');assert.equal(cardSize.imageWidth,cardSize.previewWidth);assert.equal(cardSize.overflow,false);
+  for(const locale of ['en','zh-CN']){
+   await page.locator('#language-settings').selectOption(locale);
+   const card=cards.first(),summary=card.locator('.component-more>summary'),add=card.locator('.component-add'),before={add:await add.boundingBox(),summary:await summary.boundingBox()},nodes=await page.locator('#node-tree [role=treeitem]').count();
+   const geometry=()=>cards.evaluateAll(els=>els.map(e=>{const r=e.getBoundingClientRect();return [r.x,r.y,r.width,r.height];})),beforeGrid=await geometry();
+   await summary.click();
+   const after={add:await add.boundingBox(),summary:await summary.boundingBox()};
+   assert.deepEqual(after,before,'Opening More must not move or resize either footer target');
+   assert.deepEqual(await geometry(),beforeGrid,'The popup must not expand cards or leave gaps in the grid');
+   const popup=card.locator('.component-more-panel');assert.equal(await popup.evaluate(e=>e.matches(':popover-open')),true);
+   const actions=await popup.locator('button').evaluateAll(els=>els.map(e=>{const r=e.getBoundingClientRect();return {width:r.width,height:r.height,title:e.title,label:e.getAttribute('aria-label'),icons:e.querySelectorAll('svg').length,text:e.textContent};}));
+   assert.equal(actions.length,3);for(const action of actions){assert.equal(action.height,32);assert.ok(Math.abs(action.width-actions[0].width)<1);assert.ok(action.title&&action.label);assert.equal(action.icons,1);assert.equal(action.text,'');}
+   const popupBox=await popup.boundingBox();assert.ok(popupBox.x>=0&&popupBox.x+popupBox.width<=1500&&popupBox.y>=0&&popupBox.y+popupBox.height<=1000,'Popup stays inside the viewport');
+   await page.mouse.click(before.summary.x+before.summary.width/2,before.summary.y+before.summary.height/2);
+   assert.equal(await card.locator('.component-more').getAttribute('open'),null,'Clicking the same spot closes More');assert.equal(await page.locator('#node-tree [role=treeitem]').count(),nodes,'Closing More must not insert a node');
+   await summary.click();await popup.locator('button').first().focus();await page.keyboard.press('Escape');assert.equal(await card.locator('.component-more').getAttribute('open'),null);assert.equal(await summary.evaluate(e=>e===document.activeElement),true,'Escape restores focus to More');
+  }
  }
  assert.ok(report.columns[0].columns===1);assert.ok(report.columns[1].columns===2);assert.ok(report.columns[2].columns>=3);assert.ok(report.columns[3].columns>=4);
  await page.locator('#shape-library-view').selectOption('list');assert.equal(await page.locator('#shape-library .tree-pattern-cards').first().evaluate(e=>getComputedStyle(e).gridTemplateColumns.split(' ').length),1);await page.locator('#shape-library-view').selectOption('grid');

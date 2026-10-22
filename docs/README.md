@@ -23,6 +23,8 @@
 | 上传图片、去背景、提取颜色、居中、转 SVG | [03 · 图片与 SVG](03-images-and-svg.md) |
 | 自己写公式、输入生成器 JSON、调火焰与烟雾 | [04 · 公式与生成器](04-formulas-and-generators.md) |
 | 选中/组合节点、变换、重复排列、混合与滤镜 | [05 · 画布、排列与合成](05-canvas-and-compositing.md) |
+| 把参数固定到节点树，设置全部节点适用 | [节点快捷操作](05-canvas-and-compositing.md#把常用设置固定到节点树) |
+| 制作折叠线束、折光薄膜和粒子细丝拖尾贴图 | [飘带与拖尾纹理](05-canvas-and-compositing.md#飘带与拖尾纹理) |
 | 多选统一改色、改大小、对齐和等距分布 | [批量编辑](05-canvas-and-compositing.md#多选后批量修改对齐与等距分布) |
 | 在深浅背景上对比透明、相加，检查动画消散 | [特效预览](05-canvas-and-compositing.md#6-在背景上检查特效混合) |
 | 录制关键帧、编辑曲线、设置时间与循环 | [06 · 动画与时间轴](06-animation.md) |
@@ -43,6 +45,7 @@
 - [呼吸星形起点](examples/animation-star.json)：用于跟随关键帧教程录制宽度变化，初始没有关键帧。
 - [动态焦散材质](examples/water-caustics.json)：用于高度、法线和三维查看。
 - [火焰序列](examples/fire-sequence.json)：用于生成器动画与图集导出。
+- [折叠线束起点](examples/ribbon-trails.json)：宽画布中的透明拖尾纹理，可继续选择风格预设。
 
 项目保存的是可继续编辑的结构与依赖；导出的图片是交付结果。两者不能互相代替。
 

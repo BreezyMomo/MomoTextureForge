@@ -52,7 +52,7 @@ export function curvePreview(document,curves,open){
  const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 220 62');svg.setAttribute('aria-hidden','true');
  const add=(tag,attrs)=>{const e=document.createElementNS(ns,tag);for(const [k,v]of Object.entries(attrs))e.setAttribute(k,v);svg.append(e);};
  for(let i=1;i<4;i++){add('line',{x1:i*55,y1:0,x2:i*55,y2:62,class:'curve-grid'});add('line',{x1:0,y1:i*15.5,x2:220,y2:i*15.5,class:'curve-grid'});}
- const colors={luminance:'#e5b470',rgb:'#c6d9ed',red:'#ed8f8f',green:'#9bcd96',blue:'#8daeee',alpha:'#bcb0e0'},changed=CURVE_CHANNELS.filter(key=>curves[key].some(([x,y])=>Math.abs(x-y)>1e-6));
+ const colors={luminance:'var(--ui-accent-text)',rgb:'var(--ui-text)',red:'#ed8f8f',green:'#9bcd96',blue:'#8daeee',alpha:'#bcb0e0'},changed=CURVE_CHANNELS.filter(key=>curves[key].some(([x,y])=>Math.abs(x-y)>1e-6));
  for(const key of changed.length?changed:['luminance']){const points=curves[key],slopes=curveTangents(points),xy=(x,y)=>`${4+x*212},${58-y*54}`;let d='M'+xy(...points[0]);for(let i=1;i<points.length;i++){const [a,b]=[points[i-1],points[i]],h=(b[0]-a[0])/3;d+=' C'+xy(a[0]+h,a[1]+slopes[i-1]*h)+' '+xy(b[0]-h,b[1]-slopes[i]*h)+' '+xy(...b);}add('path',{d,fill:'none',class:'curve-path',style:'stroke:'+colors[key]});}
  const text=document.createElement('span');text.textContent=uiText('shortcuts.editCurves');button.append(svg,text);button.onclick=open;return button;
 }

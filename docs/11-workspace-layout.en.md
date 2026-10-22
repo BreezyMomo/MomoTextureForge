@@ -8,6 +8,8 @@
 
 The node tree, graphics list, canvas preview, inspector and timeline can be positioned independently. Enlarge the canvas, move parameters closer to the preview, or reserve more room for animation editing.
 
+The default places **Graphics, Node tree, Canvas preview, and Inspector** from left to right in four full-height columns, using approximately 13%, 10%, 59%, and 18% of the width. The canvas keeps most of the space while graphics remain browsable in a full column. Existing current and named layouts are retained; choose **Layout → Restore default layout** to adopt the new arrangement.
+
 ## 1. Drag, split and merge tabs
 
 ![Drag tabs and separators](images/en/workspace-docking.png)

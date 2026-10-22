@@ -18,6 +18,10 @@ Select a shape or group in the node tree. No parameters are shown without a sele
 
 An animation track may control it. Use **Base values** for the underlying state or enable recording to edit a time. Also check whether an export is running.
 
+## Why did node shortcut bindings or appearance not follow me to another device?
+
+Pins, module expansion/order, panel layouts and appearance are preferences for the current browser and site, outside project and resource files. Choose **All nodes, including new nodes** in a pin's scope menu for a common shortcut. Preview insertion retains bindings within the same browser; set them again on another device. See [Node shortcuts](05-canvas-and-compositing.en.md#pin-common-settings-to-the-node-tree).
+
 ## Why does a color texture look raised in 3D?
 
 Check the preview channel. **Color** displays a flat pattern; **Normal** displays lighting from generated normals. Ordinary artwork does not need to be treated as height. The model and lights are inspection aids.

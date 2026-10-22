@@ -9,6 +9,7 @@ if(!['zh-CN','en'].includes(language))throw Error('Capture language must be zh-C
 export const label=key=>messageText(key,language);
 export const inLanguage=(chinese,english)=>language==='en'?english:chinese;
 const names={
+ "未命名画布": "Untitled canvas",
  "作品": "Canvas",
  "召唤法阵": "Summoning circle",
  "外环": "Outer ring",

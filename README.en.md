@@ -23,11 +23,13 @@ Source and documentation: [GitHub primary repository](https://github.com/BreezyM
 - **Graphics and textures:** 301 built-in shapes, patterns, noise and vector resources, plus your own images and SVG files.
 - **Custom resources:** write GLSL formulas or multipass generator JSON, expose parameters, colors and opacity, and validate the live preview.
 - **Animated effects:** fire, smoke, lightning, sparks, water, caustics and volumetric effects, with built-in time motion and parameter keyframes.
+- **Ribbon textures:** folded strands, refractive membranes and particle strands, with trail style presets, evolving shapes and horizontal seamless tiling.
 - **Compositions:** groups, regions and UVs; grid, radial, scatter, border, contour, herringbone, weave and rule-based arrangements; gradients, flow fields, blending, masks and postprocessing.
 - **Batch editing:** multi-selection retains Shape (including coloring), Transform / Layout, Animation and Composite tabs for shared settings. Matching shapes also share shape-specific parameters. Alignment and even distribution are available.
 - **Material inspection:** Color, Height and Normal channels; 2D textures or lit sphere, plane and cube previews.
 - **Effect inspection:** compare alpha and additive blending on dark and light backgrounds using the same frame. Adjust playback, display size and preview brightness.
 - **Custom workspaces:** dock, split, merge tabs and float panels inside the page. Layouts are remembered automatically and can be saved by name.
+- **Common controls and appearance:** collapse, reorder and pin parameter modules to one or all nodes; move curve windows and customize themes, accents, style and density.
 - **Delivery and reuse:** PNG, EXR, frame ZIPs, atlases, PSD, SVG contours, editable projects, resource backups and remote libraries.
 
 | Edit an effect generator | Inspect normals and lighting |

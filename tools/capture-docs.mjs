@@ -10,6 +10,7 @@ import {project,node,walk} from '../web/tree-model.js';
 import {treeSamples} from '../web/tree-samples.js';
 import {markScreenshot,syncScreenshotCaptions} from './docs-annotations.mjs';
 import {GENERATOR_EXAMPLE} from '../web/generator-authoring.js';
+import {GRAPHIC_LIST_KEY} from '../web/persistent-graphic-list.js';
 
 // Capture real application UI in a disposable browser profile, never the user's draft.
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),port=Number(process.env.DOCS_PORT??8823),url='http://127.0.0.1:'+port+'/';
@@ -28,8 +29,8 @@ if(language==='zh-CN'&&(!only.size||only.has('examples')))for(const [name,p]of [
 try{
  for(let i=0;i<60;i++){try{if((await fetch(url)).ok)break;}catch{}await new Promise(r=>setTimeout(r,200));}
  browser=await chromium.launch({channel:process.env.DOCS_BROWSER??'msedge',headless:true});
- const context=await browser.newContext({viewport:{width:1600,height:1050},deviceScaleFactor:1,locale:language,colorScheme:'dark'});
- await context.addInitScript(code=>{localStorage.setItem('momo-texture-language:v1',JSON.stringify([code,code==='en'?'zh-CN':'en']));for(const key of ['momo-texture-forge:workspace-layouts:v1','momo-texture-tree:inspector-sections:v1','momo-texture-tree:inspector-module-order:v1'])localStorage.removeItem(key);},language);
+ const context=await browser.newContext({viewport:{width:1600,height:1050},deviceScaleFactor:1,locale:language,colorScheme:'dark',reducedMotion:'reduce'});
+ await context.addInitScript(code=>{localStorage.setItem('momo-texture-language:v1',JSON.stringify([code,code==='en'?'zh-CN':'en']));for(const key of ['momo-texture-forge:workspace-layouts:v1','momo-texture-tree:inspector-sections:v1','momo-texture-tree:inspector-module-order:v1','momo-texture-tree:node-shortcuts:v1'])localStorage.removeItem(key);},language);
  let page=await context.newPage();page.setDefaultTimeout(30000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const ready=async()=>{await page.locator('#render-status').waitFor();await page.waitForFunction(()=>{const s=document.querySelector('#render-status');return document.documentElement.dataset.ready==='true'&&s?.textContent.trim()&&!s.textContent.includes('加载')&&!s.textContent.includes('Loading');},null,{timeout:120000});};
  const load=async p=>{p=localizeFixture(p);console.log('loading '+p.name);await page.goto(url+'#tree='+Buffer.from(JSON.stringify(p)).toString('base64'));await page.reload();await ready();};
@@ -37,8 +38,12 @@ try{
  const run=async(name,fn)=>{if(!only.size||only.has(name)){console.log('section '+name);await fn();}};
  const showModules=async keys=>{for(const module of await page.locator('#inspector>details.inspector-module').all()){const open=keys.includes(await module.getAttribute('data-module'));if((await module.getAttribute('open')!==null)!==open)await module.locator(':scope>summary .inspector-module-title').click();}};
  const changeNumber=async(label,value,scope=page)=>{const input=scope.getByRole('spinbutton',{name:label,exact:true});await input.fill(String(value));await input.press('Tab');};
+ const resizeSeparator=async(handle,x)=>{const box=await handle.boundingBox();await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();await page.mouse.move(x,box.y+box.height/2,{steps:8});await page.mouse.up();};
+ const resizeColumn=(panel,x)=>resizeSeparator(page.locator('.dock-stack').filter({has:page.locator('[data-panel-tab="'+panel+'"]')}).first().locator('..').locator('..').locator(':scope>.dock-splitter'),x);
  const library=async()=>{await page.locator('#open-graphics-library').click();await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).waitFor();};
  const editorReady=async()=>{const d=page.locator('dialog').last();await d.getByRole('status').filter({hasText:label('library.previewReady').trim()}).first().waitFor();return d;};
+ const fileMenuShot=async()=>{await page.locator('details.header-dropdown > summary').filter({hasText:label('menu.file')}).click();const boxes=await Promise.all(['#open-project','#save-project','#export-now'].map(selector=>page.locator(selector).boundingBox()));const x=Math.max(0,Math.floor(Math.min(...boxes.map(box=>box.x))-25)),right=Math.min(page.viewportSize().width,Math.ceil(Math.max(...boxes.map(box=>box.x+box.width))+300));await shot('project-files',null,{x,y:0,width:right-x,height:520});};
+ if(only.has('project-files'))await run('project-files',async()=>{await load(spell);await fileMenuShot();});
  await run('overflow',async()=>{
   await page.setViewportSize({width:1600,height:1300});const p=project();p.name='内容边界对照';p.root.children=[treeSamples().find(s=>s.name===p.name).root];await load(p);
   await page.getByRole('button',{name:label('editor.select')+demoName('右侧：允许超出'),exact:true}).click();await page.getByRole('button',{name:label('inspector.transformLayout'),exact:true}).click();await page.locator('#show-guides').check();await page.getByRole('combobox',{name:label('editor.boundary'),exact:true}).scrollIntoViewIfNeeded();await shot('content-overflow');const repeat=project();repeat.name='无缝光晕接续';repeat.root.children=[treeSamples().find(s=>s.name===repeat.name).root];await load(repeat);await page.getByRole('button',{name:label('editor.select')+demoName('无缝光晕接续'),exact:true}).click();await page.getByRole('button',{name:label('inspector.transformLayout'),exact:true}).click();await page.locator('#tile-preview').click();await page.locator('#tile-grid').selectOption('3');await page.getByRole('combobox',{name:label('editor.boundary'),exact:true}).scrollIntoViewIfNeeded();await shot('seamless-overflow');await page.setViewportSize({width:1600,height:1050});
@@ -64,11 +69,13 @@ try{
   await shot('composition-examples');await page.getByRole('combobox',{name:label('ui.exampleCategory'),exact:true}).selectOption('arrangement');await page.setViewportSize({width:1400,height:2200});await shot('arrangement-examples');await page.setViewportSize({width:1600,height:1050});
  });
  await run('presets',async()=>{await page.setViewportSize({width:1400,height:1100});await page.goto(url+'examples.html?category=presets');await page.waitForFunction(count=>document.querySelectorAll('#samples img').length===count,treeSamples().length,{timeout:180000});await page.locator('#samples article[data-category=presets] img').evaluateAll(images=>Promise.all(images.map(image=>image.decode())));await shot('vfx-presets');await page.setViewportSize({width:1600,height:1050});});
- await run('workspace',async()=>{
+ const workspaceOverviewOnly=only.has('workspace-overview');
+ await run(workspaceOverviewOnly?'workspace-overview':'workspace',async()=>{
   await load(spell);await page.getByRole('button',{name:label('editor.select')+demoName('环形星光'),exact:true}).click();await shot('workspace');
+  if(workspaceOverviewOnly)return;
   await page.getByRole('button',{name:label('inspector.transformLayout'),exact:true}).click();await shot('transform-region');await page.getByLabel(label('editor.instanceSize'),{exact:true}).scrollIntoViewIfNeeded();await shot('arrangement');
   await page.getByRole('button',{name:label('editor.select')+demoName('外环'),exact:true}).click();await page.getByRole('button',{name:label('inspector.composite'),exact:true}).click();await page.getByText(label('modules.imageFilters'),{exact:true}).click();await changeNumber(label('ui.bloomIntensity'),.35);await page.getByLabel(label('ui.bloomIntensity'),{exact:true}).evaluate(e=>e.scrollIntoView({block:'center'}));await shot('compositing');
-  await page.locator('details.header-dropdown > summary').filter({hasText:label('menu.file')}).click();await shot('project-files',null,{x:600,y:0,width:650,height:520});
+  await fileMenuShot();
  });
  await run('bezier-editor',async()=>{
   const p=project(),ribbon=node('shape','BezierRibbon');p.name=inLanguage('多段贝塞尔光带','Multisegment Bezier ribbon');ribbon.name=p.name;ribbon.params.splice(0,8,-.85,-.1,-.8,.9,-.1,.9,-.05,.2);ribbon.bezier.shape=[0,-.7,.75,-.75,.8,0];ribbon.color={mode:'own',fill:'solid',low:'#80dfff',high:'#80dfff'};p.root.children=[ribbon];await load(p);
@@ -77,8 +84,7 @@ try{
  await run('inspector-modules',async()=>{
   const demo=structuredClone(animated),circle=node('shape','Circle');circle.name='呼吸圆形';circle.color=demo.root.children[0].color;circle.transform.width=circle.transform.height=.65;demo.name='呼吸圆形';demo.root.children=[circle];await load(demo);
   await page.getByRole('button',{name:label('editor.select')+demoName('呼吸圆形'),exact:true}).click();
-  await page.locator('.dock-stack').filter({has:page.locator('[data-panel-tab="inspector"]')}).first().locator('.dock-stack-actions button').first().click();
-  const floating=page.locator('.dock-floating').filter({has:page.locator('[data-panel-tab="inspector"]')}).first();await floating.evaluate(e=>{Object.assign(e.style,{left:'1160px',top:'80px',width:'420px',height:'950px'});});
+  await resizeColumn('inspector',1160);
   await page.locator('#inspector [data-module="modules.node"]>summary .inspector-module-title').click();await page.locator('#inspector [data-module="editor.shapeUV"]>summary .inspector-module-title').click();
   await showModules(['modules.shapeParameters']);await page.locator('#inspector [data-module="modules.shapeParameters"]>summary .inspector-module-help').click();await page.locator('#inspector [data-module="editor.nodeColors"]>summary .module-move-up').click();await page.locator('.tree-inspector').evaluate(e=>e.scrollTop=0);await shot('inspector-modules');
   await page.getByRole('button',{name:label('inspector.transformLayout'),exact:true}).click();await page.locator('#inspector [data-module="editor.nodeRegion"]>summary .inspector-module-title').click();
@@ -96,8 +102,11 @@ try{
   await shot('graphics-list');
  });
  await run('library',async()=>{
-  await load(spell);await library();await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).fill(inLanguage('特效素材','VFX'));await page.waitForFunction(()=>document.querySelectorAll('.graphics-card').length===14);await shot('graphics-library');
-  await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).fill(inLanguage('湍流火焰','Turbulent Flame'));const fireCard=page.locator('.graphics-card').filter({has:page.locator('strong').getByText(inLanguage('湍流火焰','Turbulent Flame'),{exact:true})});if(!await fireCard.getByRole('button',{name:label('library.addToGraphicsList'),exact:true}).isDisabled())await fireCard.getByRole('button',{name:label('library.addToGraphicsList'),exact:true}).click();await fireCard.getByRole('button',{name:inLanguage('编辑 湍流火焰','Edit Turbulent Flame'),exact:true}).click();const d=await editorReady();await d.getByRole('slider',{name:label('library.previewTimeSeconds'),exact:true}).fill('1.3');await editorReady();await shot('generator-parameters');await d.locator('header .graphics-close').click();
+  await load(spell);
+  // The isolated demo removes two preloaded copies so the real Add to list action is visible.
+  await page.evaluate(key=>{const list=JSON.parse(localStorage.getItem(key));list.projectResources=list.projectResources.filter(entry=>!['PlumeSmoke','TurbulentFlame'].includes(entry.root.type));localStorage.setItem(key,JSON.stringify(list));},GRAPHIC_LIST_KEY);await page.reload();await ready();
+  await library();await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).fill(inLanguage('特效素材','VFX'));await page.waitForFunction(()=>document.querySelectorAll('.graphics-card').length===14);await shot('graphics-library');
+  await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).fill(inLanguage('湍流火焰','Turbulent Flame'));const fireCard=page.locator('.graphics-card').filter({has:page.locator('strong').getByText(inLanguage('湍流火焰','Turbulent Flame'),{exact:true})});if(await fireCard.getByRole('button',{name:label('library.addToGraphicsList'),exact:true}).count())await fireCard.getByRole('button',{name:label('library.addToGraphicsList'),exact:true}).click();await fireCard.getByRole('button',{name:inLanguage('编辑 湍流火焰','Edit Turbulent Flame'),exact:true}).click();const d=await editorReady();await d.getByRole('slider',{name:label('library.previewTimeSeconds'),exact:true}).fill('1.3');await editorReady();await shot('generator-parameters');await d.locator('header .graphics-close').click();
   await page.locator('dialog').last().locator('header .graphics-close').click();await shot('graphics-list');
  });
  await run('parameter-states',async()=>{
@@ -139,7 +148,7 @@ try{
   await page.getByRole('button',{name:label('editor.select')+demoName('外环'),exact:true}).click();await page.getByRole('button',{name:label('inspector.composite'),exact:true}).click();await showModules(['modules.imageFilters']);await changeNumber(label('ui.bloomIntensity'),.35);await shot('compositing');await page.setViewportSize({width:1600,height:1050});
  });
  await run('node-tree',async()=>{
-  const p=project(),a=node('shape','Circle'),b=node('shape','Star');a.name=inLanguage('圆形装饰','Circle decoration');b.name=inLanguage('星形装饰','Star decoration');p.name=inLanguage('节点树编辑','Node tree editing');p.root.children=[a,b];await load(cleanIds(p));const rows=page.locator('#node-tree .tree-node'),nodes=page.locator('.dock-stack').filter({has:page.locator('[data-panel-tab="nodes"]')}).first();await rows.first().locator('.tree-node-name').dblclick();await shot('node-rename',nodes);await page.locator('.tree-node-rename').press('Escape');
+  const p=project(),a=node('shape','Circle'),b=node('shape','Star');a.name=inLanguage('圆形装饰','Circle decoration');b.name=inLanguage('星形装饰','Star decoration');p.name=inLanguage('节点树编辑','Node tree editing');a.color={mode:'own',fill:'solid',low:'#80dfff',high:'#80dfff'};b.color={mode:'own',fill:'solid',low:'#ffcf66',high:'#ffcf66'};a.transform.x=.38;b.transform.x=.62;for(const n of [a,b])n.transform.width=n.transform.height=.55;p.root.children=[a,b];await load(cleanIds(p));await resizeSeparator(page.locator('.dock-workspace>.dock-split>.dock-splitter'),570);await resizeColumn('library',210);const rows=page.locator('#node-tree .tree-node'),nodes=page.locator('.dock-stack').filter({has:page.locator('[data-panel-tab="nodes"]')}).first();await rows.first().locator('.tree-node-name').dblclick();await shot('node-rename',nodes);await page.locator('.tree-node-rename').press('Escape');
   await page.evaluate(()=>{const rows=document.querySelectorAll('#node-tree .tree-node'),dataTransfer=new DataTransfer(),target=rows[1],box=target.getBoundingClientRect();rows[0].dispatchEvent(new DragEvent('dragstart',{bubbles:true,cancelable:true,dataTransfer}));target.dispatchEvent(new DragEvent('dragover',{bubbles:true,cancelable:true,dataTransfer,clientX:box.x+box.width*.55,clientY:box.y+box.height*.5}));});await page.locator('.node-group-preview').waitFor({state:'visible'});await shot('node-auto-group',null,null,true);await page.evaluate(()=>document.querySelector('#node-tree .tree-node').dispatchEvent(new DragEvent('dragend',{bubbles:true})));
  });
  await run('normal',async()=>{
@@ -165,6 +174,23 @@ try{
   await page.locator('#support-project').click();await page.getByRole('dialog',{name:label('menu.support'),exact:true}).waitFor();await page.getByRole('button',{name:label('ui.closeSupportDialog'),exact:true}).click();
   if(!await page.locator('#support-project').evaluate(e=>e===document.activeElement))throw Error('Support button focus not restored');
   await page.locator('.header-help > summary').click();await shot('help-menu',null,{x:950,y:0,width:650,height:400});
+ });
+ await run('shortcuts',async()=>{
+  const p=project(),circle=node('shape','Circle');circle.name=inLanguage('圆形装饰','Circle decoration');circle.transform.width=circle.transform.height=.65;circle.color={mode:'own',fill:'solid',low:'#80dfff',high:'#80dfff'};p.name=circle.name;p.root.children=[circle];await load(cleanIds(p));await page.locator('#node-tree .tree-node-name').click();
+  await resizeSeparator(page.locator('.dock-workspace>.dock-split>.dock-splitter'),570);await resizeColumn('library',210);await resizeColumn('inspector',1160);
+  await showModules([]);for(const key of ['editor.opacity','curves.title'])await page.locator('#inspector>[data-module="'+key+'"]>summary .module-pin').click();
+  await page.locator('#inspector>[data-module="editor.opacity"]>summary .shortcut-scope').click();await shot('node-shortcuts',page.locator('body'));await page.keyboard.press('Escape');
+  await page.locator('.node-shortcuts').getByRole('button',{name:label('shortcuts.editCurves'),exact:true}).click();const dialog=page.locator('.node-curves-dialog');await dialog.getByRole('combobox',{name:label('curves.preset'),exact:true}).selectOption('contrast');
+  const box=await dialog.locator(':scope>header').boundingBox();await page.mouse.move(box.x+35,box.y+box.height/2);await page.mouse.down();await page.mouse.move(70,125,{steps:8});await page.mouse.up();await shot('channel-curves-dialog',page.locator('body'));await dialog.getByRole('button',{name:label('common.close'),exact:true}).click();
+ });
+ await run('ribbons',async()=>{
+  const p=project(),ribbon=node('shape','FoldedRibbon');p.name=inLanguage('飘带与拖尾纹理','Ribbon and trail textures');ribbon.name=inLanguage('折叠线束','Folded ribbon strands');p.canvas.ratio=4;p.output.width=1024;p.output.height=256;p.root.children=[ribbon];await load(cleanIds(p));await page.locator('#node-tree .tree-node-name').click();
+  await resizeColumn('inspector',1140);
+  await showModules(['modules.shapeParameters']);await page.locator('#inspector').getByRole('combobox',{name:label('ribbon.stylePreset'),exact:true}).selectOption('energy');await page.locator('.tree-inspector').evaluate(e=>e.scrollTop=0);await ready();await shot('ribbon-parameters');
+  if(language==='zh-CN')await writeFile(resolve(root,'docs/examples/ribbon-trails.json'),JSON.stringify(p,null,2)+'\n');
+ });
+ await run('appearance',async()=>{
+  await load(spell);await page.locator('#appearance-settings').click();await page.locator('#appearance-theme').selectOption('light');await page.locator('#appearance-style').selectOption('soft');await page.locator('#appearance-density').selectOption('comfortable');await shot('appearance-settings');await page.locator('.appearance-dialog [data-cancel]').click();
  });
  await run('manager',async()=>{
   await load(water);

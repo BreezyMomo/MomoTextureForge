@@ -8,6 +8,25 @@ test('presets expose the expected panels',()=>{
  assert.deepEqual(panels(layoutPreset('animation')),[...PANEL_IDS].sort());
  assert.deepEqual(panels(layoutPreset('focus')),['canvas']);
 });
+test('default matches the reference four-column order and gives the canvas most of the width',()=>{
+ const columns=[];
+ function measure(n,start=0,width=1){
+  if(n.kind==='stack'){columns.push({panels:n.panels,start,width});return;}
+  assert.equal(n.axis,'x','default panels occupy the full workspace height');
+  measure(n.first,start,width*n.ratio);measure(n.second,start+width*n.ratio,width*(1-n.ratio));
+ }
+ const layout=layoutPreset();measure(layout.root);
+ assert.deepEqual(columns.map(c=>c.panels),[['library'],['nodes'],['canvas'],['inspector']]);
+ for(const [index,expected]of [.13,.10,.59,.18].entries())assert.ok(Math.abs(columns[index].width-expected)<.01);
+ assert.deepEqual(sanitizeLayout(layout),layout,'default ratios survive persistence without clamping');
+ assert.deepEqual(layout.floats,[]);
+});
+test('a new default does not replace an existing current or named layout',()=>{
+ const custom=layoutPreset('animation');custom.root.ratio=.29;
+ const saved=sanitizeLayoutSettings({current:custom,named:[{name:'My workspace',layout:custom}]});
+ assert.deepEqual(saved.current,custom);assert.deepEqual(saved.named[0].layout,custom);
+ assert.deepEqual(sanitizeLayoutSettings(null).current.root.first.first.panels,['library']);
+});
 test('merge, split, detach, close and reopen retain one panel owner without changing input',()=>{
  const original=layoutPreset(),snapshot=JSON.stringify(original),target=panelStack(original,'inspector').id;
  let layout=dockPanel(original,'library',target);assert.equal(JSON.stringify(original),snapshot);

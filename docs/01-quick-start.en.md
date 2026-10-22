@@ -15,10 +15,20 @@ Visit the [online editor](https://breezymomo.github.io/MomoTextureForge/). See [
 > Callouts: 1 Open the graphics library; 2 Select a node; 3 Switch texture channel; 4 Edit the selected node.
 
 - **Toolbar:** canvas name, File, undo/redo, canvas settings, export, graphics and help. Narrow windows move Canvas settings into File and Examples into the menu beside Graphics library.
-- **Upper left:** node tree. Select an instance or group to decide what the inspector edits.
-- **Lower left:** graphics list with reusable copies.
+- **Far left:** full-height graphics list with reusable copies.
+- **Second column:** node tree. Select an instance or group to decide what the inspector edits.
 - **Center:** composite preview, texture channels, 2D/3D modes, canvas tools and playback.
 - **Right:** selected node's shape, color, transform/layout, animation and compositing. No node means no node parameters.
+
+Open **Appearance** in the toolbar to choose Momo classic dark, neutral graphite, soft light, or follow the system, and set a custom accent color. Changes preview across the workspace. **Save appearance** remembers your choice; Cancel or Esc restores the appearance from before the dialog opened. Preferences stay in this browser and site without changing artwork colors, exports, or project files.
+
+**Interface style** offers Standard, Minimal, and Soft: fine borders and small corners, quieter module frames, or rounder controls and panels. **Density** offers Compact and Comfortable, adjusting control height and spacing in parameter modules, node rows, and library cards. Combine either setting with any palette; saving or cancelling applies to all appearance choices together.
+
+While dragging a parameter module, adjacent modules smoothly make room. The new order is saved only on drop; Esc cancels. Same-level node sorting shows an insertion gap, while cross-group moves retain insertion lines and target highlights. Panel placement, section disclosures, menus, thumbnails and notifications use brief transitions; sliders, canvas manipulation and dragged objects remain immediate. Interface motion respects the system's reduced-motion preference without changing artwork animation or exports.
+
+![Interface colors, style and density](images/en/appearance-settings.png)
+
+> Callouts: 1 Choose interface colors; 2 Choose an interface style; 3 Set interface density; 4 Customize the accent color; 5 Save appearance preferences in this browser.
 
 ## 2. Add your first graphic
 

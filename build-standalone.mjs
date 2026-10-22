@@ -19,7 +19,7 @@ const appreciationCode=await readFile(join(toolRoot,'docs/images/wechat-apprecia
 await writeFile(join(webRoot,'appreciation-code.js'),'// Generated from docs/images/wechat-appreciation.png by build-standalone.mjs.\nexport default '+JSON.stringify('data:image/png;base64,'+appreciationCode.toString('base64'))+';\n');
 const registry=await loadDefinitionURL(new URL("./web/definitions/builtin.json",import.meta.url));
 const read=name=>readFile(join(webRoot,name),"utf8");
-const [indexHTML,examplesHTML,validationHTML,css]=await Promise.all([read("index.html"),read("examples.html"),read("validate.html"),Promise.all([read("style.css"),read("tree.css"),read("graphics-workspace.css"),read("dock-workspace.css"),read("inspector-color.css")]).then(parts=>parts.join("\n"))]);
+const [indexHTML,examplesHTML,validationHTML,css]=await Promise.all([read("index.html"),read("examples.html"),read("validate.html"),Promise.all([read("theme-tokens.css"),read("style.css"),read("tree.css"),read("graphics-workspace.css"),read("dock-workspace.css"),read("inspector-color.css")]).then(parts=>parts.join("\n"))]);
 const body=html=>{
   const content=html.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1];
   if(!content)throw new Error("Page body missing");
@@ -30,6 +30,7 @@ if(!examplesStyle)throw new Error("Examples style missing");
 const serialize=value=>JSON.stringify(value).replaceAll("<","\\u003c");
 const runtime=`const freeze=(value)=>{if(value&&typeof value==='object'){Object.values(value).forEach(freeze);Object.freeze(value);}return value;};export const BUILTIN=freeze(${serialize(registry)});export const formulaText=spec=>spec.inline??BUILTIN.sources[spec.file];`;
 const entry=`
+import './appearance.js';
 import {startupStage,mountStartupContent,completeStartup,failStartup} from './startup.js';
 import {uiText} from './ui-language.js';
 (async()=>{
@@ -68,6 +69,7 @@ if(/<\/script/i.test(javascript))throw new Error("Unsafe inline script terminato
 if(/<\/style/i.test(css))throw new Error("Unsafe inline style terminator");
 const policy="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob: https: http:; connect-src https: http:; worker-src blob:; object-src 'none'; base-uri 'none'";
 let html=indexHTML.replace('<html lang="zh-CN">','<html lang="zh-CN" data-distribution="standalone">')
+  .replace('<link rel="stylesheet" href="theme-tokens.css" />','')
   .replace('<link rel="stylesheet" href="style.css" />',()=>`<meta http-equiv="Content-Security-Policy" content="${policy}"><style>${css}</style>`)
   .replace('<script type="module" src="bootstrap.js"></script>',()=>`<script>${javascript}</script>`)
   .replace('分享链接只编码贴图参数，不上传；接收方使用自己运行的工具地址，保留 #fx= 后的部分。','离线版通过“导出配置”下载项目 ZIP；把项目与本 HTML 一起发送，接收方点“打开项目”恢复。草稿按浏览器和文件位置保存，重要项目请保存为 ZIP。');

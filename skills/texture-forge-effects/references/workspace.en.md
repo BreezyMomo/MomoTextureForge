@@ -7,12 +7,16 @@
 ## Main interface
 
 - The toolbar has the editable canvas name; File (new/open/save/share), undo/redo icons, Canvas settings and Export; Graphics library and Examples; then Layout, language, Support and Help. Hover history icons for shortcuts. Narrow windows move Canvas settings into File and Examples into the menu beside Graphics library. Help includes quick/detailed guides, two Skill ZIP downloads, and GitHub/Gitee source links. Extract Skills for a compatible AI application.
-- Default left panels contain nodes and reusable graphics. The center holds preview/tools/playback. The inspector offers Shape (including coloring), Transform / Layout, Animation and Composite for single or batch editing; no selection means no node settings.
+- The default has four full-height columns: Graphics, Node tree, Canvas preview, and Inspector, using approximately 13%, 10%, 59%, and 18% of the width. The canvas column holds tools and playback. The inspector offers Shape (including coloring), Transform / Layout, Animation and Composite for single or batch editing; no selection means no node settings. Existing layouts are retained; Layout → Restore default layout adopts the four-column arrangement.
 - Preview actions save selection/canvas to the library, save/update list copies, and toggle solo. Similar names have different scopes.
 
 Errors remain in the upper-right notification area until dismissed; later success messages do not replace them. Older lists with retired graphics or missing dependencies are backed up, with unreadable entries set aside and other resources restored. The notification downloads original records and currently available dependencies. This backup is not a formal resource ZIP. Do not advise clearing browser storage or replacing unavailable graphics with unrelated ones.
 
-Graphics list Resource type / Graphic categories are multiselect chips. Options are OR within a group; both groups combine with search. All clears only its group, as does deselecting its last option. Categories come from built-in and personal list entries. Language changes retain selection without modifying projects or resources.
+The graphics list combines All / Favorites / Recent / Animated with search and multiselect category chips, without image/formula/group filters. Categories match any selected option; All or deselecting the last option clears category filtering. Categories come from built-in and personal list entries. Star buttons toggle favorites; play icons mark animated graphics. Language changes retain filters without modifying projects or resources.
+
+Toolbar Appearance previews classic dark, graphite, light or system colors, accent color, Standard/Minimal/Soft style and Compact/Comfortable density. Save stores browser preferences; Cancel restores the original appearance. Artwork and exports stay unchanged. Interface transitions honor system reduced motion.
+
+With one node selected, module header pins place controls beneath that node in the tree. The scope menu applies to all nodes, including new ones, with individual exceptions. Inapplicable modules hide; Node and graphic selection have no pin. Shortcuts share edits, keyframes and undo with the inspector. Bindings carry through preview insertion, duplication and saving/reinserting within the same browser, outside project/resource files. Full channel curves and expanded Bezier windows move by dragging their headers; arrow keys also move them, with Shift for larger steps.
 
 ## Custom panel layouts
 

@@ -23,6 +23,8 @@ Start with Quick start, then consult individual chapters as needed. Screenshots 
 | Upload, remove backgrounds, extract colors, center and convert SVG | [03 · Images and SVG](03-images-and-svg.en.md) |
 | Write formulas, enter generator JSON, adjust fire and smoke | [04 · Formulas and generators](04-formulas-and-generators.en.md) |
 | Select/group, transform, repeat, blend and filter | [05 · Canvas, arrangement and compositing](05-canvas-and-compositing.en.md) |
+| Pin controls to the node tree or apply them to all nodes | [Node shortcuts](05-canvas-and-compositing.en.md#pin-common-settings-to-the-node-tree) |
+| Create folded ribbon, membrane and particle strand textures | [Ribbon and trail textures](05-canvas-and-compositing.en.md#ribbon-and-trail-textures) |
 | Batch-edit colors/sizes, align and distribute | [Batch editing](05-canvas-and-compositing.en.md#batch-editing-alignment-and-even-distribution) |
 | Compare alpha/additive on light/dark backgrounds and check fading | [Effect preview](05-canvas-and-compositing.en.md#6-inspect-effect-blending-on-backgrounds) |
 | Record keys, edit curves, set timing and loops | [06 · Animation and timeline](06-animation.en.md) |
@@ -43,6 +45,7 @@ Download a JSON file and open it through **File → Open project**. These exampl
 - [Breathing-star starting point](examples/animation-star.json): follow the width-keyframe exercise; initially no keys.
 - [Animated caustics material](examples/water-caustics.json): inspect height, normals and 3D lighting.
 - [Flame sequence](examples/fire-sequence.json): generator motion and sprite-atlas export.
+- [Folded ribbon starting point](examples/ribbon-trails.json): a transparent trail on a wide canvas; choose a style preset to continue.
 
 A project stores editable structure and dependencies. An exported image is a delivery result. Keep both when you need future edits.
 

@@ -134,6 +134,12 @@ Contours: off/outer stroke/dilate/erode, width 0–0.1 of short side. Outer stro
 
 Levels: brightness −0.6–0.6, contrast 0.1–3, gamma 0.1–4, input/output remapping and invert. These can affect masks and gradient mapping; reset them when diagnosing colors.
 
+## Ribbon and trail textures
+
+Search the graphics library for `FoldedRibbon` (Folded ribbon strands), `RefractionMembrane` (Refractive membrane), or `ParticleStrands` (Particle strands). They are ordinary graphic resources, not new node kinds. Start with a transparent 4:1 or 8:1 canvas and a Trail style preset in graphic parameters. Folded strands gather into creases; the membrane is a continuous sheet with independent interior/edge colors; particle strands have independent distortion phases and width/opacity variation. Inherited membrane colors retain its palette; node colors can override it.
+
+Widths are relative to graphic height. Evolution speed supports reverse motion and freezes at 0; UV scrolling is independent. Horizontal seamless rounds frequencies to whole cycles and disables end fading, joining spatial edges without guaranteeing matching first/last animation frames. Shared opacity, colors, curves, filters, keyframes and exports remain available; do not change the generic node structure for these graphics.
+
 ## Channel curves
 
 Select a graphic or group and open **Shape → Channel curves**. Nodes inheriting a palette can use curves too. Groups composite their children before applying curves.

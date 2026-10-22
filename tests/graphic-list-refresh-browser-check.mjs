@@ -28,7 +28,7 @@ try{
   new MutationObserver(changes=>{for(const change of changes)if(change.target.dataset.state==='loading')window.galleryStats.loading.push(change.target.closest('.tree-pattern-card')?.dataset.entryId);}).observe(document.querySelector('#shape-library'),{subtree:true,attributes:true,attributeFilter:['data-state']});
  });
  const baseline=await stats();
- await first.locator('.graphic-favorite').click();assert.equal(await first.locator('.graphic-favorite').getAttribute('aria-pressed'),'true');assert.equal(await first.locator('.component-more').getAttribute('open'),'');
+ await first.locator('.graphic-favorite').click();assert.equal(await first.locator('.graphic-favorite').getAttribute('aria-pressed'),'true');assert.equal(await first.locator('.component-more').getAttribute('open'),null,'Clicking outside the popup dismisses it');
  await page.locator('#node-tree .tree-node .tree-node-name').first().click();await page.locator('#inspector-tabs').getByRole('button',{name:'变换/排列',exact:true}).click();
  for(const value of ['0.55','0.60','0.65']){const input=page.getByRole('spinbutton',{name:'位置 X',exact:true});await input.fill(value);await input.press('Tab');}
  await page.locator('#undo').click();await page.locator('#redo').click();
@@ -40,7 +40,7 @@ try{
  const updated=await stats();assert.equal(updated.draws-baseline.draws,1);assert.deepEqual(updated.loads.slice(baseline.loads.length),[entries[0].id]);assert.ok(updated.loading.every(id=>id===entries[0].id));
  assert.equal(await page.evaluate(()=>window.galleryImages.every((img,i)=>img===document.querySelectorAll('#shape-library img')[i])),true);
  // Metadata and language changes update labels and callbacks, without invalidating pixels.
- const beforeRename=await stats();await first.getByRole('button',{name:'重命名 Test circle',exact:true}).click();const dialog=page.locator('dialog').last();await dialog.getByRole('textbox',{name:'图形列表名称',exact:true}).fill('Renamed circle');await dialog.getByRole('button',{name:'保存',exact:true}).click();
+ const beforeRename=await stats();await first.locator('.component-more summary').click();await first.getByRole('button',{name:'重命名 Test circle',exact:true}).click();const dialog=page.locator('dialog').last();await dialog.getByRole('textbox',{name:'图形列表名称',exact:true}).fill('Renamed circle');await dialog.getByRole('button',{name:'保存',exact:true}).click();
  await page.waitForFunction(()=>document.querySelector('#shape-library .tree-pattern-text')?.textContent==='Renamed circle');assert.equal(await first.locator('.tree-pattern-text').textContent(),'Renamed circle');await page.locator('#language-settings').selectOption('en');assert.equal(await first.locator('.graphic-favorite').getAttribute('title'),'Unfavorite Renamed circle');assert.deepEqual(await stats(),beforeRename);
  // Filter/view changes reattach existing cards; their ready images never reload.
  await page.locator('#library-filter [data-value=favorites]').click();assert.equal(await cards.count(),1);await page.locator('#library-filter [data-value=all]').click();await page.locator('#shape-search').fill('Test ring');assert.equal(await cards.count(),1);await page.locator('#shape-search').fill('');await page.locator('#shape-library-view').selectOption('list');await page.locator('#shape-library-view').selectOption('grid');assert.deepEqual(await stats(),beforeRename);
