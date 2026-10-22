@@ -50,7 +50,7 @@ The library is the source, the graphics list holds reusable copies, and nodes ar
 1. Select a node and open **Transform / Layout**.
 2. Start with region width, height, position and rotation under the node's occupied region.
 3. For repetition, choose an arrangement, then adjust instance size and distribution.
-4. Set canvas aspect ratio in **Canvas settings**; pixel dimensions are chosen at export.
+4. Change the canvas aspect ratio with **Ratio** above the preview or in **Canvas settings**. Choose **Custom…**, enter width and height, then click **Apply ratio**; supported ratios range from 1:8 to 8:1. Pixel dimensions are chosen at export. Switching or resetting trial graphics and returning to the canvas retain the current ratio. Ratio changes made during trial editing are also saved to the original canvas.
 
 Node region, shape radius and arranged-instance size are three different levels. If a pattern looks too small, check which level you are editing.
 

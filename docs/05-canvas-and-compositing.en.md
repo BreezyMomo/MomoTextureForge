@@ -330,7 +330,7 @@ Filters support keys. Groups composite children before filtering. Radii such as 
 
 **Shape → Internal UV** changes sampling rather than node bounds. Scale, rotation, offset, scrolling, swirl and polar coordinates modify the texture. Reset UV first when investigating distortion.
 
-Zoom, checkerboard, node bounds, pivots, solo preview and tile inspection are viewing aids. **Tile count** chooses **2×2, 3×3 or 4×4** and enables Tile preview. Toggling it preserves the chosen count. These settings do not change the canvas, project or export dimensions. Tile inspection reveals seams but does not remove them; inspect even after enabling Seamless repeat.
+Below the preview, the left group contains Select, Pivot, UV, Pan and Snap tools. The right group contains zoom, **View** and **Tile**. **View** contains checkerboard/black/white backgrounds, node bounds, pivots and the boundary explanation. The arrow beside Tile offers **2×2, 3×3, 4×4** and an off action. Choosing a count enables tiling; toggling Tile preserves that count, which appears on the button while enabled. These viewing aids do not change the canvas, project or export dimensions. Tile inspection reveals seams but does not remove them; inspect even after enabling Seamless repeat.
 
 Shortcuts: Ctrl/Cmd+D duplicates, Delete removes, Ctrl+Z undoes and Ctrl+Shift+Z redoes. Export always uses the full canvas bounds.
 
