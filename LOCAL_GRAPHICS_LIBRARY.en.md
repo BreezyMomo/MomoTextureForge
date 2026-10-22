@@ -35,7 +35,11 @@ Single-resource ZIPs use `momo.texture-pack/v1`; `content.json.graphicResource` 
 
 Storage is browser/origin-specific. Export backups for another computer/browser. Obsolete image-hidden metadata is unused, but old resource snapshots are not proactively deleted. Legacy global component lists are not automatically restored as the current list.
 
+List recovery handles unreadable entries separately: it first retains the exact original text and failure details in `momo-texture-tree:graphic-list-recovery:v1`, then allows the valid list to be saved. Entire unreadable entries are set aside without replacing their graphics. Custom dependency snapshots are retained while a recovery backup exists. Notifications offer the original records and currently available dependencies as a download. Failed backup writes leave the original list protected. This recovery archive is for recovery and diagnosis, not a directly importable formal resource ZIP.
+
 ## Batch adding and added status
+
+Batch add shows processed/total counts and the current resource name while yielding to keep the interface responsive. It saves and refreshes the editor once after preparation. Cancel keeps completed resources, leaving unprocessed and failed items selected for retry. Undo reverses the whole addition.
 
 Select multiple items, all current results or none, then batch-add. Added status uses global `resourceId + versionId`, not personal revision. Duplicate same-version additions are disabled by default. A higher version offers confirmed replacement of the corresponding list entry and resets personal changes while keeping existing canvas instances. Batch-add does not auto-upgrade versions. Partial failures report reasons and keep failed items selected.
 
@@ -108,3 +112,5 @@ Color processing offers unchanged, tint and replace color, with original-image e
 Download Effects Skill provides `texture-forge-effects`, Markdown-only with no install dependencies. It explains operations rather than controlling the user's editor. It covers resource scopes/saving, canvas, regions/UV/arrangement, repetition, color/blending/masks/contours, timing, images, export, recipes and troubleshooting. Arrangement ranges are generated from current definitions; actual graphics capabilities come from an exported dynamic catalog, not a bundled fixed list.
 
 Maintain sources under `skills/texture-forge-effects`; `node build-effects-kit.mjs` regenerates ranges, embedded files and ZIP. Authoring/offline builds regenerate both kits too. Update guidance when controls/behavior change; generated ranges use current definitions. Both kits include Chinese and English Markdown editions.
+
+The graphics list automatically receives all built-in graphics on first initialization. Existing browsers receive missing built-ins once on upgrade, preserving existing resources, versions and personal edits. Built-ins are deduplicated by resource identity. Later intentional removals, including an empty list, stay removed after refresh. New/open canvases continue sharing this list; initialization does not draw every built-in on the canvas.

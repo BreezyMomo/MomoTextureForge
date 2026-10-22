@@ -256,3 +256,15 @@ Shortcuts: Ctrl/Cmd+D duplicates, Delete removes, Ctrl+Z undoes and Ctrl+Shift+Z
 Background, size, blend and preview brightness affect viewing only. They are not written to the project, node blend/opacity, export background, PNG or frame sequence. Change the actual texture in the inspector/export settings. Confirm engine-specific HDR, color-space and material behavior in the target project.
 
 Canvas transform and UV dragging pause in effect preview; inspector edits remain available. Return to **2D canvas** for dragging, or use **3D material** for surface-lighting inspection.
+
+## Channel curves
+
+Select a graphic or group and open **Color → Channel curves**. Nodes inheriting a palette can use curves too. Groups composite their children before applying curves.
+
+- Choose **Luminance / height, Master RGB, Red R, Green G, Blue B, or Alpha**. Luminance adjusts brightness and height; RGB changes color only. Alpha changes coverage and scales the height contribution accordingly.
+- Click the graph to add a point, drag or use arrow keys to move it, or enter input/output values from 0–255. Endpoint inputs stay at 0 and 255; their outputs remain editable. Internal points can be deleted. Up to 16 points use smooth cubic interpolation through the controls, with continuous tangents and no overshoot. The graph, preview and exports share the same shape. Two-point curves remain straight.
+- Editing points or applying a preset enables curves. Disable temporarily, reset one channel, or reset all curves. Undo/redo, project/resource saves and exports preserve them.
+- Curves run after basic brightness/levels and before contours/image filters. Color order is luminance, master RGB, then individual RGB channels; Alpha follows. Unmodified channels preserve their original values, avoiding HDR clipping when adjusting only Alpha.
+- Curve shapes currently support neither keyframes nor batch edits. For multiple selected nodes, edit the primary node. These curves remap pixel values, unlike parameter curves in the animation timeline.
+
+For softer smoke or mask coverage, adjust Alpha. To change brightness while keeping transparency, use RGB. Mapping Alpha input 0 to a nonzero output also covers previously transparent areas inside the node region.

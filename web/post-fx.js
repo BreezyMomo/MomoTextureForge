@@ -1,4 +1,5 @@
 import {boundsSize} from './render-bounds.js';
+import {hasChannelCurves} from './channel-curves.js';
 // Radii are measured in pixels at a 512-pixel canvas, so exports scale consistently.
 export const FX_SPECS=[
  ["ui.blurRadius",0,32,0,.1],["ui.bloomIntensity",0,3,0,.01],
@@ -6,7 +7,7 @@ export const FX_SPECS=[
  ["ui.sharpenIntensity",0,3,0,.01],["ui.chromaticAberrationDistance",0,24,0,.1],["ui.posterizeLevels",0,16,0,1]
 ];
 export const fxDefaults=()=>FX_SPECS.map(s=>s[3]);
-export const hasPostFx=n=>[0,1,4,5,6].some(i=>(n.postFx?.[i]??0)>0);
+export const hasPostFx=n=>hasChannelCurves(n)||[0,1,4,5,6].some(i=>(n.postFx?.[i]??0)>0);
 export const FX_GLSL=`
 uniform float fxAmount,fxThreshold;
 vec4 fxColor(vec2 p){if(repeatNode==1)p=fract(p);if(any(lessThan(p,vec2(0)))||any(greaterThan(p,vec2(1))))return vec4(0);return filtered(srcColor,p);}

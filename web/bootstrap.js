@@ -4,7 +4,7 @@ try {
  await startupStage(uiText("ui.readingGraphicsAndLocalResources"));
  const {restoreAssets}=await import('./resource-assets.js');await restoreAssets();
  await startupStage(uiText("ui.preparingEditor"));
- await import('./tree-app.js');
+ await (await import('./tree-app.js')).ready;
  await completeStartup();
 }
 catch (error) {

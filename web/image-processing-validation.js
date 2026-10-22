@@ -40,5 +40,5 @@ try {
  try{const restored=roundtrip.prepared[0][1];if(restored.imageProcessing||restored.imageTransform||restored.imageColor||restored.data===sourceBytes)throw Error('保存结果仍保留源图片或处理设置');const baked=await renderIcon(restored);for(let i=0;i<red.length;i++){const d=i%4===3?Math.abs(red[i]-baked[i]):Math.abs(red[i]*red[i-i%4+3]/255-baked[i]*baked[i-i%4+3]/255);if(d>2)throw Error('确认图片往返改变了处理结果');}}finally{roundtrip.rollback();}
  const selectedId='asset_'+await contentHash(retained);registerAsset(selectedId,retained,await prepareAsset(retained));try{const entry=await packageGraphic(node('shape',selectedId),{name:'提取指定颜色测试',kind:'image',category:'验证'});await saveLibraryEntry(entry.entry,entry.bytes);}finally{unregisterAsset(selectedId);}
  result.textContent='PASS：指定颜色提取GPU/部分透明度/资源包往返、自动居中像素范围、轮廓GPU放大对比、连通域、编辑草稿原图不变、确认后仅保存处理结果、图片方向。点击按钮编辑测试图形。';
- const library=createGraphicsLibrary({onLoad:()=>{},notify:message=>result.textContent=message});document.querySelector('#open').onclick=()=>library.open();
+ const library=createGraphicsLibrary({onLoad:()=>{},onLoadBatch:()=>{},notify:message=>result.textContent=message});document.querySelector('#open').onclick=()=>library.open();
 }catch(e){result.textContent=e.stack;}

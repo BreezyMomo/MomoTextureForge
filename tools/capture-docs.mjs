@@ -24,7 +24,7 @@ const stars=node('shape','Star');stars.name='环形星光';stars.arrange[0]=8;st
 const animated=project();animated.name='呼吸星形';const star=node('shape','Star');star.name='呼吸星形';star.color={mode:'own',fill:'solid',low:'#80dfff',high:'#80dfff'};star.transform.width=star.transform.height=.65;animated.root.children=[star];cleanIds(animated);
 const water=project();water.name='动态焦散材质';water.root.children=[node('shape','WaterCaustics')];cleanIds(water);
 const fire=project();fire.name='火焰序列';fire.root.children=[node('shape','Bonfire')];cleanIds(fire);
-if(language==='zh-CN')for(const [name,p]of [['summoning-circle',spell],['animation-star',animated],['water-caustics',water],['fire-sequence',fire]])await writeFile(resolve(root,'docs/examples/'+name+'.json'),JSON.stringify(p,null,2)+'\n');
+if(language==='zh-CN'&&!only.has('library-filters'))for(const [name,p]of [['summoning-circle',spell],['animation-star',animated],['water-caustics',water],['fire-sequence',fire]])await writeFile(resolve(root,'docs/examples/'+name+'.json'),JSON.stringify(p,null,2)+'\n');
 try{
  for(let i=0;i<60;i++){try{if((await fetch(url)).ok)break;}catch{}await new Promise(r=>setTimeout(r,200));}
  browser=await chromium.launch({channel:process.env.DOCS_BROWSER??'msedge',headless:true});
@@ -69,9 +69,19 @@ try{
   await page.getByRole('button',{name:label('editor.select')+demoName('外环'),exact:true}).click();await page.getByRole('button',{name:label('inspector.composite'),exact:true}).click();await page.getByText(label('editor.postProcessingBrightnessLevelsInvert'),{exact:true}).click();await changeNumber(label('ui.bloomIntensity'),.35);await page.getByLabel(label('ui.bloomIntensity'),{exact:true}).evaluate(e=>e.scrollIntoView({block:'center'}));await shot('compositing');
   await page.locator('details.header-dropdown > summary').filter({hasText:label('menu.file')}).click();await shot('project-files',null,{x:600,y:0,width:650,height:520});
  });
+ await run('library-filters',async()=>{
+  await load(spell);
+  await page.locator('.dock-stack').filter({has:page.locator('[data-panel-tab="library"]')}).first().locator('.dock-stack-actions button').first().click();
+  const floating=page.locator('.dock-floating').filter({has:page.locator('[data-panel-tab="library"]')}).first();
+  await floating.evaluate(e=>{e.style.left='18px';e.style.top='80px';e.style.width='360px';e.style.height='850px';});
+  for(const type of ['formula','image'])await page.locator('#library-filter button[data-value="'+type+'"]').click();
+  for(const type of ['形状','渐变'])await page.locator('#library-categories button[data-value="'+type+'"]').click();
+  await page.waitForFunction(()=>document.querySelector('#shape-library img')?.dataset.ready==='true');
+  await shot('graphics-list');
+ });
  await run('library',async()=>{
   await load(spell);await library();await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).fill(inLanguage('特效素材','VFX'));await page.waitForFunction(()=>document.querySelectorAll('.graphics-card').length===14);await shot('graphics-library');
-  await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).fill(inLanguage('湍流火焰','Turbulent Flame'));const fireCard=page.locator('.graphics-card').filter({has:page.locator('strong').getByText(inLanguage('湍流火焰','Turbulent Flame'),{exact:true})});await fireCard.getByRole('button',{name:label('library.addToGraphicsList'),exact:true}).click();await fireCard.getByRole('button',{name:inLanguage('编辑 湍流火焰','Edit Turbulent Flame'),exact:true}).click();const d=await editorReady();await d.getByRole('slider',{name:label('library.previewTimeSeconds'),exact:true}).fill('1.3');await editorReady();await shot('generator-parameters');await d.locator('header .graphics-close').click();
+  await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).fill(inLanguage('湍流火焰','Turbulent Flame'));const fireCard=page.locator('.graphics-card').filter({has:page.locator('strong').getByText(inLanguage('湍流火焰','Turbulent Flame'),{exact:true})});if(!await fireCard.getByRole('button',{name:label('library.addToGraphicsList'),exact:true}).isDisabled())await fireCard.getByRole('button',{name:label('library.addToGraphicsList'),exact:true}).click();await fireCard.getByRole('button',{name:inLanguage('编辑 湍流火焰','Edit Turbulent Flame'),exact:true}).click();const d=await editorReady();await d.getByRole('slider',{name:label('library.previewTimeSeconds'),exact:true}).fill('1.3');await editorReady();await shot('generator-parameters');await d.locator('header .graphics-close').click();
   await page.locator('dialog').last().locator('header .graphics-close').click();await shot('graphics-list');
  });
  await run('parameter-states',async()=>{
@@ -153,5 +163,5 @@ try{
    await manager.locator('#grid article').first().getByRole('button',{name:inLanguage('编辑信息','Edit metadata'),exact:true}).click();await manager.locator('#edit-dialog').waitFor({state:'visible'});clear=await markScreenshot(manager,'library-manager-edit',null,language);try{await manager.screenshot({path:resolve(output,'library-manager-edit.png'),animations:'disabled'});}finally{await clear();}console.log('captured library-manager-edit');
   }finally{await manager.close();await new Promise(r=>managerServer.close(r));}
  });
- if(errors.length)throw Error(errors.join('\n'));await syncScreenshotCaptions(root,language);console.log('Documentation captures complete');
+ if(errors.length)throw Error(errors.join('\n'));await syncScreenshotCaptions(root,language,only.has('library-filters')?new Set(['graphics-list']):null);console.log('Documentation captures complete');
 }catch(error){console.error(error);if(browser){const p=browser.contexts()[0]?.pages()[0];if(p){await p.screenshot({path:resolve(root,'test-results/docs-capture-error.png')}).catch(()=>{});await writeFile(resolve(root,'test-results/docs-capture-error.txt'),await p.locator('body').innerText()).catch(()=>{});}}process.exitCode=1;}finally{await browser?.close();server.kill();}

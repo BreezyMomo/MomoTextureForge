@@ -30,7 +30,7 @@ export const annotations={
  'selection-colors':[role('button',label('inspector.color'),'进入颜色页签'),field(label('selection.batch')+label('selection.opacity'),'批量调整透明度'),field(label('selection.batch')+label('editor.colorSource'),'选择自定义或继承配色'),field(label('selection.batch')+label('editor.fillColor')+' HEX','只统一修改填充颜色')].map(spec=>({...spec,numberOnly:true})),
  'selection-shape':[css('#node-tree','选择同一种图形'),role('button',label('inspector.shape'),'进入图形页签'),field(inLanguage('批量半径','Batch Radius'),'不同半径显示多个值'),field(inLanguage('批量环线宽','Batch Ring line width'),'批量修改圆环线宽')].map(spec=>({...spec,numberOnly:true})),
  'generator-parameters':[field(label('library.previewTimeSeconds'),'拖动时间查看运动'),css('.graphic-preview-panel canvas','观察生成结果'),role('button',label('library.saveAsNewGraphic'),'保存自己的版本')],
- 'graphics-list':[css('#shape-search','搜索常用列表'),role('button',inLanguage('添加 湍流火焰','Add Turbulent Flame'),'添加实例到画布')],
+ 'graphics-list':[css('#shape-search','搜索常用列表'),css('#library-filter','多选资源类型'),css('#library-categories','多选图形分类'),css('#shape-library .tree-pattern-card>button:nth-of-type(2)','添加实例到画布')].map(spec=>({...spec,numberOnly:true})),
  'image-import':[field(label('library.resourceName'),'填写资源名称'),field(label('library.imageFile'),'选择图片文件'),css('.graphic-preview-panel canvas','检查预览')],
  'image-background':[field(label('library.processingMode'),'选择去背景方式'),field(label('editor.backgroundColor'),'指定要去除的颜色'),css('.graphic-preview-panel canvas','用棋盘格确认透明')],
  'formula-editor':[role('tab',label('editor.formula'),'选择公式类型'),field(label('library.glslFormula'),'输入公式代码')],
@@ -58,18 +58,18 @@ export const annotations={
  'arrangement-examples':[field(label('ui.exampleCategory'),'筛选新增排列'),role('link',label('ui.editOnCanvas'),'打开排列示例')],
 };
 
-export async function syncScreenshotCaptions(root,language='zh-CN'){
+export async function syncScreenshotCaptions(root,language='zh-CN',imageNames=null){
  const english=language==='en',suffix=english?'.en.md':'.md';
  const files=['README'+suffix,...(await readdir(resolve(root,'docs'))).filter(f=>f.endsWith(suffix)&&(english||!f.endsWith('.en.md'))).map(f=>'docs/'+f)];
  for(const file of files){
   const path=resolve(root,file),source=await readFile(path,'utf8');
   const text=source.replace(/\r\n/g,'\n').replace(/^(!\[[^\]]*\]\((?:docs\/)?images\/(?:en\/)?([^/)]+)\.png\))(?:\n\n> (?:图中标记：|Callouts?: )[^\n]*)?/gm,(all,image,name)=>{
-   if(!annotations[name])return all;
+   if(!annotations[name]||(imageNames&&!imageNames.has(name)))return all;
    const labels=english?englishCallouts[name]:annotations[name].map(a=>a.label);
    if(!labels||labels.length!==annotations[name].length)throw Error('Missing callout translations: '+name);
    return image+'\n\n'+(english?'> Callouts: ':'> 图中标记：')+labels.map((label,i)=>(i+1)+' '+label).join(english?'; ':'；')+(english?'.':'。');
   });
-  if(text!==source)await writeFile(path,text);
+  if(text!==source.replace(/\r\n/g,'\n'))await writeFile(path,text);
  }
 }
 

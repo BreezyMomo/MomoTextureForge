@@ -21,6 +21,8 @@
   ],
   "graphics-list": [
     "Search the reusable list",
+    "Select resource types",
+    "Select graphic categories",
     "Add an instance to the canvas"
   ],
   "image-import": [

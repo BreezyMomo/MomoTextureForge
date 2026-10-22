@@ -22,6 +22,7 @@ import {finalizeImageAsset} from './image-bake.js';
 import {exportGraphicsLibrary} from './graphics-export.js';
 import {bindFormulaParameters,vectorParameterSlots} from './formula-parameters.js';
 import {libraryResourceStatus} from './project-resources.js';
+import {addLibrarySelection} from './library-batch.js';
 import builtinThumbnails from './builtin-thumbnails.js';
 import {builtinAsset,assetFor,contentHash,prepareAsset,registerAsset,unregisterAsset,resources,ensureAssetImages} from './resource-assets.js';
 import {encodeResourcePack,readResourcePack,imageAsset,finalizeResourcePack} from './resource-pack.js';
@@ -52,9 +53,9 @@ export function requestGraphicMetadata(title,initialMeta){return new Promise(res
 export const requestGraphicName=async(title,initialName)=>(await requestGraphicMetadata(title,{name:initialName}))?.name??null;
 function labelled(name,input){input.setAttribute('aria-label',name);return el('label',{},[el('span',{text:name}),input]);}
 export async function packageGraphic(root,meta,thumbnail='') {const entry={...libraryIdentity(meta),name:meta.name||root.name,...graphicAliasesField(meta.aliases),category:meta.category||'我的图形',description:meta.description||'',kind:meta.kind||'composition',...(meta.generator?{generator:true}:{}),thumbnail,source:meta.source??null};const bytes=await encodeResourcePack({schema:PRESET_SCHEMA,name:entry.name,root:cloneNode(root),graphicResource:entry});return {entry,bytes};}
-async function unpack(bytes){const pack=await readResourcePack(bytes);pack.register();return pack;}
+async function unpack(bytes){const pack=await readResourcePack(bytes);try{pack.register();return pack;}catch(error){pack.rollback();throw error;}}
 function thumbnail(root){const r=new TreeRenderer(previewSurface);try{const p=project();p.root.children=[cloneNode(root)];r.draw(p,160,160,{time:.25});return r.canvas.toDataURL();}finally{r.destroy();}}
-export function createGraphicsLibrary({onLoad,onInsert,onComposition,onPublished,getResources=()=>[],notify}){
+export function createGraphicsLibrary({onLoad,onLoadBatch,onInsert,onComposition,onPublished,getResources=()=>[],notify}){
  const imageTypeCache=new Map();
  const bundleFor=async (item,options={})=>item.remote?downloadRemoteResource(item,options):libraryBundle(bundleKey(item));
  async function itemTypeLabel(item){if(item.generator)return '生成器';if(item.remote)return graphicTypeLabel(item.kind,item.imageMime);if(item.kind!=='image')return graphicTypeLabel(item.kind);const key=item.resourceId+'@'+item.versionId+':'+(item.hash??'');if(!imageTypeCache.has(key))imageTypeCache.set(key,libraryBundle(bundleKey(item)).then(imageTypeFromBundle).catch(()=>graphicTypeLabel('image')));return imageTypeCache.get(key);}
@@ -72,7 +73,37 @@ export function createGraphicsLibrary({onLoad,onInsert,onComposition,onPublished
   const exportSelected=button(uiText("library.exportResources"),()=>exportItems([...selected.values()]));exportSelected.disabled=true;const toolbar=el('div',{className:'graphics-actions'},[button(uiText("library.createResource"),()=>createResource(render)),button(uiText("library.remoteLibraries"),()=>manageRemoteLibraries({modal,el,button,labelled,confirm:confirmGraphicAction,onChange:render})),button(uiText("library.refreshRemoteLibraries"),()=>syncRemote(true)),exportSelected,button(uiText("library.exportAIGraphicsCatalog"),()=>exportAIContext()),search,filter,sourceFilter]);body.append(toolbar,el('p',{text:uiText("library.addDirectlyToTheCanvasToEditParametersAddFavoritesTo")}),status,list);
   d.classList.add('graphics-library-dialog');
   let entries=[],locked=false,visible=[],allItems=[];const selected=new Map(),chosenVariants=new Map(),key=graphicVariantKey,resourceStatus=item=>libraryResourceStatus(getResources(),item);
-  const batch=button(uiText("library.addSelectedResources"),()=>action(async()=>{let added=0,skipped=0;const failures=[];for(const [id,item]of selected){try{if(resourceStatus(item)==='added'){skipped++;selected.delete(id);continue;}if(resourceStatus(item)==='update'){failures.push(graphicLabel(item)+'：请使用确认更新');continue;}await loadOne(item);added++;selected.delete(id);}catch(e){failures.push(graphicLabel(item)+'：'+e.message);}}await render();status.textContent=(uiFormat("library.addedValueItemsSkippedValue",added,skipped) + (failures.length ? (uiText("library.notAdded") + failures.join('；')) : ''));}));
+  let batchController=null;
+  const progressText=el('span',{role:'status','aria-live':'polite'}),progressName=el('span',{className:'graphics-batch-name'}),progressBar=el('progress',{'aria-label':uiText('library.batchProgressLabel'),max:1,value:0}),cancelBatch=button(uiText('common.cancel'),()=>{batchController?.abort();cancelBatch.disabled=true;});
+  const progressPanel=el('section',{className:'graphics-batch-progress',hidden:true},[progressText,progressBar,progressName,cancelBatch]);status.before(progressPanel);
+  const closeButton=d.querySelector('.graphics-close');
+  d.addEventListener('cancel',event=>{if(batchController){event.preventDefault();if(!cancelBatch.disabled){batchController.abort();cancelBatch.disabled=true;}}});
+  const batch=button(uiText("library.addSelectedResources"),()=>action(async()=>{
+   batchController=new AbortController();const abort=()=>batchController?.abort();controller.signal.addEventListener('abort',abort,{once:true});
+   closeButton.disabled=true;progressPanel.hidden=false;cancelBatch.disabled=false;status.textContent='';
+   try{
+    const result=await addLibrarySelection({items:[...selected.values()],status:resourceStatus,signal:batchController.signal,
+     prepare:async(item,signal)=>{
+      let pack;try{
+       const root=item.builtin?node('shape',item.builtin):(pack=await unpack(await bundleFor(item,{signal}))).payload.root;
+       if(!root)throw messageError('library.missingResourceEntryPoint');
+       if(signal.aborted)throw messageError('library.actionCanceled');
+       return {root,meta:item,rollback:()=>pack?.rollback()};
+      }catch(error){pack?.rollback();throw error;}
+     },
+     commit:onLoadBatch,
+     onProgress:({phase,item,done,total})=>{
+      progressBar.max=total;progressBar.value=done;
+      progressText.textContent=phase==='saving'?uiText('library.batchSaving'):uiFormat('library.batchProgress',done,total);
+      progressName.textContent=item?graphicLabel(item):'';
+      if(phase==='saving')cancelBatch.disabled=true;
+     }
+    });
+    for(const item of [...result.added,...result.skipped])selected.delete(key(item));
+    await render(true);
+    status.textContent=(result.canceled?uiText('library.batchCanceled'):'')+uiFormat('library.addedValueItemsSkippedValue',result.added.length,result.skipped.length)+(result.failures.length?uiText('library.notAdded')+result.failures.map(({item,error,needsUpdate})=>graphicLabel(item)+'：'+(needsUpdate?uiText('library.batchNeedsUpdate'):uiError(error))).join('；'):'');
+   }finally{controller.signal.removeEventListener('abort',abort);batchController=null;progressPanel.hidden=true;closeButton.disabled=false;}
+  }));
   const syncSelection=()=>{batch.textContent=((uiText("library.addSelectedCountPrefix") + selected.size) + '）');batch.disabled=!selected.size;exportSelected.disabled=!selected.size;};
   toolbar.append(button(uiText("library.selectAllResults"),()=>{for(const item of visible)selected.set(key(item),item);render();}),button(uiText("library.clearSelection"),()=>{selected.clear();render();}),batch);syncSelection();
   function exportAIContext(){
@@ -92,7 +123,7 @@ export function createGraphicsLibrary({onLoad,onInsert,onComposition,onPublished
    if(!root)throw messageError("library.missingResourceEntryPoint");if(controller.signal.aborted||!d.open)throw messageError("library.actionCanceled");
    await onInsert(root,item);d.close();notify(((uiText("library.added") + graphicLabel(item)) + uiText("library.toCanvasAdjustParametersInTheInspector")));
   }catch(e){pack?.rollback();throw e;}});}
-  async function render(){const revision=++renderRevision;[entries,sources,catalogs,downloads]=await Promise.all([libraryEntries(),remoteSources(),remoteCatalogs(),remoteDownloads()]);await annotateTypes(entries);if(!d.open||revision!==renderRevision)return;const previousSource=sourceFilter.value;sourceFilter.replaceChildren(...[['all',"library.allSources"],['builtin',"library.builtInGraphics"],['local',"library.localOriginals"],['downloaded',"library.downloadedRemoteResources"],...sources.map(s=>['remote:'+s.id,s.name+(s.enabled?'':uiText("library.disabled"))])].map(([value,text])=>el('option',{value,text:value.startsWith('remote:')?text:uiText(text)})));sourceFilter.value=[...sourceFilter.options].some(o=>o.value===previousSource)?previousSource:'all';const builtins=await Promise.all(CATALOG.filter(p=>!p.id.startsWith('asset_')&&libraryVisible(p.id)).map(async p=>({name:p.definition.name,...graphicAliasesField(p.definition.aliases),searchTerms:p.zh+' '+p.id+' '+p.categoryName,category:categoryLabel(p.category),kind:'formula',builtin:p.id,resourceId:await builtinIdentity(p.id),versionId:p.definition.revision,personalRevision:0,typeLabel:p.definition.generator?"library.generator":"editor.formula",thumbnail:builtinThumbnails[p.id]})));if(!d.open||revision!==renderRevision)return;const cached=latestRemoteDownloads(downloads),remoteItems=[...cached];for(const catalog of catalogs){const source=sources.find(s=>s.id===catalog.sourceId&&s.enabled);if(!source)continue;for(const entry of catalog.entries){const local=cached.find(c=>c.sourceId===source.id&&c.resourceId===entry.resourceId&&c.versionId===entry.versionId);if(!local)remoteItems.push({...entry,remote:true,sourceId:source.id,sourceName:source.name});}}allItems=[...new Map([...builtins,...entries,...remoteItems].map(item=>[key(item),item])).values()];const available=new Set(allItems.map(key));for(const id of selected.keys())if(!available.has(id))selected.delete(id);const q=search.value.trim().toLowerCase();list.replaceChildren();visible=[];
+  async function render(force=false){if(batchController&&force!==true)return;const revision=++renderRevision;[entries,sources,catalogs,downloads]=await Promise.all([libraryEntries(),remoteSources(),remoteCatalogs(),remoteDownloads()]);await annotateTypes(entries);if(!d.open||revision!==renderRevision||(batchController&&force!==true))return;const previousSource=sourceFilter.value;sourceFilter.replaceChildren(...[['all',"library.allSources"],['builtin',"library.builtInGraphics"],['local',"library.localOriginals"],['downloaded',"library.downloadedRemoteResources"],...sources.map(s=>['remote:'+s.id,s.name+(s.enabled?'':uiText("library.disabled"))])].map(([value,text])=>el('option',{value,text:value.startsWith('remote:')?text:uiText(text)})));sourceFilter.value=[...sourceFilter.options].some(o=>o.value===previousSource)?previousSource:'all';const builtins=await Promise.all(CATALOG.filter(p=>!p.id.startsWith('asset_')&&libraryVisible(p.id)).map(async p=>({name:p.definition.name,...graphicAliasesField(p.definition.aliases),searchTerms:p.zh+' '+p.id+' '+p.categoryName,category:categoryLabel(p.category),kind:'formula',builtin:p.id,resourceId:await builtinIdentity(p.id),versionId:p.definition.revision,personalRevision:0,typeLabel:p.definition.generator?"library.generator":"editor.formula",thumbnail:builtinThumbnails[p.id]})));if(!d.open||revision!==renderRevision||(batchController&&force!==true))return;const cached=latestRemoteDownloads(downloads),remoteItems=[...cached];for(const catalog of catalogs){const source=sources.find(s=>s.id===catalog.sourceId&&s.enabled);if(!source)continue;for(const entry of catalog.entries){const local=cached.find(c=>c.sourceId===source.id&&c.resourceId===entry.resourceId&&c.versionId===entry.versionId);if(!local)remoteItems.push({...entry,remote:true,sourceId:source.id,sourceName:source.name});}}allItems=[...new Map([...builtins,...entries,...remoteItems].map(item=>[key(item),item])).values()];const available=new Set(allItems.map(key));for(const id of selected.keys())if(!available.has(id))selected.delete(id);const q=search.value.trim().toLowerCase();list.replaceChildren();visible=[];
    const matches=e=>(sourceFilter.value==='all'||sourceFilter.value==='builtin'&&e.builtin||sourceFilter.value==='local'&&!e.builtin&&!e.remote||sourceFilter.value==='downloaded'&&e.remote&&downloads.some(c=>key(c)===key(e))||sourceFilter.value==='remote:'+e.sourceId)&&(filter.value==='all'||filter.value==='builtin'&&e.builtin||filter.value==='local'&&!e.builtin&&!e.remote||filter.value==='formula'&&e.kind==='formula'||filter.value==='image'&&e.kind==='image'||filter.value==='composition'&&e.kind==='composition');
    const sourceLabel=e=>e.remote?uiText("library.source")+(sources.find(s=>s.id===e.sourceId)?.name??e.sourceName??uiText("library.remoteLibraries"))+(!sources.some(s=>s.id===e.sourceId)?uiText("library.subscriptionRemoved"):!sources.find(s=>s.id===e.sourceId).enabled?uiText("library.disabled"):''):e.builtin?'内置图形':'本地图形库';
    for(const group of groupGraphics(allItems)){
@@ -120,7 +151,7 @@ export function createGraphicsLibrary({onLoad,onInsert,onComposition,onPublished
    }syncSelection();if(!list.children.length)list.append(el('p',{text:uiText("library.noMatchingResources")}));
   }
   search.oninput=render;filter.onchange=render;sourceFilter.onchange=render;
-  let syncing=false;async function syncRemote(force=false){if(syncing||!d.open)return;syncing=true;try{const results=await refreshRemoteSources({force,signal:controller.signal});if(d.open){await render();const failures=results.flatMap(r=>r.status==='rejected'?[r.reason.message]:(r.value.errors??[]));if(results.length)status.textContent=(failures.length ? (uiText("library.someRemoteRefreshesOrDownloadsFailedCachedResourcesRemainUsable") + failures.join('；')) : uiText("library.remoteCatalogsUpdated"));}}catch(e){if(d.open)status.textContent=uiError(e);}finally{syncing=false;}}
+  let syncing=false;async function syncRemote(force=false){if(syncing||locked||!d.open)return;syncing=true;try{const results=await refreshRemoteSources({force,signal:controller.signal});if(d.open&&!locked){await render();const failures=results.flatMap(r=>r.status==='rejected'?[r.reason.message]:(r.value.errors??[]));if(results.length&&!locked)status.textContent=(failures.length ? (uiText("library.someRemoteRefreshesOrDownloadsFailedCachedResourcesRemainUsable") + failures.join('；')) : uiText("library.remoteCatalogsUpdated"));}}catch(e){if(d.open&&!locked)status.textContent=uiError(e);}finally{syncing=false;}}
   const timer=setInterval(()=>syncRemote(),REMOTE_LIMITS.interval);d.addEventListener('close',()=>{clearInterval(timer);controller.abort();},{once:true});await render();syncRemote();
  }
  async function createResource(onSaved){

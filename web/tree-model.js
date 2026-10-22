@@ -1,4 +1,6 @@
 import {graphicAliasesField} from './graphic-name.js';
+import {curveDefaults,sanitizeCurves} from './channel-curves.js';
+import {sanitizeChannelSources} from './output-channels.js';
 import {messageError} from './message-catalog.js';
 import {parameterRole} from './parameter-metadata.js';
 import {FX_SPECS,fxDefaults} from './post-fx.js';
@@ -22,9 +24,9 @@ export function node(kind='shape',type='Circle'){
  color:{mode:kind==='group'?'preserve':'inherit',fill:'gradient',low:'#000000',high:'#ffffff'},
  arrange:sanitizeTreeArrangement([0,...Array(58).fill(undefined)]),arrangeExtra:extraDefaults(),tileEdges:0,arrangeFit:'contain',imageFit:'contain',instancePhase:0,instanceContent:'all',scatterAvoidOverlap:false,scatterGap:0,
  timing:{start:0,end:1,from:0,to:1,cycles:1,loop:false,pingpong:false,ease:'linear',outside:'hold',frozen:false,at:0,offset:0,curve:[]},
- shapeClock:{follow:true,speed:1,offset:0,value:0},contour:{mode:'none',radius:.01},animationEnabled:true,post:POST_SPECS.map(p=>p[3]),postFx:fxDefaults(),invert:false,maskInvert:false,tracks:{},children:[],mask:null};
+ shapeClock:{follow:true,speed:1,offset:0,value:0},contour:{mode:'none',radius:.01},animationEnabled:true,post:POST_SPECS.map(p=>p[3]),postFx:fxDefaults(),curves:curveDefaults(),invert:false,maskInvert:false,tracks:{},children:[],mask:null};
 }
-export function project(){const root=node('group');root.name='画布';root.children=[node()];return {schema:TREE_SCHEMA,name:'未命名画布',root,projectResources:[],canvas:{ratio:1},output:{width:512,height:512,mode:'color',alpha:true,depth:8,seconds:3,fps:30,frames:90,columns:8,loopExport:true,exrZip:true,background:'#000000',normal:3,normalAlgorithm:'sobel',normalFlipX:false,normalFlipY:false,normalInvert:false,normalSmooth:0,channels:[0,2,3,8]}};}
+export function project(){const root=node('group');root.name='画布';root.children=[node()];return {schema:TREE_SCHEMA,name:'未命名画布',root,projectResources:[],canvas:{ratio:1},output:{width:512,height:512,mode:'color',alpha:true,depth:8,seconds:3,fps:30,frames:90,columns:8,loopExport:true,exrZip:true,background:'#000000',normal:3,normalAlgorithm:'sobel',normalFlipX:false,normalFlipY:false,normalInvert:false,normalSmooth:0,channels:[0,2,3,8],channelSources:[null,null,null,null]}};}
 export function walk(root,fn,parent=null,depth=0){fn(root,parent,depth);for(const c of root.children)walk(c,fn,root,depth+1);if(root.mask)walk(root.mask,fn,root,depth+1);}
 export function find(root,id){let found=null;walk(root,(n,p,d)=>{if(n.id===id)found={node:n,parent:p,depth:d};});return found;}
 export function cloneNode(n){const c=structuredClone(n);walk(c,x=>x.id=uid());return c;}
@@ -84,6 +86,7 @@ export function sanitizeTree(raw,{component=false}={}){
   n.shapeClock={follow:r.shapeClock?.follow!==false,speed:num(r.shapeClock?.speed,1,-10,10),offset:num(r.shapeClock?.offset,0,-600,600),value:num(r.shapeClock?.value,0,-36000,36000)};
   n.contour={mode:ANIMATION_ENUMS['contour.mode'].includes(r.contour?.mode)?r.contour.mode:'none',radius:num(r.contour?.radius,.01,0,.1)};
   n.postFx=FX_SPECS.map((p,i)=>num(r.postFx?.[i],p[3],p[1],p[2]));n.postFx[6]=Math.round(n.postFx[6]);
+  n.curves=sanitizeCurves(r.curves);
   n.animationEnabled=r.animationEnabled!==false;n.post=POST_SPECS.map((p,i)=>num(r.post?.[i],p[3],p[1],p[2]));n.invert=!!r.invert;n.maskInvert=!!r.maskInvert;
   if(Array.isArray(r.color?.stops))n.color.stops=r.color.stops.slice(0,8).filter(s=>/^#[0-9a-f]{6}$/i.test(s.color)).map(s=>({color:s.color,position:num(s.position,0,0,1)})).sort((a,b)=>a.position-b.position);
   n.uv=n.uv.map((v,i)=>num(r.uv?.[i],v,...fieldSpec(n,'uv.'+i)));n.polar=!!r.polar;
@@ -118,12 +121,13 @@ export function sanitizeTree(raw,{component=false}={}){
   n.children=(r.children??[]).map(c=>read(c,depth+1));if(r.mask)n.mask=read(r.mask,depth+1);return n;
  }
  const p=project();p.root=read(raw.root,0);
- if(raw.projectResources!==undefined){if(!Array.isArray(raw.projectResources))throw messageError("ui.invalidGraphicsListFormat");const ids=new Set();p.projectResources=raw.projectResources.map(entry=>{if(!entry||typeof entry.id!=='string'||ids.has(entry.id))throw messageError("ui.invalidOrDuplicateGraphicsListID");ids.add(entry.id);const clean=sanitizeTree({...project(),root:entry.root,projectResources:[]},{component:true}).root;return {id:entry.id,name:String(entry.name??clean.name).slice(0,80),...graphicAliasesField(entry.aliases),category:String(entry.category??'图形列表').slice(0,80),description:String(entry.description??'').slice(0,2000),kind:['formula','image','composition'].includes(entry.kind)?entry.kind:'composition',resourceId:typeof entry.resourceId==='string'?entry.resourceId:uid(),versionId:Math.max(1,Math.floor(num(entry.versionId,1,1,1000000000))),personalRevision:Math.floor(num(entry.personalRevision,0,0,1000000000)),source:entry.source?{resourceId:String(entry.source.resourceId).slice(0,128),versionId:Math.max(1,Math.floor(num(entry.source.versionId,1,1,1000000000)))}:null,root:clean};});}
+ if(raw.projectResources!==undefined){if(!Array.isArray(raw.projectResources))throw messageError("ui.invalidGraphicsListFormat");const ids=new Set();p.projectResources=raw.projectResources.map(entry=>{if(!entry||typeof entry.id!=='string'||ids.has(entry.id))throw messageError("ui.invalidOrDuplicateGraphicsListID");ids.add(entry.id);const clean=sanitizeTree({...project(),root:entry.root,projectResources:[]},{component:true}).root;return {id:entry.id,...(typeof entry.builtin==='string'&&BY_ID.has(entry.builtin)&&!entry.builtin.startsWith('asset_')?{builtin:entry.builtin}:{}),name:String(entry.name??clean.name).slice(0,80),...graphicAliasesField(entry.aliases),category:String(entry.category??'图形列表').slice(0,80),description:String(entry.description??'').slice(0,2000),kind:['formula','image','composition'].includes(entry.kind)?entry.kind:'composition',resourceId:typeof entry.resourceId==='string'?entry.resourceId:uid(),versionId:Math.max(1,Math.floor(num(entry.versionId,1,1,1000000000))),personalRevision:Math.floor(num(entry.personalRevision,0,0,1000000000)),source:entry.source?{resourceId:String(entry.source.resourceId).slice(0,128),versionId:Math.max(1,Math.floor(num(entry.source.versionId,1,1,1000000000)))}:null,root:clean};});}
 if(!component)p.root=canvasRoot(p.root);p.name=String(raw.name??p.name).slice(0,80);
  for(const [key,min,max] of [['width',1,4096],['height',1,4096],['columns',1,32],['depth',8,16],['seconds',.05,600],['normal',0,20]])p.output[key]=num(raw.output?.[key],p.output[key],min,max);
  for(const key of ['width','height','columns'])p.output[key]=Math.round(p.output[key]);p.output.depth=p.output.depth===16?16:8;
  p.output.normalAlgorithm=raw.output?.normalAlgorithm==='scharr'?'scharr':'sobel';for(const k of ['normalFlipX','normalFlipY','normalInvert'])p.output[k]=raw.output?.[k]===true;p.output.normalSmooth=num(raw.output?.normalSmooth,0,0,8);
- p.output.channels=Array.from({length:4},(_,i)=>Math.round(num(raw.output?.channels?.[i],p.output.channels[i],0,9)));
+ p.output.channels=Array.from({length:4},(_,i)=>Math.round(num(raw.output?.channels?.[i],p.output.channels[i],0,13)));
+ p.output.channelSources=sanitizeChannelSources(raw.output?.channelSources);
  if(/^#[0-9a-f]{6}$/i.test(raw.output?.background))p.output.background=raw.output.background;
  p.canvas.ratio=num(raw.canvas?.ratio,p.output.width/p.output.height,1/8,8);
  p.output.mode=['color','height','normal','rgba'].includes(raw.output?.mode)?raw.output.mode:'color';p.output.alpha=raw.output?.alpha!==false;p.output.exrZip=raw.output?.exrZip!==false;p.output.loopExport=raw.output?.loopExport!==false;

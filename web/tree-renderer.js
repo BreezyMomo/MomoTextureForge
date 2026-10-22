@@ -1,4 +1,6 @@
 import {NORMAL_GLSL,setNormalUniforms} from './normal-map.js';
+import {CURVES_GLSL,curveUniforms,hasChannelCurves} from './channel-curves.js';
+import {channelSourceSelection,sanitizeChannelSources} from './output-channels.js';
 import {FX_GLSL,applyPostFx} from './post-fx.js';
 import {resources} from './resource-assets.js';
 import {formulaTime} from './formula-time.js';
@@ -31,6 +33,7 @@ else if(any(lessThan(p,vec2(0)))||any(greaterThanEqual(p,vec2(1)))){c=vec4(0);h=
 vec4 blendColor(vec4 dst,vec4 src,int mode){float a=src.a+dst.a*(1.-src.a);if(mode==0)return vec4(src.rgb+dst.rgb*(1.-src.a),a);vec3 d=dst.a>0.?dst.rgb/dst.a:vec3(0),s=src.a>0.?src.rgb/src.a:vec3(0);if(mode==10)return dst*src.a;if(mode==11)return dst*(1.-src.a);vec3 b=mode==6?abs(d-s):mode==7?mix(2.*d*s,1.-2.*(1.-d)*(1.-s),step(vec3(.5),d)):mode==8?(1.-2.*s)*d*d+2.*s*d:mode==9?min(vec3(1),d/max(vec3(.00001),1.-s)):mode==1?d+s:mode==2?max(d,s):mode==3?d*s:mode==4?max(d-s,0.):1.-(1.-d)*(1.-s);return vec4((1.-src.a)*dst.rgb+(1.-dst.a)*src.rgb+src.a*dst.a*b,a);}
 float blendHeight(float d,float s,float a,int mode){if(mode==0)return s+d*(1.-a);if(mode==1)return d+s;if(mode==2)return max(d,s);if(mode==3)return mix(d,d*(a>0.?s/a:0.),a);if(mode==4)return max(d-s,0.);if(mode==6)return abs(d-s);if(mode==7)return d<.5?2.*d*s:1.-2.*(1.-d)*(1.-s);if(mode==8)return (1.-2.*s)*d*d+2.*s*d;if(mode==9)return min(1.,d/max(.00001,1.-s));if(mode==10)return d*a;if(mode==11)return d*(1.-a);return 1.-(1.-d)*(1.-s);}
 ${FX_GLSL}
+${CURVES_GLSL}
 void main(){vec4 c=vec4(0);float h=0.;
  if(operation==0){h=texture(srcHeight,uv).r;float a=clamp(h,0.,1.);c=vec4(ramp(h)*a,a);}
  if(operation==9){h=texture(srcHeight,uv).r;vec4 p=texture(srcColor,uv);if(imageLuminance==1)h=dot(p.rgb,vec3(.2126,.7152,.0722))*p.a;c=vec4((recolor==1?ramp(h):p.rgb)*p.a,p.a);}
@@ -47,15 +50,18 @@ void main(){vec4 c=vec4(0);float h=0.;
  }
  if(operation==8){c=texture(srcColor,uv);h=texture(srcHeight,uv).r;float a=max(0.,c.a-texture(dstColor,uv).a),ratio=c.a>0.?a/c.a:0.;c*=ratio;h*=ratio;}
  if(operation>=10)applyFx(c,h);
+ if(operation==16)channelCurves(c,h);
  colorOut=c;heightOut=vec4(h,c.a,0,c.a);
 }`;
 const FINAL=`#version 300 es
 precision highp float;in vec2 uv;out vec4 frag;uniform sampler2D srcColor,srcHeight;uniform int outputMode,transparent,channels[4];uniform vec3 background;uniform float strength;uniform vec2 pixel;
-float channel(int s,float v,vec3 n,float a){if(s==0)return v;if(s==1)return 1.-v;if(s==2)return n.x*.5+.5;if(s==3)return n.y*.5+.5;if(s==4)return n.z*.5+.5;if(s==5)return 0.;if(s==6)return 1.;if(s==7)return .5;if(s==9)return clamp(length(n.xy),0.,1.);return a;}
+uniform sampler2D packR,packG,packB,packA;uniform int packModes[4];
+float packed(sampler2D tex,int mode,float fallback){if(mode==0)return fallback;if(mode==6)return 0.;vec4 c=texture(tex,uv);if(mode>=7){vec3 rgb=c.a>0.?c.rgb/c.a:vec3(0);if(mode==7)return rgb.r;if(mode==8)return rgb.g;if(mode==9)return rgb.b;return dot(rgb,vec3(.2126,.7152,.0722));}if(mode==1)return dot(c.rgb,vec3(.2126,.7152,.0722));if(mode==2)return c.r;if(mode==3)return c.g;if(mode==4)return c.b;return c.a;}
+float channel(int s,float v,vec3 n,vec4 c){if(s>=10){vec3 rgb=c.a>0.?c.rgb/c.a:vec3(0);if(s==10)return rgb.r;if(s==11)return rgb.g;if(s==12)return rgb.b;return dot(rgb,vec3(.2126,.7152,.0722));}if(s==0)return v;if(s==1)return 1.-v;if(s==2)return n.x*.5+.5;if(s==3)return n.y*.5+.5;if(s==4)return n.z*.5+.5;if(s==5)return 0.;if(s==6)return 1.;if(s==7)return .5;if(s==9)return clamp(length(n.xy),0.,1.);return c.a;}
 float h(vec2 p){return texture(srcHeight,clamp(p,vec2(0),vec2(1))).r;}
 ${NORMAL_GLSL}
-void main(){vec4 c=texture(srcColor,uv);float v=h(uv);vec3 n=vec3(0,0,1);if(outputMode==2||outputMode==3)n=surfaceNormal(uv);
- if(outputMode==1)frag=vec4(vec3(v),transparent==1?c.a:1.);else if(outputMode==2)frag=vec4(n*.5+.5,1.);else if(outputMode==3)frag=vec4(channel(channels[0],v,n,c.a),channel(channels[1],v,n,c.a),channel(channels[2],v,n,c.a),channel(channels[3],v,n,c.a));else frag=vec4(transparent==1?(c.a>0.?c.rgb/c.a:vec3(0)):c.rgb+background*(1.-c.a),transparent==1?c.a:1.);
+void main(){vec4 c=texture(srcColor,uv);float v=h(uv);vec3 n=vec3(0,0,1);bool needsNormal=outputMode==2;for(int i=0;i<4;i++)if(outputMode==3&&packModes[i]==0&&((channels[i]>=2&&channels[i]<=4)||channels[i]==9))needsNormal=true;if(needsNormal)n=surfaceNormal(uv);
+ if(outputMode==1)frag=vec4(vec3(v),transparent==1?c.a:1.);else if(outputMode==2)frag=vec4(n*.5+.5,1.);else if(outputMode==3)frag=vec4(packed(packR,packModes[0],channel(channels[0],v,n,c)),packed(packG,packModes[1],channel(channels[1],v,n,c)),packed(packB,packModes[2],channel(channels[2],v,n,c)),packed(packA,packModes[3],channel(channels[3],v,n,c)));else frag=vec4(transparent==1?(c.a>0.?c.rgb/c.a:vec3(0)):c.rgb+background*(1.-c.a),transparent==1?c.a:1.);
 }`;
 function fitted(t,w,h){if(t.fit!=='contain')return [t.width,t.height];const side=Math.min(t.width*w,t.height*h);return [side/w,side/h];}
 const blendIds={over:0,add:1,max:2,multiply:3,subtract:4,screen:5,difference:6,overlay:7,softlight:8,dodge:9,mask:10,inverseMask:11};
@@ -91,13 +97,14 @@ export class TreeRenderer{
   const next=this.target(out.w,out.h,false,out.aspect);next.bounds=out.bounds;this.pass(next,{...options,source:src,dest:out});this.consumed(src);this.release(out);return next;
  }
  clearCache(){for(const t of this.cache.values())this.release(t);this.cache.clear();this.trimPool();}
- pass(target,{source=null,dest=null,mask=null,op=3,box=[.5,.5,1,1],axis=[.5,.5,0,1],repeat=false,opacity=1,blend='over',palette=['#000000','#ffffff'],recolor=false,imageLuminance=false,post=[0,1,1,0,1,0,1],inverted=false,contourStep=[0,0],table=null,count=0,inPlace=false,fxAmount=0,fxThreshold=0}={}){
+ pass(target,{source=null,dest=null,mask=null,op=3,box=[.5,.5,1,1],axis=[.5,.5,0,1],repeat=false,opacity=1,blend='over',palette=['#000000','#ffffff'],recolor=false,imageLuminance=false,post=[0,1,1,0,1,0,1],inverted=false,contourStep=[0,0],table=null,count=0,inPlace=false,fxAmount=0,fxThreshold=0,curves=null}={}){
  if(op===1)({box,axis}=boundedPlacement(box,axis,source?.bounds,target.bounds));
  else if(![0,4,5,9].includes(op))target.bounds=source?.bounds??UNIT_BOUNDS;
  const gl=this.gl,p=this.program();gl.useProgram(p);const loc=n=>this.location(p,n);gl.bindFramebuffer(gl.FRAMEBUFFER,target.fb);gl.drawBuffers([gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1]);gl.viewport(0,0,target.w,target.h);gl.disable(gl.BLEND);
  const fallback=source?.textures[0]??dest?.textures[0]??mask?.textures[0];if(!fallback)return;
  const textures=[source?.textures[0],source?.textures[1],dest?.textures[0],dest?.textures[1],mask?.textures[1],table];
  ['srcColor','srcHeight','dstColor','dstHeight','maskTex','tableTex'].forEach((name,i)=>{gl.activeTexture(gl.TEXTURE0+i);gl.bindTexture(gl.TEXTURE_2D,textures[i]??fallback);gl.uniform1i(loc(name),i);});
+ if(curves){const u=curveUniforms(curves);gl.uniform3fv(loc('curvePoints[0]'),u.data);gl.uniform1iv(loc('curveCounts[0]'),u.counts);}
  gl.uniform1f(loc('fxAmount'),fxAmount);gl.uniform1f(loc('fxThreshold'),fxThreshold);const [bw,bh]=boundsSize(target.bounds),metricAspect=target.aspect*bw/bh;gl.uniform2fv(loc('physicalMetric'),[metricAspect,1]);gl.uniform2fv(loc('contourStep'),contourStep);gl.uniform1i(loc('inverted'),+inverted);gl.uniform4fv(loc('postA'),post.slice(0,4));gl.uniform3fv(loc('postB'),post.slice(4));const stops=palette.stops??[];gl.uniform1i(loc('stopCount'),stops.length);const stopData=new Float32Array(32);stops.forEach((s,i)=>stopData.set([...rgb(s.color),s.position],i*4));gl.uniform4fv(loc('stops[0]'),stopData);
  gl.uniform1i(loc('imageLuminance'),+imageLuminance);gl.uniform1i(loc('hasDest'),dest?1:0);gl.uniform1i(loc('operation'),op);gl.uniform1i(loc('repeatNode'),+repeat);gl.uniform1i(loc('blendMode'),blendIds[blend]);gl.uniform1i(loc('recolor'),+recolor);gl.uniform1i(loc('recordCount'),count);gl.uniform1f(loc('opacity'),opacity);gl.uniform4fv(loc('placement'),box);gl.uniform4fv(loc('pivotTurn'),axis);gl.uniform3fv(loc('lowColor'),rgb(palette[0]));gl.uniform3fv(loc('highColor'),rgb(palette[1]));if(inPlace){gl.enable(gl.BLEND);gl.blendEquation(gl.FUNC_ADD);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);if(!repeat){const c=Math.cos(axis[2]),s=Math.sin(axis[2]),corners=[0,1].flatMap(x=>[0,1].map(y=>{const dx=(x-axis[0])*axis[3]*box[2],dy=(y-axis[1])*box[3];return [box[0]+c*dx-s*dy/metricAspect,box[1]+s*dx*metricAspect+c*dy];})),x0=Math.max(0,Math.floor(Math.min(...corners.map(p=>p[0]))*target.w)-2),y0=Math.max(0,Math.floor(Math.min(...corners.map(p=>p[1]))*target.h)-2),x1=Math.min(target.w,Math.ceil(Math.max(...corners.map(p=>p[0]))*target.w)+2),y1=Math.min(target.h,Math.ceil(Math.max(...corners.map(p=>p[1]))*target.h)+2);gl.enable(gl.SCISSOR_TEST);gl.scissor(x0,y0,Math.max(0,x1-x0),Math.max(0,y1-y0));}}gl.drawArrays(gl.TRIANGLES,0,3);
  const err=gl.getError();gl.disable(gl.BLEND);gl.disable(gl.SCISSOR_TEST);if(err)throw Error('节点渲染错误 '+err);
@@ -107,7 +114,7 @@ export class TreeRenderer{
  if(repeat){const copies=[];for(const r of records){const p=recordPlacement(r);for(const box of periodicCopies(p.box,p.axis,source,aspect,limit-copies.length))copies.push({...r,x:box[0],y:box[1]});}records=copies;}
  const gl=this.gl,tex=gl.createTexture(),data=new Float32Array(Math.max(1,records.length)*12);records.forEach((r,i)=>{const p=boundedPlacement([r.x,r.y,r.width,r.height],[.5,.5,r.turn,r.mirror??1],source,target);data.set([...p.box,...p.axis,r.opacity??1,0,0,0],i*12);});gl.bindTexture(gl.TEXTURE_2D,tex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA32F,Math.max(3,records.length*3),1,0,gl.RGBA,gl.FLOAT,data);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);return {texture:tex,count:records.length};}
  visibleFootprint(n,progress){
-  this.footprintCache??=new Map();const key=JSON.stringify([n,progress,this.formulaSeconds??0]);
+  this.footprintCache??=new Map();const key=JSON.stringify([this.packSelection?.id??null,n,progress,this.formulaSeconds??0]);
   if(this.footprintCache.has(key))return this.footprintCache.get(key);
   const quality=this.quality,limit=this.sampleLimit;let src;
   try{
@@ -121,6 +128,7 @@ export class TreeRenderer{
   }finally{this.release(src);this.quality=quality;this.sampleLimit=limit;}
  }
  records(n,time,{original=n,aspect=1}={}){
+  if(this.packSelection){const selection=this.packSelection;this.packSelection=null;try{return this.records(n,time,{original,aspect});}finally{this.packSelection=selection;}}
   if(n.arrange[0]===14){
    if(n.kind!=='group'||!n.children.length)throw Error('沿轮廓排列需要组合：第一个子节点为轮廓来源，后续子节点为装饰');
    this.layoutCache??=new Map();const key='outline:'+JSON.stringify([n,time,this.formulaSeconds,aspect]);if(this.layoutCache.has(key))return this.layoutCache.get(key);
@@ -159,7 +167,7 @@ export class TreeRenderer{
   return need?neededBounds(range,need):range;
  }
  let bounds=UNIT_BOUNDS;
- for(const child of n.children){const e=evaluateNode(child,progress);if(!e.visible)continue;const p=transformPlacement(e.node.transform,aspect),childAspect=aspect*p.box[2]/p.box[3],request=need?transformBounds(need,p.box,p.axis,aspect,true):null,range=this.measureNode(child,progress,childAspect,request);bounds=unionBounds(bounds,transformBounds(range,p.box,p.axis,aspect));}
+ for(const child of n.children){if(this.packSelection&&!this.packSelection.ids.has(child.id))continue;const e=evaluateNode(child,progress);if(!e.visible)continue;const p=transformPlacement(e.node.transform,aspect),childAspect=aspect*p.box[2]/p.box[3],request=need?transformBounds(need,p.box,p.axis,aspect,true):null,range=this.measureNode(child,progress,childAspect,request);bounds=unionBounds(bounds,transformBounds(range,p.box,p.axis,aspect));}
  return need?neededBounds(bounds,need):bounds;
  }
  measureNode(original,parentTime,aspect=1,need=UNIT_BOUNDS){
@@ -193,15 +201,15 @@ export class TreeRenderer{
   const s=defaults();s.layers[0]=newLayer(n.type);s.layers[0].params=n.params;s.layers[0].uv=n.uv;s.layers[0].polar=n.polar;s.output.mode=1;s.output.seamless=CATALOG.find(p=>p.id===n.type)?.definition.renderPadding?false:(n.boundary==='repeat');s.output.seamMode=n.seamMode;s.output.seamBlend=n.seamBlend;s.animation.duration=1;s.animation.speed=1;
   const raw=this.base.draw(s,sw,sh,{time:progress,formulaTime:formulaTime(n,this.formulaSeconds),float:this.float,retainTexture:true,preserveSeamlessScale:true,treeEdges:true,sampleOffset:design.bounds.slice(0,2),sampleScale:boundsSize(design.bounds)});let vector=null;const image=(resources.get(n.type)?.kind==='image'&&n.params[0]<.5&&n.color.mode==='inherit')||!!CATALOG.find(p=>p.id===n.type)?.definition.generator;try{if(image||CATALOG.find(p=>p.id===n.type)?.vector){s.output.mode=0;vector=this.base.draw(s,sw,sh,{time:progress,formulaTime:formulaTime(n,this.formulaSeconds),float:this.float,retainTexture:true,preserveSeamlessScale:true,treeEdges:true,sampleOffset:design.bounds.slice(0,2),sampleScale:boundsSize(design.bounds)});}this.pass(design,{source:{textures:[vector?.texture??raw.texture,raw.texture]},op:image?9:vector?5:0,palette,imageLuminance:imageResource&&n.params[0]<.5&&n.color.mode==='inherit',recolor:!!CATALOG.find(p=>p.id===n.type)?.definition.generator&&['own','remap'].includes(n.color.mode)});}finally{this.gl.deleteTexture(raw.texture);if(vector)this.gl.deleteTexture(vector.texture);}if(framed){out=this.composite(out,design,{op:1,box:[.5,.5,cw,ch],repeat:(n.boundary==='repeat')});this.release(design);}return out;
  }
- for(const child of n.children){const e=evaluateNode(child,progress);if(!e.visible)continue;const t=e.node.transform,[cw,ch]=fitted(t,aspect,1);
+ for(const child of n.children){if(this.packSelection&&!this.packSelection.ids.has(child.id))continue;const e=evaluateNode(child,progress);if(!e.visible)continue;const t=e.node.transform,[cw,ch]=fitted(t,aspect,1);
   const src=this.renderNode(child,progress,Math.max(1,Math.ceil(w*cw)),Math.max(1,Math.ceil(h*ch)),palette,aspect*cw/ch,n.boundary==='repeat'?null:transformBounds(out.bounds,[t.x,t.y,cw,ch],[t.pivotX,t.pivotY,t.rotation*Math.PI/180,t.mirrorX?-1:1],aspect,true));
-  out=this.composite(out,src,{op:1,box:[t.x,t.y,cw,ch],axis:[t.pivotX,t.pivotY,t.rotation*Math.PI/180,t.mirrorX?-1:1],opacity:e.node.opacity,blend:e.node.blend,repeat:(n.boundary==='repeat')});
+  out=this.composite(out,src,{op:1,box:[t.x,t.y,cw,ch],axis:[t.pivotX,t.pivotY,t.rotation*Math.PI/180,t.mirrorX?-1:1],opacity:e.node.opacity,blend:this.packSelection?.path.has(child.id)?'over':e.node.blend,repeat:(n.boundary==='repeat')});
  }
  return out;
  }
  // Only the arranged source is retained here; node effects and placement remain separate.
  cachedContent(n,progress,w,h,palette,aspect=w/h,need=UNIT_BOUNDS){
- const key='content:'+JSON.stringify([this.formulaSeconds,this.quality,n.id,n.kind,n.type,n.imageFit,n.boundary,need,n.params,n.shapeClock,n.uv,n.polar,(n.boundary==='repeat'),n.seamMode,n.seamBlend,n.children,progress,w,h,aspect,palette,palette.stops]);
+ const key='content:'+JSON.stringify([this.packSelection?.id??null,this.formulaSeconds,this.quality,n.id,n.kind,n.type,n.imageFit,n.boundary,need,n.params,n.shapeClock,n.uv,n.polar,(n.boundary==='repeat'),n.seamMode,n.seamBlend,n.children,progress,w,h,aspect,palette,palette.stops]);
  if(this.streaming){
   this.streamSources??=new Map();if(this.streamSources.has(key)){const t=this.streamSources.get(key);this.streamSources.delete(key);this.streamSources.set(key,t);return t;}
   const out=this.content(n,progress,w,h,palette,aspect,need);out.streamHeld=true;this.streamSources.set(key,out);
@@ -215,7 +223,7 @@ export class TreeRenderer{
  if(w>4096||h>4096||w>this.base.maxSize||h>this.base.maxSize)throw Error('节点采样尺寸超过显卡或4096上限');
  const e=evaluateNode(original,parentTime),n=e.node,palette=['own','remap'].includes(n.color.mode)?Object.assign([n.color.fill==='solid'?n.color.high:n.color.low,n.color.high],{stops:n.color.fill==='solid'?undefined:n.color.stops}):inherited;
  const animated=x=>Object.keys(x.tracks).length||x.uv[4]!==0||x.timing.outside==='hide'||x.timing.before==='hide'||x.timing.after==='hide'||x.instancePhase||x.kind==='shape'&&x.shapeClock?.follow!==false&&CATALOG.find(p=>p.id===x.type)?.usesTime||x.children.some(animated)||x.mask&&animated(x.mask);
- const key=JSON.stringify([this.quality,original,animated(original)?[e.progress,this.formulaSeconds]:0,e.visible,w,h,aspect,need,palette,palette.stops]);this.usedKeys.add(key);if(this.cache.has(key)){const t=this.cache.get(key);this.reclaimable.delete(t);this.cache.delete(key);this.cache.set(key,t);for(const [id,count]of t.layoutCounts??[])this.lastCounts.set(id,count);return t;}
+ const key=JSON.stringify([this.packSelection?.id??null,this.quality,original,animated(original)?[e.progress,this.formulaSeconds]:0,e.visible,w,h,aspect,need,palette,palette.stops]);this.usedKeys.add(key);if(this.cache.has(key)){const t=this.cache.get(key);this.reclaimable.delete(t);this.cache.delete(key);this.cache.set(key,t);for(const [id,count]of t.layoutCounts??[])this.lastCounts.set(id,count);return t;}
  if(!e.visible){const blank=this.target(w,h,false,aspect);if(!this.streaming)this.cache.set(key,blank);return blank;}
  const records=this.records(n,e.progress,{original,aspect});this.lastCounts.set(n.id,records.length);const outputBounds=this.nodeBounds(n,e.progress,aspect,need,original,parentTime,records);let out;
  if(n.arrange[0]){
@@ -236,6 +244,7 @@ export class TreeRenderer{
  if(n.mask){const t=evaluateNode(n.mask,e.progress).node,[mw,mh]=fitted(t.transform,aspect,1),m=this.renderNode(n.mask,e.progress,w,h,palette,aspect*mw/mh,transformBounds(out.bounds,[t.transform.x,t.transform.y,mw,mh],[t.transform.pivotX,t.transform.pivotY,t.transform.rotation*Math.PI/180,t.transform.mirrorX?-1:1],aspect,true)),placed=this.target(out.w,out.h,false,out.aspect);placed.bounds=out.bounds;this.pass(placed,{source:m,op:1,box:[t.transform.x,t.transform.y,...fitted(t.transform,aspect,1)],axis:[t.transform.pivotX,t.transform.pivotY,t.transform.rotation*Math.PI/180,t.transform.mirrorX?-1:1],opacity:t.opacity});this.consumed(m);const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{source:out,mask:placed,op:2,inverted:n.maskInvert});this.release(out);this.release(placed);out=next;}
  if(n.color.mode==='remap'){const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{source:out,op:3,recolor:true,palette});this.release(out);out=next;}
  if(n.invert||n.post.some((v,i)=>v!==[0,1,1,0,1,0,1][i])){const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{source:out,op:6,post:n.post,inverted:n.invert,palette,recolor:n.color.mode==='remap'||n.kind==='shape'&&!((resources.get(n.type)?.kind==='image'&&n.params[0]<.5&&n.color.mode==='inherit')||(CATALOG.find(p=>p.id===n.type)?.definition.generator&&['inherit','preserve'].includes(n.color.mode)))});this.release(out);out=next;}
+ if(hasChannelCurves(n)){const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{source:out,op:16,curves:n.curves});this.release(out);out=next;}
  if(n.contour?.mode!=='none'&&n.contour?.radius>0){
   const original=out,erode=n.contour.mode==='erode';
   for(const step of contourPasses(n.contour.radius*Math.min(out.w/boundsSize(out.bounds)[0],out.h/boundsSize(out.bounds)[1])/Math.min(out.w,out.h),out.w,out.h)){const next=this.target(out.w,out.h,false,out.aspect);this.pass(next,{source:out,op:7,contourStep:step,inverted:erode,repeat:(n.boundary==='repeat')});if(out!==original)this.release(out);out=next;}
@@ -252,16 +261,32 @@ export class TreeRenderer{
  this.formulaSeconds=formulaSeconds;const start=performance.now();this.quality=quality===1?1:2;this.sampleLimit=Math.min(4096,this.base.maxSize,Math.max(w,h)*2);this.operations=0;this.measureOperations=0;this.measureCache=new Map();if(w*h>16777216)throw Error('输出超过像素预算');
  // Evict between frames, never while ancestors reference cached descendants.
  this.streaming=stream;if(stream)this.clearCache();this.overBlend??=!this.float||!!this.gl.getExtension('EXT_float_blend');
- this.usedKeys.clear();this.reclaimable.clear();this.budget=stream?Infinity:384*1024*1024;
+ this.usedKeys.clear();this.reclaimable.clear();this.budget=stream?(project.output.mode==='rgba'&&sanitizeChannelSources(project.output.channelSources).some(Boolean)?768*1024*1024:Infinity):384*1024*1024;
  try{
   let root=canvasRoot(project.root),parentTime=time;if(solo){const entry=find(root,solo);if(entry){root=entry.node.id===project.root.id?canvasRoot(entry.node):entry.node;parentTime=entry.parent?nodeClock(canvasRoot(project.root),entry.parent.id,time).progress:time;}}
   const aspect=project.canvas.ratio,e=evaluateNode(root,parentTime),t=e.node.transform,[rw,rh]=fitted(t,aspect,1),placement=transformPlacement(t,aspect),src=this.renderNode(root,parentTime,w,h,undefined,aspect*rw/rh,transformBounds(UNIT_BOUNDS,placement.box,placement.axis,aspect,true));this.clearStreamSources();const identity=stream&&unitBounds(src.bounds)&&t.x===.5&&t.y===.5&&t.width===1&&t.height===1&&t.pivotX===.5&&t.pivotY===.5&&t.rotation===0&&!t.mirrorX&&e.node.opacity===1,placed=identity?src:this.target(w,h,false,aspect);
   if(!identity){this.pass(placed,{source:src,op:1,box:[t.x,t.y,...fitted(t,aspect,1)],axis:[t.pivotX,t.pivotY,t.rotation*Math.PI/180,t.mirrorX?-1:1],opacity:e.node.opacity});this.consumed(src);}
+  const packedSources=new Map(),channelSources=sanitizeChannelSources(project.output.channelSources);
+  if(project.output.mode==='rgba')for(const setting of channelSources){
+   if(!setting||setting.nodeId===project.root.id||packedSources.has(setting.nodeId))continue;
+   const isolated=canvasRoot(project.root),selection=channelSourceSelection(isolated,setting.nodeId);
+   if(!selection){packedSources.set(setting.nodeId,null);continue;}
+   let progress=time,visible=true,phased=false;for(const ancestor of selection.nodes){
+    const e=evaluateNode(ancestor,progress);progress=e.progress;
+    const fixedHidden=ancestor.enabled===false&&!(ancestor.animationEnabled!==false&&ancestor.tracks?.enabled&&!ancestor.tracks.enabled.muted);
+    visible&&=!fixedHidden&&(phased||e.visible);
+    if(e.node.instancePhase&&e.node.arrange[0])phased=true;
+   }
+   if(!visible){packedSources.set(setting.nodeId,null);continue;}
+   this.packSelection=selection;const source=this.renderNode(isolated,time,w,h,undefined,aspect,UNIT_BOUNDS);this.packSelection=null;const target=this.target(w,h,false,aspect);
+   this.pass(target,{source,op:1});this.consumed(source);this.clearStreamSources();packedSources.set(setting.nodeId,target);
+  }
   const gl=this.gl,p=this.program(true),loc=n=>this.location(p,n);if(!(read&&stream)){if(this.canvas.width!==w)this.canvas.width=w;if(this.canvas.height!==h)this.canvas.height=h;}let target=null;if(read)target=this.target(w,h,true,aspect);gl.bindFramebuffer(gl.FRAMEBUFFER,target?.fb??null);gl.drawBuffers(target?[gl.COLOR_ATTACHMENT0]:[gl.BACK]);gl.useProgram(p);gl.viewport(0,0,w,h);
-  placed.textures.forEach((tex,i)=>{gl.activeTexture(gl.TEXTURE0+i);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(loc(i?'srcHeight':'srcColor'),i);});gl.uniform1i(loc('outputMode'),['color','height','normal','rgba'].indexOf(project.output.mode));gl.uniform1i(loc('transparent'),+project.output.alpha);gl.uniform1iv(loc('channels'),project.output.channels);gl.uniform3fv(loc('background'),rgb(project.output.background??'#000000'));gl.uniform1f(loc('strength'),project.output.normal);setNormalUniforms(gl,loc,project.output);gl.uniform2f(loc('pixel'),1/w,1/h);gl.drawArrays(gl.TRIANGLES,0,3);
+  placed.textures.forEach((tex,i)=>{gl.activeTexture(gl.TEXTURE0+i);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(loc(i?'srcHeight':'srcColor'),i);});const modes=new Int32Array(4);channelSources.forEach((setting,i)=>{const target=setting?.nodeId===project.root.id?placed:packedSources.get(setting?.nodeId);modes[i]=!setting?0:!target?6:({luminance:1,red:2,green:3,blue:4,alpha:5,height:2,colorRed:7,colorGreen:8,colorBlue:9,colorLuminance:10})[setting.component];gl.activeTexture(gl.TEXTURE0+2+i);gl.bindTexture(gl.TEXTURE_2D,target?.textures[setting?.component==='height'?1:0]??placed.textures[0]);gl.uniform1i(loc(['packR','packG','packB','packA'][i]),2+i);});gl.uniform1iv(loc('packModes[0]'),modes);
+  gl.uniform1i(loc('outputMode'),['color','height','normal','rgba'].indexOf(project.output.mode));gl.uniform1i(loc('transparent'),+project.output.alpha);gl.uniform1iv(loc('channels'),project.output.channels);gl.uniform3fv(loc('background'),rgb(project.output.background??'#000000'));gl.uniform1f(loc('strength'),project.output.normal);setNormalUniforms(gl,loc,project.output);gl.uniform2f(loc('pixel'),1/w,1/h);gl.drawArrays(gl.TRIANGLES,0,3);
   let pixels=null;if(read){const raw=this.float?new Float32Array(w*h*4):new Uint8Array(w*h*4);gl.readBuffer(gl.COLOR_ATTACHMENT0);gl.readPixels(0,0,w,h,gl.RGBA,this.float?gl.FLOAT:gl.UNSIGNED_BYTE,raw);if(stream&&this.float){pixels=raw;const row=new Float32Array(w*4);for(let y=0;y<Math.floor(h/2);y++){const a=y*w*4,b=(h-y-1)*w*4;row.set(raw.subarray(a,a+w*4));raw.copyWithin(a,b,b+w*4);raw.set(row,b);}}else{pixels=new Float32Array(raw.length);for(let y=0;y<h;y++)for(let x=0;x<w*4;x++)pixels[y*w*4+x]=raw[(h-y-1)*w*4+x]/(this.float?1:255);}}
-  if(gl.getError())throw Error('浏览器或显卡未能完成当前尺寸的输出，请关闭其他图形程序后重试');this.release(target);this.release(placed);this.lastMs=performance.now()-start;return pixels;
- }catch(error){this.clearCache();throw error;}finally{this.clearStreamSources();this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,null);for(const [key,t]of this.cache)if(!this.usedKeys.has(key)){this.release(t);this.cache.delete(key);}const cached=new Set(this.cache.values());for(const t of [...this.live])if(!cached.has(t))this.release(t);this.trimPool(128*1024*1024);while(this.allocated>128*1024*1024&&this.cache.size){const key=this.cache.keys().next().value;this.release(this.cache.get(key));this.cache.delete(key);this.trimPool(128*1024*1024);}this.trimPool(128*1024*1024);this.streaming=false;this.budget=384*1024*1024;}
+  if(gl.getError())throw Error('浏览器或显卡未能完成当前尺寸的输出，请关闭其他图形程序后重试');for(const source of packedSources.values())this.release(source);this.release(target);this.release(placed);this.lastMs=performance.now()-start;return pixels;
+ }catch(error){this.clearCache();throw error;}finally{this.packSelection=null;this.clearStreamSources();this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,null);for(const [key,t]of this.cache)if(!this.usedKeys.has(key)){this.release(t);this.cache.delete(key);}const cached=new Set(this.cache.values());for(const t of [...this.live])if(!cached.has(t))this.release(t);this.trimPool(128*1024*1024);while(this.allocated>128*1024*1024&&this.cache.size){const key=this.cache.keys().next().value;this.release(this.cache.get(key));this.cache.delete(key);this.trimPool(128*1024*1024);}this.trimPool(128*1024*1024);this.streaming=false;this.budget=384*1024*1024;}
  }
  destroy(){this.base.generators?.destroy();this.footprintCache?.clear();this.layoutCache?.clear();for(const tex of this.base.assetTextures?.values()??[])this.gl.deleteTexture(tex);this.clearCache();for(const t of [...this.live])this.release(t);this.trimPool();this.uniforms.clear();for(const p of this.programs.values())this.gl.deleteProgram(p);for(const p of this.base.programs.values())this.gl.deleteProgram(p.p);}
 }

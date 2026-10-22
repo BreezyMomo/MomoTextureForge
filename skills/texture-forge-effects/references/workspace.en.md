@@ -10,6 +10,10 @@
 - Default left panels contain nodes and reusable graphics. The center holds preview/tools/playback. The inspector offers Shape, Color, Transform / Layout, Animation and Composite for single or batch editing; no selection means no node settings.
 - Preview actions save selection/canvas to the library, save/update list copies, and toggle solo. Similar names have different scopes.
 
+Errors remain in the upper-right notification area until dismissed; later success messages do not replace them. Older lists with retired graphics or missing dependencies are backed up, with unreadable entries set aside and other resources restored. The notification downloads original records and currently available dependencies. This backup is not a formal resource ZIP. Do not advise clearing browser storage or replacing unavailable graphics with unrelated ones.
+
+Graphics list Resource type / Graphic categories are multiselect chips. Options are OR within a group; both groups combine with search. All clears only its group, as does deselecting its last option. Categories come from built-in and personal list entries. Language changes retain selection without modifying projects or resources.
+
 ## Custom panel layouts
 
 Dock the node tree, graphics list, canvas, inspector and timeline independently. Drag a title tab to an edge for a split or center for merged tabs. Drag separators to resize.
@@ -33,6 +37,8 @@ Examples open editable independent canvases, with construction descriptions. Ini
 Add directly to canvas uses the card's selected version, creates an independent selected node and closes the library. Undo/redo and project dependencies are retained. It does not modify list copies. Add to graphics list separately for reuse. Remote packs download on demand.
 
 Search/filter library names/aliases/categories/tags and sources/types. Select current results, batch-add or export selected resources. Higher-version updates are scoped, never global instance replacements. Identity has resource ID, formal version and personal revision. Explicit list updates increment personal revision; publication increments formal version and resets the publishing copy. Do not hand-edit IDs to bypass content conflicts.
+
+Batch add shows progress and the current resource name, then saves once. Cancel keeps completed resources; unprocessed or failed items remain selected for retry. The whole addition can be undone. Batch add never confirms version updates automatically.
 
 Create resource offers Image/Import files/Formula/Generator. Export resources includes dependencies, not just screenshots. Generator supports custom GLSL/multipass JSON. Built-in edits save copies; custom editors can update their originals. Explain deletion scopes and let the user act.
 
@@ -104,3 +110,7 @@ Select Chinese/English directly in the toolbar. Codes/types/order cannot be edit
 The preference also covers library, previews/export, timeline, layouts, examples and help. User project/node names/code remain untouched. Default graphic names remain data; displayed names resolve resource aliases rather than UI catalogs. Use real names, not UI IDs such as `menu.file`, when entering aliases.
 
 Multilingual graphic names are edited beside default names with fixed choices, shared by built-ins/custom resources. Library/list/remote indexes display selected-language-first, then default, and search all aliases/IDs. JSON/ZIP preserve metadata; composition publishing/list rename support it. New nodes use the then-current display name, then persist independently.
+
+The graphics list automatically receives all built-in graphics on first initialization. Existing browsers receive missing built-ins once on upgrade, preserving existing resources, versions and personal edits. Built-ins are deduplicated by resource identity. Later intentional removals, including an empty list, stay removed after refresh. New/open canvases continue sharing this list; initialization does not draw every built-in on the canvas.
+
+Thumbnail grids automatically add or remove columns based on available panel width, with a minimum card width of about 120px. Widen the panel for three, four or more columns; narrow panels fall back to one. View → List remains a single column.

@@ -50,7 +50,7 @@ import {uiText} from './ui-language.js';
     }else{
       await startupStage(uiText('ui.readingGraphicsAndLocalResources'));
       const treeStyle=document.createElement('style');treeStyle.dataset.treeStyle='true';document.head.append(treeStyle);const {restoreAssets}=await import('./resource-assets.js');await restoreAssets();
-      await startupStage(uiText('ui.preparingEditor'));await import('./tree-app.js');
+      await startupStage(uiText('ui.preparingEditor'));await (await import('./tree-app.js')).ready;
     }
     await completeStartup();
   }catch(error){
