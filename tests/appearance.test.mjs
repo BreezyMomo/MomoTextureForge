@@ -11,7 +11,7 @@ test('appearance restores only supported themes and literal six-digit colors',()
 
 test('custom colors retain readable button and accent text across every theme',()=>{
  for(const theme of ['classic','graphite','light'])for(const accent of ['#000000','#ffffff','#ffff00','#0000ff','#ff0000','#808080','#dfae72']){
-  const p=appearancePalette({theme,accent}),panel={classic:'#1e2229',graphite:'#262729',light:'#ffffff'}[theme];
+  const p=appearancePalette({theme,accent}),panel={classic:'#1e2025',graphite:'#262729',light:'#ffffff'}[theme];
   assert.ok(colorContrast(p.accent,p.onAccent)>=4.5,theme+' '+accent+' button');
   assert.ok(colorContrast(p.hover,p.onAccent)>=4.5,theme+' '+accent+' hover');
   assert.ok(colorContrast(p.accentText,panel)>=4.5,theme+' '+accent+' text');

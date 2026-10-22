@@ -1894,12 +1894,12 @@
   "appearance.storageUnavailable": "Browser preferences could not be saved. You can still preview colors or cancel to restore your appearance.",
   "appearance.style": "Interface style",
   "appearance.density": "Density",
-  "appearance.standard": "Standard",
+  "appearance.standard": "Refined",
   "appearance.minimal": "Minimal",
   "appearance.soft": "Soft",
   "appearance.compact": "Compact",
   "appearance.comfortable": "Comfortable",
-  "appearance.standardDescription": "Fine borders and small corners keep module groups clear.",
+  "appearance.standardDescription": "Fine borders, layered surfaces and subtle shadows keep the workspace compact and clear.",
   "appearance.minimalDescription": "Quieter module borders, organized with separators and spacing.",
   "appearance.softDescription": "Rounder controls and panels with gentle surface hierarchy."
 }

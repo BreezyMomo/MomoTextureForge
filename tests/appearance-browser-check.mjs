@@ -20,9 +20,11 @@ try{
  await page.locator('[role=treeitem]').first().click();
  const snapshot=()=>page.evaluate(()=>({storage:Object.fromEntries(Object.entries(localStorage).filter(([key])=>key!=='momo-texture-appearance:v1')),hash:location.hash,undo:document.querySelector('#undo').disabled,redo:document.querySelector('#redo').disabled,pixels:document.querySelector('#tree-canvas').toDataURL(),guides:getComputedStyle(document.querySelector('#tree-preview-surface'),'::after').borderColor}));
  const before=await snapshot(),appearance=page.locator('#appearance-settings');
+ assert.equal(await page.locator('html').getAttribute('data-interface-style'),'standard');
+ assert.notEqual(await page.locator('.dock-stack').first().evaluate(e=>getComputedStyle(e).boxShadow),'none');
  const open=async()=>{await appearance.click();await page.locator('.appearance-dialog').waitFor();};
  const theme=page.locator('#appearance-theme');
- await open();await theme.selectOption('light');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
+ await open();assert.equal(await page.locator('#appearance-style option[value=standard]').innerText(),'精致');assert.notEqual(await page.locator('.appearance-dialog').evaluate(e=>getComputedStyle(e).boxShadow),'none');await theme.selectOption('light');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
  assert.equal(await page.locator('.appearance-dialog').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
  await page.locator('#appearance-hex').fill('#ffff00');await page.locator('#appearance-hex').dispatchEvent('input');
  await page.locator('[data-save]').click();assert.equal(await page.locator('.appearance-dialog').count(),0);
@@ -37,7 +39,7 @@ try{
  await open();
  for(const themeId of ['classic','graphite','light']){
   await theme.selectOption(themeId);
-  for(const [styleId,radius]of [['standard','5px'],['minimal','2px'],['soft','8px']]){
+  for(const [styleId,radius]of [['standard','6px'],['minimal','2px'],['soft','8px']]){
    await style.selectOption(styleId);
    for(const densityId of ['compact','comfortable']){
     await density.selectOption(densityId);
@@ -45,6 +47,8 @@ try{
     assert.equal(await page.locator('#appearance-hex').evaluate(e=>getComputedStyle(e).borderRadius),radius);
     assert.equal(await page.locator('.inspector-module').first().evaluate(e=>getComputedStyle(e).borderLeftWidth),styleId==='minimal'?'0px':'1px');
     assert.equal(await page.locator('.inspector-module-body').first().evaluate(e=>getComputedStyle(e).paddingTop),densityId==='compact'?'9px':'14px');
+    assert.equal(await page.locator('.dock-stack').first().evaluate(e=>getComputedStyle(e).boxShadow==='none'),styleId==='minimal');
+    assert.equal(await page.locator('.tree-visibility').first().evaluate(e=>getComputedStyle(e).backgroundColor),'rgba(0, 0, 0, 0)');
     assert.deepEqual(await projectSnapshot(),stable);
    }
   }
@@ -57,7 +61,7 @@ try{
   await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-style-'+styleId+'.png',output))});
  }
  await open();await density.selectOption('compact');await theme.selectOption('graphite');assert.equal(await style.inputValue(),'soft');assert.equal(await density.inputValue(),'compact');await page.keyboard.press('Escape');assert.equal(await page.locator('html').getAttribute('data-density'),'comfortable');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
- await page.locator('#language-settings').selectOption('en');await open();assert.equal(await page.locator('#appearance-title').innerText(),'Appearance');assert.equal(await theme.locator('option').count(),4);await theme.selectOption('graphite');await page.locator('[data-save]').click();
+ await page.locator('#language-settings').selectOption('en');await open();assert.equal(await page.locator('#appearance-title').innerText(),'Appearance');assert.equal(await page.locator('#appearance-style option[value=standard]').innerText(),'Refined');assert.equal(await theme.locator('option').count(),4);await theme.selectOption('graphite');await page.locator('[data-save]').click();
  await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-graphite.png',output))});
  for(const width of [1600,1100,768]){
   await page.setViewportSize({width,height:960});
