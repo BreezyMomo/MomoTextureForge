@@ -18,7 +18,10 @@ try{
   await page.route('**/*',async route=>{
    const request=route.request();
    if(request.url().startsWith('https://hm.baidu.com/')){
-    requests.push({url:request.url(),headers:await request.allHeaders()});
+    const headers=await request.allHeaders();requests.push({url:request.url(),headers});
+    // Baidu can reply 200 with no code when the script omits its Referer.
+    // Model that response so merely inserting a script cannot pass this check.
+    if(headers.referer!==new URL(url).origin+'/')return route.fulfill({contentType:'text/plain',body:''});
     return route.fulfill({contentType:'text/javascript',body:'window.__capturedAnalytics=JSON.parse(JSON.stringify(window._hmt));'});
    }
    if(request.isNavigationRequest())return route.fulfill({contentType:'text/html',body:html});
@@ -29,7 +32,8 @@ try{
    await page.waitForFunction(()=>window.__capturedAnalytics);
    const queue=await page.evaluate(()=>window.__capturedAnalytics);
    assert.equal(requests.length,1);assert.equal(requests[0].url,'https://hm.baidu.com/hm.js?'+id);
-   assert.equal(requests[0].headers.referer,undefined);
+   assert.equal(requests[0].headers.referer,new URL(url).origin+'/');
+   assert.doesNotMatch(requests[0].headers.referer,/PRIVATE|sharecode|tree=|token=/);
    assert.deepEqual(queue.find(x=>x[0]==='_trackPageview'),['_trackPageview',path]);
    assert.doesNotMatch(JSON.stringify(queue),/PRIVATE|sharecode|tree=/);
   }else{
@@ -43,5 +47,5 @@ try{
  await blocked.goto('https://momo-texture-forge.app.workbuddy.host/');
  await blocked.waitForFunction(()=>document.documentElement.dataset.ready==='true');
  assert.equal(await blocked.locator('#open-graphics-library').count(),1);
- console.log('Analytics browser checks passed: host isolation, CSP, sanitized PV, no script Referer, offline isolation, blocked tracker does not block editor.');
+ console.log('Analytics browser checks passed: host isolation, CSP, sanitized PV, origin-only script Referer, offline isolation, blocked tracker does not block editor.');
 }finally{await browser.close();}

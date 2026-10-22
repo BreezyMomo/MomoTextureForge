@@ -14,7 +14,7 @@ test('one sanitized pageview, no automatic events, no project parameters or refe
  assert.equal(startSiteAnalytics(win,doc),true);
  assert.equal(startSiteAnalytics(win,doc),false);
  assert.deepEqual(win._hmt,[['_setAutoPageview',false],['_setAutoEventTracking',false],['_setReferrerOverride','https://example.com/'],['_trackPageview','/']]);
- assert.equal(scripts.length,1);assert.equal(scripts[0].referrerPolicy,'no-referrer');assert.equal(scripts[0].async,true);
+ assert.equal(scripts.length,1);assert.equal(scripts[0].referrerPolicy,'origin');assert.equal(scripts[0].async,true);
  assert.equal(scripts[0].src,'https://hm.baidu.com/hm.js?a22e68093f1a42a8cbfa480f7425636f');
  assert.doesNotMatch(JSON.stringify([win._hmt,scripts]),/SECRET|PRIVATE|private-path/);
 });

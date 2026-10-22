@@ -28,7 +28,9 @@ export function startSiteAnalytics(win=window,doc=document){
   queue.push(['_trackPageview',target.path]);
   const script=doc.createElement('script');
   script.id='momo-site-analytics';script.async=true;
-  script.referrerPolicy='no-referrer';
+  // Baidu returns an empty 200 response without a Referer. Send only the
+  // origin so shared canvas data, tokens and URL paths remain private.
+  script.referrerPolicy='origin';
   script.src='https://hm.baidu.com/hm.js?'+target.id;
   doc.head.append(script);
   return true;
