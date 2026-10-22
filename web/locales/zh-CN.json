@@ -1845,5 +1845,17 @@
   "nodeTree.invalidGroupTarget": "无法在此处创建组合，请选择其他目标。",
   "nodeTree.groupPreview": "预览",
   "nodeTree.groupDropHint": "松开鼠标创建组合，移开取消。",
-  "nodeTree.groupDropReason": "图形不能包含子节点，只有组合可以。松开后会新建组合，将拖动节点与目标图形一起放入。"
+  "nodeTree.groupDropReason": "图形不能包含子节点，只有组合可以。松开后会新建组合，将拖动节点与目标图形一起放入。",
+  "shortcuts.title": "节点快捷操作",
+  "shortcuts.pin": "固定{0}到节点",
+  "shortcuts.unpin": "取消固定{0}",
+  "shortcuts.show": "显示{0}的快捷操作",
+  "shortcuts.forNode": "{0}的快捷操作",
+  "shortcuts.editCurves": "编辑曲线",
+  "shortcuts.scopeFor": "{0}的固定范围",
+  "shortcuts.currentNode": "当前节点",
+  "shortcuts.allNodes": "所有节点（含新建节点）",
+  "shortcuts.scopeHint": "仅固定快捷控件，不修改参数值；单个节点仍可单独取消。",
+  "dialog.moveWindow": "移动窗口",
+  "dialog.moveHint": "拖动标题栏移动窗口，也可用方向键微调位置。"
 }

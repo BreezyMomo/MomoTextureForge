@@ -1845,5 +1845,17 @@
   "nodeTree.invalidGroupTarget": "Cannot create a group here. Choose another target.",
   "nodeTree.groupPreview": "Preview",
   "nodeTree.groupDropHint": "Release to create the group. Move away to cancel.",
-  "nodeTree.groupDropReason": "Only groups can contain child nodes; graphics cannot. Releasing here creates a group containing the dragged nodes and this graphic."
+  "nodeTree.groupDropReason": "Only groups can contain child nodes; graphics cannot. Releasing here creates a group containing the dragged nodes and this graphic.",
+  "shortcuts.title": "Node shortcuts",
+  "shortcuts.pin": "Pin {0} to node",
+  "shortcuts.unpin": "Unpin {0}",
+  "shortcuts.show": "Show shortcuts for {0}",
+  "shortcuts.forNode": "Shortcuts for {0}",
+  "shortcuts.editCurves": "Edit curves",
+  "shortcuts.scopeFor": "Pin scope for {0}",
+  "shortcuts.currentNode": "Current node",
+  "shortcuts.allNodes": "All nodes, including new nodes",
+  "shortcuts.scopeHint": "Pins controls without changing parameter values. Individual nodes can still opt out.",
+  "dialog.moveWindow": "Move window",
+  "dialog.moveHint": "Drag the title bar to move the window, or use arrow keys to nudge it."
 }

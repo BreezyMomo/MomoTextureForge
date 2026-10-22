@@ -1,4 +1,5 @@
 import {uiText,uiFormat} from './ui-language.js';
+import {SHORTCUT_MODULES,shortcutControls} from './node-shortcuts.js';
 
 export const INSPECTOR_SECTIONS_KEY='momo-texture-tree:inspector-sections:v1';
 export const INSPECTOR_ORDER_KEY='momo-texture-tree:inspector-module-order:v1';
@@ -26,7 +27,7 @@ const descriptions={
  'selection.alignDistribute':'selection.alignsNodeRegionBoundsThreeOrMoreNodesCanBeEvenly','curves.title':'curves.hint'
 };
 // A view-only wrapper: inputs keep their existing handlers, reset buttons and keyframes.
-export function groupInspectorSections(host,{tab,graphic,state,multiple=false}){
+export function groupInspectorSections(host,{tab,graphic,state,multiple=false,shortcuts=null}){
  const doc=host.ownerDocument,make=(tag,className)=>{const element=doc.createElement(tag);element.className=className;return element;};
  const scope=key=>key==='modules.shapeParameters'?key+':'+(graphic?.id??'selection'):key;
  function decorate(details,key,title,defaultOpen=true){
@@ -35,7 +36,7 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false}){
   for(const heading of body.querySelectorAll(':scope>h3[data-inspector-section]'))if(heading.dataset.inspectorSection===key)heading.remove();
   const help=make('span','tree-note inspector-module-description'),heading=make('span','inspector-module-heading'),button=make('button','inspector-module-help'),arrow=make('span','inspector-module-arrow');arrow.setAttribute('aria-hidden','true');
   const notes=[...body.querySelectorAll(':scope>p[data-inspector-help]')];if(notes.length){help.textContent=notes.map(note=>note.textContent).join('\n');notes.forEach(note=>note.remove());}else help.textContent=uiText(descriptions[key]??'modules.sectionHelp');help.hidden=!state.help.has(id);button.type='button';button.textContent='?';button.title=uiFormat('modules.helpTitle',title);button.setAttribute('aria-label',button.title);button.setAttribute('aria-expanded',String(!help.hidden));
-  heading.append(label,button,arrow);summary.replaceChildren(heading,help);summary.setAttribute('aria-label',title);details.append(body);details.open=state.open(id,defaultOpen);summary.setAttribute('aria-expanded',String(details.open));
+  heading.append(label,button);if(shortcuts&&SHORTCUT_MODULES.includes(key))heading.append(shortcutControls(doc,{key,pinned:shortcuts.keys.includes(key),onToggle:shortcuts.toggle,global:shortcuts.global(key),onToggleAll:shortcuts.toggleAll}));heading.append(arrow);summary.replaceChildren(heading,help);summary.setAttribute('aria-label',title);details.append(body);details.open=state.open(id,defaultOpen);summary.setAttribute('aria-expanded',String(details.open));
   const remember=()=>{state.remember(id,details.open);summary.setAttribute('aria-expanded',String(details.open));};
   const previous=details.ontoggle;details.ontoggle=()=>{if(details.isConnected){summary.setAttribute('aria-expanded',String(details.open));previous?.();}};
   summary.onkeydown=event=>{if(event.key===' '||event.key==='Enter')event.stopPropagation();};
@@ -69,6 +70,7 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false}){
   const grip=make('button','module-drag-handle'),actions=make('span','module-order-actions');grip.type='button';grip.draggable=true;grip.textContent='⠿';grip.title=uiFormat('modules.dragToReorder',title);grip.setAttribute('aria-label',grip.title);grip.onclick=event=>{event.preventDefault();event.stopPropagation();};
   grip.ondragstart=event=>{event.stopPropagation();dragging=module;event.dataTransfer.setData('text/plain',module.dataset.module);event.dataTransfer.effectAllowed='move';module.classList.add('module-dragging');};grip.ondragend=clear;
   for(const [direction,text,key]of [[-1,'↑','modules.moveUp'],[1,'↓','modules.moveDown']]){const button=make('button',direction<0?'module-move-up':'module-move-down');button.type='button';button.textContent=text;button.title=uiFormat(key,title);button.setAttribute('aria-label',button.title);button.onclick=event=>{event.preventDefault();event.stopPropagation();const list=modules(),target=list[list.indexOf(module)+direction];if(!target)return;direction<0?host.insertBefore(module,target):host.insertBefore(module,target.nextSibling);save();button.focus();};actions.append(button);}
+  const pins=header.querySelector(':scope>.shortcut-pin-controls');if(pins)actions.prepend(pins);
   header.prepend(grip);header.insertBefore(actions,header.querySelector('.inspector-module-arrow'));
   module.ondragover=event=>{if(!dragging||dragging===module)return;event.preventDefault();event.stopPropagation();event.dataTransfer.dropEffect='move';for(const item of modules())item.classList.remove('module-drop-before','module-drop-after');const rect=module.querySelector(':scope>summary').getBoundingClientRect();module.classList.add(event.clientY<rect.y+rect.height/2?'module-drop-before':'module-drop-after');};
   module.ondrop=event=>{if(!dragging||dragging===module)return;event.preventDefault();event.stopPropagation();const before=module.classList.contains('module-drop-before');host.insertBefore(dragging,before?module:module.nextSibling);clear();save();};

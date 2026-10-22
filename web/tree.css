@@ -306,3 +306,38 @@
 .node-group-preview-child{margin-left:17px;padding:5px 9px;border-left:1px solid #7b684a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.node-group-preview p{margin:4px 8px 7px;color:#cbb584;font-size:11px;line-height:1.5}
 
 .tree-editor .tree-node .tree-visibility:hover{color:#f1c27e}
+
+/* Node shortcuts reuse inspector controls without its module chrome. */
+.tree-editor .module-pin,.tree-editor .tree-node .node-shortcut-marker{display:inline-flex;align-items:center;justify-content:center;flex:none;width:22px;height:22px;padding:3px;border:0;background:transparent;box-shadow:none;color:#8498ae;font-weight:400}
+.module-pin svg,.node-shortcut-marker svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.tree-editor .module-pin[aria-pressed=true],.tree-editor .tree-node .node-shortcut-marker{background:transparent;color:#e5b470;box-shadow:none}
+.tree-editor .module-pin:hover,.tree-editor .tree-node .node-shortcut-marker:hover{color:#f5d5a3;background:#ffffff09}
+.module-pin:focus-visible,.node-shortcut-marker:focus-visible{outline:2px solid #9bd9e8;outline-offset:1px}
+.inspector-module-heading .module-order-actions .module-pin{padding:3px}
+.node-shortcuts{min-width:0;margin:0 0 9px;padding:3px 8px 4px 11px;border-left:1px solid #786447;background:#191e25;border-radius:0 0 5px 5px}
+.node-shortcut{min-width:0;padding:6px 0}.node-shortcut+.node-shortcut{border-top:1px solid #343d49}
+.node-shortcut-heading{display:flex;align-items:center;justify-content:space-between;gap:6px;color:#c6d6e6;font-size:11px;font-weight:600}
+.node-shortcut-body{min-width:0}.node-shortcut-body .tree-field{margin:6px 0;gap:5px;font-size:11px}.node-shortcut-body .tree-field select{width:100%;min-width:0}
+.node-shortcut-body .tree-number-field{grid-template-columns:minmax(30px,1fr) 53px auto auto;gap:4px}
+.node-shortcut-body .tree-number-field>label{display:none}.node-shortcut-body .tree-number-field input[type=number]{width:53px;padding:4px}.node-shortcut-body .tree-number-field button{padding:4px;min-width:22px}
+.node-shortcut-body button,.node-shortcut-body select{font-size:11px;padding:5px}.node-shortcut-body>button{margin:4px 3px 4px 0}
+.node-shortcut-body .tree-note,.node-shortcut-body .gradient-preset,.node-shortcut-body .gradient-editor-actions{display:none}
+.node-shortcut-body .tree-check{margin:5px 0;font-size:11px}.node-shortcut-body .tree-check input{flex:none;width:14px;height:14px;margin:0}
+.node-shortcut-body .color-control-row{margin:7px 0}.node-shortcut-body .color-control-inputs{gap:5px}.node-shortcut-body .color-control-inputs input[type=color]{width:38px;min-width:38px;height:29px;min-height:29px;padding:2px}.node-shortcut-body .color-control-inputs input[type=text]{font-size:12px;padding:4px}
+.node-shortcut-body .gradient-editor{margin:7px 0}.node-shortcut-body .gradient-editor-heading{font-size:11px;gap:4px}.node-shortcut-body .gradient-stop-count{font-size:10px}.node-shortcut-body .gradient-selected{gap:5px;margin-bottom:0}.node-shortcut-body .gradient-selected-color input[type=text]{width:70px}.node-shortcut-body .gradient-position{font-size:11px}.node-shortcut-body .gradient-position input{width:48px}
+.tree-editor .node-shortcut-curve{display:block;width:100%;padding:0;margin:5px 0 0;border:1px solid #3e4857;background:#161c24;color:#b5c9de;overflow:hidden;text-align:right}
+.node-shortcut-curve svg{display:block;width:100%;height:62px}.node-shortcut-curve .curve-grid{stroke:#2d3541;stroke-width:1}.node-shortcut-curve .curve-path{stroke:#e5b470;stroke-width:2}.node-shortcut-curve span{display:block;padding:3px 6px;font-size:10px}
+.tree-editor .node-curves-dialog{width:min(620px,94vw);max-height:92vh;overflow:auto;margin:auto;padding:14px;background:#1e232c;color:#d8dce5;border:1px solid #657489;border-radius:8px}.node-curves-dialog::backdrop{background:#0009}
+.node-curves-dialog>header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:10px;border-bottom:1px solid #3b4654}.node-curves-dialog .channel-curves-editor{border:0;margin:12px 0 0;padding:0}.node-curves-dialog .channel-curve-graph{max-width:none}
+.shortcut-pin-controls{display:inline-flex;align-items:center;flex:none;gap:0}
+.tree-editor .shortcut-pin-controls .shortcut-scope{width:12px;height:22px;min-width:0;padding:1px;border:0;background:transparent;color:#8b9db1;font-size:10px;line-height:1}
+.tree-editor .shortcut-scope[data-global=true]{color:#f0c584}.tree-editor .shortcut-scope:hover{background:#ffffff0c;color:#f0c584}.shortcut-scope:focus-visible{outline:2px solid #9bd9e8;outline-offset:1px}
+.tree-editor .shortcut-scope-menu{position:fixed;inset:auto;margin:0;width:min(265px,calc(100vw - 16px));padding:10px;border:1px solid #596779;border-radius:6px;background:#242b35;color:#dce5ee;box-shadow:0 5px 18px #0008;font:12px system-ui}
+.shortcut-scope-menu>strong{display:block;padding:0 4px 7px;color:#ecc38c}.shortcut-scope-menu>label{display:flex;align-items:center;gap:8px;padding:8px 5px;border-radius:4px;cursor:pointer}.shortcut-scope-menu>label:hover{background:#35404e}
+.shortcut-scope-menu input[type=checkbox]{flex:none;width:14px;height:14px;margin:0;accent-color:#e0af6e}.shortcut-scope-menu>p{margin:7px 4px 0;padding-top:8px;border-top:1px solid #45505e;color:#a7b7ca;font-size:11px;line-height:1.6}
+.movable-dialog{box-sizing:border-box}.movable-dialog>header{cursor:grab;user-select:none;touch-action:none}.movable-dialog.dialog-moving>header{cursor:grabbing}.movable-dialog>header:focus-visible{outline:2px solid #91d5e0;outline-offset:2px}
+.inspector-module-heading>.shortcut-pin-controls{margin-left:auto}.inspector-module-heading>.shortcut-pin-controls+.inspector-module-arrow{margin-left:5px}
+.node-shortcut-body .tree-number-field>label{display:block}.node-shortcut[data-shortcut="editor.opacity"] .tree-number-field>label{display:none}
+.node-shortcut-body .tree-field{min-width:0;flex-wrap:wrap}.node-shortcut-body .tree-number-field{display:grid}.node-shortcut-body .tree-field>select{flex:1 1 110px;min-width:0}.node-shortcut-body .tree-field>button{flex:none}
+.node-shortcut-heading>span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.node-shortcut-body .inspector-module-heading{padding:5px 7px;min-height:28px}.node-shortcut-body .inspector-module-body{padding:7px}.node-shortcut-body h3{font-size:11px;color:#b7cadd}
+.node-shortcut-body .bezier-editor-toolbar,.node-shortcut-body .bezier-editor-actions,.node-shortcut-body .bezier-editor-coordinates{gap:4px}.node-shortcut-body .bezier-editor-coordinates input{width:65px}.node-shortcut-body .bezier-editor-status{font-size:10px}
