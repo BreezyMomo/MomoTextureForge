@@ -41,6 +41,14 @@ npm run build:pages
 
 该命令先构建离线 HTML，再同步到可提交的 `site/index.html`，保留 `.nojekyll`。部署 `site/` 即可，不需要 Node.js 服务，兼容 GitHub Pages 仓库子路径。`dist/` 不提交，`site/` 随源码更新。
 
+### 正式站点访问统计
+
+`build:pages` 额外内嵌 `web/site-analytics.js`，并仅为统计脚本允许 `https://hm.baidu.com`。`build:standalone` 的离线 HTML/ZIP 不含统计代码。脚本按 HTTPS 域名和路径白名单选择两个独立的百度统计站点：GitHub Pages（站点 23623715）和 WorkBuddy（站点 23623719）。本地、其他部署域名、其他 GitHub 项目及验证视图不统计。
+
+每次打开页面仅手动发送一次 PV：编辑器与组合示例分别使用固定路径；不将查询参数、`sharecode` 或画布 `#tree` 放入 PV 地址，来源只保留域名。关闭自动 PV 和自动点击采集，脚本请求不发送 Referer。当前不添加导出、参数编辑等行为事件，也不主动上报画布名称、图片或节点内容。百度服务仍会处理访问统计所需的网络/浏览器信息和访客标识；不能将其描述为完全无数据采集。
+
+统计失败不阻塞编辑器启动。核验时分别访问两个正式站点，在百度统计对应网站的“代码安装检查”和访问报告中查看；新站点脚本及报表可能延迟生效，不能仅凭插入了 script 标签判定数据已入库。修改统计后运行 `node --test tests/site-analytics.test.mjs` 和 `node tests/site-analytics-browser-check.mjs`，后者检查静态包的白名单、CSP、请求来源与离线隔离。
+
 `.github/workflows/pages.yml` 在推送 `main` 后执行检查、构建和 Pages 部署。首次配置在 GitHub 仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**；也可在 Actions 中手动运行部署。实际部署状态以 Actions 结果为准。
 
 [官方 Pages 说明](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages)提供服务条件与限制。部署后访问者能获取网页中嵌入的代码和资源。在线版的个人图库与草稿仍在访问者浏览器内，远程图库需另行部署并配置跨域。
