@@ -5,10 +5,6 @@ export const STYLE_IDS=Object.freeze(['refined','standard','minimal','soft','aur
 export const DENSITY_IDS=Object.freeze(['compact','comfortable']);
 export const TAB_STYLE_IDS=Object.freeze(['auto','classic','segmented','pill','underline']);
 const defaultTabs={standard:'classic',minimal:'classic',soft:'classic',refined:'segmented',aurora:'pill',pulse:'pill',cinema:'underline',candy:'pill'};
-export const APPEARANCE_PRESETS=Object.freeze([
- Object.freeze({style:'aurora',theme:'classic',tabs:'pill'}),Object.freeze({style:'pulse',theme:'graphite',tabs:'pill'}),
- Object.freeze({style:'cinema',theme:'classic',tabs:'underline'}),Object.freeze({style:'candy',theme:'light',tabs:'pill'})
-]);
 const palettes={classic:{accent:'#dfae72',panel:'#1e2229',text:'#e5e9ef'},graphite:{accent:'#8ab4f8',panel:'#262729',text:'#eceeef'},light:{accent:'#3866af',panel:'#ffffff',text:'#242b35'}};
 const surfaceKeys=['bg','inset','panel','surface','hover','line','line-strong','text','muted','subtle'];
 const skin=(accent,values)=>({accent,surfaces:Object.fromEntries(surfaceKeys.map((key,i)=>[key,values[i]]))});

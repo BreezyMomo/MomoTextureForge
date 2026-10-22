@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {project,node} from '../web/tree-model.js';
-import {APPEARANCE_PRESETS} from '../web/appearance.js';
+import {STYLE_IDS} from '../web/appearance.js';
 const built=process.argv.includes('--built'),root=path.resolve(fileURLToPath(new URL(built?'../site/':'../web/',import.meta.url)));
 const output=new URL('../test-results/appearance/',import.meta.url);await mkdir(output,{recursive:true});
 const types={'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.glsl':'text/plain','.svg':'image/svg+xml'};
@@ -25,7 +25,7 @@ try{
  assert.notEqual(await page.locator('.dock-stack').first().evaluate(e=>getComputedStyle(e).boxShadow),'none');
  const open=async()=>{await appearance.click();await page.locator('.appearance-dialog').waitFor();};
  const theme=page.locator('#appearance-theme');
- await open();assert.equal(await page.locator('#appearance-style option[value=refined]').innerText(),'精致');assert.equal(await page.locator('#appearance-style option[value=standard]').innerText(),'原版');assert.notEqual(await page.locator('.appearance-dialog').evaluate(e=>getComputedStyle(e).boxShadow),'none');await theme.selectOption('light');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
+ await open();assert.equal(await page.locator('[data-style=refined] .appearance-style-label').innerText(),'精致');assert.equal(await page.locator('[data-style=standard] .appearance-style-label').innerText(),'原版');assert.notEqual(await page.locator('.appearance-dialog').evaluate(e=>getComputedStyle(e).boxShadow),'none');await theme.selectOption('light');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
  assert.equal(await page.locator('.appearance-dialog').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
  await page.locator('#appearance-hex').fill('#ffff00');await page.locator('#appearance-hex').dispatchEvent('input');
  await page.locator('[data-save]').click();assert.equal(await page.locator('.appearance-dialog').count(),0);
@@ -35,17 +35,23 @@ try{
  await open();await theme.selectOption('graphite');await page.keyboard.press('Escape');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
  await open();await theme.selectOption('system');await page.emulateMedia({colorScheme:'dark'});await page.waitForFunction(()=>document.documentElement.dataset.theme==='classic');await page.emulateMedia({colorScheme:'light'});await page.waitForFunction(()=>document.documentElement.dataset.theme==='light');await page.locator('[data-save]').click();
  await page.locator('[role=treeitem]').first().click();await open();await theme.selectOption('light');await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-settings-chinese.png',output))});await page.locator('[data-save]').click();
- const style=page.locator('#appearance-style'),density=page.locator('#appearance-density'),tabs=page.locator('#appearance-tabs');
+ const style={selectOption:id=>page.locator('.appearance-style-card[data-style='+id+']').click(),inputValue:()=>page.locator('html').getAttribute('data-interface-style')},density=page.locator('#appearance-density'),tabs=page.locator('#appearance-tabs');
  const projectSnapshot=async()=>{const {pixels,...stable}=await snapshot();return stable;},stable=await projectSnapshot();
  await open();
  await density.selectOption('comfortable');
- for(const preset of APPEARANCE_PRESETS){
-  await page.locator('[data-preset='+preset.style+']').click();
-  assert.equal(await style.inputValue(),preset.style);assert.equal(await theme.inputValue(),preset.theme);assert.equal(await density.inputValue(),'comfortable');assert.equal(await tabs.inputValue(),preset.tabs);
-  assert.equal(await page.locator('[data-preset='+preset.style+']').getAttribute('aria-pressed'),'true');
-  assert.match(await page.locator('html').evaluate(e=>e.style.getPropertyValue('--ui-panel')),/^#[a-f\d]{6}$/i);
+ assert.equal(await page.locator('#appearance-style,.appearance-presets').count(),0,'one style entry point');
+ assert.equal(await page.locator('.appearance-style-card').count(),STYLE_IDS.length,'all old and new styles available');
+ await tabs.selectOption('underline');await page.locator('#appearance-hex').fill('#7EC5A5');await page.locator('#appearance-hex').dispatchEvent('input');
+ const independent={theme:await theme.inputValue(),accent:await page.locator('#appearance-hex').inputValue(),density:await density.inputValue(),tabs:await tabs.inputValue()};
+ for(const styleId of STYLE_IDS){
+  await style.selectOption(styleId);
+  assert.equal(await style.inputValue(),styleId);
+  assert.deepEqual({theme:await theme.inputValue(),accent:await page.locator('#appearance-hex').inputValue(),density:await density.inputValue(),tabs:await tabs.inputValue()},independent,'style cards preserve independent choices');
+  assert.equal(await page.locator('.appearance-style-card[aria-pressed=true]').count(),1);
+  assert.equal(await page.locator('[data-style='+styleId+']').getAttribute('aria-pressed'),'true');
   assert.deepEqual(await projectSnapshot(),stable);
  }
+ await page.locator('.appearance-dialog').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-unified-styles.png',output))});
  await tabs.selectOption('auto');
  for(const themeId of ['classic','graphite','light']){
   await theme.selectOption(themeId);
@@ -96,7 +102,7 @@ try{
  }
  await open();await style.selectOption('soft');await page.locator('[data-save]').click();
  await open();await density.selectOption('compact');await theme.selectOption('graphite');assert.equal(await style.inputValue(),'soft');assert.equal(await density.inputValue(),'compact');await page.keyboard.press('Escape');assert.equal(await page.locator('html').getAttribute('data-density'),'comfortable');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
- await page.locator('#language-settings').selectOption('en');await open();assert.equal(await page.locator('#appearance-title').innerText(),'Appearance');assert.equal(await page.locator('#appearance-style option[value=refined]').innerText(),'Refined');assert.equal(await page.locator('#appearance-style option[value=standard]').innerText(),'Original');assert.equal(await theme.locator('option').count(),4);await theme.selectOption('graphite');await page.locator('[data-save]').click();
+ await page.locator('#language-settings').selectOption('en');await open();assert.equal(await page.locator('#appearance-title').innerText(),'Appearance');assert.equal(await page.locator('[data-style=refined] .appearance-style-label').innerText(),'Refined');assert.equal(await page.locator('[data-style=standard] .appearance-style-label').innerText(),'Original');assert.equal(await theme.locator('option').count(),4);await theme.selectOption('graphite');await page.locator('[data-save]').click();
  await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-graphite.png',output))});
  for(const width of [1600,1100,768]){
   await page.setViewportSize({width,height:960});
@@ -112,5 +118,5 @@ try{
  await page.locator('[data-save]').click();await page.locator('#open-graphics-library').click();await page.locator('.graphics-card').first().waitFor();
  assert.equal(await page.locator('.graphics-dialog').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
  await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-library-light.png',output))});
- assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,checks:['live preview','custom accent','canvas/storage/history isolation','48 theme/style/density combinations','four one-click presets preserve density','creative palette cleanup','modern pill tabs','independent tab geometry and save/restore','real dock and inspector preview fidelity','original and refined stay distinct','saved style/density restoration','cancel','system changes','English header 1600/1100/768','320px dialog','hex validation','library surfaces'],errors}));
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,checks:['live preview','custom accent','canvas/storage/history isolation','48 theme/style/density combinations','single style grid preserves palette, custom accent, tabs and density','creative palette cleanup','modern pill tabs','independent tab geometry and save/restore','real dock and inspector preview fidelity','original and refined stay distinct','saved style/density restoration','cancel','system changes','English header 1600/1100/768','320px dialog','hex validation','library surfaces'],errors}));
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

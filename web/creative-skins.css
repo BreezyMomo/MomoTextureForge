@@ -1,26 +1,37 @@
-/* Creative presets adapt Framer, Spotify, Runway, Lovable and MiniMax references.
+/* Creative styles adapt Framer, Spotify, Runway, Lovable and MiniMax references.
    Every rule is opt-in. Original, Refined, Minimal and Soft keep their own chrome. */
-.appearance-presets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0 0 22px}
-.tree-editor .appearance-presets .appearance-preset{display:flex;flex-direction:column;gap:4px;min-width:0;margin:0;padding:7px;text-align:left;white-space:normal;border:1px solid var(--ui-line);border-radius:10px;background:var(--ui-panel);color:var(--ui-text);box-shadow:none}
-.tree-editor .appearance-presets .appearance-preset:hover{border-color:var(--ui-line-strong);background:var(--ui-surface)}
-.tree-editor .appearance-presets .appearance-preset[aria-pressed=true]{border-color:var(--ui-accent-text);background:var(--ui-selected);color:var(--ui-text);box-shadow:inset 0 0 0 1px var(--ui-accent-text)}
-.appearance-preset-label{font-size:12px;font-weight:600}
-.appearance-preset>small{font-size:10px;line-height:1.5;color:var(--ui-muted)}
-.appearance-preset-art{position:relative;display:block;width:100%;height:60px;overflow:hidden;border-radius:6px;background:var(--preset-bg);--preset-round:7px}
-.appearance-preset[data-preset=aurora]{--preset-bg:#111528;--preset-accent:#b5a0ff;--preset-surface:#28304c}
-.appearance-preset[data-preset=pulse]{--preset-bg:#111712;--preset-accent:#77e5a0;--preset-surface:#2a3a30}
-.appearance-preset[data-preset=cinema]{--preset-bg:#101114;--preset-accent:#eeeef2;--preset-surface:#26272e}
-.appearance-preset[data-preset=candy]{--preset-bg:#faedf6;--preset-accent:#ad3d79;--preset-surface:#ebcfe0}
-.appearance-preset-art i{display:block;position:absolute}
+.appearance-style-picker{padding:18px 22px 0}
+.appearance-style-picker>label{display:block;margin-bottom:8px;font-weight:500}
+.appearance-style-picker .appearance-style-description{margin:10px 0 0;min-height:36px;color:var(--ui-muted);font-size:12px}
+.appearance-styles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.tree-editor .appearance-styles .appearance-style-card{display:flex;flex-direction:column;gap:4px;min-width:0;margin:0;padding:7px;text-align:left;white-space:normal;border:1px solid var(--ui-line);border-radius:10px;background:var(--ui-panel);color:var(--ui-text);box-shadow:none}
+.tree-editor .appearance-styles .appearance-style-card:hover{border-color:var(--ui-line-strong);background:var(--ui-surface)}
+.tree-editor .appearance-styles .appearance-style-card[aria-pressed=true]{border-color:var(--ui-accent-text);background:var(--ui-selected);color:var(--ui-text);box-shadow:inset 0 0 0 1px var(--ui-accent-text)}
+.appearance-style-label{font-size:12px;font-weight:600}
+.appearance-style-art{position:relative;display:block;width:100%;height:48px;overflow:hidden;border-radius:6px;background:var(--preset-bg);--preset-round:7px}
+.appearance-style-card[data-style=refined]{--preset-bg:#1e2229;--preset-accent:#dfae72;--preset-surface:#343941}
+.appearance-style-card[data-style=standard]{--preset-bg:#1e2229;--preset-accent:#dfae72;--preset-surface:#30353d}
+.appearance-style-card[data-style=minimal]{--preset-bg:#202329;--preset-accent:#bac2ce;--preset-surface:#2c3037}
+.appearance-style-card[data-style=soft]{--preset-bg:#232931;--preset-accent:#a7bce0;--preset-surface:#3c4654}
+.appearance-style-card[data-style=standard] .appearance-style-art{--preset-round:2px}
+.appearance-style-card[data-style=minimal] .appearance-style-art{--preset-round:0px}
+.appearance-style-card[data-style=minimal] .preset-mini-sidebar{background:transparent;border-right:1px solid var(--preset-surface)}
+.appearance-style-card[data-style=soft] .appearance-style-art{--preset-round:12px}
+@media(max-width:550px){.appearance-styles{grid-template-columns:repeat(2,minmax(0,1fr))}.appearance-style-picker{padding:16px 16px 0}}
+.appearance-style-card[data-style=aurora]{--preset-bg:#111528;--preset-accent:#b5a0ff;--preset-surface:#28304c}
+.appearance-style-card[data-style=pulse]{--preset-bg:#111712;--preset-accent:#77e5a0;--preset-surface:#2a3a30}
+.appearance-style-card[data-style=cinema]{--preset-bg:#101114;--preset-accent:#eeeef2;--preset-surface:#26272e}
+.appearance-style-card[data-style=candy]{--preset-bg:#faedf6;--preset-accent:#ad3d79;--preset-surface:#ebcfe0}
+.appearance-style-art i{display:block;position:absolute}
 .preset-mini-sidebar{left:5px;top:5px;bottom:5px;width:22%;background:var(--preset-surface);border-radius:var(--preset-round)}
 .preset-mini-tab{left:32%;top:7px;width:35%;height:8px;border-radius:var(--preset-round);background:var(--preset-accent)}
-.preset-mini-orbit{left:44%;top:22px;width:33px;height:33px;border:4px solid var(--preset-accent);border-radius:50%;box-shadow:0 0 17px color-mix(in srgb,var(--preset-accent) 30%,transparent)}
+.preset-mini-orbit{left:44%;top:20px;width:24px;height:24px;border:4px solid var(--preset-accent);border-radius:50%;box-shadow:0 0 17px color-mix(in srgb,var(--preset-accent) 30%,transparent)}
 .preset-mini-field{right:6px;top:22px;width:16%;bottom:5px;border-radius:var(--preset-round);background:var(--preset-surface)}
-.appearance-preset[data-preset=aurora] .appearance-preset-art{background:radial-gradient(ellipse at 75% 75%,#30265e,transparent 70%),var(--preset-bg)}
-.appearance-preset[data-preset=pulse] .appearance-preset-art{--preset-round:999px}
-.appearance-preset[data-preset=cinema] .appearance-preset-art{--preset-round:2px}
-.appearance-preset[data-preset=cinema] .preset-mini-tab{height:2px;top:13px}
-.appearance-preset[data-preset=candy] .appearance-preset-art{background:linear-gradient(135deg,#ede7fb,#fae1e9)}
+.appearance-style-card[data-style=aurora] .appearance-style-art{background:radial-gradient(ellipse at 75% 75%,#30265e,transparent 70%),var(--preset-bg)}
+.appearance-style-card[data-style=pulse] .appearance-style-art{--preset-round:999px}
+.appearance-style-card[data-style=cinema] .appearance-style-art{--preset-round:2px}
+.appearance-style-card[data-style=cinema] .preset-mini-tab{height:2px;top:13px}
+.appearance-style-card[data-style=candy] .appearance-style-art{background:linear-gradient(135deg,#ede7fb,#fae1e9)}
 .appearance-preview{align-self:start;position:sticky;top:0}
 @media(max-width:550px){.appearance-preview{position:static;align-self:stretch}}
 

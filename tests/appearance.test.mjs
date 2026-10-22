@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {APPEARANCE_KEY,APPEARANCE_PRESETS,STYLE_IDS,normalizeAppearance,appearancePalette,colorContrast,createAppearance} from '../web/appearance.js';
+import {APPEARANCE_KEY,STYLE_IDS,normalizeAppearance,appearancePalette,colorContrast,createAppearance} from '../web/appearance.js';
 const defaults={theme:'classic',accent:null,style:'refined',density:'compact',tabs:'auto'};
 
 test('appearance restores only supported themes and literal six-digit colors',()=>{
@@ -19,10 +19,11 @@ test('custom colors retain readable button and accent text across every theme',(
  }
 });
 
-test('creative presets use independent UI palettes and remove every override on return to an existing style',()=>{
+test('creative styles use independent UI palettes and remove every override on return to an existing style',()=>{
  const values=new Map(),root={dataset:{},style:{setProperty:(key,value)=>values.set(key,value),removeProperty:key=>values.delete(key)}};
  const controller=createAppearance({root});const original=controller.palette();
- for(const preset of APPEARANCE_PRESETS){
+ for(const style of ['aurora','pulse','cinema','candy']){
+  const preset={style,theme:'classic'};
   controller.preview({...preset,accent:null});const p=controller.palette();
   assert.equal(root.dataset.interfaceStyle,preset.style);assert.equal(values.get('--ui-panel'),p.surfaces.panel);
   assert.ok(colorContrast(p.accent,p.onAccent)>=4.5);assert.ok(colorContrast(p.surfaces.text,p.surfaces.panel)>=4.5);assert.ok(colorContrast(p.surfaces.muted,p.surfaces.panel)>=4.5);

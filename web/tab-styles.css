@@ -1,6 +1,6 @@
 /* Tab geometry is independent from color and surface style. Auto leaves every
    existing skin untouched; explicit choices apply equally to real and preview tabs. */
-.appearance-layout-options .appearance-tabs-option{grid-column:1/-1}
+.appearance-layout-options{margin-bottom:20px}
 .appearance-tabs-option small{display:block;font-size:11px;line-height:1.6;color:var(--ui-muted);margin-top:6px}
 .appearance-preview .appearance-preview-dock{height:auto;min-height:0;margin-bottom:16px;flex:none}
 .appearance-preview-content{padding:12px}
