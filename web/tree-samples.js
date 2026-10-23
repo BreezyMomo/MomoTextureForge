@@ -1,3 +1,4 @@
+import {contentEffectSamples} from './content-effect-samples.js';
 import {node,project,cloneNode} from './tree-model.js';
 import {vfxPresets} from './vfx-presets.js';
 import {effectSamples} from './effect-samples.js';
@@ -154,7 +155,7 @@ export function treeSamples(){
  const shieldMask=shape('Circle','圆形护盾遮罩',.96,'#ffffff');shieldMask.params[0]=.9;shieldMask.params[3]=.001;cells.mask=shieldMask;shield.children=[cells,halo(.96,'#b2f6ff')];
  const flame=group('火焰法阵'),flames=node('shape','Bonfire');flames.name='中心火焰';flames.transform.width=flames.transform.height=.7;
  const fireStars=turn(shape('Star','旋转火星',1,'#ffc175'),-180);radial(fireStars,10,.4,.075);flame.children=[flames,halo(.91,'#ff9c52'),halo(.78,'#ffd385'),fireStars];
- return [...vfxSamples().map(s=>({...s,category:'vfx'})),...uiSamples().map(s=>({...s,category:'ui'})),...arrangementExamples(),...overflowExamples(),...vfxPresets(),...effectSamples(),...creativeEffectSamples(),...noiseWarpSamples(),
+ return [...vfxSamples().map(s=>({...s,category:'vfx'})),...uiSamples().map(s=>({...s,category:'ui'})),...arrangementExamples(),...overflowExamples(),...vfxPresets(),...effectSamples(),...creativeEffectSamples(),...noiseWarpSamples(),...contentEffectSamples(),
   {nameKey:"examples.sketchStyles.name",root:sketchStyles,description:"examples.sketchStyles.description",tags:["fx.effect.sketch","examples.staticPNG"],output:{mode:'color',alpha:false,background:'#ffffff'}},
   {nameKey:"examples.sketchHeart.name",root:sketchHeart,description:"examples.sketchHeart.description",tags:["fx.effect.sketch","fx.option.crossHatch","examples.staticPNG"],output:{mode:'color',alpha:false,background:'#ffffff'}},
   {nameKey:"examples.summoningEffect.name",root:summon,description:"examples.concentricPulsingRingsARotatingStarArrayAndAFadingShockwave",tags:["examples.nestedGroups","editor.keyframe"]},

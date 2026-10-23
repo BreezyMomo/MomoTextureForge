@@ -1,3 +1,4 @@
+import {CONTENT_EFFECTS} from './content-effects.js';
 import {CREATIVE_EFFECTS} from './creative-effect-specs.js';
 import {NOISE_WARP_SPEC,noiseWarpActive} from './noise-warp.js';
 import {normalizeDashPattern} from './sketch-options.js';
@@ -42,7 +43,7 @@ export const POST_EFFECTS=[
   number('pathSimplification',0,1,0,.01),number('fixedDecimalPlaceDigits',-1,6,-1,1),
   number('sunburstCenterX',0,1,.5),number('sunburstCenterY',0,1,.5),number('sunburstRays',4,720,72,1)
  ]}
-,...CREATIVE_EFFECTS,NOISE_WARP_SPEC
+,...CREATIVE_EFFECTS,NOISE_WARP_SPEC,...CONTENT_EFFECTS
 ].map(spec=>({...spec,label:'fx.effect.'+spec.id,description:'fx.help.'+spec.id,parameters:spec.parameters.map(p=>({...p,path:p.path??'postEffects.'+spec.id+'.'+p.key}))}));
 export const EFFECT_IDS=POST_EFFECTS.map(s=>s.id);
 export const EFFECT_BY_ID=new Map(POST_EFFECTS.map(s=>[s.id,s]));
@@ -58,6 +59,9 @@ export const effectsUseTime=n=>(effectEnabled(n,'scanline')&&effectValues(n,'sca
 
 // Style-specific controls are hidden without discarding their stored values.
 export function effectParameterVisible(p,values){
+ if(p.path==='postEffects.dissolve.dissolveAngle')return values.dissolvePattern===2;
+ if(['postEffects.dissolve.edgeWidth','postEffects.dissolve.burnColor'].includes(p.path))return values.dissolveStyle===1;
+ if(p.path==='postEffects.liquidFusion.liquidColor')return values.fusionColor===1;
  if(p.path==='postEffects.noiseWarp.loopSeconds')return values.warpMotion===1;
  if(p.path.startsWith('postEffects.halftone.')&&['inkColor','paperColor'].includes(p.key))return values.inkMode===0;
  if(p.path.startsWith('postEffects.dither.')){if(p.key==='levels')return values.paletteMode<2;if(['inkColor','paperColor'].includes(p.key))return values.paletteMode>=2;if(p.key==='seed')return values.ditherPattern===2;}
