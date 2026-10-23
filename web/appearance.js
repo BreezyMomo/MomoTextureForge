@@ -2,10 +2,10 @@
 export const APPEARANCE_KEY='momo-texture-appearance:v1';
 export const THEME_IDS=Object.freeze(['system','classic','graphite','light']);
 export const COLOR_SCHEME_IDS=Object.freeze(['auto','xuanqing','tianqing','dunhuang','zhusha','zhuyue','ouhe']);
-export const STYLE_IDS=Object.freeze(['standard','refined','minimal','soft','aurora','pulse','cinema','candy']);
+export const STYLE_IDS=Object.freeze(['standard','refined','airy','minimal','soft','aurora','pulse','cinema','candy']);
 export const DENSITY_IDS=Object.freeze(['compact','comfortable']);
 export const TAB_STYLE_IDS=Object.freeze(['auto','classic','segmented','pill','underline']);
-const defaultTabs={standard:'classic',minimal:'classic',soft:'classic',refined:'segmented',aurora:'pill',pulse:'pill',cinema:'underline',candy:'pill'};
+const defaultTabs={standard:'classic',minimal:'classic',soft:'classic',refined:'segmented',airy:'segmented',aurora:'pill',pulse:'pill',cinema:'underline',candy:'pill'};
 const palettes={classic:{accent:'#dfae72',panel:'#1e2229',text:'#e5e9ef'},graphite:{accent:'#8ab4f8',panel:'#262729',text:'#eceeef'},light:{accent:'#3866af',panel:'#ffffff',text:'#242b35'}};
 const surfaceKeys=['bg','inset','panel','surface','hover','line','line-strong','text','muted','subtle'];
 const skin=(accent,values)=>({accent,surfaces:Object.fromEntries(surfaceKeys.map((key,i)=>[key,values[i]]))});

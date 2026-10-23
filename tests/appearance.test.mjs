@@ -113,3 +113,15 @@ test('schemes save and restore with independent tabs, density and system mode wi
  controller.preview({theme:'classic',style:'standard',scheme:'auto'});assert.equal(values.has('--ui-panel'),false);assert.equal(values.has('--ui-line-strong'),false);
  assert.equal(data.get('momo-texture-tree:draft:v1'),'artwork');assert.deepEqual(JSON.parse(data.get(APPEARANCE_KEY)),saved);
 });
+
+
+test('Airy is an additional saved control style that preserves every existing palette and explicit tab choice',()=>{
+ const storage=new Map(),root={dataset:{},style:{setProperty(){},removeProperty(){}}};
+ const controller=createAppearance({root,storage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)}});
+ for(const id of ['standard','refined','minimal','soft','aurora','pulse','cinema','candy'])assert.ok(STYLE_IDS.includes(id));
+ const prefs={theme:'light',scheme:'dunhuang',style:'airy',tabs:'pill',density:'comfortable',accent:'#765432'};
+ controller.save(prefs);assert.deepEqual(controller.get(),prefs);assert.equal(root.dataset.tabStyle,'pill');
+ assert.deepEqual(appearancePalette(prefs),appearancePalette({...prefs,style:'refined'}));
+ controller.preview({...prefs,tabs:'auto'});assert.equal(root.dataset.tabStyle,'segmented');
+ assert.equal(normalizeAppearance(null).style,'refined');
+});

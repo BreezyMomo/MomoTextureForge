@@ -2101,5 +2101,17 @@
   "examples.sketchStyles.description": "Nine hearts show the original, solid, hachure, cross-hatch, zigzag, dots, dashed, zigzag-line and sunburst styles, left to right and top to bottom. Select each node to inspect its settings.",
   "fx.group.outline": "More outline settings",
   "fx.group.fill": "More fill settings",
-  "fx.group.path": "Contour and path settings"
+  "fx.group.path": "Contour and path settings",
+  "appearance.airy": "Airy",
+  "appearance.airyDescription": "Fine separators and spacing organize parameters, with quiet frames, filled inputs and clear focus states.",
+  "parameter.axis.x": "X",
+  "parameter.axis.y": "Y",
+  "parameter.unit.degrees": "°",
+  "parameter.unit.seconds": "s",
+  "parameter.position": "Position",
+  "parameter.size": "Size",
+  "parameter.pivot": "Pivot",
+  "parameter.uvOffset": "UV offset",
+  "parameter.layoutCenter": "Layout center",
+  "parameter.timeOffset": "Time offset"
 }

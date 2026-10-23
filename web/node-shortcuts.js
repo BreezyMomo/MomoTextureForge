@@ -1,3 +1,4 @@
+import {editorIcon} from './editor-icons.js';
 import {uiText,uiFormat} from './ui-language.js';
 import {CURVE_CHANNELS,curveTangents} from './channel-curves.js';
 
@@ -30,12 +31,12 @@ export function nodeShortcutState(storage){
 
 export function shortcutPin(document,{key,pinned,onToggle}){
  const button=document.createElement('button');button.type='button';button.className='module-pin';button.setAttribute('aria-pressed',String(pinned));button.title=uiFormat(pinned?'shortcuts.unpin':'shortcuts.pin',uiText(key));button.setAttribute('aria-label',button.title);
- const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg'),path=document.createElementNS(ns,'path');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');path.setAttribute('d','M9 3h6l-1 6 4 4v2H6v-2l4-4-1-6ZM12 15v6');svg.append(path);button.append(svg);button.onclick=event=>{event.preventDefault();event.stopPropagation();onToggle(key);};return button;
+ button.append(editorIcon('pin',document));button.onclick=event=>{event.preventDefault();event.stopPropagation();onToggle(key);};return button;
 }
 
 export function shortcutControls(document,{key,pinned,onToggle,global=false,onToggleAll}){
  const group=document.createElement('span');group.className='shortcut-pin-controls';group.append(shortcutPin(document,{key,pinned,onToggle}));
- const scope=document.createElement('button');scope.type='button';scope.className='shortcut-scope';scope.textContent='▾';scope.title=uiFormat('shortcuts.scopeFor',uiText(key));scope.setAttribute('aria-label',scope.title);scope.setAttribute('aria-haspopup','dialog');scope.setAttribute('aria-expanded','false');scope.dataset.global=String(global);group.append(scope);
+ const scope=document.createElement('button');scope.type='button';scope.className='shortcut-scope';scope.append(editorIcon('down',document));scope.title=uiFormat('shortcuts.scopeFor',uiText(key));scope.setAttribute('aria-label',scope.title);scope.setAttribute('aria-haspopup','dialog');scope.setAttribute('aria-expanded','false');scope.dataset.global=String(global);group.append(scope);
  scope.onclick=event=>{
   event.preventDefault();event.stopPropagation();document.querySelector('.shortcut-scope-menu')?.remove();
   const popup=document.createElement('div');popup.className='shortcut-scope-menu';popup.setAttribute('popover','auto');popup.setAttribute('role','dialog');popup.setAttribute('aria-label',scope.title);

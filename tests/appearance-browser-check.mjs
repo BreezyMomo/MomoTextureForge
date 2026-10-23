@@ -82,7 +82,7 @@ try{
  await tabs.selectOption('auto');
  for(const themeId of ['classic','graphite','light']){
   await theme.selectOption(themeId);
-  for(const [styleId,radius]of [['refined','6px'],['standard','5px'],['minimal','2px'],['soft','8px'],['aurora','9px'],['pulse','10px'],['cinema','6px'],['candy','10px']]){
+  for(const [styleId,radius]of [['refined','6px'],['airy','6px'],['standard','5px'],['minimal','2px'],['soft','8px'],['aurora','9px'],['pulse','10px'],['cinema','6px'],['candy','10px']]){
    await style.selectOption(styleId);
    for(const densityId of ['compact','comfortable']){
     await density.selectOption(densityId);
@@ -90,8 +90,8 @@ try{
     assert.equal(await page.locator('#appearance-hex').evaluate(e=>getComputedStyle(e).borderRadius),radius);
     assert.equal(await page.locator('.inspector-module').first().evaluate(e=>getComputedStyle(e).borderLeftWidth),['minimal','cinema'].includes(styleId)?'0px':'1px');
     assert.equal(await page.locator('.inspector-module-body').first().evaluate(e=>getComputedStyle(e).paddingTop),densityId==='compact'?'9px':'14px');
-    assert.equal(await page.locator('.dock-stack').first().evaluate(e=>getComputedStyle(e).boxShadow==='none'),!['refined','aurora'].includes(styleId));
-    assert.equal(await page.locator('.dock-workspace').evaluate(e=>getComputedStyle(e).paddingTop),['refined','aurora','pulse','cinema','candy'].includes(styleId)?'6px':'3px');
+    assert.equal(await page.locator('.dock-stack').first().evaluate(e=>getComputedStyle(e).boxShadow==='none'),!['refined','airy','aurora'].includes(styleId));
+    assert.equal(await page.locator('.dock-workspace').evaluate(e=>getComputedStyle(e).paddingTop),['refined','airy','aurora','pulse','cinema','candy'].includes(styleId)?'6px':'3px');
     assert.equal(await page.locator('.tree-visibility').first().evaluate(e=>getComputedStyle(e).backgroundColor),'rgba(0, 0, 0, 0)');
     const inlinePanel=await page.locator('html').evaluate(e=>e.style.getPropertyValue('--ui-panel'));
     assert.equal(Boolean(inlinePanel),['aurora','pulse','cinema','candy'].includes(styleId),'palette overrides clear when leaving creative skins');
@@ -127,7 +127,7 @@ try{
  await open();await scheme.selectOption('ouhe');await page.keyboard.press('Escape');assert.equal(await page.locator('html').getAttribute('data-color-scheme'),'xuanqing');
  await open();await scheme.selectOption('auto');await page.locator('[data-save]').click();
  await page.locator('[role=treeitem]').first().click();
- for(const styleId of ['refined','standard','minimal','soft','aurora','pulse','cinema','candy']){
+ for(const styleId of STYLE_IDS){
   await open();await style.selectOption(styleId);await page.locator('[data-save]').click();
   await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-style-'+styleId+'.png',output))});
  }
@@ -149,5 +149,5 @@ try{
  await page.locator('[data-save]').click();await page.locator('#open-graphics-library').click();await page.locator('.graphics-card').first().waitFor();
  assert.equal(await page.locator('.graphics-dialog').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
  await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-library-light.png',output))});
- assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,checks:['live preview','fixed reference thumbnails across schemes, modes and custom accents','18 named scheme/mode combinations preserve geometry and artwork','scheme save/reload/cancel','custom accent','canvas/storage/history isolation','48 theme/style/density combinations','single style grid preserves palette, custom accent, tabs and density','creative palette cleanup','modern pill tabs','independent tab geometry and save/restore','real dock and inspector preview fidelity','original and refined stay distinct','saved style/density restoration','cancel','system changes','English header 1600/1100/768','320px dialog','hex validation','library surfaces'],errors}));
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,checks:['live preview','fixed reference thumbnails across schemes, modes and custom accents','18 named scheme/mode combinations preserve geometry and artwork','scheme save/reload/cancel','custom accent','canvas/storage/history isolation','54 theme/style/density combinations','single style grid preserves palette, custom accent, tabs and density','creative palette cleanup','modern pill tabs','independent tab geometry and save/restore','real dock and inspector preview fidelity','original and refined stay distinct','saved style/density restoration','cancel','system changes','English header 1600/1100/768','320px dialog','hex validation','library surfaces'],errors}));
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

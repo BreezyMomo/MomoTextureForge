@@ -76,5 +76,5 @@ try{
  for(const key of curve.keys){const [r,g,b]=key.match(/\d+/g).map(Number);assert.ok(r>g&&g>b,'curve keyframes stay gold');assert.ok(colorContrast(hex(key),hex(curve.bg))>=3);}
  const [cr,cg,cb]=curve.line.match(/\d+/g).map(Number);assert.ok(cb>cr&&cb>cg,'curve stays blue');
 
- assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,combinations:336,checks:['functional colors independent from scheme, accent and skin','recording beats selected-button rules','real/preview fidelity','dark/light contrast','visible playhead over interval','unchanged artwork and history'],errors}));
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,combinations:COLOR_SCHEME_IDS.length*3*STYLE_IDS.length*2,checks:['functional colors independent from scheme, accent and skin','recording beats selected-button rules','real/preview fidelity','dark/light contrast','visible playhead over interval','unchanged artwork and history'],errors}));
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

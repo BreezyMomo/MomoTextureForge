@@ -2101,5 +2101,17 @@
   "examples.sketchStyles.description": "九个心形按从左到右、从上到下展示原图、纯色、平行排线、交叉排线、连续锯齿、圆点、虚线排线、锯齿线排线和放射线。逐个选择节点可查看对应参数。",
   "fx.group.outline": "更多描边设置",
   "fx.group.fill": "更多填充设置",
-  "fx.group.path": "轮廓与路径设置"
+  "fx.group.path": "轮廓与路径设置",
+  "appearance.airy": "轻盈",
+  "appearance.airyDescription": "以细分隔线和留白组织参数，弱化重复外框，保留输入底色与焦点提示。",
+  "parameter.axis.x": "X",
+  "parameter.axis.y": "Y",
+  "parameter.unit.degrees": "°",
+  "parameter.unit.seconds": "s",
+  "parameter.position": "位置",
+  "parameter.size": "尺寸",
+  "parameter.pivot": "轴心",
+  "parameter.uvOffset": "UV 偏移",
+  "parameter.layoutCenter": "排列中心",
+  "parameter.timeOffset": "时间偏移"
 }

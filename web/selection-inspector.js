@@ -1,3 +1,5 @@
+import {decorateParameterRow} from './parameter-presentation.js';
+import {editorIcon} from './editor-icons.js';
 import {normalizeDashPattern} from './sketch-options.js';
 import {createPostEffectsEditor} from './post-effects-editor.js';
 import {POST_EFFECTS,effectEnabled,effectEnableValues,effectResetValues,effectValues,effectParameterVisible} from './post-effect-specs.js';
@@ -55,10 +57,10 @@ export function createSelectionInspector(host,api){
   }
  }
  function number(label,path,min,max,step=.01,{scale=1,parent=host,reason='',resettable=true}={}){
-  if(!path.startsWith('params.'))label=uiText(label);const name=uiText("selection.batch")+label,slider=el('input',{type:'range',min,max,step,'aria-label':(name + uiText("editor.slider"))}),input=el('input',{type:'number',min,max,step,placeholder:uiText("selection.mixedValues"),'aria-label':name}),r=row(label,[slider,input],parent);
+  if(!path.startsWith('params.'))label=uiText(label);const name=uiText("selection.batch")+label,slider=el('input',{type:'range',min,max,step,'aria-label':(name + uiText("editor.slider"))}),input=el('input',{type:'number',min,max,step,placeholder:uiText("selection.mixedValues"),'aria-label':name}),r=row(label,[slider,input],parent);r.classList.add('selection-number-field');r.dataset.parameterPath=path;decorateParameterRow(r,path);
   const paths=[path];if(path==='transform.width'&&nodes.some(n=>n.transform.lockAspect))paths.push('transform.height');if(path==='transform.height'&&nodes.some(n=>n.transform.lockAspect))paths.push('transform.width');
   bind([slider,input],paths,n=>Math.round(val(n,path)*scale*1e6)/1e6,v=>{if(v.trim()===''||!Number.isFinite(Number(v))){api.notify(uiText("selection.enterAValidNumber"));return false;}return assign(path,Math.max(min,Math.min(max,Number(v)))/scale);},{reason});
-  if(resettable){const b=button('↺',()=>api.reset(path),r);b.dataset.reset='true';b.title=uiText("selection.restoreEachNodeSDefaultRecordsAKeyframeWhileRecording");b.setAttribute('aria-label',(uiText("selection.batchReset") + label));}return r;
+  if(resettable){const b=button('',()=>api.reset(path),r);b.replaceChildren(editorIcon('reset',doc));b.dataset.reset='true';b.title=uiText("selection.restoreEachNodeSDefaultRecordsAKeyframeWhileRecording");b.setAttribute('aria-label',(uiText("selection.batchReset") + label));}return r;
  }
  function choice(label,path,options,{numeric=false,parent=host,reason='',read=n=>val(n,path),write=v=>assign(path,v),paths=[path]}={}){if(!path.startsWith('params.')){label=uiText(label);options=options.map(([v,t,...rest])=>[v,uiOption(t),...rest]);}
   const select=el('select',{'aria-label':(uiText("selection.batch") + label)},[el('option',{value:'',text:uiText("selection.mixedValues"),disabled:'disabled'}),...options.map(([value,text,disabled])=>el('option',{value,text,...(disabled?{disabled:'disabled'}:{})}))]);row(label,[select],parent);
