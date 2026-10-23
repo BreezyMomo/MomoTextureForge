@@ -39,7 +39,19 @@ Run `node --test tests/appearance.test.mjs` and `node tests/appearance-browser-c
 
 `STYLE_IDS` retains one card selector for all control styles. Neutral reference cards illustrate geometry only; root tab overrides are always explicit. Styles retain their corners, frames, shadows and module structure without selecting palettes or tabs.
 
-The six complete palettes are `shuimo`, `qingci`, `mineral`, `xuanqing`, `zhuyue` and `ouhe`. Legacy `tianqing`, `zhusha` and `dunhuang` map to the corresponding first three palettes; old `accent` migrates to `colors.action`. Historical automatic colors resolve once using the saved style/mode, and automatic tabs resolve to their previous shape. Subsequent edits use explicit IDs. Reading migration does not write project data; explicit saving persists the normalized structure.
+The fourteen complete palettes are `shuimo`, `qingci`, `mineral`, `xuanqing`, `zhuyue`, `ouhe`, `qinghua`, `zhujin`, `yanzhi`, `zitong`, `ailv`, `taoyao`, `qiuxiang` and `tonglv`. Legacy `tianqing`, `zhusha` and `dunhuang` map to the corresponding first three palettes; old `accent` migrates to `colors.action`. Historical automatic colors resolve once using the saved style/mode, and automatic tabs resolve to their previous shape. Subsequent edits use explicit IDs. Reading migration does not write project data; explicit saving persists the normalized structure.
+
+Eight additional combinations are adapted from [Chinese Color Atlas](https://chinesecoloratlas.com/palettes). The source HEX values below anchor each palette; interface surfaces, text and roles are separately adjusted for light/dark readability. These are editor adaptations, not literal copies of the swatches. The existing six palettes retain their values.
+
+- `qinghua` · [Porcelain Moon](https://chinesecoloratlas.com/palettes/blue-white-porcelain): `#4994C4 / #D6ECF0 / #C0EBD7 / #065279 / #50616D`.
+- `zhujin` · [Vermilion Palace](https://chinesecoloratlas.com/palettes/ming-palace): `#FF4C00 / #EACD76 / #7BCFA6 / #50616D / #F0F0F4`.
+- `yanzhi` · [Indigo & Rouge](https://chinesecoloratlas.com/palettes/ancient-illustration): `#425066 / #9D2933 / #ECD452 / #206864 / #E0F0E9`.
+- `zitong` · [Plum & Bronze](https://chinesecoloratlas.com/palettes/premium-jewelry): `#80515F / #4A372E / #3B2D2B / #D8A7AD / #E9E7EF`.
+- `ailv` · [Herbal Jade](https://chinesecoloratlas.com/palettes/wellness-spa): `#A4E2C6 / #D4F2E7 / #D6ECF0 / #9E8368 / #75878A`.
+- `taoyao` · [Peach & Lake](https://chinesecoloratlas.com/palettes/children-education): `#F6BEC8 / #30DFF3 / #FFF143 / #425066`.
+- `qiuxiang` · [Autumn Ochre](https://chinesecoloratlas.com/palettes/autumn-editorial): `#BF9C46 / #955539 / #9E8368 / #D6ECF0`.
+- `tonglv` · [Verdigris & Copper](https://chinesecoloratlas.com/palettes/architecture-interior): `#549688 / #4A372E / #622A1D / #F0F0F4 / #9A6655`.
+
 
 Every palette supplies selection, navigation, parameter, header and neutral stage roles mapped by `web/palette-roles.css` to the real UI and preview. Four custom color roles are independent. Mode changes preserve their inputs; choosing another palette or restoring defaults clears only color overrides. Advanced colors start collapsed. Run `node tests/grouped-palettes-browser-check.mjs` (add `--built` for static) for all palettes, modes, nine styles and four tab shapes, including contrast, preview fidelity and unchanged artwork pixels.
 

@@ -29,7 +29,7 @@ try{
   return {action:visual('#export-now'),previewAction:visual('.appearance-preview-toolbar .primary'),nav:visual('#inspector-tabs>button.active'),previewNav:visual('.appearance-inspector-tabs>button.active'),dock:visual('.dock-workspace .dock-tab[aria-selected=true]'),previewDock:visual('.appearance-preview-dock .dock-tab[aria-selected=true]'),node:visual('.tree-node.selected'),nodeSelection:css('.tree-node.selected').getPropertyValue('--ui-accent-text').trim(),slider:css('#inspector input[type=range]').accentColor,previewSlider:css('.appearance-preview-value progress').accentColor,selection:token('selection'),navigation:token('navigation'),control:token('control'),header:css('.tree-header').backgroundColor,stage:css('.dock-panel-body>.tree-preview').backgroundColor,interval:visual('.appearance-preview .animation-interval'),record:visual('.appearance-preview .recording')};
  });
  let checks=0;await open();
- assert.deepEqual(await scheme.locator('option').evaluateAll(options=>options.map(o=>o.value)),GROUPED_SCHEME_IDS,'one unified list of six complete palettes');
+ assert.deepEqual(await scheme.locator('option').evaluateAll(options=>options.map(o=>o.value)),GROUPED_SCHEME_IDS,'one unified list of complete palettes');
  for(const id of GROUPED_SCHEME_IDS)for(const mode of ['classic','graphite','light']){
   await scheme.selectOption(id);await theme.selectOption(mode);await tabs.selectOption('segmented');
   for(const style of STYLE_IDS){

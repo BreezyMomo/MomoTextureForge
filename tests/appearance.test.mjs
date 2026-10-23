@@ -4,8 +4,8 @@ import {APPEARANCE_KEY,STYLE_IDS,COLOR_SCHEME_IDS,COLOR_ROLE_IDS,TAB_STYLE_IDS,n
 const defaults={theme:'classic',style:'refined',density:'compact',tabs:'segmented',scheme:'shuimo',colors:defaultAppearanceColors()};
 const makeRoot=()=>({dataset:{},style:{values:new Map(),setProperty(key,value){this.values.set(key,value);},removeProperty(key){this.values.delete(key);}}});
 
-test('six complete palettes and four explicit tab styles have safe defaults',()=>{
- assert.deepEqual(COLOR_SCHEME_IDS,['shuimo','qingci','mineral','xuanqing','zhuyue','ouhe']);assert.deepEqual(TAB_STYLE_IDS,['classic','segmented','pill','underline']);
+test('fourteen complete palettes and four explicit tab styles have safe defaults',()=>{
+ assert.deepEqual(COLOR_SCHEME_IDS,['shuimo','qingci','mineral','xuanqing','zhuyue','ouhe','qinghua','zhujin','yanzhi','zitong','ailv','taoyao','qiuxiang','tonglv']);assert.deepEqual(TAB_STYLE_IDS,['classic','segmented','pill','underline']);
  for(const raw of [null,[],{},'light',{theme:'unknown',scheme:'constructor',tabs:'unknown',style:'unknown',colors:{action:'url(https://example.com)'}}])assert.deepEqual(normalizeAppearance(raw),defaults);
  const p=normalizeAppearance({theme:'light',colors:{action:'#Aa00Ff',selection:'#112233',navigation:'#123',control:'bad',unknown:'#000000'}});
  assert.deepEqual(p.colors,{action:'#aa00ff',selection:'#112233',navigation:null,control:null});assert.equal(p.style,'standard');assert.equal(p.scheme,'qingci');assert.equal(p.tabs,'classic');

@@ -1,7 +1,7 @@
 // User preferences never enter a canvas, its undo history, or resource identity.
 export const APPEARANCE_KEY='momo-texture-appearance:v1';
 export const THEME_IDS=Object.freeze(['system','classic','graphite','light']);
-export const COLOR_SCHEME_IDS=Object.freeze(['shuimo','qingci','mineral','xuanqing','zhuyue','ouhe']);
+export const COLOR_SCHEME_IDS=Object.freeze(['shuimo','qingci','mineral','xuanqing','zhuyue','ouhe','qinghua','zhujin','yanzhi','zitong','ailv','taoyao','qiuxiang','tonglv']);
 export const GROUPED_SCHEME_IDS=COLOR_SCHEME_IDS;
 export const COLOR_ROLE_IDS=Object.freeze(['action','selection','navigation','control']);
 export const STYLE_IDS=Object.freeze(['standard','refined','airy','minimal','soft','aurora','pulse','cinema','candy']);
@@ -27,7 +27,41 @@ const colorSchemes={
  },
  xuanqing:{dark:groupedSkin('#8ac9be',['#101c22','#132027','#17272d','#21353c','#2d454d','#3a5259','#738e91','#e4eeeb','#b0c4be','#95aaa7'],'#dbbf7c','#a6b9e8','#9fc7bd','#152a37','#1a2024'),light:groupedSkin('#2d6b64',['#e8efec','#f2f6f2','#f8faf6','#e0e9e3','#d3e0d9','#bbcfc4','#6e8b80','#243c3d','#4d665f','#5d786d'],'#7a5e25','#505f90','#3c6b68','#dce5e8','#e9edef')},
  zhuyue:{dark:groupedSkin('#a6c78d',['#17221d','#1b2922','#223229','#2c4236','#3a5544','#445f4e','#809b83','#e7efe0','#b9cbb0','#9eb492'],'#ddbd86','#9fc6d5','#bec78e','#192e2e','#1a2024'),light:groupedSkin('#4c6d3f',['#eef1e5','#f5f7ee','#fafbf4','#e6ecd9','#d9e3c7','#c2ceb0','#7c9066','#2d3b2b','#56674d','#68785b'],'#80602d','#3d6c7f','#68743b','#e5eadf','#e9edef')},
- ouhe:{dark:groupedSkin('#d4b2ce',['#241f2a','#2c2533','#332c3b','#453a4d','#574963','#62516c','#a18aa9','#f5eaf1','#cfbbcd','#b39cb0'],'#dec58f','#9dbfdb','#bdb3e3','#252b3c','#1a2024'),light:groupedSkin('#875584',['#f2edf3','#f8f4f8','#fffafd','#efe4ed','#e4d5e1','#cfbbcd','#9b7d97','#403144','#6d586d','#846c83'],'#7d5c2b','#47647d','#6e5b91','#e7e6ef','#e9edef')}
+ ouhe:{dark:groupedSkin('#d4b2ce',['#241f2a','#2c2533','#332c3b','#453a4d','#574963','#62516c','#a18aa9','#f5eaf1','#cfbbcd','#b39cb0'],'#dec58f','#9dbfdb','#bdb3e3','#252b3c','#1a2024'),light:groupedSkin('#875584',['#f2edf3','#f8f4f8','#fffafd','#efe4ed','#e4d5e1','#cfbbcd','#9b7d97','#403144','#6d586d','#846c83'],'#7d5c2b','#47647d','#6e5b91','#e7e6ef','#e9edef')},
+ // Adapted from Chinese Color Atlas palette combinations. Source colors and
+ // their original palette links are listed in docs/development.md and .en.md.
+ qinghua:{
+  dark:groupedSkin('#71b9e4',['#111c2a','#162335','#1b2c40','#263b51','#334d64','#405c73','#7c9cb1','#e8f5f6','#c2d6df','#a4bfcc'],'#b0dcca','#8fb8f1','#9dc3d0','#132a43','#181f29'),
+  light:groupedSkin('#23658e',['#e6eff5','#edf5f9','#f8fcfd','#e0edf5','#cfe2ee','#b5ccdc','#6c8a9f','#223d53','#456076','#587084'],'#2d705b','#28558e','#426c7b','#d9e8f3','#e8edf1')
+ },
+ zhujin:{
+  dark:groupedSkin('#ff845c',['#23191a','#2b1f20','#342729','#443438','#534147','#654f53','#a68a82','#f7eee3','#ddc9bd','#c2a99b'],'#eacd76','#8fcfaf','#aabacb','#382220','#211c20'),
+  light:groupedSkin('#b53822',['#f1e7e0','#f8eee7','#fffaf1','#f0e2d7','#e5d4c6','#cdb5a5','#98796b','#472f2b','#6a4b43','#7a5b50'],'#806120','#347354','#48687d','#eed9ce','#eee9e7')
+ },
+ yanzhi:{
+  dark:groupedSkin('#e58294',['#191e2c','#1f2637','#272e42','#343e53','#414e65','#53637a','#8f9fb3','#eff3e9','#c9d2d6','#afbfc8'],'#ecd452','#8cc3b7','#b3cbe0','#202940','#1c202a'),
+  light:groupedSkin('#9d2933',['#e9edf1','#f0f4f6','#f9fcf7','#e2eaf0','#d3e0e8','#bdccd7','#7d91a3','#2c394b','#4c6071','#617382'],'#79651b','#206864','#4e6988','#dce5ef','#e9edf0')
+ },
+ zitong:{
+  dark:groupedSkin('#d7a3b9',['#251d26','#2d2430','#352b39','#463849','#56465a','#69576b','#a58a9f','#f4edf4','#d8c9d5','#bfaabb'],'#d8aa7d','#e3b9ba','#b6bce5','#30232b','#211e27'),
+  light:groupedSkin('#80515f',['#eee7ed','#f6eff3','#fcf9fc','#ece1e9','#e0d3dc','#cab6c6','#94738b','#453145','#634c62','#755e71'],'#815735','#934e65','#5c6492','#e6d9df','#ede9ef')
+ },
+ ailv:{
+  dark:groupedSkin('#a4e2c6',['#152221','#1a2b28','#203530','#2b443d','#37544b','#44675b','#86a89a','#e9f6ed','#c3dacf','#a7c3b4'],'#d9b491','#9fcbdc','#d1dca9','#1c3036','#1b2325'),
+  light:groupedSkin('#326c56',['#e6f1eb','#edf8f1','#f8fcf7','#dfeee2','#cde2d2','#b4cdbb','#739581','#263e35','#476452','#5a7464'],'#805d3e','#3d6c80','#64753b','#dcece8','#e9efec')
+ },
+ taoyao:{
+  dark:groupedSkin('#f6bec8',['#1c2030','#22283b','#2b3147','#39425a','#46536b','#596880','#95a4bd','#f5f2f5','#d2d7e4','#b4c1d6'],'#f3dc77','#70dce9','#bfb6ed','#26243a','#1c202b'),
+  light:groupedSkin('#a54268',['#f3eaf0','#faf2f6','#fffbfd','#eee3ed','#e3d6e3','#ccb9cf','#967d9c','#3b354f','#5e526e','#72627e'],'#7c661f','#196e82','#6e5794','#e3e9f3','#ecebf1')
+ },
+ qiuxiang:{
+  dark:groupedSkin('#d8b657',['#231e17','#2c271e','#352f25','#453c2f','#534938','#675a44','#a99670','#f5edda','#ddcfb4','#c3b28f'],'#e2a386','#b4d2d4','#c6ce9a','#292d2c','#24211e'),
+  light:groupedSkin('#83631d',['#f1eadb','#f7f0e3','#fffbf0','#eee3cb','#e2d6b8','#cbbd97','#93815d','#443928','#65553b','#766447'],'#955539','#386d75','#606e3e','#e8e6d8','#eeeae1')
+ },
+ tonglv:{
+  dark:groupedSkin('#82c1b3',['#1a201e','#202926','#29332f','#37443d','#45544b','#56675b','#90a696','#f0f3e9','#ccd7cb','#b3c2b3'],'#d7ac83','#daaba0','#b9cba6','#302621','#1e2323'),
+  light:groupedSkin('#326e61',['#eaece5','#f2f3ec','#fafbf5','#e3e8dc','#d5decd','#bdcbb3','#7e9374','#313e32','#52634e','#63755b'],'#805737','#945d4f','#597346','#e8dfd5','#ebede7')
+ }
 };
 const neutralSurfaces=skin(null,['#1c1d1f','#202123','#262729','#303234','#3c3f43','#41454a','#727981','#eceeef','#b3b9c2','#929aa7']).surfaces;
 const literalColor=value=>typeof value==='string'&&/^#[a-f\d]{6}$/i.test(value)?value.toLowerCase():null;

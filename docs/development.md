@@ -37,7 +37,19 @@ npm start -- --port 8799
 
 所有控件样式由 `STYLE_IDS` 注册并保留唯一卡片入口，只修改形态。卡片统一使用中性参考颜色，根节点始终启用明确页签覆盖，不从样式选择配色或页签。风格特有的圆角、边框、阴影与模块组织继续保留。
 
-配色 `scheme` 仅提供 `shuimo`、`qingci`、`mineral`、`xuanqing`、`zhuyue`、`ouhe` 六套完整多色方案。旧 `tianqing`、`zhusha`、`dunhuang` 映射到前三者，旧 `accent` 迁入 `colors.action`；历史 `auto` 根据读取时已有样式和模式解析一次，随后只存明确 ID。旧自动页签同样解析为原有形态，之后换控件样式不会联动。读取迁移不写入项目，显式保存时使用规范化结构。
+配色 `scheme` 仅提供 `shuimo`、`qingci`、`mineral`、`xuanqing`、`zhuyue`、`ouhe`、`qinghua`、`zhujin`、`yanzhi`、`zitong`、`ailv`、`taoyao`、`qiuxiang`、`tonglv` 十四套完整多色方案。旧 `tianqing`、`zhusha`、`dunhuang` 映射到前三者，旧 `accent` 迁入 `colors.action`；历史 `auto` 根据读取时已有样式和模式解析一次，随后只存明确 ID。旧自动页签同样解析为原有形态，之后换控件样式不会联动。读取迁移不写入项目，显式保存时使用规范化结构。
+
+新增八组参考 [Chinese Color Atlas 中国传统色配色库](https://chinesecoloratlas.com/zh-Hans/palettes)。下列原始 HEX 用于确定组合关系；编辑器的表面、文字和交互色按深浅模式另行适配对比度，不直接把原色平均铺满界面。已有六组色值保持不变。
+
+- `qinghua` · [青花映月](https://chinesecoloratlas.com/zh-Hans/palettes/blue-white-porcelain)：`#4994C4 / #D6ECF0 / #C0EBD7 / #065279 / #50616D`。
+- `zhujin` · [朱金宫阙](https://chinesecoloratlas.com/zh-Hans/palettes/ming-palace)：`#FF4C00 / #EACD76 / #7BCFA6 / #50616D / #F0F0F4`。
+- `yanzhi` · [黛蓝胭脂](https://chinesecoloratlas.com/zh-Hans/palettes/ancient-illustration)：`#425066 / #9D2933 / #ECD452 / #206864 / #E0F0E9`。
+- `zitong` · [紫绶古铜](https://chinesecoloratlas.com/zh-Hans/palettes/premium-jewelry)：`#80515F / #4A372E / #3B2D2B / #D8A7AD / #E9E7EF`。
+- `ailv` · [艾绿茶白](https://chinesecoloratlas.com/zh-Hans/palettes/wellness-spa)：`#A4E2C6 / #D4F2E7 / #D6ECF0 / #9E8368 / #75878A`。
+- `taoyao` · [桃夭湖光](https://chinesecoloratlas.com/zh-Hans/palettes/children-education)：`#F6BEC8 / #30DFF3 / #FFF143 / #425066`。
+- `qiuxiang` · [秋香赭石](https://chinesecoloratlas.com/zh-Hans/palettes/autumn-editorial)：`#BF9C46 / #955539 / #9E8368 / #D6ECF0`。
+- `tonglv` · [铜绿流光](https://chinesecoloratlas.com/zh-Hans/palettes/architecture-interior)：`#549688 / #4A372E / #622A1D / #F0F0F4 / #9A6655`。
+
 
 所有方案均返回选中、导航、参数、顶栏与中性画布周边角色，由 `web/palette-roles.css` 映射至真实控件与预览。`colors` 中四个可自定义角色相互独立；切换明暗保留自定义值，选择另一套方案与恢复默认按钮仅清除颜色覆盖。高级颜色区默认折叠。`node tests/grouped-palettes-browser-check.mjs`（静态版加 `--built`）检查全部方案、明暗、九种样式与四种页签，验证对比度、预览一致和作品像素不变。
 
