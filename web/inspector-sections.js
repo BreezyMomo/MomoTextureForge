@@ -1,3 +1,4 @@
+import {editorIcon} from './editor-icons.js';
 import {uiText,uiFormat} from './ui-language.js';
 import {SHORTCUT_MODULES,shortcutControls} from './node-shortcuts.js';
 import {animateUI,animateLayout,layoutRects,createReorderPreview,dragAutoScroll} from './editor-motion.js';
@@ -36,7 +37,7 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false,sh
   const body=make('div','inspector-module-body');for(const child of [...details.childNodes])if(child!==summary)body.append(child);
   for(const heading of body.querySelectorAll(':scope>h3[data-inspector-section]'))if(heading.dataset.inspectorSection===key)heading.remove();
   const help=make('span','tree-note inspector-module-description'),heading=make('span','inspector-module-heading'),button=make('button','inspector-module-help'),arrow=make('span','inspector-module-arrow');arrow.setAttribute('aria-hidden','true');
-  const notes=[...body.querySelectorAll(':scope>p[data-inspector-help]')];if(notes.length){help.textContent=notes.map(note=>note.textContent).join('\n');notes.forEach(note=>note.remove());}else help.textContent=uiText(descriptions[key]??'modules.sectionHelp');help.hidden=!state.help.has(id);button.type='button';button.textContent='?';button.title=uiFormat('modules.helpTitle',title);button.setAttribute('aria-label',button.title);button.setAttribute('aria-expanded',String(!help.hidden));
+  const notes=[...body.querySelectorAll(':scope>p[data-inspector-help]')];if(notes.length){help.textContent=notes.map(note=>note.textContent).join('\n');notes.forEach(note=>note.remove());}else help.textContent=uiText(descriptions[key]??'modules.sectionHelp');help.hidden=!state.help.has(id);button.type='button';button.append(editorIcon('help',doc));button.title=uiFormat('modules.helpTitle',title);button.setAttribute('aria-label',button.title);button.setAttribute('aria-expanded',String(!help.hidden));
   heading.append(label,button);if(shortcuts&&SHORTCUT_MODULES.includes(key))heading.append(shortcutControls(doc,{key,pinned:shortcuts.keys.includes(key),onToggle:shortcuts.toggle,global:shortcuts.global(key),onToggleAll:shortcuts.toggleAll}));heading.append(arrow);summary.replaceChildren(heading,help);summary.setAttribute('aria-label',title);details.append(body);details.open=state.open(id,defaultOpen);summary.setAttribute('aria-expanded',String(details.open));
   body.inert=!details.open;
   const remember=()=>{state.remember(id,details.open);summary.setAttribute('aria-expanded',String(details.open));body.inert=!details.open;};
@@ -68,7 +69,7 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false,sh
  function clear(commit=false){dragEvents?.abort();dragEvents=null;scroll?.stop();scroll=null;if(capture?.grip.hasPointerCapture?.(capture.id))capture.grip.releasePointerCapture(capture.id);capture=null;const source=dragging;if(commit)preview?.commit();else preview?.cancel();if(ghost){const image=ghost,from=image.getBoundingClientRect(),to=source?.querySelector(':scope>summary').getBoundingClientRect(),animation=to&&animateUI(image,[{transform:'none',opacity:1},{transform:`translate(${to.left-from.left}px,${to.top-from.top}px)`,opacity:0}],{duration:commit?100:160});if(animation)animation.finished.then(()=>image.remove(),()=>image.remove());else image.remove();}ghost=null;preview=null;dragging=null;}
  for(const module of modules()){
   const header=module.querySelector(':scope>summary .inspector-module-heading'),title=module.querySelector(':scope>summary .inspector-module-title').textContent;
-  const grip=make('button','module-drag-handle'),actions=make('span','module-order-actions');grip.type='button';grip.draggable=false;grip.textContent='⠿';grip.title=uiFormat('modules.dragToReorder',title);grip.setAttribute('aria-label',grip.title);grip.onclick=event=>{event.preventDefault();event.stopPropagation();};
+  const grip=make('button','module-drag-handle'),actions=make('span','module-order-actions');grip.type='button';grip.draggable=false;grip.append(editorIcon('drag',doc));grip.title=uiFormat('modules.dragToReorder',title);grip.setAttribute('aria-label',grip.title);grip.onclick=event=>{event.preventDefault();event.stopPropagation();};
   grip.onpointerdown=start=>{
    if(start.button!==0)return;start.preventDefault();start.stopPropagation();clear();grip.setPointerCapture?.(start.pointerId);capture={grip,id:start.pointerId};dragEvents=new AbortController();const options={capture:true,signal:dragEvents.signal};
    let pointerY=start.clientY;

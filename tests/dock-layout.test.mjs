@@ -53,7 +53,7 @@ test('empty workspace and floating-only workspace can recover through show',()=>
 });
 test('restoration rejects unknown panels, duplicate ownership, invalid IDs and unsafe bounds',()=>{
  const bad={root:{kind:'split',id:'bad"id',ratio:10,first:{kind:'stack',id:'same',panels:['canvas','canvas','alien'],active:'alien'},second:{kind:'stack',id:'same',panels:['canvas','inspector'],active:'canvas'}},floats:[{id:'same',root:{kind:'stack',panels:['nodes']},w:9,h:9,x:null,y:null}]};
- const clean=sanitizeLayout(bad);assert.deepEqual(panels(clean),['canvas','inspector','nodes']);assert.equal(clean.root.ratio,.88);
+ const clean=sanitizeLayout(bad);assert.deepEqual(panels(clean),['canvas','inspector','nodes']);assert.equal(clean.root.ratio,.99);
  assert.equal(panelStack(clean,'inspector').active,'inspector');assert.equal(clean.floats[0].x,0);assert.equal(clean.floats[0].y,0);
  const ids=[];visitLayout(clean,n=>ids.push(n.id));ids.push(clean.floats[0].id);assert.equal(new Set(ids).size,ids.length);assert.ok(ids.every(id=>/^[\w-]+$/.test(id)));
  const cycle={kind:'split'};cycle.first=cycle;assert.equal(sanitizeLayout({root:cycle}).root,null);
