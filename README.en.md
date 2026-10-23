@@ -51,7 +51,7 @@ The 31 node effects include print halftones, palette dithering, glitch slices, z
 
 Noise distortion adds heat-haze, water-refraction and energy-turbulence comparison examples, with continuous flow and closed trajectory motion. See [Noise distortion](docs/05-canvas-and-compositing.en.md#noise-distortion).
 
-Dissolve / burn, Shockwave refraction and Liquid fusion add three editable comparisons with progress keyframes, image and group processing. See [Dissolve, shockwave and liquid fusion](docs/05-canvas-and-compositing.en.md#dissolve-shockwave-and-liquid-fusion).
+Dissolve / burn, Shockwave refraction and Liquid fusion add three editable comparisons with progress keyframes, image and group processing. See [Dissolve, shockwave and liquid fusion](docs/05-canvas-and-compositing.en.md#dissolve-shockwave-and-liquid-fusion). Post-processing uses a current stack plus a searchable, categorized picker with shared specimen previews. Bypass, removal and restoration preserve authored settings and keyframes.
 
 The new-arrangement category includes rounded border lights, star-contour dots, herringbone tiles, basket weave, fading dots, wave flow fields and connected pipes. Puzzle examples demonstrate cell spacing, four connector styles, per-corner rounding and tabs extending outside their cells. Content-boundary comparisons, cross-cell dots and a seamless halo demonstrate **Transform / Layout → Boundary handling**: Clip, Allow overflow or Seamless repeat. Children can extend outwards and parents can wrap them; the final canvas boundary stays fixed. Choose **Edit on canvas** to inspect the node structure. Animated examples include one-shot/loop playback and export settings.
 

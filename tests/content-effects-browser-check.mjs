@@ -19,7 +19,7 @@ try{
   const size=48,pixels=new Float32Array(size*size*4);
   for(let y=0;y<size;y++)for(let x=0;x<size;x++){const a=x<4||y<4||x>43||y>43?0:1,v=(x%12<6)!==(y%12<6)?1:.15;pixels.set([v,.2+.6*y/size,.7,a],(y*size+x)*4);}
   const asset=await imageAsset(new File([await encodePNG(pixels,size,size)],'Content source.png',{type:'image/png'})),id='asset_'+await contentHash(asset);registerAsset(id,asset,await prepareAsset(asset));
-  const p=project(),g=node('group');g.name='Content scene';g.children=[node('shape',id),node('shape','Star')];g.children[1].transform.width=g.children[1].transform.height=.45;p.root.children=[g];
+  const p=project(),g=node('group');g.name='Content scene';g.effectPresence=Object.fromEntries((await import('./post-effect-specs.js')).EFFECT_IDS.map(id=>[id,true]));g.children=[node('shape',id),node('shape','Star')];g.children[1].transform.width=g.children[1].transform.height=.45;p.root.children=[g];
   const bytes=await encodeResourcePack(p);let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));return {pack:btoa(binary),imageId:id};
  });
  const gpu=built||uiOnly?{}:await page.evaluate(async imageId=>{
