@@ -27,23 +27,23 @@ npm start -- --port 8799
 
 ## 界面主题
 
-`web/appearance.js` 管理版本化的浏览器偏好 `momo-texture-appearance:v1`，只接受内置主题 ID 和六位十六进制强调色。跟随系统模式监听系统明暗变化；强调色生成可读的按钮文字、面板强调文字和选中底色。`web/appearance-settings.js` 提供实时预览、取消还原和显式保存，存储不可用时保留预览并显示提示。
+`web/appearance.js` 管理浏览器偏好 `momo-texture-appearance:v1`。规范化后包含 `scheme`、`style`、`tabs`、`theme`、`density` 与 `colors:{action,selection,navigation,control}`；颜色接受六位 HEX 或 null（跟随当前方案）。背景与文字由方案提供，交互颜色派生可读对比度。实时预览、取消、保存均覆盖全部设置，不进入项目、撤销或资源哈希。
 
 公共界面颜色在 `web/theme-tokens.css` 按背景、面板、控件、文字、边框与状态用途定义，各组件样式引用这些变量。画布辅助线、缩略图底色、用户色板和作品内容保持独立。启动入口在挂载编辑器前应用偏好；离线与静态构建内嵌同一份主题样式和逻辑。外观不进入项目模型、撤销记录、资源哈希或作品导出。
 
-偏好中的 `style`（`standard`、`refined`、`airy`、`minimal`、`soft`、`aurora`、`pulse`、`cinema`、`candy`）和 `density`（`compact`、`comfortable`）独立于配色。`standard` 始终对应“标准”，保留原来的语义配色和控件规则；旧配色偏好缺少风格时补为标准与紧凑，新浏览器默认使用独立的 `refined`（精致）。根元素的 `data-interface-style`、`data-density` 驱动共享圆角与间距变量，简洁风格仅弱化内容模块边框，保留输入框、键盘焦点和停靠分隔条。密度调整触发现有预览尺寸观察器，不写入画布模型。
+偏好中的 `style`（`standard`、`refined`、`airy`、`minimal`、`soft`、`aurora`、`pulse`、`cinema`、`candy`）和 `density`（`compact`、`comfortable`）独立于配色。`standard` 始终对应“标准”，保留标准控件规则；旧配色偏好缺少风格时补为标准与紧凑，新浏览器默认使用独立的 `refined`（精致）。根元素的 `data-interface-style`、`data-density` 驱动共享圆角与间距变量，简洁风格仅弱化内容模块边框，保留输入框、键盘焦点和停靠分隔条。密度调整触发现有预览尺寸观察器，不写入画布模型。
 
 `web/editor-surfaces.css` 为精致与四个创作风格提供公共表面层级，`web/creative-skins.css` 分别定义其页签、圆角与面板结构，均以风格 ID 限定，避免覆盖标准、简洁或柔和；源码和静态包均在其他编辑器样式之后加载。背景、边框、选中态与阴影通过 `web/theme-tokens.css` 的语义变量组合，避免改动作品色板、透明棋盘和画布辅助线。视觉参考为 [Linear 的分层表面](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/linear.app/DESIGN.md) 与 [Raycast 的浮层](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/raycast/DESIGN.md)，按编辑器的紧凑布局调整，不使用官网的大字号与宣传区留白。
 
-所有界面风格由 `STYLE_IDS` 注册，并通过唯一的风格卡片入口选择。卡片只修改 `style`，保留配色方案、明暗模式、自定义强调色、密度和页签；选中态仅取决于风格 ID。每种创作风格提供深浅色表面变量，石墨配色进一步中和背景；`appearancePalette` 按实际面板颜色计算强调文字对比度。使用 `auto` 配色切回既有风格时移除全部创作风格内联颜色，避免串色。视觉参考：[Framer](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/framer/DESIGN.md)、[Spotify](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/spotify/DESIGN.md)、[Runway](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/runwayml/DESIGN.md)、[Lovable](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/lovable/DESIGN.md) 与 [MiniMax](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/minimax/DESIGN.md)。
+所有控件样式由 `STYLE_IDS` 注册并保留唯一卡片入口，只修改形态。卡片统一使用中性参考颜色，根节点始终启用明确页签覆盖，不从样式选择配色或页签。风格特有的圆角、边框、阴影与模块组织继续保留。
 
-配色偏好 `scheme` 接受 `auto`、`xuanqing`、`tianqing`、`dunhuang`、`zhusha`、`zhuyue` 和 `ouhe`；旧设置缺少该字段时补为 `auto`，保留原有颜色。命名方案独立于控件风格，按深浅模式提供背景、面板、控件、边框、三级文字和推荐强调色；石墨模式中和表面颜色。选择方案将强调色重置为推荐色，随后仍可自定义。风格卡片保留各自固定的参考配色与示意图，不随配色方案、明暗模式或强调色改变；实际搭配效果在右侧与工作区实时预览。方案为适配编辑器自行调制的界面颜色，不作为传统色历史标准值，也不引入外部色表依赖。
+配色 `scheme` 仅提供 `shuimo`、`qingci`、`mineral`、`xuanqing`、`zhuyue`、`ouhe` 六套完整多色方案。旧 `tianqing`、`zhusha`、`dunhuang` 映射到前三者，旧 `accent` 迁入 `colors.action`；历史 `auto` 根据读取时已有样式和模式解析一次，随后只存明确 ID。旧自动页签同样解析为原有形态，之后换控件样式不会联动。读取迁移不写入项目，显式保存时使用规范化结构。
 
-`GROUPED_SCHEME_IDS` 额外注册 `shuimo`、`qingci`、`mineral` 三套成组配色，借鉴 [Chinese Color Atlas 的角色配色方式](https://chinesecoloratlas.com/zh-Hans/palettes)，按编辑器对比度重新调制。`appearancePalette` 额外返回选中、导航、参数、顶栏和中性画布周边角色；自定义强调色仅改变动作色。`web/palette-roles.css` 仅在 `data-palette-roles=true` 时映射角色，保留各风格的控件几何、独立页签和功能状态色；切回原方案时移除全部角色覆盖。预览复用真实主按钮、页签和动画状态样式，色条展示当前六个颜色角色。运行 `node tests/grouped-palettes-browser-check.mjs`（静态版加 `--built`），检查三组配色与明暗、九种风格及独立页签的 117 组组合、主色独立性、预览一致、对比度、保存/取消/恢复、作品像素不变与窄屏。
+所有方案均返回选中、导航、参数、顶栏与中性画布周边角色，由 `web/palette-roles.css` 映射至真实控件与预览。`colors` 中四个可自定义角色相互独立；切换明暗保留自定义值，选择另一套方案与恢复默认按钮仅清除颜色覆盖。高级颜色区默认折叠。`node tests/grouped-palettes-browser-check.mjs`（静态版加 `--built`）检查全部方案、明暗、九种样式与四种页签，验证对比度、预览一致和作品像素不变。
 
 `airy`（轻盈）复用精致风格的共享表面与控件变量，仅在自身选择器下以透明模块外框、分组分隔线和填充输入区实现减少边框；不修改既有风格或默认选择。`web/editor-icons.js` 为画布工具、节点类型、参数重置/关键帧和模块操作提供统一 SVG，图标按钮保留语义名称与本地化提示，关键帧状态通过 `data-key-state` 更新且不替换按钮。参数数值与操作列在 `web/tree.css` 中对齐，多选数值行使用 `selection-number-field`；`web/parameter-presentation.js` 按稳定路径标记 X/Y 轴与角度/秒单位，不分析翻译后的名称；紧凑快捷区与全局设置保留自身布局。运行 `node tests/editor-polish-browser-check.mjs`（静态版加 `--built`）验证风格切换与保存、240/300/400px 排版、重置/撤销/关键帧及多选控件。
 
-页签偏好 `tabs`（`auto`、`classic`、`segmented`、`pill`、`underline`）独立保存。缺少该字段的旧设置保持 `auto`，不覆盖原有外观；跟随风格时使用其默认页签，明确选择页签后切换风格仍保留该选择。根元素 `data-tab-style` 表示实际形态，`data-tab-override` 决定是否加载独立覆盖，规则在 `web/tab-styles.css`。预览复用 `.dock-stack-header` / `.dock-tab`，参数页签通过 `:is(#inspector-tabs,.appearance-inspector-tabs)` 共用规则；浏览器检查比对实际控件与预览的颜色、边框、圆角、阴影与间距。
+页签偏好 `tabs` 仅接受 `classic`、`segmented`、`pill`、`underline`。`data-tab-style` 表示明确选择，`data-tab-override` 始终为 true，规则在 `web/tab-styles.css`。历史 auto 仅在读取时迁移。停靠与参数页签预览共用实际规则，浏览器检查比对颜色、边框、圆角、阴影与间距。
 
 验证主题行为可运行 `node --test tests/appearance.test.mjs`、`node tests/appearance-browser-check.mjs`；静态构建后加 `--built` 检查发行版。浏览器检查覆盖预览、取消、保存恢复、系统变化、中英文入口、窄屏顶栏、画布像素与项目存储不变，截图位于 `test-results/appearance/`。
 
@@ -173,7 +173,7 @@ node tools/capture-docs.mjs shortcuts ribbons appearance
 | bezier-editor | 多段路径、放大编辑和控制点操作 |
 | shortcuts | 节点快捷区、全部适用菜单和可移动通道曲线窗口 |
 | ribbons | 折叠线束的宽画布、风格预设与参数 |
-| appearance | 国风配色、明暗模式、控件风格、页签、密度与强调色 |
+| appearance | 国风配色、明暗模式、控件样式、页签、密度与强调色 |
 | library | 图库、生成器参数、图形列表 |
 | library-filters | 全部/收藏/最近/动态、分类多选与动态标记 |
 | parameter-states | 动画控制状态与录制/基础值操作 |

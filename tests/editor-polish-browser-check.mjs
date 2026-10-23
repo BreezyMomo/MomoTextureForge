@@ -22,7 +22,7 @@ try{
  const snapshot=()=>page.evaluate(()=>({hash:location.hash,draft:localStorage.getItem('momo-texture-tree:draft:v1'),undo:document.querySelector('#undo').disabled,redo:document.querySelector('#redo').disabled,pixels:document.querySelector('#tree-canvas').toDataURL()}));
  const initial=await snapshot(),open=()=>page.locator('#appearance-settings').click(),style=id=>page.locator('.appearance-style-card[data-style='+id+']').click();
  await open();assert.equal(await page.locator('.appearance-style-card').count(),9);for(const id of STYLE_IDS)assert.equal(await page.locator('[data-style='+id+']').count(),1);
- await style('airy');await page.locator('#appearance-scheme').selectOption('dunhuang');await page.locator('#appearance-tabs').selectOption('pill');await page.locator('[data-save]').click();
+ await style('airy');await page.locator('#appearance-scheme').selectOption('mineral');await page.locator('#appearance-tabs').selectOption('pill');await page.locator('[data-save]').click();
  assert.deepEqual(await snapshot(),initial,'switching styles preserves artwork and history');
  const module=page.locator('#inspector details[data-module="modules.shapeParameters"]'),field=path=>page.locator('#inspector .tree-number-field[data-parameter-path="'+path+'"]');
  for(const mode of ['classic','graphite','light']){

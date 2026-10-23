@@ -29,12 +29,12 @@ try{
   return {action:visual('#export-now'),previewAction:visual('.appearance-preview-toolbar .primary'),nav:visual('#inspector-tabs>button.active'),previewNav:visual('.appearance-inspector-tabs>button.active'),dock:visual('.dock-workspace .dock-tab[aria-selected=true]'),previewDock:visual('.appearance-preview-dock .dock-tab[aria-selected=true]'),node:visual('.tree-node.selected'),nodeSelection:css('.tree-node.selected').getPropertyValue('--ui-accent-text').trim(),slider:css('#inspector input[type=range]').accentColor,previewSlider:css('.appearance-preview-value progress').accentColor,selection:token('selection'),navigation:token('navigation'),control:token('control'),header:css('.tree-header').backgroundColor,stage:css('.dock-panel-body>.tree-preview').backgroundColor,interval:visual('.appearance-preview .animation-interval'),record:visual('.appearance-preview .recording')};
  });
  let checks=0;await open();
- for(const id of ['xuanqing','tianqing','dunhuang','zhusha','zhuyue','ouhe',...GROUPED_SCHEME_IDS])assert.equal(await scheme.locator('option[value='+id+']').count(),1,'every old and new scheme is available');
+ assert.deepEqual(await scheme.locator('option').evaluateAll(options=>options.map(o=>o.value)),GROUPED_SCHEME_IDS,'one unified list of six complete palettes');
  for(const id of GROUPED_SCHEME_IDS)for(const mode of ['classic','graphite','light']){
-  await scheme.selectOption(id);await theme.selectOption(mode);await tabs.selectOption('auto');
+  await scheme.selectOption(id);await theme.selectOption(mode);await tabs.selectOption('segmented');
   for(const style of STYLE_IDS){
    await page.locator('.appearance-style-card[data-style='+style+']').click();
-   for(const tab of style==='refined'?['auto','classic','segmented','pill','underline']:['auto']){
+   for(const tab of style==='refined'?['classic','segmented','pill','underline']:['segmented']){
     await tabs.selectOption(tab);const v=await read(),context=id+' '+mode+' '+style+' '+tab;
     assert.equal(await page.locator('html').getAttribute('data-palette-roles'),'true');assert.equal(await page.locator('.appearance-palette-color').count(),6);
     assert.equal(v.previewAction.bg,v.action.bg,context+' primary preview');assert.equal(v.previewAction.color,v.action.color);
@@ -48,9 +48,9 @@ try{
    }
   }
   await page.locator('.appearance-style-card[data-style=refined]').click();await tabs.selectOption('pill');
-  const original=await read();await page.locator('#appearance-hex').fill('#ff00ff');await page.locator('#appearance-hex').dispatchEvent('input');const custom=await read();
+  const original=await read();await page.locator('#appearance-colors>summary').click();await page.locator('#appearance-hex').fill('#ff00ff');await page.locator('#appearance-hex').dispatchEvent('input');const custom=await read();
   for(const key of ['node','nav','dock','slider','selection','navigation','control','header','stage'])assert.deepEqual(custom[key],original[key],key+' stays independent of the primary action color');assert.notEqual(custom.action.bg,original.action.bg);
-  await page.locator('[data-reset]').click();assert.deepEqual(await snapshot(),before,'palette changes preserve artwork, pixels and undo');
+  await page.locator('[data-reset]').click();await page.locator('#appearance-colors>summary').click();await page.locator('.appearance-dialog').evaluate(e=>e.scrollTop=0);assert.deepEqual(await snapshot(),before,'palette changes preserve artwork, pixels and undo');
   if(mode!=='graphite'){
    const lane=await page.locator('.appearance-preview .animation-lane').boundingBox(),footer=await page.locator('.appearance-dialog>footer').boundingBox();assert.ok(lane.y+lane.height<footer.y,'preview timeline is visible above the footer');
    await page.locator('.appearance-dialog').screenshot({path:path.join(output,`${built?'built':'source'}-${id}-${mode}-settings.png`)});
@@ -61,8 +61,8 @@ try{
  }
  await scheme.selectOption('shuimo');await page.locator('[data-save]').click();await page.reload();await ready();assert.equal(await page.locator('html').getAttribute('data-color-scheme'),'shuimo');await page.locator('[role=treeitem]').first().click();
  await open();const saved=await read();await scheme.selectOption('mineral');await theme.selectOption('light');await page.keyboard.press('Escape');assert.equal(await page.locator('html').getAttribute('data-color-scheme'),'shuimo');await open();assert.deepEqual(await read(),saved,'cancel restores all role tokens');
- await scheme.selectOption('dunhuang');assert.equal(await page.locator('html').getAttribute('data-palette-roles'),'false');assert.equal(await page.locator('.appearance-palette-strip').isVisible(),false);assert.equal(await page.locator('html').evaluate(e=>e.style.getPropertyValue('--ui-navigation')),'');
- await scheme.selectOption('qingci');await page.locator('[data-save]').click();await page.locator('#language-settings').selectOption('en');await open();assert.equal(await scheme.locator('option[value=qingci]').innerText(),'Celadon & Gold · Palette');assert.match(await page.locator('.appearance-palette-strip').innerText(),/Selection/);
+ await scheme.selectOption('mineral');assert.equal(await page.locator('html').getAttribute('data-palette-roles'),'true');assert.equal(await page.locator('.appearance-palette-strip').isVisible(),true);assert.notEqual(await page.locator('html').evaluate(e=>e.style.getPropertyValue('--ui-navigation')),'');
+ await scheme.selectOption('qingci');await page.locator('[data-save]').click();await page.locator('#language-settings').selectOption('en');await open();assert.equal(await scheme.locator('option[value=qingci]').innerText(),'Celadon & Gold');assert.match(await page.locator('.appearance-palette-strip').innerText(),/Selection/);
  for(const width of [768,550,320]){await page.setViewportSize({width,height:960});assert.equal(await page.locator('.appearance-dialog').evaluate(e=>e.scrollWidth<=e.clientWidth+1),true,'dialog fits '+width);}
  assert.deepEqual(errors,[]);console.log({built,checks,roleSeparation:true,allStyles:true,realPreview:true,contrast:true,oldSchemes:true,saveReloadCancel:true,artworkUnchanged:true,englishNarrow:true,errors});
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

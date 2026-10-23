@@ -32,6 +32,7 @@ try{
  const unchanged=()=>page.evaluate(()=>({hash:location.hash,draft:localStorage.getItem('momo-texture-tree:draft:v1'),undo:document.querySelector('#undo').disabled,redo:document.querySelector('#redo').disabled}));
  const before=await unchanged();
  await page.locator('#appearance-settings').click();
+ await page.locator('#appearance-colors>summary').click();
  const read=()=>page.evaluate(()=>{
   const css=s=>getComputedStyle(document.querySelector(s)),read=s=>{const c=css(s);return {color:c.color,bg:c.backgroundColor,border:c.borderTopColor};};
   const actual={badge:read('#shape-library .graphic-animated'),interval:read('#node-animation-editor .animation-interval:not(.context):not(.readonly)'),key:read('#node-animation-editor button.animation-key[aria-pressed=true]'),record:read('#inspector .inspector-animation-mode button.recording'),playhead:read('#node-animation-editor .animation-playhead'),favorite:read('#shape-library .graphic-favorite[aria-pressed=true]')};
@@ -61,11 +62,19 @@ try{
   }
  }
  }
- for(const scheme of COLOR_SCHEME_IDS.slice(1))for(const theme of ['classic','light']){
+ for(const theme of ['classic','graphite','light']){
+  await page.locator('#appearance-theme').selectOption(theme);
+  for(const role of ['selection','navigation','control'])for(const color of ['#000000','#FFFFFF']){
+   const input=page.locator('#appearance-hex-'+role);await input.fill(color);await input.dispatchEvent('input');
+   const v=await read();assert.deepEqual(v.actual,baselines.get(theme),'functional colors remain independent of custom '+role);
+   for(const key of ['badge','interval','key','record','playhead'])assert.deepEqual(v.preview[key],v.actual[key]);
+  }
+ }
+ for(const scheme of COLOR_SCHEME_IDS)for(const theme of ['classic','light']){
   await page.locator('#appearance-scheme').selectOption(scheme);await page.locator('#appearance-theme').selectOption(theme);await page.locator('.appearance-style-card[data-style=refined]').click();await page.locator('#appearance-tabs').selectOption('pill');
   await page.locator('.appearance-dialog').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-'+scheme+'-'+theme+'.png',output))});
  }
- await page.locator('#appearance-scheme').selectOption('auto');
+ await page.locator('#appearance-scheme').selectOption('shuimo');
  assert.deepEqual(await unchanged(),before,'color settings do not edit artwork or history');
  await page.locator('#appearance-theme').selectOption('classic');await page.locator('.appearance-style-card[data-style=aurora]').click();
  await page.locator('.appearance-dialog').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-preview.png',output))});
