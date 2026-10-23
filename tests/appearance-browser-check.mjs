@@ -54,6 +54,12 @@ try{
 
  const scheme=page.locator('#appearance-scheme');assert.equal(await scheme.locator('option').count(),COLOR_SCHEME_IDS.length);
  const initialColors=await scheme.inputValue();
+ const thumbnails=()=>page.locator('.appearance-style-card').evaluateAll(cards=>cards.map(card=>{
+  const css=selector=>getComputedStyle(card.querySelector(selector));
+  return {style:card.dataset.style,background:css('.appearance-style-art').background,sidebar:css('.preset-mini-sidebar').background,tab:css('.preset-mini-tab').background,field:css('.preset-mini-field').background,orbit:css('.preset-mini-orbit').borderColor,glow:css('.preset-mini-orbit').boxShadow};
+ }));
+ const originalThumbnails=await thumbnails();
+
  const geometry=()=>page.locator('#inspector-tabs button.active').evaluate(e=>{const c=getComputedStyle(e);return {radius:c.borderRadius,padding:c.padding,font:c.fontSize};});
  const shapeBefore=await geometry(),namedBefore=await snapshot();
  for(const schemeId of COLOR_SCHEME_IDS.slice(1)){
@@ -66,6 +72,7 @@ try{
    assert.equal(await page.locator('html').evaluate(e=>e.style.getPropertyValue('--ui-panel')),expected.surfaces.panel);
    assert.equal((await page.locator('#appearance-hex').inputValue()).toLowerCase(),expected.accent,'scheme uses its recommended accent');
    await page.locator('#appearance-hex').fill('#336699');await page.locator('#appearance-hex').dispatchEvent('input');
+   assert.deepEqual(await thumbnails(),originalThumbnails,'reference thumbnails stay fixed across schemes, modes and custom accents');
    await style.selectOption('standard');assert.equal(await scheme.inputValue(),schemeId);assert.equal(await page.locator('#appearance-hex').inputValue(),'#336699','control style preserves named colors and custom accent');
    await style.selectOption('candy');await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));assert.deepEqual(await snapshot(),namedBefore,'schemes never change canvas pixels, project data, or history');
   }
@@ -142,5 +149,5 @@ try{
  await page.locator('[data-save]').click();await page.locator('#open-graphics-library').click();await page.locator('.graphics-card').first().waitFor();
  assert.equal(await page.locator('.graphics-dialog').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
  await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-library-light.png',output))});
- assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,checks:['live preview','18 named scheme/mode combinations preserve geometry and artwork','scheme save/reload/cancel','custom accent','canvas/storage/history isolation','48 theme/style/density combinations','single style grid preserves palette, custom accent, tabs and density','creative palette cleanup','modern pill tabs','independent tab geometry and save/restore','real dock and inspector preview fidelity','original and refined stay distinct','saved style/density restoration','cancel','system changes','English header 1600/1100/768','320px dialog','hex validation','library surfaces'],errors}));
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,checks:['live preview','fixed reference thumbnails across schemes, modes and custom accents','18 named scheme/mode combinations preserve geometry and artwork','scheme save/reload/cancel','custom accent','canvas/storage/history isolation','48 theme/style/density combinations','single style grid preserves palette, custom accent, tabs and density','creative palette cleanup','modern pill tabs','independent tab geometry and save/restore','real dock and inspector preview fidelity','original and refined stay distinct','saved style/density restoration','cancel','system changes','English header 1600/1100/768','320px dialog','hex validation','library surfaces'],errors}));
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

@@ -32,9 +32,6 @@
 .appearance-style-card[data-style=cinema] .appearance-style-art{--preset-round:2px}
 .appearance-style-card[data-style=cinema] .preset-mini-tab{height:2px;top:13px}
 .appearance-style-card[data-style=candy] .appearance-style-art{background:linear-gradient(135deg,#ede7fb,#fae1e9)}
-/* Named schemes keep the style thumbnails focused on control geometry. */
-:root[data-color-scheme]:not([data-color-scheme=auto]) .appearance-style-card{--preset-bg:var(--ui-inset);--preset-accent:var(--ui-accent);--preset-surface:var(--ui-surface)}
-:root[data-color-scheme]:not([data-color-scheme=auto]) .appearance-style-art{background:var(--preset-bg)}
 .appearance-preview{align-self:start;position:sticky;top:0}
 @media(max-width:550px){.appearance-preview{position:static;align-self:stretch}}
 

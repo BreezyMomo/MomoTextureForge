@@ -37,7 +37,7 @@ npm start -- --port 8799
 
 所有界面风格由 `STYLE_IDS` 注册，并通过唯一的风格卡片入口选择。卡片只修改 `style`，保留配色方案、明暗模式、自定义强调色、密度和页签；选中态仅取决于风格 ID。每种创作风格提供深浅色表面变量，石墨配色进一步中和背景；`appearancePalette` 按实际面板颜色计算强调文字对比度。使用 `auto` 配色切回既有风格时移除全部创作风格内联颜色，避免串色。视觉参考：[Framer](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/framer/DESIGN.md)、[Spotify](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/spotify/DESIGN.md)、[Runway](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/runwayml/DESIGN.md)、[Lovable](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/lovable/DESIGN.md) 与 [MiniMax](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/minimax/DESIGN.md)。
 
-配色偏好 `scheme` 接受 `auto`、`xuanqing`、`tianqing`、`dunhuang`、`zhusha`、`zhuyue` 和 `ouhe`；旧设置缺少该字段时补为 `auto`，保留原有颜色。命名方案独立于控件风格，按深浅模式提供背景、面板、控件、边框、三级文字和推荐强调色；石墨模式中和表面颜色。选择方案将强调色重置为推荐色，随后仍可自定义。`data-color-scheme` 同步样式卡片示意图，避免暗示控件形态与颜色绑定。方案为适配编辑器自行调制的界面颜色，不作为传统色历史标准值，也不引入外部色表依赖。
+配色偏好 `scheme` 接受 `auto`、`xuanqing`、`tianqing`、`dunhuang`、`zhusha`、`zhuyue` 和 `ouhe`；旧设置缺少该字段时补为 `auto`，保留原有颜色。命名方案独立于控件风格，按深浅模式提供背景、面板、控件、边框、三级文字和推荐强调色；石墨模式中和表面颜色。选择方案将强调色重置为推荐色，随后仍可自定义。风格卡片保留各自固定的参考配色与示意图，不随配色方案、明暗模式或强调色改变；实际搭配效果在右侧与工作区实时预览。方案为适配编辑器自行调制的界面颜色，不作为传统色历史标准值，也不引入外部色表依赖。
 
 页签偏好 `tabs`（`auto`、`classic`、`segmented`、`pill`、`underline`）独立保存。缺少该字段的旧设置保持 `auto`，不覆盖原有外观；跟随风格时使用其默认页签，明确选择页签后切换风格仍保留该选择。根元素 `data-tab-style` 表示实际形态，`data-tab-override` 决定是否加载独立覆盖，规则在 `web/tab-styles.css`。预览复用 `.dock-stack-header` / `.dock-tab`，参数页签通过 `:is(#inspector-tabs,.appearance-inspector-tabs)` 共用规则；浏览器检查比对实际控件与预览的颜色、边框、圆角、阴影与间距。
 
