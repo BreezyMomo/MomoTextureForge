@@ -41,6 +41,8 @@ npm start -- --port 8799
 
 验证主题行为可运行 `node --test tests/appearance.test.mjs`、`node tests/appearance-browser-check.mjs`；静态构建后加 `--built` 检查发行版。浏览器检查覆盖预览、取消、保存恢复、系统变化、中英文入口、窄屏顶栏、画布像素与项目存储不变，截图位于 `test-results/appearance/`。
 
+编辑状态使用独立语义变量：`--ui-motion` / `--ui-motion-bg` 表示动画，`--ui-time*` 表示时间区间，`--ui-key*` 表示关键帧与收藏，`--ui-playhead` 表示播放位置，录制复用危险色。它们不从个人强调色推导；浅色主题提供对应的深色文字与轮廓。`web/tree.css` 的功能状态规则优先于通用选中样式，录制即使带 `aria-pressed=true` 仍显示红色。外观预览复用真实动画标记、时间区间、关键帧和录制按钮的类与规则。
+
 ## 构建离线版
 
 ```sh

@@ -28,6 +28,8 @@ Standard retains the earlier module frames, selection treatment and controls; sa
 
 **Tab style** independently offers Classic, Segmented, Pills and Underlined, or Follow interface style to retain a skin’s original tabs. Changing only tabs leaves colors, skin and density unchanged; switching skins also preserves an explicit tab choice. The preview includes both dock-panel and inspector tabs, using the editor’s actual style rules.
 
+Functional colors are independent of the personal accent: green marks animation badges and animated parameters, blue marks time intervals, gold marks keyframes and favorites, and red marks recording. The playhead uses a high-contrast line and top marker. Read-only intervals retain gray stripes and dashed borders. Changing the style or accent preserves these meanings, and the appearance preview includes these states.
+
 While dragging a parameter module, adjacent modules smoothly make room. The new order is saved only on drop; Esc cancels. Same-level node sorting shows an insertion gap, while cross-group moves retain insertion lines and target highlights. Panel placement, section disclosures, menus, thumbnails and notifications use brief transitions; sliders, canvas manipulation and dragged objects remain immediate. Interface motion respects the system's reduced-motion preference without changing artwork animation or exports.
 
 ![Interface colors, style and density](images/en/appearance-settings.png)

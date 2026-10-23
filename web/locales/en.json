@@ -1920,5 +1920,6 @@
   "appearance.tabsUnderline": "Underlined",
   "appearance.tabsHelp": "Customize panel and inspector tabs without changing colors.",
   "appearance.samplePanel": "Inspector",
-  "appearance.sampleLibrary": "Graphics list"
+  "appearance.sampleLibrary": "Graphics list",
+  "appearance.functionalColors": "Green marks animation, blue marks time intervals, gold marks keyframes, and red marks recording."
 }

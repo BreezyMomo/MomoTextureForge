@@ -41,6 +41,8 @@ All interface styles are registered in `STYLE_IDS` and selected through one card
 
 The independent `tabs` preference accepts `auto`, `classic`, `segmented`, `pill` and `underline`. Older settings default to `auto`, preserving their existing look. Following the style uses its default tabs; explicit tab choices survive style changes, and adjusting only tabs does not reset other preferences. Root `data-tab-style` records the effective geometry and `data-tab-override` enables explicit overrides from `web/tab-styles.css`. The preview reuses `.dock-stack-header` / `.dock-tab`; inspector rules are shared through `:is(#inspector-tabs,.appearance-inspector-tabs)`. Browser checks compare real and preview colors, borders, radii, shadows and padding.
 
+Editing states use independent semantic variables: `--ui-motion` / `--ui-motion-bg` for animation, `--ui-time*` for time intervals, `--ui-key*` for keyframes and favorites, and `--ui-playhead` for playback position; recording uses the danger colors. They are not derived from the personal accent. Light themes provide darker text and outlines. Functional-state rules in `web/tree.css` take precedence over generic selection, keeping recording red even with `aria-pressed=true`. The appearance preview shares the real animation-badge, interval, keyframe and recording-button classes and rules.
+
 ## Build offline
 
 ```sh
