@@ -6,7 +6,7 @@
   "name": "侵蚀遮罩",
   "category": "mask",
   "order": 257,
-  "variant": 0,
+  "variant": 3,
   "parameters": [
     {
       "slot": 0,

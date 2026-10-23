@@ -6,7 +6,7 @@
   "name": "间歇喷发",
   "category": "energy",
   "order": 239,
-  "variant": 24,
+  "variant": 19,
   "parameters": [
     {
       "slot": 0,

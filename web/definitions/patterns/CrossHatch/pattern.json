@@ -6,7 +6,7 @@
   "name": "交叉排线",
   "category": "pattern",
   "order": 78,
-  "variant": 22,
+  "variant": 10,
   "parameters": [
     {
       "slot": 0,

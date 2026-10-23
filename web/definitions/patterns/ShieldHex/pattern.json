@@ -6,7 +6,7 @@
   "name": "能量护盾",
   "category": "energy",
   "order": 242,
-  "variant": 27,
+  "variant": 20,
   "parameters": [
     {
       "slot": 0,

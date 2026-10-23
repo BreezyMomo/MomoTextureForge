@@ -6,7 +6,7 @@
   "name": "斩击弧光",
   "category": "ribbon",
   "order": 275,
-  "variant": 10,
+  "variant": 14,
   "parameters": [
     {
       "slot": 0,

@@ -6,7 +6,7 @@
   "name": "三角网格",
   "category": "pattern",
   "order": 74,
-  "variant": 18,
+  "variant": 8,
   "parameters": [
     {
       "slot": 2,

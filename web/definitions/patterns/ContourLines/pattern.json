@@ -6,7 +6,7 @@
   "name": "等高线",
   "category": "pattern",
   "order": 95,
-  "variant": 39,
+  "variant": 19,
   "parameters": [
     {
       "slot": 0,

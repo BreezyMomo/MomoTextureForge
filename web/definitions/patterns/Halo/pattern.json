@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "高斯光晕",
-  "category": "radial",
+  "category": "light",
   "order": 16,
-  "variant": 16,
+  "variant": 2,
   "parameters": [
     {
       "slot": 0,

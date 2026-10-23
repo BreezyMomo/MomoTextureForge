@@ -155,7 +155,7 @@ test("all catalogue entries have unique identities and explicit shader branches"
     CATEGORIES.reduce((n, c) => n + c.count, 0),
     CATALOG.length,
   );
-  assert.equal(CATEGORIES.length, 13);
+  assert.equal(CATEGORIES.length, 17);
   assert.ok(
     PATTERN_EXPRESSIONS.every((x) => typeof x === "string" && x.length > 0),
   );

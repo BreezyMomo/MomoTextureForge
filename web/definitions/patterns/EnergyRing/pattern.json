@@ -6,7 +6,7 @@
   "name": "能量环",
   "category": "energy",
   "order": 234,
-  "variant": 19,
+  "variant": 14,
   "parameters": [
     {
       "slot": 0,

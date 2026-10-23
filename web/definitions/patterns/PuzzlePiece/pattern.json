@@ -4,9 +4,9 @@
   "revision": 5,
   "abi": "momo-pattern/16-v1",
   "name": "拼图块",
-  "category": "pattern",
+  "category": "shape",
   "order": 51,
-  "variant": 0,
+  "variant": 26,
   "parameters": [
     {
       "slot": 0,

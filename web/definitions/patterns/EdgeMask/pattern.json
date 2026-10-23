@@ -6,7 +6,7 @@
   "name": "边缘遮罩",
   "category": "mask",
   "order": 261,
-  "variant": 4,
+  "variant": 7,
   "parameters": [
     {
       "slot": 0,

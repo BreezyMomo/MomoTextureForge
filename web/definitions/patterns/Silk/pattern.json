@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "丝绸",
-  "category": "noise",
+  "category": "fabric",
   "order": 138,
-  "variant": 23,
+  "variant": 7,
   "parameters": [
     {
       "slot": 0,

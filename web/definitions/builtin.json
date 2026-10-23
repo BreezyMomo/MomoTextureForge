@@ -1,23 +1,31 @@
 {
   "schema": "momo.texture-index/v1",
-  "revision": 21,
+  "revision": 22,
   "abi": "momo-pattern/16-v1",
   "categories": [
     {
-      "id": "radial",
-      "name": "径向"
-    },
-    {
       "id": "shape",
-      "name": "形状"
-    },
-    {
-      "id": "pattern",
-      "name": "图案"
+      "name": "基础形状"
     },
     {
       "id": "gradient",
       "name": "渐变"
+    },
+    {
+      "id": "pattern",
+      "name": "几何图案"
+    },
+    {
+      "id": "ornament",
+      "name": "装饰纹样"
+    },
+    {
+      "id": "tile",
+      "name": "砖石与铺装"
+    },
+    {
+      "id": "fabric",
+      "name": "织物与编织"
     },
     {
       "id": "noise",
@@ -25,35 +33,43 @@
     },
     {
       "id": "natural",
-      "name": "自然材质"
+      "name": "表面材质"
+    },
+    {
+      "id": "grunge",
+      "name": "污渍与磨损"
     },
     {
       "id": "digital",
-      "name": "数字"
+      "name": "科技与数字"
+    },
+    {
+      "id": "light",
+      "name": "光效与粒子"
     },
     {
       "id": "energy",
-      "name": "能量"
+      "name": "能量与冲击"
     },
     {
-      "id": "vector",
-      "name": "矢量场"
+      "id": "atmosphere",
+      "name": "烟雾与火焰"
     },
     {
-      "id": "mask",
-      "name": "遮罩"
+      "id": "water",
+      "name": "水纹与焦散"
     },
     {
       "id": "ribbon",
-      "name": "拖尾"
+      "name": "丝带与拖尾"
     },
     {
-      "id": "sigil",
-      "name": "法阵"
+      "id": "vector",
+      "name": "流场与数据图"
     },
     {
-      "id": "vfx",
-      "name": "特效素材"
+      "id": "mask",
+      "name": "遮罩与溶解"
     }
   ],
   "libraries": {

@@ -97,7 +97,7 @@ try{
   const floating=page.locator('.dock-floating').filter({has:page.locator('[data-panel-tab="library"]')}).first();
   await floating.evaluate(e=>{e.style.left='18px';e.style.top='80px';e.style.width='360px';e.style.height='850px';});
   await page.locator('#library-filter button[data-value=all]').click();
-  for(const type of ['形状','渐变'])await page.locator('#library-categories button[data-value="'+type+'"]').click();
+  for(const type of ['基础形状','渐变'])await page.locator('#library-categories button[data-value="'+type+'"]').click();
   await page.waitForFunction(()=>document.querySelector('#shape-library img')?.dataset.ready==='true');
   await shot('graphics-list');
  });
@@ -105,7 +105,7 @@ try{
   await load(spell);
   // The isolated demo removes two preloaded copies so the real Add to list action is visible.
   await page.evaluate(key=>{const list=JSON.parse(localStorage.getItem(key));list.projectResources=list.projectResources.filter(entry=>!['PlumeSmoke','TurbulentFlame'].includes(entry.root.type));localStorage.setItem(key,JSON.stringify(list));},GRAPHIC_LIST_KEY);await page.reload();await ready();
-  await library();await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).fill(inLanguage('特效素材','VFX'));await page.waitForFunction(()=>document.querySelectorAll('.graphics-card').length===14);await shot('graphics-library');
+  await library();await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).fill(inLanguage('烟雾与火焰','Smoke and fire'));await page.waitForFunction(()=>document.querySelectorAll('.graphics-card').length===12);await shot('graphics-library');
   await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).fill(inLanguage('湍流火焰','Turbulent Flame'));const fireCard=page.locator('.graphics-card').filter({has:page.locator('strong').getByText(inLanguage('湍流火焰','Turbulent Flame'),{exact:true})});if(await fireCard.getByRole('button',{name:label('library.addToGraphicsList'),exact:true}).count())await fireCard.getByRole('button',{name:label('library.addToGraphicsList'),exact:true}).click();await fireCard.getByRole('button',{name:inLanguage('编辑 湍流火焰','Edit Turbulent Flame'),exact:true}).click();const d=await editorReady();await d.getByRole('slider',{name:label('library.previewTimeSeconds'),exact:true}).fill('1.3');await editorReady();await shot('generator-parameters');await d.locator('header .graphics-close').click();
   await page.locator('dialog').last().locator('header .graphics-close').click();await shot('graphics-list');
  });

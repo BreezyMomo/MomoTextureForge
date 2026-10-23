@@ -20,13 +20,24 @@ When the search field contains text, **×** appears on the right. Click it to cl
 
 Browse **All / Favorites / Recent / Animated**, regardless of whether a resource is an image, formula, or composition. Recent contains up to 24 previewed or added graphics, most recently used first. Animated includes time-based graphics, keyframe animation, and UV motion, with a play icon in the upper-left corner of each card and a localized tooltip. Graphic categories remain multiselect: any selected category matches, combined with the active browse mode and search. All or deselecting the last category clears the category restriction. Language changes retain selection; filters never change graphic content.
 
+The built-in library has 17 categories based on appearance and use. The library and left list share the same categories and order:
+
+- **Basic shapes, Gradients**: circle and polygon outlines, and linear, radial or spherical value transitions.
+- **Geometric patterns, Ornaments**: stripes, grids and dots, or decorative flowers, spirals and knots.
+- **Tiles and paving, Fabric and weave, Surface materials, Grunge and wear**: brick and flooring, woven surfaces, wood/stone/metal/paper, or rust/scratches/splashes.
+- **Noise, Tech and digital**: procedural noise and grain, or scanlines, glitches, HUDs and circuits.
+- **Light and particles, Energy and impact, Smoke and fire, Water and caustics, Ribbons and trails**: find effects by their purpose, with formulas and generators together. Add the Animated filter for moving graphics only.
+- **Flow and data maps, Masks and dissolve**: flow direction, normals and displacement, or erosion, edges and dissolve masks.
+
+Built-ins already in the list appear under the current catalog categories without clearing storage or adding them again. Resource IDs, favorites, personal parameters, existing nodes and saved content stay unchanged. Custom and imported resources retain their own categories.
+
 Use **☆ / ★** in the upper-right corner of a card to favorite or unfavorite it; **Favorites count** in the first row shows only favorite graphics. Favorites and recent usage stay in this browser across reloads and are not included in projects or resource packages. Built-in favorites still saved by the legacy editor migrate automatically.
 
 ![Search effect resources](images/en/graphics-library.png)
 
 > Callouts: 1 Search resources; 2 Add directly to canvas; 3 Add to the reusable list; 4 Edit a resource.
 
-1. Open **Graphics library** in the toolbar. Search names, categories or tags; the screenshot searches for the effects category.
+1. Open **Graphics library** in the toolbar. Search names, categories or tags, such as “Smoke and fire”, “Water and caustics” or a specific graphic name.
 2. Filter by source and type to distinguish built-in, local and remote resources.
 3. Choose **Add directly to canvas**. The library closes and the inspector selects the new node. Formulas, generators, images and compositions share this entry point.
 4. For frequent reuse, also choose **Add to graphics list**. Multiple selected resources can be added together. Use **+ Add** in the left panel to insert instances later.

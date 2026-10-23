@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "百叶格栅",
-  "category": "digital",
+  "category": "pattern",
   "order": 205,
-  "variant": 14,
+  "variant": 22,
   "parameters": [
     {
       "slot": 0,

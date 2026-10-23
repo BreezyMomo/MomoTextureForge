@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "散景光斑",
-  "category": "radial",
+  "category": "light",
   "order": 19,
-  "variant": 19,
+  "variant": 3,
   "parameters": [
     {
       "slot": 0,

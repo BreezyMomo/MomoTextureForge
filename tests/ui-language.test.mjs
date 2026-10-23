@@ -30,7 +30,7 @@ test('semantic UI keys format fixed text while preserving user names and resourc
   assert.equal(uiError(Error('用户自己输入的错误')),'用户自己输入的错误');
   assert.equal(uiOption('common.close'),'Off');assert.equal(uiText('common.close'),'Close');
   const builtin=BY_ID.get('Circle'),before=JSON.stringify(builtin);assert.equal(graphicLabel(builtin),'Circle');assert.equal(JSON.stringify(builtin),before);
-  assert.equal(graphicLabel({id:'asset_custom',zh:'颜色'}),'颜色');assert.equal(graphicLabel({id:'asset_named_like_key',zh:'menu.file'}),'menu.file');assert.equal(parameterLabel({variable:'radius',aliases:{en:'menu.file'}}),'menu.file');assert.equal(categoryLabel(0),'Radial');
+  assert.equal(graphicLabel({id:'asset_custom',zh:'颜色'}),'颜色');assert.equal(graphicLabel({id:'asset_named_like_key',zh:'menu.file'}),'menu.file');assert.equal(parameterLabel({variable:'radius',aliases:{en:'menu.file'}}),'menu.file');assert.equal(categoryLabel(0),'Basic shapes');
   setLanguageOrder(['zh-CN']);assert.equal(uiText('menu.file'),'文件');assert.equal(graphicLabel(builtin),builtin.zh);
  }finally{setLanguageOrder(['zh-CN','en']);}
 });

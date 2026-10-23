@@ -6,7 +6,7 @@
   "name": "线性渐变",
   "category": "gradient",
   "order": 106,
-  "variant": 0,
+  "variant": 5,
   "parameters": [
     {
       "slot": 5,

@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "特鲁谢瓷砖",
-  "category": "pattern",
+  "category": "tile",
   "order": 73,
-  "variant": 17,
+  "variant": 4,
   "parameters": [
     {
       "slot": 2,

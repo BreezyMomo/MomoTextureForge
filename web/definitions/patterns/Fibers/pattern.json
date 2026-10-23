@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "纤维",
-  "category": "natural",
+  "category": "fabric",
   "order": 163,
-  "variant": 16,
+  "variant": 9,
   "parameters": [
     {
       "slot": 0,

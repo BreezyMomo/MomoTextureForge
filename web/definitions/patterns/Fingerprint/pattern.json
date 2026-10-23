@@ -6,7 +6,7 @@
   "name": "指纹",
   "category": "pattern",
   "order": 89,
-  "variant": 33,
+  "variant": 15,
   "parameters": [
     {
       "slot": 0,

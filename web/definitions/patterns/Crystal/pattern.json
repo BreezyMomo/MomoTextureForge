@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "晶体",
-  "category": "noise",
+  "category": "natural",
   "order": 132,
-  "variant": 17,
+  "variant": 0,
   "parameters": [
     {
       "slot": 0,

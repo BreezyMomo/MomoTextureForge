@@ -4,9 +4,9 @@
   "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "蓬松烟团",
-  "category": "vfx",
+  "category": "atmosphere",
   "order": 284,
-  "variant": 0,
+  "variant": 6,
   "parameters": [
     {
       "slot": 0,

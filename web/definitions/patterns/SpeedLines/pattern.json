@@ -6,7 +6,7 @@
   "name": "速度线",
   "category": "energy",
   "order": 220,
-  "variant": 5,
+  "variant": 7,
   "parameters": [
     {
       "slot": 0,

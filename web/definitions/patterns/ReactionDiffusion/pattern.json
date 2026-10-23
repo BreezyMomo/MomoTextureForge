@@ -6,7 +6,7 @@
   "name": "反应扩散风格纹理",
   "category": "noise",
   "order": 136,
-  "variant": 21,
+  "variant": 20,
   "parameters": [
     {
       "slot": 0,

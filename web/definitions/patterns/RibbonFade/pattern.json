@@ -6,7 +6,7 @@
   "name": "拖尾衰减",
   "category": "ribbon",
   "order": 265,
-  "variant": 0,
+  "variant": 4,
   "parameters": [
     {
       "slot": 0,

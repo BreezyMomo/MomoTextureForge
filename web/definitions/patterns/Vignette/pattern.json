@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "暗角",
-  "category": "radial",
+  "category": "gradient",
   "order": 3,
-  "variant": 3,
+  "variant": 1,
   "parameters": [
     {
       "slot": 0,

@@ -6,7 +6,7 @@
   "name": "纸张",
   "category": "natural",
   "order": 165,
-  "variant": 18,
+  "variant": 12,
   "parameters": [
     {
       "slot": 0,

@@ -1,9 +1,8 @@
 import {BY_ID} from './catalog.js';
-import {categoryLabel} from './graphic-label.js';
+import {graphicCategory,graphicCategoryGroups,graphicCategorySearchText} from './graphic-categories.js';
 import {graphicSearchText} from './graphic-name.js';
 import {uiText,uiFormat} from './ui-language.js';
 
-const category=entry=>entry.category||'图形列表';
 export function graphicIsAnimated(entry){
  function animated(n){
   if(!n)return false;
@@ -15,7 +14,7 @@ export function graphicIsAnimated(entry){
 export function filterGraphicList(entries,{mode='all',favorites=new Set(),recent=[],categories=[],query=''}={}){
  const groups=new Set(categories),search=query.trim().toLowerCase(),byId=new Map(entries.map(entry=>['preset:'+entry.id,entry]));
  const candidates=mode==='recent'?[...new Set(recent)].map(id=>byId.get(id)).filter(Boolean):entries;
- return candidates.filter(entry=>(mode!=='favorites'||favorites.has(entry.id))&&(mode!=='animated'||graphicIsAnimated(entry))&&(!groups.size||groups.has(category(entry)))&&graphicSearchText(entry).includes(search));
+ return candidates.filter(entry=>(mode!=='favorites'||favorites.has(entry.id))&&(mode!=='animated'||graphicIsAnimated(entry))&&(!groups.size||groups.has(graphicCategory(entry)))&&(graphicSearchText(entry)+' '+graphicCategorySearchText(entry)).includes(search));
 }
 
 function toggleGroup(host,onChange){
@@ -54,8 +53,7 @@ export function createGraphicListFilters(modeHost,categoryHost,onChange){
   get mode(){return mode;},
   update(entries,{favorites=new Set()}={}){
    updateModes(entries.filter(entry=>favorites.has(entry.id)).length);
-   const groups=new Map();for(const entry of entries){const key=category(entry);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(entry);}
-   categories.update([...groups].map(([value,members])=>{const builtin=BY_ID.get(members[0].builtin);return {value,label:builtin&&members.every(entry=>BY_ID.get(entry.builtin)?.category===builtin.category)?categoryLabel(builtin.category):value};}));
+   categories.update(graphicCategoryGroups(entries).map(group=>({value:group.key,label:group.title})));
   },
   filter(entries,query,context={}){return filterGraphicList(entries,{...context,mode,categories:categories.selected,query});}
  };

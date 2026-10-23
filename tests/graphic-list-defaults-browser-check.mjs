@@ -45,7 +45,7 @@ try{
  }
  assert.ok(report.columns[0].columns===1);assert.ok(report.columns[1].columns===2);assert.ok(report.columns[2].columns>=3);assert.ok(report.columns[3].columns>=4);
  await page.locator('#shape-library-view').selectOption('list');assert.equal(await page.locator('#shape-library .tree-pattern-cards').first().evaluate(e=>getComputedStyle(e).gridTemplateColumns.split(' ').length),1);await page.locator('#shape-library-view').selectOption('grid');
- await mkdir('test-results/graphic-list-defaults',{recursive:true});await page.screenshot({path:'test-results/graphic-list-defaults/'+(built?'built':'source')+'.png'});
+ await mkdir('test-results/graphic-list-defaults',{recursive:true});if(!process.argv.includes('--no-screenshots'))await page.screenshot({path:'test-results/graphic-list-defaults/'+(built?'built':'source')+'.png'});
  const circle=cards.filter({has:page.getByRole('button',{name:'添加 圆形',exact:true})});await circle.locator('summary').click();await circle.getByRole('button',{name:'从图形列表移除',exact:true}).click();const remaining=await read();assert.equal(remaining.length,first.length-1);await page.reload();await ready();assert.equal(await cards.count(),remaining.length);
  // An intentionally empty initialized list stays empty.
  await page.evaluate(([key,text])=>localStorage.setItem(key,text),[GRAPHIC_LIST_KEY,serializeGraphicList([])]);await page.reload();await ready();assert.equal(await cards.count(),0);

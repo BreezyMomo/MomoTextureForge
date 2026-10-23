@@ -6,7 +6,7 @@
   "name": "等离子丝",
   "category": "ribbon",
   "order": 269,
-  "variant": 4,
+  "variant": 8,
   "parameters": [
     {
       "slot": 0,

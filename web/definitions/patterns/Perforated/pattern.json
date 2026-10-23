@@ -6,7 +6,7 @@
   "name": "冲孔板",
   "category": "pattern",
   "order": 86,
-  "variant": 30,
+  "variant": 12,
   "parameters": [
     {
       "slot": 0,

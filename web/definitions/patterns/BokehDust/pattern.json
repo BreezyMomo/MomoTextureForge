@@ -4,9 +4,9 @@
   "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "散景浮尘",
-  "category": "vfx",
+  "category": "light",
   "order": 289,
-  "variant": 5,
+  "variant": 14,
   "parameters": [
     {
       "slot": 0,

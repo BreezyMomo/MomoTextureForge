@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "灰烬沉积",
-  "category": "natural",
+  "category": "grunge",
   "order": 182,
-  "variant": 35,
+  "variant": 10,
   "parameters": [
     {
       "slot": 0,

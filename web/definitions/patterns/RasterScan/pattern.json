@@ -6,7 +6,7 @@
   "name": "光栅扫描",
   "category": "digital",
   "order": 210,
-  "variant": 19,
+  "variant": 18,
   "parameters": [
     {
       "slot": 0,

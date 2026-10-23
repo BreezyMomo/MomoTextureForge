@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "熔岩脉络",
-  "category": "noise",
+  "category": "natural",
   "order": 139,
-  "variant": 24,
+  "variant": 1,
   "parameters": [
     {
       "slot": 0,

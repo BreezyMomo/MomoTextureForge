@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "纤维纸纹",
-  "category": "noise",
+  "category": "natural",
   "order": 142,
-  "variant": 27,
+  "variant": 3,
   "parameters": [
     {
       "slot": 0,

@@ -6,7 +6,7 @@
   "name": "电平条",
   "category": "digital",
   "order": 211,
-  "variant": 20,
+  "variant": 19,
   "parameters": [
     {
       "slot": 0,

@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "伊斯兰几何",
-  "category": "pattern",
+  "category": "ornament",
   "order": 80,
-  "variant": 24,
+  "variant": 7,
   "parameters": [
     {
       "slot": 0,

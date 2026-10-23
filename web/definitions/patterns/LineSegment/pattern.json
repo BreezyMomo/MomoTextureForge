@@ -6,7 +6,7 @@
   "name": "线段",
   "category": "shape",
   "order": 56,
-  "variant": 30,
+  "variant": 29,
   "parameters": [
     {
       "slot": 0,

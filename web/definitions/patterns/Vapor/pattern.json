@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "水汽",
-  "category": "noise",
+  "category": "atmosphere",
   "order": 140,
-  "variant": 25,
+  "variant": 0,
   "parameters": [
     {
       "slot": 0,

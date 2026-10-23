@@ -6,7 +6,7 @@
   "name": "厚度遮罩",
   "category": "mask",
   "order": 262,
-  "variant": 5,
+  "variant": 8,
   "parameters": [
     {
       "slot": 0,

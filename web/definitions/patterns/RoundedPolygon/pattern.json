@@ -6,7 +6,7 @@
   "name": "圆角多边形",
   "category": "shape",
   "order": 33,
-  "variant": 8,
+  "variant": 13,
   "parameters": [
     {
       "slot": 0,

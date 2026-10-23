@@ -6,7 +6,7 @@
   "name": "烟雾拖尾",
   "category": "ribbon",
   "order": 273,
-  "variant": 8,
+  "variant": 12,
   "parameters": [
     {
       "slot": 0,

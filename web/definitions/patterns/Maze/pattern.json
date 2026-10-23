@@ -6,7 +6,7 @@
   "name": "迷宫纹",
   "category": "pattern",
   "order": 104,
-  "variant": 48,
+  "variant": 21,
   "parameters": [
     {
       "slot": 0,

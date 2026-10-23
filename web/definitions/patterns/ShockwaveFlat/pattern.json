@@ -6,7 +6,7 @@
   "name": "冲击波面",
   "category": "energy",
   "order": 223,
-  "variant": 8,
+  "variant": 10,
   "parameters": [
     {
       "slot": 0,

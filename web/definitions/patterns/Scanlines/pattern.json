@@ -6,7 +6,7 @@
   "name": "扫描线",
   "category": "digital",
   "order": 191,
-  "variant": 0,
+  "variant": 1,
   "parameters": [
     {
       "slot": 0,

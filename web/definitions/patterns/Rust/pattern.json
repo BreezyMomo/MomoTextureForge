@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "锈蚀",
-  "category": "natural",
+  "category": "grunge",
   "order": 154,
-  "variant": 7,
+  "variant": 1,
   "parameters": [
     {
       "slot": 0,

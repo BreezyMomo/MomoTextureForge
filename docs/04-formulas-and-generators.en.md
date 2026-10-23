@@ -44,7 +44,7 @@ If you do not know GLSL, use the [Authoring Skill](10-ai-and-help.en.md) to requ
 
 > Callouts: 1 Scrub time to inspect motion; 2 Inspect the generated image; 3 Save your version.
 
-1. Search the library for fire, smoke or effects.
+1. Search the library for fire, smoke or the Smoke and fire category. Lightning is under Energy and impact; sparks are under Light and particles.
 2. Open **Edit Turbulent Flame**, for example, and wait for the preview.
 3. Adjust width, height, smoke, particles or noise while inspecting color and alpha.
 4. Scrub **Preview time (seconds)** or play the animation. Where available, setting animation speed to zero freezes built-in motion.

@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "扇形",
-  "category": "radial",
+  "category": "shape",
   "order": 11,
-  "variant": 11,
+  "variant": 3,
   "parameters": [
     {
       "slot": 0,

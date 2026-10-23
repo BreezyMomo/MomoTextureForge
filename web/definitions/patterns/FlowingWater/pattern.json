@@ -4,9 +4,9 @@
   "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "流动水纹",
-  "category": "vfx",
+  "category": "water",
   "order": 291,
-  "variant": 7,
+  "variant": 4,
   "parameters": [
     {
       "slot": 0,

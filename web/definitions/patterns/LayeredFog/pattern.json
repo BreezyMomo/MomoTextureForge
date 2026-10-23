@@ -4,9 +4,9 @@
   "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "层叠雾气",
-  "category": "vfx",
+  "category": "atmosphere",
   "order": 285,
-  "variant": 1,
+  "variant": 7,
   "parameters": [
     {
       "slot": 0,

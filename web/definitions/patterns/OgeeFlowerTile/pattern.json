@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "弧菱花砖",
-  "category": "shape",
+  "category": "tile",
   "order": 55,
-  "variant": 29,
+  "variant": 0,
   "parameters": [
     {
       "slot": 2,

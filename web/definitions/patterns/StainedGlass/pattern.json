@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "彩窗铅条",
-  "category": "pattern",
+  "category": "tile",
   "order": 98,
-  "variant": 42,
+  "variant": 9,
   "parameters": [
     {
       "slot": 0,

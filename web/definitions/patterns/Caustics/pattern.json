@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "焦散",
-  "category": "natural",
+  "category": "water",
   "order": 151,
-  "variant": 4,
+  "variant": 2,
   "parameters": [
     {
       "slot": 0,

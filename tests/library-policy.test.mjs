@@ -24,10 +24,13 @@ test('curated presets use current definitions and preserve active values through
 });
 
 test('reviewed names and data-map categories match their purpose',()=>{
- for(const [id,name,category] of [['Thorn','尖峰渐变','shape'],['Curl','旋度流场','vector']]){
+ for(const [id,name,category] of [['Thorn','尖峰渐变','gradient'],['Curl','旋度流场','vector']]){
   assert.equal(BY_ID.get(id).zh,name);assert.equal(BY_ID.get(id).definition.category,category);
  }
  const square=libraryVariantNode('square-gradient');assert.equal(square.type,'ShapeGradient');assert.deepEqual(square.params.slice(0,3),[1,.62,1]);
 });
 
-test("sigil category retains only web and vortex",()=>{assert.deepEqual(CATALOG.filter(p=>p.definition.category==="sigil").map(p=>p.id),["WebSigil","VortexGate"]);});
+test('web ornament and vortex portal belong with their visual families',()=>{
+ assert.equal(BY_ID.get('WebSigil').definition.category,'ornament');
+ assert.equal(BY_ID.get('VortexGate').definition.category,'energy');
+});

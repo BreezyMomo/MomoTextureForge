@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "星光闪烁",
-  "category": "shape",
+  "category": "light",
   "order": 49,
-  "variant": 24,
+  "variant": 8,
   "parameters": [
     {
       "slot": 0,

@@ -6,7 +6,7 @@
   "name": "径向侵蚀",
   "category": "mask",
   "order": 258,
-  "variant": 1,
+  "variant": 4,
   "parameters": [
     {
       "slot": 0,

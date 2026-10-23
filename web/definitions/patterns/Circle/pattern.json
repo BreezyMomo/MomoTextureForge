@@ -4,7 +4,7 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "圆形",
-  "category": "radial",
+  "category": "shape",
   "order": 0,
   "variant": 0,
   "parameters": [

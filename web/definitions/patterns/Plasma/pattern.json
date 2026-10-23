@@ -6,7 +6,7 @@
   "name": "等离子",
   "category": "noise",
   "order": 135,
-  "variant": 20,
+  "variant": 19,
   "parameters": [
     {
       "slot": 0,

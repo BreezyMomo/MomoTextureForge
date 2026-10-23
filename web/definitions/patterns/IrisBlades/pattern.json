@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "光阑叶片",
-  "category": "radial",
+  "category": "shape",
   "order": 14,
-  "variant": 14,
+  "variant": 4,
   "parameters": [
     {
       "slot": 0,

@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "体积火焰",
-  "category": "vfx",
+  "category": "atmosphere",
   "order": 295,
-  "variant": 11,
+  "variant": 10,
   "parameters": [
     {
       "slot": 0,

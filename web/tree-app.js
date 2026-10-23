@@ -58,7 +58,8 @@ import {createAnimationWorkspace} from './tree-animation-workspace.js';
 import {outputDimensions,previewDimensions,selectionRegions} from './tree-view.js';
 import {patternThumbnails} from './pattern-thumbnails.js';
 import {arrangeShortcut} from './workspace-model.js';
-import {graphicLabel,categoryLabel} from './graphic-label.js';
+import {graphicLabel} from './graphic-label.js';
+import {graphicCategoryGroups} from './graphic-categories.js';
 import {CATALOG,BY_ID,CATEGORIES,PALETTES} from './catalog.js';
 import {project,node,find,walk,cloneNode,removeNode,moveNode,sanitizeTree,pathGet,pathSet,nodeClock,expandInstances,PRESET_SCHEMA,fieldSpec,shapeDefaults,uid,POST_SPECS,animationType,ANIMATION_ENUMS,ANIMATION_BOOLS} from './tree-model.js';
 import {pageHref} from './distribution.js';
@@ -568,10 +569,7 @@ function library(){
  const entries=projectOwner().projectResources,context={favorites:new Set(entries.filter(p=>favorites.has(p)).map(p=>p.id)),recent};
  libraryFilters.update(entries,context);
  const items=libraryFilters.filter(entries,q,context),recentMode=libraryFilters.mode==='recent';
- const groups=recentMode?[{key:'scope:recent',title:uiText('library.recent'),members:items}]:[...new Set(items.map(p=>p.category||'图形列表'))].map(category=>{
-  const members=items.filter(p=>(p.category||'图形列表')===category),builtin=BY_ID.get(members[0]?.builtin),title=builtin&&members.every(p=>BY_ID.get(p.builtin)?.category===builtin.category)?categoryLabel(builtin.category):category;
-  return {key:category,title,members};
- });
+ const groups=recentMode?[{key:'scope:recent',title:uiText('library.recent'),members:items}]:graphicCategoryGroups(items);
  libraryView.update({entries,sections:groups,view:$('shape-library-view').value,emptyMessage:uiText(libraryFilters.mode==='favorites'?'library.noMatchingFavorites':libraryFilters.mode==='recent'?'library.noRecentGraphics':'editor.noMatchingGraphicsOpenGraphicsLibraryAboveToChooseResources')});syncLibraryToggle();
 }
 $('shape-library-view').onchange=library;

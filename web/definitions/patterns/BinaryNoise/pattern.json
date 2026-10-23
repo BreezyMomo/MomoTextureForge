@@ -6,7 +6,7 @@
   "name": "二进制噪块",
   "category": "digital",
   "order": 201,
-  "variant": 10,
+  "variant": 11,
   "parameters": [
     {
       "slot": 0,

@@ -6,7 +6,7 @@
   "name": "域扭曲",
   "category": "noise",
   "order": 137,
-  "variant": 22,
+  "variant": 21,
   "parameters": [
     {
       "slot": 0,

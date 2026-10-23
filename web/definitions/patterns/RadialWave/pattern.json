@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "环形波浪",
-  "category": "radial",
+  "category": "ornament",
   "order": 22,
-  "variant": 22,
+  "variant": 5,
   "parameters": [
     {
       "slot": 0,

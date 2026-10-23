@@ -6,7 +6,7 @@
   "name": "圆点阵",
   "category": "pattern",
   "order": 59,
-  "variant": 3,
+  "variant": 2,
   "parameters": [
     {
       "slot": 2,

@@ -15,7 +15,7 @@ test('seven generator types append with explicit capability versions and extende
  assert.equal(CATALOG[283].id,'NaturalWood');
  for(const id of ids){
   const type=BY_ID.get(id);
-  assert.equal(type.categoryName,'特效素材');
+  assert.equal(type.definition.category,({PlumeSmoke:'atmosphere',LayeredFog:'atmosphere',TurbulentFlame:'atmosphere',BallisticSparks:'light',BranchedLightning:'energy',BokehDust:'light',FilmGrain:'noise'})[id]);
   assert.equal(type.usesTime,true);
   assert.equal(type.definition.generator.schema,'momo.generator/v1');
   assert.ok(type.parameters.length>=13&&type.parameters.length<=64);

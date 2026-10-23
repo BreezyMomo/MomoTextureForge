@@ -6,7 +6,7 @@
   "name": "多边形",
   "category": "shape",
   "order": 25,
-  "variant": 0,
+  "variant": 5,
   "parameters": [
     {
       "slot": 2,

@@ -6,7 +6,7 @@
   "name": "雷达扫描",
   "category": "digital",
   "order": 208,
-  "variant": 17,
+  "variant": 16,
   "parameters": [
     {
       "slot": 0,

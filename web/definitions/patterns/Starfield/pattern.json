@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "星场",
-  "category": "energy",
+  "category": "light",
   "order": 233,
-  "variant": 18,
+  "variant": 10,
   "parameters": [
     {
       "slot": 0,

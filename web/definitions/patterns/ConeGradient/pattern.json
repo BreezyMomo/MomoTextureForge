@@ -6,7 +6,7 @@
   "name": "角向渐变",
   "category": "gradient",
   "order": 112,
-  "variant": 6,
+  "variant": 11,
   "parameters": [
     {
       "slot": 0,

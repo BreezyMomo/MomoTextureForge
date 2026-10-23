@@ -6,7 +6,7 @@
   "name": "径向阶梯",
   "category": "gradient",
   "order": 113,
-  "variant": 7,
+  "variant": 12,
   "parameters": [
     {
       "slot": 0,

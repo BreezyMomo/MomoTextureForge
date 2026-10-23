@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "青海波",
-  "category": "pattern",
+  "category": "ornament",
   "order": 103,
-  "variant": 47,
+  "variant": 13,
   "parameters": [
     {
       "slot": 0,

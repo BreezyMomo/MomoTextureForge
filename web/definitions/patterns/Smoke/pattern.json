@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "烟",
-  "category": "natural",
+  "category": "atmosphere",
   "order": 148,
-  "variant": 1,
+  "variant": 2,
   "parameters": [
     {
       "slot": 0,

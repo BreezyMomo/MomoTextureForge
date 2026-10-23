@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "光照体积烟雾",
-  "category": "vfx",
+  "category": "atmosphere",
   "order": 297,
-  "variant": 13,
+  "variant": 11,
   "parameters": [
     {
       "slot": 0,

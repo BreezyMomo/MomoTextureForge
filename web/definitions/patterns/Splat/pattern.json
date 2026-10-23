@@ -6,7 +6,7 @@
   "name": "溅射形",
   "category": "shape",
   "order": 40,
-  "variant": 15,
+  "variant": 17,
   "parameters": [
     {
       "slot": 0,

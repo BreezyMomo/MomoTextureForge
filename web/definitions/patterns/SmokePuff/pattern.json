@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "烟团",
-  "category": "energy",
+  "category": "atmosphere",
   "order": 227,
-  "variant": 12,
+  "variant": 4,
   "parameters": [
     {
       "slot": 0,

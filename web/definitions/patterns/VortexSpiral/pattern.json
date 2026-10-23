@@ -6,7 +6,7 @@
   "name": "螺旋涡",
   "category": "energy",
   "order": 235,
-  "variant": 20,
+  "variant": 15,
   "parameters": [
     {
       "slot": 0,

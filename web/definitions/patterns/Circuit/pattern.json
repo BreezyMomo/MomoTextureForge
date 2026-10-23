@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "电路走线",
-  "category": "pattern",
+  "category": "digital",
   "order": 82,
-  "variant": 26,
+  "variant": 0,
   "parameters": [
     {
       "slot": 0,

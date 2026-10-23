@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "螺旋",
-  "category": "radial",
+  "category": "ornament",
   "order": 6,
-  "variant": 6,
+  "variant": 2,
   "parameters": [
     {
       "slot": 0,

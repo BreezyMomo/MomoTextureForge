@@ -6,7 +6,7 @@
   "name": "菱形网格",
   "category": "pattern",
   "order": 75,
-  "variant": 19,
+  "variant": 9,
   "parameters": [
     {
       "slot": 2,

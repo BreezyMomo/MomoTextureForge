@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "刀光",
-  "category": "energy",
+  "category": "ribbon",
   "order": 224,
-  "variant": 9,
+  "variant": 2,
   "parameters": [
     {
       "slot": 0,

@@ -6,7 +6,7 @@
   "name": "随机方块",
   "category": "digital",
   "order": 200,
-  "variant": 9,
+  "variant": 10,
   "parameters": [
     {
       "slot": 0,

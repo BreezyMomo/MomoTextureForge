@@ -6,7 +6,7 @@
   "name": "透视网格",
   "category": "digital",
   "order": 199,
-  "variant": 8,
+  "variant": 9,
   "parameters": [
     {
       "slot": 0,

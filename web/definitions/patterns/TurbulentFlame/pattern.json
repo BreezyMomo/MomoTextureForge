@@ -4,9 +4,9 @@
   "revision": 5,
   "abi": "momo-pattern/16-v1",
   "name": "湍流火焰",
-  "category": "vfx",
+  "category": "atmosphere",
   "order": 286,
-  "variant": 2,
+  "variant": 8,
   "parameters": [
     {
       "slot": 0,

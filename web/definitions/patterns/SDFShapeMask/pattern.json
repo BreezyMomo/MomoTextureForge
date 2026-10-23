@@ -6,7 +6,7 @@
   "name": "形状距离场",
   "category": "mask",
   "order": 260,
-  "variant": 3,
+  "variant": 6,
   "parameters": [
     {
       "slot": 0,

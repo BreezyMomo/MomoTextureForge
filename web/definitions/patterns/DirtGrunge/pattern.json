@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "污渍",
-  "category": "natural",
+  "category": "grunge",
   "order": 155,
-  "variant": 8,
+  "variant": 2,
   "parameters": [
     {
       "slot": 0,

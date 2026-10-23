@@ -4,9 +4,9 @@
   "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "分叉闪电",
-  "category": "vfx",
+  "category": "energy",
   "order": 288,
-  "variant": 4,
+  "variant": 26,
   "parameters": [
     {
       "slot": 0,

@@ -6,7 +6,7 @@
   "name": "齿轮",
   "category": "shape",
   "order": 30,
-  "variant": 5,
+  "variant": 10,
   "parameters": [
     {
       "slot": 2,

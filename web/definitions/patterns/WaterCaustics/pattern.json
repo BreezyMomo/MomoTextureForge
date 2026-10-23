@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "动态焦散",
-  "category": "vfx",
+  "category": "water",
   "order": 292,
-  "variant": 8,
+  "variant": 5,
   "parameters": [
     {
       "slot": 0,

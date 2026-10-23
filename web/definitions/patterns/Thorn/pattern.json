@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "尖峰渐变",
-  "category": "shape",
+  "category": "gradient",
   "order": 37,
-  "variant": 12,
+  "variant": 4,
   "parameters": [
     {
       "slot": 0,

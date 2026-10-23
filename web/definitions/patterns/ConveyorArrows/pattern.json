@@ -6,7 +6,7 @@
   "name": "传送箭头",
   "category": "pattern",
   "order": 92,
-  "variant": 36,
+  "variant": 17,
   "parameters": [
     {
       "slot": 0,

@@ -6,7 +6,7 @@
   "name": "双层拖尾",
   "category": "ribbon",
   "order": 267,
-  "variant": 2,
+  "variant": 6,
   "parameters": [
     {
       "slot": 0,

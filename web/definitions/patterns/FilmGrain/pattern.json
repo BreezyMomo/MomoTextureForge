@@ -4,9 +4,9 @@
   "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "胶片颗粒",
-  "category": "vfx",
+  "category": "noise",
   "order": 290,
-  "variant": 6,
+  "variant": 25,
   "parameters": [
     {
       "slot": 0,

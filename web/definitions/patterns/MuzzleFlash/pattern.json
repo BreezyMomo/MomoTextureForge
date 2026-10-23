@@ -6,7 +6,7 @@
   "name": "枪口闪光",
   "category": "energy",
   "order": 236,
-  "variant": 21,
+  "variant": 16,
   "parameters": [
     {
       "slot": 0,

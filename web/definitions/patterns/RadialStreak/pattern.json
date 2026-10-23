@@ -4,9 +4,9 @@
   "revision": 4,
   "abi": "momo-pattern/16-v1",
   "name": "扰动环纹",
-  "category": "radial",
+  "category": "ornament",
   "order": 13,
-  "variant": 13,
+  "variant": 3,
   "parameters": [
     {
       "slot": 0,

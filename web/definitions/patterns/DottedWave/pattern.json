@@ -6,7 +6,7 @@
   "name": "波浪点阵",
   "category": "pattern",
   "order": 90,
-  "variant": 34,
+  "variant": 16,
   "parameters": [
     {
       "slot": 2,

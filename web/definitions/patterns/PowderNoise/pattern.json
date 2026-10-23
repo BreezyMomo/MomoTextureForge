@@ -6,7 +6,7 @@
   "name": "粉末噪点",
   "category": "noise",
   "order": 146,
-  "variant": 31,
+  "variant": 24,
   "parameters": [
     {
       "slot": 0,

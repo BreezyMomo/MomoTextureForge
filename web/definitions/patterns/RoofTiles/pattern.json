@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "瓦片",
-  "category": "pattern",
+  "category": "tile",
   "order": 76,
-  "variant": 20,
+  "variant": 5,
   "parameters": [
     {
       "slot": 0,

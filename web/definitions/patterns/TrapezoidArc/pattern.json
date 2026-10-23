@@ -6,7 +6,7 @@
   "name": "梯形弓形",
   "category": "shape",
   "order": 45,
-  "variant": 20,
+  "variant": 22,
   "parameters": [
     {
       "slot": 0,

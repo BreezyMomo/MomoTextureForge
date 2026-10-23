@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "剥落漆面",
-  "category": "natural",
+  "category": "grunge",
   "order": 176,
-  "variant": 29,
+  "variant": 9,
   "parameters": [
     {
       "slot": 0,

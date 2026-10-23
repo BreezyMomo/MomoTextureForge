@@ -6,7 +6,7 @@
   "name": "星形",
   "category": "shape",
   "order": 26,
-  "variant": 1,
+  "variant": 6,
   "parameters": [
     {
       "slot": 2,

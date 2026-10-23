@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "同心环",
-  "category": "radial",
+  "category": "ornament",
   "order": 5,
-  "variant": 5,
+  "variant": 1,
   "parameters": [
     {
       "slot": 0,

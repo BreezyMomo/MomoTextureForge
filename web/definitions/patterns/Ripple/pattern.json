@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "涟漪",
-  "category": "pattern",
+  "category": "water",
   "order": 64,
-  "variant": 8,
+  "variant": 0,
   "parameters": [
     {
       "slot": 0,

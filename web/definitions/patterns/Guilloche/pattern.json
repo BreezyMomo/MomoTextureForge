@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "扭索花纹",
-  "category": "pattern",
+  "category": "ornament",
   "order": 105,
-  "variant": 49,
+  "variant": 14,
   "parameters": [
     {
       "slot": 0,

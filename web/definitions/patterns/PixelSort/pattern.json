@@ -6,7 +6,7 @@
   "name": "列错位故障",
   "category": "digital",
   "order": 213,
-  "variant": 22,
+  "variant": 21,
   "parameters": [
     {
       "slot": 0,

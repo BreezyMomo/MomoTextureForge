@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "锈斑铁器",
-  "category": "natural",
+  "category": "grunge",
   "order": 175,
-  "variant": 28,
+  "variant": 8,
   "parameters": [
     {
       "slot": 0,

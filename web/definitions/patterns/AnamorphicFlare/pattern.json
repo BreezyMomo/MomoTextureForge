@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "横向耀斑",
-  "category": "radial",
+  "category": "light",
   "order": 20,
-  "variant": 20,
+  "variant": 4,
   "parameters": [
     {
       "slot": 0,

@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "火焰",
-  "category": "natural",
+  "category": "atmosphere",
   "order": 149,
-  "variant": 2,
+  "variant": 3,
   "parameters": [
     {
       "slot": 0,

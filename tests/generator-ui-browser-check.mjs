@@ -5,8 +5,8 @@ const url=process.argv[2]??'http://127.0.0.1:8799/';
 const browser=await chromium.launch({channel:'msedge',headless:true});
 try{
  const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto(url);await page.locator('#open-graphics-library').click();await page.getByPlaceholder('搜索名称、分类或标签').fill('特效素材');
- await page.waitForFunction(()=>document.querySelectorAll('.graphics-card').length===14);
+ await page.goto(url);await page.locator('#open-graphics-library').click();await page.getByPlaceholder('搜索名称、分类或标签').fill('烟雾与火焰');
+ await page.waitForFunction(()=>document.querySelectorAll('.graphics-card').length===12);
  await mkdir('test-results/generator-ui',{recursive:true});await page.screenshot({path:'test-results/generator-ui/library.png'});
  await page.getByRole('button',{name:'编辑 蓬松烟团',exact:true}).click();
  let dialog=page.locator('dialog.graphic-editor-dialog');await dialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
@@ -30,7 +30,7 @@ try{
  await page.getByRole('button',{name:'编辑 湍流火焰',exact:true}).click();dialog=page.locator('dialog.graphic-editor-dialog');await dialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
  await page.screenshot({path:'test-results/generator-ui/fire-editor.png'});
  await dialog.locator('header .graphics-close').click();
- await page.getByRole('button',{name:'编辑 分叉闪电',exact:true}).click();dialog=page.locator('dialog.graphic-editor-dialog');await dialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
+ await page.getByPlaceholder('搜索名称、分类或标签').fill('分叉闪电');await page.getByRole('button',{name:'编辑 分叉闪电',exact:true}).click();dialog=page.locator('dialog.graphic-editor-dialog');await dialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
  const lightningAtZero=await dialog.locator('canvas').evaluate(canvas=>canvas.toDataURL());
  await dialog.getByRole('slider',{name:'预览时间（秒）',exact:true}).fill('1.3');
  await page.waitForFunction(before=>document.querySelector('dialog.graphic-editor-dialog canvas')?.toDataURL()!==before,lightningAtZero);

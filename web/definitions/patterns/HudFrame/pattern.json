@@ -6,7 +6,7 @@
   "name": "HUD框线",
   "category": "digital",
   "order": 196,
-  "variant": 5,
+  "variant": 6,
   "parameters": [
     {
       "slot": 0,

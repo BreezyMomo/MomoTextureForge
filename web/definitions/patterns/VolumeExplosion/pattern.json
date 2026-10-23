@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "体积爆炸",
-  "category": "vfx",
+  "category": "energy",
   "order": 296,
-  "variant": 12,
+  "variant": 28,
   "parameters": [
     {
       "slot": 0,

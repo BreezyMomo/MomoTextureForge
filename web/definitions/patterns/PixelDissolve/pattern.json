@@ -4,9 +4,9 @@
   "revision": 3,
   "abi": "momo-pattern/16-v1",
   "name": "像素消融",
-  "category": "digital",
+  "category": "mask",
   "order": 203,
-  "variant": 12,
+  "variant": 1,
   "parameters": [
     {
       "slot": 0,
