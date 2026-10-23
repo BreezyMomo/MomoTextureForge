@@ -166,6 +166,51 @@ Numeric and color parameters use existing keyframes, batch editing and pinned co
 Height to normal converts current height into node colors while retaining alpha and height. Later compositing and color filters still affect those colors. Normal output separately derives normal data from final height. Base levels, inversion, channel curves and contours still run before this effect list. Legacy projects retain their original filter order and `postFx.*` animation paths.
 
 
+### Creative style effects
+
+Ten new effects share the node stack with the original seventeen. Open **Composition examples → Composition practice → Creative effect comparison** for the original and all ten styles. Three additional examples demonstrate Comic print, Retro handheld and Hologram glitch. Read the comparison left to right, top to bottom; select a node to inspect its settings.
+
+| Effect | Controls and uses |
+| --- | --- |
+| Print halftone | Round dots, square dots or lines; size 2–64, angle, monochrome ink/paper or RGB screens, scatter and seed. Coverage follows image tone, unlike uniform hatching inside a traced outline. |
+| Palette dithering | Bayer 4×4, Bayer 8×8 or seeded noise; RGB levels, grayscale, two colors or four-tone handheld colors; levels 2–16, cell size 1–24, strength and seed. |
+| Glitch slices | Horizontal/vertical slices, count 2–128, probability, displacement 0–128, RGB offset, change rate, phase and seed. |
+| Zoom blur | Center X/Y, outward/inward/both directions, distance 0–256, inner/outer radii and sampling quality. Full effect inside the inner radius fades towards the outer radius; if outer is smaller, the transition occurs at the inner radius. |
+| Kuwahara painting | Four quadrants or eight elliptical sectors aligned to local edges; radius 1–24, region sharpness, anisotropy and sampling quality. Useful for painterly clouds, noise and gradients. |
+| Bevel relief | Alpha contour or height source; width, light angle/elevation, relief strength, light/shadow colors. Changes shading colors without rewriting height. |
+| Pencil / XDoG | Extended difference of Gaussians; line scale, scale ratio, edge weight, threshold, softness, ink/paper colors and retained source colors. Extracts internal tone detail. |
+| Retro CRT | Barrel curvature, scanline density/strength, RGB phosphor stripes, grain, flicker, edge shading, rate, phase and seed. |
+| ASCII art | Embedded density glyphs, blocks or binary 0/1; glyph size 6–64, source/ink colors, inverted tone, paper color and opacity. No system font dependency. |
+| Pixel sorting | Horizontal/vertical, luminance/hue/saturation, ascending/descending, lower/upper thresholds, alpha threshold, run length 2–256 cells and cell size 1–24. Actually reorders contiguous runs. |
+
+All new effects have **Mix 0–1**; zero bypasses processing. Mode-specific controls appear as needed and retain hidden values. Numbers, colors, toggles and modes support keyframes, batch editing and pinned node controls. Sizes use a 512px short-edge reference; positions are node coordinates, with Y=0 at the bottom.
+
+Halftone, dithering, painting, bevel and pencil preserve alpha and height; ink/paper colors do not fill transparent backgrounds. ASCII stays within existing content; zero paper opacity makes glyph gaps transparent and also masks height. Glitches, zoom blur, CRT curvature and sorting move or filter color, alpha and height together. Wide bevels, painting and high-quality zoom blur require more sampling. Painting quality changes its fixed sampling density; zoom quality uses 8/16/32 samples.
+
+A zero change rate freezes glitch and CRT motion. Fixed seed and time reproduce frames without relying on playback history, so timeline scrubbing and exported sequences agree. Random changes do not automatically form seamless loops; arrange phase and switches when a loop is required.
+
+Pixel sorting operates on eligible contiguous runs. Transparent and out-of-threshold cells break runs; the maximum span splits longer runs. Thresholds apply to the selected metric: luminance, normalized hue or saturation. Reversed thresholds bypass sorting. Analysis uses the node's fixed 512px short-edge grid and produces a displacement map; final color and height still sample full-resolution content. Larger cells create coarser sorting blocks and reduce work. Analysis is limited to 1,048,576 cells and a side length of 4096 or the device limit. Exceeding this budget asks for larger cells or smaller node extent rather than silently reducing precision. Semi-transparent cells sort by straight color; equal keys retain source order.
+
+Try **Pixelate → Palette dithering** for handheld graphics, **Print halftone → Edge detection** for comic print, or **Glitch slices → Scanlines → Bloom** for holographic interference. Put effects on the outermost group to process a complete composition.
+
+### Noise distortion
+
+Enable **Composite → Post-processing → Noise distortion**. This resamples the current composited result of the effect stack using a displacement field. It supports shapes, imported images and groups. A group composites its children first, then warps their color, alpha and height together. Drag to choose whether distortion runs before or after blur, outlines or bloom. Put the effect on the outermost group to process a complete canvas.
+
+- **Distortion mode**: heat haze uses vertically stretched soft noise; water ripples combine crossing waves with noise for refraction; energy turbulence uses layered noise domain warping. Changing mode preserves shared parameter values.
+- **Horizontal/vertical displacement**: 0–64 each, measured at the node's 512px short-edge reference. Zero disables that axis; both zero bypass the effect.
+- **Disturbance scale**: 8–256; larger values produce broader disturbances. **Detail octaves**: 1–5, with more detail requiring more processing.
+- **Motion direction**: -180° to 180°, with 0° right and 90° up. **Motion speed**: 0–128 reference pixels/second; zero freezes the seeded field. **Seed**: 1–65535. Identical input, settings, seed and time reproduce the result.
+- **Mix**: 0–1, interpolating displacement rather than crossfading two images. Zero bypasses the effect exactly.
+
+**Continuous flow** translates the noise field using absolute time, suitable for rising heat haze, without matching endpoints. **Closed trajectory loop** samples the same field on a closed path and exposes a 0.1–60 second duration. Positions and motion directions match at complete periods; the direction control sets the initial trajectory tangent. The hidden duration retains its value. Pausing, jumping in time, reopening and sequence export evaluate the same time directly, independent of playback history.
+
+A closed trajectory guarantees only this effect's field period. Source graphics, image sequences, child animation, other effects and relevant keyframes must also match at that duration. Playback looping or omitting a duplicate export endpoint does not make continuous flow seamless.
+
+Uses the node's **Clip / Allow overflow / Seamless repeat** boundary. Clip and overflow sample transparent border taps rather than stretching the last opaque pixel. Overflow reserves the maximum displacement on each axis. Repeat wraps source sampling and makes the disturbance field periodic at node boundaries; the disturbance scale aligns to whole periods, and the source must still be suitable for tiling. Transparent holes remain part of the sampled input, empty content stays empty, and HDR colors are not clamped in floating-point rendering.
+
+Three **Composition examples → Composition practice** examples compare original content on the left with composited grid, ring and star distortion on the right: Heat haze distortion, Water ripple refraction and Energy turbulence. Heat haze demonstrates continuous motion; the water and energy examples use three-second and 3.6-second closed trajectories over static child graphics, making their endpoints match. Expand the right group to edit its source. Modes, settings, switches, order and keyframes travel with saved nodes/components; batch editing and pinned post-processing controls are supported.
+
 ### Hand-drawn style
 
 Open **Examples → Composition exercises → Hand-drawn heart** for a ready-made example with dark double strokes and red cross-hatching. The white background comes from canvas output settings; the effect belongs to the heart node.

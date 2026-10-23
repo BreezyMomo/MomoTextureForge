@@ -2,6 +2,9 @@ import {boundsSize} from './render-bounds.js';
 import {hasChannelCurves} from './channel-curves.js';
 import {fxDefaults,POST_EFFECTS,effectOrder,effectEnabled,effectValues} from './post-effect-specs.js';
 import {applySketchFx} from './sketch-fx.js';
+import {CREATIVE_FX_GLSL} from './creative-fx-glsl.js';
+import {applyPixelSortFx} from './pixel-sort-fx.js';
+import {NOISE_WARP_GLSL,noiseWarpActive,noiseWarpMotion} from './noise-warp.js';
 export {FX_SPECS,fxDefaults} from './post-effect-specs.js';
 // Radii are measured in pixels at a 512-pixel canvas, so exports scale consistently.
 export const hasPostFx=n=>hasChannelCurves(n)||POST_EFFECTS.some(s=>effectEnabled(n,s.id));
@@ -16,6 +19,8 @@ vec3 fxStraight(vec4 c){return c.a>.00001?c.rgb/c.a:vec3(0);}
 float fxLuma(vec3 c){return dot(c,vec3(.2126,.7152,.0722));}
 vec4 fxColor(vec2 p){if(repeatNode==1)p=fract(p);if(any(lessThan(p,vec2(0)))||any(greaterThan(p,vec2(1))))return vec4(0);return filtered(srcColor,p);}
 float fxHeight(vec2 p){if(repeatNode==1)p=fract(p);if(any(lessThan(p,vec2(0)))||any(greaterThan(p,vec2(1))))return 0.;return filtered(srcHeight,p).r;}
+${CREATIVE_FX_GLSL}
+${NOISE_WARP_GLSL}
 void applyFx(out vec4 c,out float h){
  c=texture(srcColor,uv);h=texture(srcHeight,uv).r;
  if(operation==10){c=vec4(0);h=0.;float sum=0.;for(int i=-8;i<=8;i++){float x=float(i)/8.,weight=exp(-x*x*3.);vec2 q=uv+contourStep*x;c+=fxColor(q)*weight;h+=fxHeight(q)*weight;sum+=weight;}c/=sum;h/=sum;}
@@ -34,6 +39,8 @@ void applyFx(out vec4 c,out float h){
  if(operation==29){vec3 rgb=fxStraight(c);float key=clamp(max(rgb.r,max(rgb.g,rgb.b)),0.,1.),a=mix(1.,key,fxAmount);c.rgb=rgb/max(a,.00001)*(c.a*a);c.a*=a;h*=a;}
  if(operation==30){vec2 d=contourStep;float left=fxHeight(uv-vec2(d.x,0)),right=fxHeight(uv+vec2(d.x,0)),bottom=fxHeight(uv-vec2(0,d.y)),top=fxHeight(uv+vec2(0,d.y));vec2 slope=vec2(left-right,bottom-top)*fxAmount;if(fxData[0].x>.5)slope.y=-slope.y;c.rgb=(normalize(vec3(slope,1.))*.5+.5)*c.a;}
  if(operation==31){vec4 ink=texture(tableTex,uv);if(fxData[0].x<.5){c=ink+c*(1.-ink.a);h=ink.a+h*(1.-ink.a);}else{c=ink;h=ink.a;}}
+ if(operation>=32&&operation<=41)applyCreativeFx(c,h);
+ if(operation==42)applyNoiseWarp(c,h);
 }
 `;
 export function applyPostFx(renderer,source,node){
@@ -62,6 +69,33 @@ export function applyPostFx(renderer,source,node){
   if(id==='unblack')replace(pass(out,29,{fxAmount:v.strength}));
   if(id==='normal')replace(pass(out,30,{contourStep:[v.sampleStep*scale/out.w,v.sampleStep*scale/out.h],fxAmount:v.strength/v.sampleStep,fxData:[+v.flipY]}));
   if(id==='sketch')replace(applySketchFx(renderer,out,v));
+  // A zero mix is an exact bypass, including expensive paint and readback effects.
+  if(v.mix===0)continue;
+  if(id==='pixelSort'&&v.lowThreshold>v.highThreshold)continue;
+  const common={fxAmount:v.mix},pixels=radius=>[radius*scale/out.w,radius*scale/out.h];
+  if(id==='halftone')replace(pass(out,32,{...common,fxData:[v.dotSize,v.angle,v.dotShape,v.inkMode,0,v.scatter,v.seed],fxColors:colors(v.inkColor,v.paperColor)}));
+  if(id==='dither')replace(pass(out,33,{...common,fxData:[v.cellSize,v.ditherPattern,v.paletteMode,v.levels,v.ditherStrength,v.seed],fxColors:colors(v.inkColor,v.paperColor)}));
+  if(id==='glitch')replace(pass(out,34,{...common,fxData:[v.slices,v.displacement,v.chance,v.sliceAxis,Math.floor((renderer.formulaSeconds??0)*v.rate),v.phase*997,v.seed,v.rgbOffset]}));
+  if(id==='zoomBlur')replace(pass(out,35,{...common,fxData:[v.centerX,v.centerY,v.innerRadius,v.outerRadius,v.blurDistance,v.zoomDirection,[8,16,32][v.quality]]}));
+  if(id==='kuwahara')replace(pass(out,36,{...common,contourStep:pixels(v.paintRadius),fxData:[v.paintRadius,v.paintMode,v.edgeSharpness,[2,4,6][v.quality],v.anisotropy]}));
+  if(id==='bevel')replace(pass(out,37,{...common,contourStep:pixels(v.bevelWidth),fxData:[v.bevelSource,v.relief,v.lightAngle*Math.PI/180,v.elevation*Math.PI/180],fxColors:colors(v.lightColor,v.shadowColor)}));
+  if(id==='xdog'){
+   let small,large;try{small=blur(out,v.lineScale*3);large=blur(out,v.lineScale*v.scaleRatio*3);replace(pass(out,38,{...common,dest:large,table:small.textures[0],fxData:[v.edgeWeight,v.lineThreshold,v.lineSoftness,+v.retainColor],fxColors:colors(v.inkColor,v.paperColor)}));}
+   finally{renderer.release(small);renderer.release(large);}
+  }
+  if(id==='crt')replace(pass(out,39,{...common,fxData:[v.curvature,v.lineDensity,v.lineStrength,v.maskStrength,Math.floor((renderer.formulaSeconds??0)*v.rate),v.phase,v.seed,v.grain,v.flicker,v.edgeShade]}));
+  if(id==='ascii')replace(pass(out,40,{...common,fxData:[v.glyphSize,v.characterSet,+v.colored,+v.invert,v.paperOpacity],fxColors:colors(v.inkColor,v.paperColor)}));
+  if(id==='pixelSort')replace(applyPixelSortFx(renderer,out,v));
+  if(id==='noiseWarp'&&noiseWarpActive(v))replace(pass(out,42,{...common,fxData:[v.warpX,v.warpY,v.warpMode,v.warpDetail,...noiseWarpMotion(v,renderer.formulaSeconds??0),v.warpScale,0,v.seed]}));
  }
  return out;
+}
+
+// Keep expensive paint loops out of ordinary compositing shaders. Creative operations
+// compile with a constant operation so drivers can eliminate unrelated branches.
+export function specializeFxShader(source,operation){
+ if(operation<32||operation>41)source=source.replace(CREATIVE_FX_GLSL,'').replace('if(operation>=32&&operation<=41)applyCreativeFx(c,h);','');
+ if(operation!==42)source=source.replace(NOISE_WARP_GLSL,'').replace('if(operation==42)applyNoiseWarp(c,h);','');
+ if(operation<32||operation>42)return source;
+ return source.replace('blendMode,operation,recordCount','blendMode,recordCount').replace('#version 300 es','#version 300 es\n#define operation '+operation);
 }

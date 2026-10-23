@@ -1,3 +1,5 @@
+import {CREATIVE_EFFECTS} from './creative-effect-specs.js';
+import {NOISE_WARP_SPEC,noiseWarpActive} from './noise-warp.js';
 import {normalizeDashPattern} from './sketch-options.js';
 // Stable IDs and paths are part of saved nodes; array indices remain for legacy animations.
 export const FX_SPECS=[
@@ -40,6 +42,7 @@ export const POST_EFFECTS=[
   number('pathSimplification',0,1,0,.01),number('fixedDecimalPlaceDigits',-1,6,-1,1),
   number('sunburstCenterX',0,1,.5),number('sunburstCenterY',0,1,.5),number('sunburstRays',4,720,72,1)
  ]}
+,...CREATIVE_EFFECTS,NOISE_WARP_SPEC
 ].map(spec=>({...spec,label:'fx.effect.'+spec.id,description:'fx.help.'+spec.id,parameters:spec.parameters.map(p=>({...p,path:p.path??'postEffects.'+spec.id+'.'+p.key}))}));
 export const EFFECT_IDS=POST_EFFECTS.map(s=>s.id);
 export const EFFECT_BY_ID=new Map(POST_EFFECTS.map(s=>[s.id,s]));
@@ -51,10 +54,15 @@ export function sanitizeEffects(raw){const result=effectDefaults();for(const s o
 export function effectValues(n,id){const spec=EFFECT_BY_ID.get(id);return Object.fromEntries(spec.parameters.map(p=>[p.key,p.path.startsWith('postFx.')?n.postFx?.[+p.path.split('.')[1]]??p.default:n.postEffects?.[id]?.[p.key]??p.default]));}
 export function effectEnableValues(n,id,enabled){const s=EFFECT_BY_ID.get(id),values={['postEffects.'+id+'.enabled']:enabled};if(enabled&&s.legacy!==undefined&&!(n.postFx?.[s.legacy]>0))values['postFx.'+s.legacy]=s.start;return values;}
 export function effectResetValues(id){const s=EFFECT_BY_ID.get(id);return Object.fromEntries(s.parameters.map(p=>[p.path,p.path==='postFx.'+s.legacy?s.start:p.default]));}
-export const effectsUseTime=n=>effectEnabled(n,'scanline')&&effectValues(n,'scanline').speed!==0;
+export const effectsUseTime=n=>(effectEnabled(n,'scanline')&&effectValues(n,'scanline').speed!==0)||['glitch','crt'].some(id=>effectEnabled(n,id)&&effectValues(n,id).rate!==0)||(effectEnabled(n,'noiseWarp')&&noiseWarpActive(effectValues(n,'noiseWarp'))&&effectValues(n,'noiseWarp').motionSpeed>0);
 
 // Style-specific controls are hidden without discarding their stored values.
 export function effectParameterVisible(p,values){
+ if(p.path==='postEffects.noiseWarp.loopSeconds')return values.warpMotion===1;
+ if(p.path.startsWith('postEffects.halftone.')&&['inkColor','paperColor'].includes(p.key))return values.inkMode===0;
+ if(p.path.startsWith('postEffects.dither.')){if(p.key==='levels')return values.paletteMode<2;if(['inkColor','paperColor'].includes(p.key))return values.paletteMode>=2;if(p.key==='seed')return values.ditherPattern===2;}
+ if(p.path.startsWith('postEffects.kuwahara.')&&p.key==='anisotropy')return values.paintMode===1;
+ if(p.path.startsWith('postEffects.ascii.')){if(p.key==='inkColor')return !values.colored;if(p.key==='paperColor')return values.paperOpacity>0;}
  if(!p.path.startsWith('postEffects.sketch.'))return true;const style=values.fillStyle;
  const only={fillOpacity:[1,2,3,5,6,7,8,9],fillColor:[1,2,3,5,6,7,8,9],hatchAngle:[2,3,5,7,8,9],hatchGap:[2,3,5,6,7,8],hatchWidth:[2,3,5,6,7,8,9],fillMultiStroke:[2,3,5,6,7,8,9],fillShapeRoughnessGain:[1],fillDashPattern:[2,3,5,6,7,8,9],fillDashOffset:[2,3,5,6,7,8,9],dashLength:[7],dashGap:[7],zigzagOffset:[8],curveStepCount:[6],curveFitting:[6],curveTightness:[6],sunburstCenterX:[9],sunburstCenterY:[9],sunburstRays:[9]};
  return !only[p.key]||only[p.key].includes(style);
