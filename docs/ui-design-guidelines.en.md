@@ -40,6 +40,7 @@ Each theme is one designed composition, without forced light/dark variants. Them
 
 ## 2. Component structure
 
+- Node rows sit on the workspace surface with clear spacing. The top-level drop zone stays quiet at rest and reveals its dashed boundary and target highlight while dragging.
 - Panel headers share a background; active tabs use navigation feedback. Close, float and other management actions use secondary text color.
 - Parameter sections use subtle surfaces, spacing and separators. Avoid repeating frames, shadows and colored headings at every panel, section and subsection level.
 - Show current graphic parameters first. Place whole-group reset and randomize actions after the parameters as secondary buttons. Keep individual reset and keyframe controls beside their values.

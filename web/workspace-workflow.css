@@ -148,3 +148,11 @@
  #inspector .tree-field>select{flex-basis:100%;width:100%}
  .tree-editor .inspector-module-heading{flex-wrap:wrap}
 }
+
+/* Node rows sit directly on the workspace; reveal the drop target during drag. */
+.tree-editor #node-tree{display:flow-root;padding-block:4px}
+.tree-editor #node-tree .tree-node{min-height:32px;margin-block:4px}
+.tree-editor #node-tree .tree-root-drop{min-height:36px;margin:12px 0 0;padding:8px;border:1px dashed transparent;border-radius:var(--ui-control-radius);background:transparent;color:var(--ui-subtle)}
+.tree-editor #node-tree.node-sort-active .tree-root-drop{border-color:var(--ui-line-strong);color:var(--ui-muted)}
+.tree-editor #node-tree .tree-root-drop.active{border-color:var(--ui-selection);background:var(--ui-selection-surface);color:var(--ui-text)}
+.tree-editor #node-tree+.selection-tools{margin-top:12px;gap:8px}

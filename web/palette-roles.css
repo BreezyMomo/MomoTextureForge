@@ -12,8 +12,8 @@
 :root[data-tab-override=true][data-palette-roles=true] .dock-stack-header{background:var(--ui-panel-header-bg);border-bottom:1px solid var(--ui-line);--ui-text:var(--ui-header-text);--ui-muted:var(--ui-header-muted);--ui-tab-active-fg:var(--ui-header-navigation);--ui-tab-active-bg:var(--ui-header-navigation-bg)}
 :root[data-palette-roles=true] .dock-panel-body{background:var(--ui-bg)}
 :root[data-palette-roles=true] .dock-panel-body>:is(.tree-left,.tree-inspector){background:transparent}
-:root[data-palette-roles=true] .tree-editor :is(.tree-pattern-card,.graphics-card,#node-tree){background:var(--ui-panel)}
-:root[data-palette-roles=true] #node-tree:empty{background:transparent}
+:root[data-palette-roles=true] .tree-editor :is(.tree-pattern-card,.graphics-card){background:var(--ui-panel)}
+:root[data-palette-roles=true] #node-tree{background:transparent}
 :root[data-tab-override=true][data-palette-roles=true] .dock-tabs{background:transparent;border-color:transparent}
 :root[data-palette-roles=true] .tree-editor .dock-stack-header :is(.dock-stack-actions button,.dock-window-move){color:var(--ui-muted)}
 :root[data-palette-roles=true] .tree-editor .dock-tab[aria-selected=false]{color:var(--ui-muted)}
