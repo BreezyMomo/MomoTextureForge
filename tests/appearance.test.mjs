@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {APPEARANCE_KEY,STYLE_IDS,COLOR_SCHEME_IDS,normalizeAppearance,appearancePalette,colorContrast,createAppearance} from '../web/appearance.js';
+import {APPEARANCE_KEY,STYLE_IDS,COLOR_SCHEME_IDS,GROUPED_SCHEME_IDS,normalizeAppearance,appearancePalette,colorContrast,createAppearance} from '../web/appearance.js';
 const defaults={theme:'classic',accent:null,style:'refined',density:'compact',tabs:'auto',scheme:'auto'};
 
 test('appearance restores only supported themes and literal six-digit colors',()=>{
@@ -124,4 +124,29 @@ test('Airy is an additional saved control style that preserves every existing pa
  assert.deepEqual(appearancePalette(prefs),appearancePalette({...prefs,style:'refined'}));
  controller.preview({...prefs,tabs:'auto'});assert.equal(root.dataset.tabStyle,'segmented');
  assert.equal(normalizeAppearance(null).style,'refined');
+});
+
+test('grouped palettes keep independent action, selection, navigation and parameter colors',()=>{
+ for(const scheme of GROUPED_SCHEME_IDS)for(const theme of ['classic','graphite','light']){
+  const p=appearancePalette({scheme,theme});
+  assert.ok(new Set([p.accent,p.roles.selection,p.roles.navigation,p.roles.control]).size>=3);
+  assert.ok(colorContrast(p.surfaces.text,p.roles.header)>=4.5,'header text '+scheme+' '+theme);
+  assert.ok(colorContrast(p.surfaces.text,p.selected)>=4.5,'selected node text '+scheme+' '+theme);
+  for(const role of ['selection','navigation','control'])assert.ok(colorContrast(p.roles[role],p.surfaces.panel)>=4.5,role+' '+scheme+' '+theme);
+  for(const accent of ['#ff00ff','#000000','#ffffff']){
+   const custom=appearancePalette({scheme,theme,accent});assert.deepEqual(custom.roles,p.roles);assert.equal(custom.selected,p.selected,'primary customizations preserve the other palette roles');
+  }
+ }
+});
+
+test('all grouped role overrides are removed when returning to an existing scheme or cancelling',()=>{
+ const values=new Map(),root={dataset:{},style:{setProperty:(key,value)=>values.set(key,value),removeProperty:key=>values.delete(key)}};
+ const controller=createAppearance({root}),original=controller.get();
+ for(const scheme of GROUPED_SCHEME_IDS){
+  controller.preview({...original,scheme});assert.equal(root.dataset.paletteRoles,'true');assert.ok(values.has('--ui-selection-surface'));
+  for(const next of [original,{...original,scheme:'dunhuang'},{...original,style:'aurora'}]){
+   controller.preview(next);assert.equal(root.dataset.paletteRoles,'false');
+   for(const key of ['selection','navigation','control','header','stage','on-navigation','navigation-bg','selection-surface','selection-line'])assert.equal(values.has('--ui-'+key),false,key+' resets');
+  }
+ }
 });

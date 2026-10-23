@@ -190,7 +190,7 @@ try{
   if(language==='zh-CN')await writeFile(resolve(root,'docs/examples/ribbon-trails.json'),JSON.stringify(p,null,2)+'\n');
  });
  await run('appearance',async()=>{
-  await load(spell);await page.locator('#appearance-settings').click();await page.locator('#appearance-scheme').selectOption('tianqing');await page.locator('#appearance-theme').selectOption('light');await page.locator('.appearance-style-card[data-style=airy]').click();await page.locator('#appearance-density').selectOption('comfortable');await shot('appearance-settings');await page.locator('.appearance-dialog [data-cancel]').click();
+  await load(spell);await page.locator('#appearance-settings').click();await page.locator('#appearance-scheme').selectOption('qingci');await page.locator('#appearance-theme').selectOption('light');await page.locator('.appearance-style-card[data-style=airy]').click();await page.locator('#appearance-tabs').selectOption('pill');await page.locator('#appearance-density').selectOption('compact');await shot('appearance-settings');await page.locator('.appearance-dialog [data-cancel]').click();
  });
  await run('canvas-view',async()=>{
   await load(spell);await page.locator('#pan-preview').click();

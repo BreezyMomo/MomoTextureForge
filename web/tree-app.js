@@ -87,6 +87,7 @@ if(document.documentElement.dataset.distribution!=='standalone')document.head.ap
 if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'editor-surfaces.css'}));
 if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'creative-skins.css'}));
 if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'tab-styles.css'}));
+if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'palette-roles.css'}));
 document.body.className='tree-editor';mountStartupContent(`
 <header class="tree-header">
 <div class="tree-brand"><strong>MOMO <span>TEXTURE FORGE</span></strong><input id="project-name" aria-label="画布名称" data-i18n-aria-label="editor.canvasName" title="画布名称" data-i18n-title="editor.canvasName"></div>

@@ -39,6 +39,8 @@ npm start -- --port 8799
 
 配色偏好 `scheme` 接受 `auto`、`xuanqing`、`tianqing`、`dunhuang`、`zhusha`、`zhuyue` 和 `ouhe`；旧设置缺少该字段时补为 `auto`，保留原有颜色。命名方案独立于控件风格，按深浅模式提供背景、面板、控件、边框、三级文字和推荐强调色；石墨模式中和表面颜色。选择方案将强调色重置为推荐色，随后仍可自定义。风格卡片保留各自固定的参考配色与示意图，不随配色方案、明暗模式或强调色改变；实际搭配效果在右侧与工作区实时预览。方案为适配编辑器自行调制的界面颜色，不作为传统色历史标准值，也不引入外部色表依赖。
 
+`GROUPED_SCHEME_IDS` 额外注册 `shuimo`、`qingci`、`mineral` 三套成组配色，借鉴 [Chinese Color Atlas 的角色配色方式](https://chinesecoloratlas.com/zh-Hans/palettes)，按编辑器对比度重新调制。`appearancePalette` 额外返回选中、导航、参数、顶栏和中性画布周边角色；自定义强调色仅改变动作色。`web/palette-roles.css` 仅在 `data-palette-roles=true` 时映射角色，保留各风格的控件几何、独立页签和功能状态色；切回原方案时移除全部角色覆盖。预览复用真实主按钮、页签和动画状态样式，色条展示当前六个颜色角色。运行 `node tests/grouped-palettes-browser-check.mjs`（静态版加 `--built`），检查三组配色与明暗、九种风格及独立页签的 117 组组合、主色独立性、预览一致、对比度、保存/取消/恢复、作品像素不变与窄屏。
+
 `airy`（轻盈）复用精致风格的共享表面与控件变量，仅在自身选择器下以透明模块外框、分组分隔线和填充输入区实现减少边框；不修改既有风格或默认选择。`web/editor-icons.js` 为画布工具、节点类型、参数重置/关键帧和模块操作提供统一 SVG，图标按钮保留语义名称与本地化提示，关键帧状态通过 `data-key-state` 更新且不替换按钮。参数数值与操作列在 `web/tree.css` 中对齐，多选数值行使用 `selection-number-field`；`web/parameter-presentation.js` 按稳定路径标记 X/Y 轴与角度/秒单位，不分析翻译后的名称；紧凑快捷区与全局设置保留自身布局。运行 `node tests/editor-polish-browser-check.mjs`（静态版加 `--built`）验证风格切换与保存、240/300/400px 排版、重置/撤销/关键帧及多选控件。
 
 页签偏好 `tabs`（`auto`、`classic`、`segmented`、`pill`、`underline`）独立保存。缺少该字段的旧设置保持 `auto`，不覆盖原有外观；跟随风格时使用其默认页签，明确选择页签后切换风格仍保留该选择。根元素 `data-tab-style` 表示实际形态，`data-tab-override` 决定是否加载独立覆盖，规则在 `web/tab-styles.css`。预览复用 `.dock-stack-header` / `.dock-tab`，参数页签通过 `:is(#inspector-tabs,.appearance-inspector-tabs)` 共用规则；浏览器检查比对实际控件与预览的颜色、边框、圆角、阴影与间距。
@@ -47,7 +49,7 @@ npm start -- --port 8799
 
 编辑状态使用独立语义变量：`--ui-motion` / `--ui-motion-bg` 表示动画，`--ui-time*` 表示时间区间，`--ui-key*` 表示关键帧与收藏，`--ui-playhead` 表示播放位置，录制复用危险色。它们不从个人强调色推导；浅色主题提供对应的深色文字与轮廓。`web/tree.css` 的功能状态规则优先于通用选中样式，录制即使带 `aria-pressed=true` 仍显示红色。外观预览复用真实动画标记、时间区间、关键帧和录制按钮的类与规则。
 
-运行 `node tests/functional-colors-browser-check.mjs`，以及静态构建后的 `node tests/functional-colors-browser-check.mjs --built`，检查 336 组配色、明暗与风格组合中的功能色、对比度、真实界面与预览一致性，并确认作品像素和撤销记录不变。
+运行 `node tests/functional-colors-browser-check.mjs`，以及静态构建后的 `node tests/functional-colors-browser-check.mjs --built`，检查所有配色、明暗与风格组合中的功能色、对比度、真实界面与预览一致性，并确认作品像素和撤销记录不变。
 
 ## 构建离线版
 
