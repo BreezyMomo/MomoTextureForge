@@ -457,3 +457,13 @@
 .appearance-preview-signals .animation-key{left:42%}
 .appearance-preview-signals .animation-playhead{left:62%}
 .appearance-preview-signals>small{display:block;margin:0;color:var(--ui-muted);line-height:1.6}
+
+/* Node post-processing order is persisted with the graphic, independently of inspector layout. */
+.post-effects-editor{min-width:0}.post-effects-toolbar{display:flex;gap:6px;margin-bottom:8px}
+.post-effects-list{position:relative;display:flex;flex-direction:column;gap:6px;min-width:0}
+.post-effect{border:1px solid var(--ui-line);border-radius:5px;background:var(--ui-panel);min-width:0}
+:is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary{display:flex;align-items:center;gap:5px;cursor:pointer;padding:6px;list-style:none;min-width:0}
+:is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary::-webkit-details-marker{display:none}:is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary::after{content:'›';margin-left:3px;color:var(--ui-muted)}.post-effect>details[open]>summary::after{transform:rotate(90deg)}
+.post-effect-title{flex:1;min-width:0;overflow-wrap:anywhere}:is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary button{padding:1px 4px;min-width:21px;border:0;background:transparent;box-shadow:none;color:var(--ui-muted)}
+:is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary button:hover{color:var(--ui-text);background:var(--ui-hover)}.post-effect-grip{cursor:grab}:is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary input{margin:0;flex:none}
+.post-effect-body{padding:0 8px 8px;min-width:0}.post-effect-help{padding:0 8px;margin:0 0 8px}.post-effect.module-dragging{opacity:0}

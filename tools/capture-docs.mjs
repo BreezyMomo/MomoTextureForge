@@ -86,7 +86,7 @@ try{
   await page.getByRole('button',{name:label('editor.select')+demoName('呼吸圆形'),exact:true}).click();
   await resizeColumn('inspector',1160);
   await page.locator('#inspector [data-module="modules.node"]>summary .inspector-module-title').click();await page.locator('#inspector [data-module="editor.shapeUV"]>summary .inspector-module-title').click();
-  await showModules(['modules.shapeParameters']);await page.locator('#inspector [data-module="modules.shapeParameters"]>summary .inspector-module-help').click();await page.locator('#inspector [data-module="editor.nodeColors"]>summary .module-move-up').click();await page.locator('.tree-inspector').evaluate(e=>e.scrollTop=0);await shot('inspector-modules');
+  await showModules(['modules.shapeParameters']);await page.locator('#inspector [data-module="modules.shapeParameters"]>summary .inspector-module-help').click();await page.locator('#inspector [data-module="editor.nodeColors"]>summary .module-drag-handle').press('ArrowUp');await page.locator('.tree-inspector').evaluate(e=>e.scrollTop=0);await shot('inspector-modules');
   await page.getByRole('button',{name:label('inspector.transformLayout'),exact:true}).click();await page.locator('#inspector [data-module="editor.nodeRegion"]>summary .inspector-module-title').click();
   await page.getByRole('combobox',{name:label('editor.arrangement'),exact:true}).selectOption('1');await changeNumber(label('editor.gridColumns'),5);await changeNumber(label('editor.gridRows'),4);
   await page.locator('#inspector [data-module="editor.contentArrangement"]>summary .inspector-module-help').click();await page.locator('.tree-inspector').evaluate(e=>e.scrollTop=0);await shot('inspector-layout-modules');

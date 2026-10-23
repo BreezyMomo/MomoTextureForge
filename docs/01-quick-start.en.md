@@ -82,7 +82,7 @@ Drafts are autosaved in browser storage, but other browsers, ports and origins d
 
 ## 5. Practice with composition examples
 
-Open **Examples** to generate 30 compositions and material presets: five VFX studies, four UI backgrounds, thirteen new-arrangement demonstrations, two material presets and six composition exercises. Filter by category. Each card explains its construction; **Edit on canvas** opens an independent canvas whose tree can be explored layer by layer.
+Open **Examples** to generate 31 compositions and material presets: five VFX studies, four UI backgrounds, thirteen new-arrangement demonstrations, two material presets and seven composition exercises, including a hand-drawn heart with red cross-hatching. Filter by category. Each card explains its construction; **Edit on canvas** opens an independent canvas whose tree can be explored layer by layer.
 
 Puzzle examples show cell spacing, overflow tabs, flat outside borders and per-piece colors. Content-boundary and cross-cell examples demonstrate overflow handling.
 

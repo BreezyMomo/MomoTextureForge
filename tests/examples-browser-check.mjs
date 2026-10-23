@@ -30,7 +30,7 @@ try{
  for(const href of links){
   const url=new URL(href);assert.equal(url.origin,origin);
   const project=sanitizeTree(JSON.parse(Buffer.from(url.hash.slice(6),'base64').toString('utf8')));
-  const root=project.root.children[0];assert.ok(root.kind==='shape'?root.arrange[0]>0:root.children.length>=2);names.add(project.name);
+  const root=project.root.children[0];assert.ok(root.kind==='shape'?root.arrange[0]>0||Object.values(root.postEffects).some(effect=>effect.enabled===true):root.children.length>=2);names.add(project.name);
   if(['刀光拖尾','命中爆闪','破碎冲击环','溶解遮罩'].includes(project.name))assert.equal(project.output.loopExport,false,project.name);
   if(project.name==='溶解遮罩'){assert.equal(project.output.mode,'height');assert.equal(project.output.alpha,false);}
   if(['菱形格纹','交错菱砖','斜纹底纹','点阵底纹'].includes(project.name)){assert.equal(project.output.mode,'color');assert.equal(project.output.alpha,false);}
@@ -40,6 +40,7 @@ try{
    await editor.waitForFunction(()=>{const s=document.querySelector('#render-status');return s&&s.textContent.includes('预览')&&!s.textContent.includes('加载');});
    assert.equal(await editor.locator('#project-name').inputValue(),project.name);
    assert.equal(await editor.locator('#preview-error').isVisible(),false,project.name);
+   if(project.name==='手绘心形'){assert.equal(root.type,'HeartLeafTeardrop');assert.equal(root.postEffects.sketch.enabled,true);assert.equal(root.postEffects.sketch.fillStyle,3);assert.equal(root.postEffects.sketch.fillColor,'#f42521');await editor.locator('.tree-node-name').filter({hasText:'手绘心形'}).click();await editor.locator('#inspector-tabs').getByRole('button',{name:'合成',exact:true}).click();const effects=editor.locator('#inspector [data-module="modules.imageFilters"]');if(await effects.getAttribute('open')===null)await effects.locator(':scope>summary .inspector-module-title').click();assert.equal(await effects.locator('[data-effect=sketch] [data-effect-enabled]').isChecked(),true);assert.equal(await effects.locator('[data-effect=sketch] select').first().inputValue(),'3');}
    assert.ok(await editor.locator('[role="treeitem"]').count()>=(root.kind==='shape'?1:2));
   }finally{await editor.close();}
  }
@@ -55,8 +56,10 @@ try{
   }
   return {outside,inside};
  });
+ const heartPixels=await page.locator('img[alt="手绘心形"]').evaluate(img=>{const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0);const {data}=ctx.getImageData(0,0,canvas.width,canvas.height);let red=0,ink=0,paper=0;for(let i=0;i<data.length;i+=4){if(data[i]>150&&data[i+1]<150&&data[i+2]<150)red++;if(Math.max(data[i],data[i+1],data[i+2])<100)ink++;if(Math.min(data[i],data[i+1],data[i+2])>240)paper++;}return {red,ink,paper};});
+ assert.ok(heartPixels.red>500,'手绘心形保留红色交叉排线');assert.ok(heartPixels.ink>100,'手绘心形保留深色轮廓');assert.ok(heartPixels.paper>5000,'手绘心形保留白色纸面和排线间隙');
  assert.equal(shieldPixels.outside,0,'蜂巢不得超出圆形护盾边界');assert.ok(shieldPixels.inside>100,'圆内保留蜂巢纹样');
- await mkdir('test-results/examples',{recursive:true});await page.screenshot({path:'test-results/examples/gallery.png',fullPage:true});
+ await mkdir('test-results/examples',{recursive:true});if(!process.argv.includes('--no-screenshots'))await page.screenshot({path:'test-results/examples/gallery.png',fullPage:true});
  if(!standalone){
   const frames=await page.evaluate(async()=>{
    const {TreeRenderer}=await import('./tree-renderer.js'),{treeSamples}=await import('./tree-samples.js'),{project,cloneNode,sanitizeTree}=await import('./tree-model.js'),{encodePNG}=await import('./encoders.js');
@@ -88,7 +91,7 @@ try{
    if(name==='溶解遮罩')assert.ok(stats[0].energy>.99,'溶解从完整白色开始');
    if(name==='溶解遮罩')for(const frame of stats){assert.equal(frame.alphaMin,255,'黑白遮罩应不透明');assert.equal(frame.grayError,0,'黑白遮罩通道一致');}
   }
-  await page.locator('#animation-check').screenshot({path:'test-results/examples/animation-frames.png'});
+  if(!process.argv.includes('--no-screenshots'))await page.locator('#animation-check').screenshot({path:'test-results/examples/animation-frames.png'});
   console.log(JSON.stringify({animationFrames:frames}));
   const tiles=await page.evaluate(async()=>{
    const {TreeRenderer}=await import('./tree-renderer.js'),{treeSamples}=await import('./tree-samples.js'),{project,cloneNode,sanitizeTree}=await import('./tree-model.js'),{encodePNG}=await import('./encoders.js');
@@ -111,7 +114,7 @@ try{
   });
   assert.equal(tiles.length,4);
   for(const tile of tiles){assert.ok(tile.colors>=3,tile.name+' 应包含底纹');assert.ok(tile.staticError<.0001,tile.name+' 应保持静态');assert.ok(tile.alphaError<.0001,tile.name+' 默认不透明');assert.ok(tile.wrapError<.005,tile.name+' 跨边缘排列应与整图循环平移一致');}
-  await page.locator('#ui-check').screenshot({path:'test-results/examples/ui-tiles.png'});console.log({uiTiles:tiles});
+  if(!process.argv.includes('--no-screenshots'))await page.locator('#ui-check').screenshot({path:'test-results/examples/ui-tiles.png'});console.log({uiTiles:tiles});
  }
  await page.goto(origin);if(standalone)await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');else await page.locator('#render-status').waitFor();
  await page.locator('.header-help > summary').click();

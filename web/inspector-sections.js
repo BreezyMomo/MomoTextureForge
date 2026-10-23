@@ -32,7 +32,7 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false,sh
  const doc=host.ownerDocument,make=(tag,className)=>{const element=doc.createElement(tag);element.className=className;return element;};
  const scope=key=>key==='modules.shapeParameters'?key+':'+(graphic?.id??'selection'):key;
  function decorate(details,key,title,defaultOpen=true){
-  details.classList.add('inspector-module');details.dataset.module=key;const id=scope(key),summary=details.querySelector(':scope>summary'),label=make('span','inspector-module-title');label.textContent=title;label.title=title;
+  details.classList.remove('arrangement-advanced');details.classList.add('inspector-module');details.dataset.module=key;const id=scope(key),summary=details.querySelector(':scope>summary'),label=make('span','inspector-module-title');label.textContent=title;label.title=title;
   const body=make('div','inspector-module-body');for(const child of [...details.childNodes])if(child!==summary)body.append(child);
   for(const heading of body.querySelectorAll(':scope>h3[data-inspector-section]'))if(heading.dataset.inspectorSection===key)heading.remove();
   const help=make('span','tree-note inspector-module-description'),heading=make('span','inspector-module-heading'),button=make('button','inspector-module-help'),arrow=make('span','inspector-module-arrow');arrow.setAttribute('aria-hidden','true');
@@ -64,8 +64,7 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false,sh
  const ordered=state.order(tab,modules().map(module=>module.dataset.module));
  const byKey=new Map(modules().map(module=>[module.dataset.module,module]));for(const key of ordered)host.append(byKey.get(key));
  let dragging=null,preview=null,dragEvents=null,ghost=null,capture=null,scroll=null;
- function update(){const list=modules();list.forEach((module,index)=>{module.querySelector(':scope>summary .module-move-up').disabled=index===0;module.querySelector(':scope>summary .module-move-down').disabled=index===list.length-1;});}
- function save(){state.rememberOrder(tab,modules().map(module=>module.dataset.module));update();}
+ function save(){state.rememberOrder(tab,modules().map(module=>module.dataset.module));}
  function clear(commit=false){dragEvents?.abort();dragEvents=null;scroll?.stop();scroll=null;if(capture?.grip.hasPointerCapture?.(capture.id))capture.grip.releasePointerCapture(capture.id);capture=null;const source=dragging;if(commit)preview?.commit();else preview?.cancel();if(ghost){const image=ghost,from=image.getBoundingClientRect(),to=source?.querySelector(':scope>summary').getBoundingClientRect(),animation=to&&animateUI(image,[{transform:'none',opacity:1},{transform:`translate(${to.left-from.left}px,${to.top-from.top}px)`,opacity:0}],{duration:commit?100:160});if(animation)animation.finished.then(()=>image.remove(),()=>image.remove());else image.remove();}ghost=null;preview=null;dragging=null;}
  for(const module of modules()){
   const header=module.querySelector(':scope>summary .inspector-module-heading'),title=module.querySelector(':scope>summary .inspector-module-title').textContent;
@@ -81,9 +80,12 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false,sh
    window.addEventListener('resize',()=>clear(),{signal:dragEvents.signal});
    document.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();clear();grip.focus({preventScroll:true});}else if(dragging){if([' ','Enter','Tab'].includes(event.key))event.preventDefault();event.stopPropagation();}},options);
   };
-  for(const [direction,text,key]of [[-1,'↑','modules.moveUp'],[1,'↓','modules.moveDown']]){const button=make('button',direction<0?'module-move-up':'module-move-down');button.type='button';button.textContent=text;button.title=uiFormat(key,title);button.setAttribute('aria-label',button.title);button.onclick=event=>{event.preventDefault();event.stopPropagation();const list=modules(),target=list[list.indexOf(module)+direction];if(!target)return;const before=layoutRects(list);direction<0?host.insertBefore(module,target):host.insertBefore(module,target.nextSibling);save();animateLayout(list,before);button.focus();};actions.append(button);}
+  grip.onkeydown=event=>{
+   if(!['ArrowUp','ArrowDown'].includes(event.key))return;event.preventDefault();event.stopPropagation();
+   const list=modules(),direction=event.key==='ArrowUp'?-1:1,target=list[list.indexOf(module)+direction];if(!target)return;
+   const before=layoutRects(list);direction<0?host.insertBefore(module,target):host.insertBefore(module,target.nextSibling);save();animateLayout(list,before);grip.focus({preventScroll:true});
+  };
   const pins=header.querySelector(':scope>.shortcut-pin-controls');if(pins)actions.prepend(pins);
   header.prepend(grip);header.insertBefore(actions,header.querySelector('.inspector-module-arrow'));
  }
- update();
 }

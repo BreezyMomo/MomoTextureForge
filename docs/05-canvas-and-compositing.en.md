@@ -38,7 +38,7 @@ The inspector has four tabs: **Shape**, **Transform / Layout**, **Animation**, a
 
 ![Collapsible graphic parameter modules](images/en/inspector-modules.png)
 
-> Callouts: 1 Graphic-specific parameters share one module; 2 Click the question mark for help; 3 Click the header to expand or collapse UV; 4 Drag the handle or use arrows to reorder modules.
+> Callouts: 1 Graphic-specific parameters share one module; 2 Click the question mark for help; 3 Click the header to expand or collapse UV; 4 Drag the handle to reorder modules.
 
 Click a module header to expand or collapse it, or **?** to show or hide help. These controls are independent: help does not expand parameters, and help remains available while parameters are collapsed. Collapsing changes only panel visibility; parameters and animation remain active. Common modules retain expansion across nodes; graphic-specific parameter modules remember each graphic type separately. Preferences stay in this browser across language changes and reloads, outside project files and undo history.
 
@@ -46,9 +46,35 @@ Click a module header to expand or collapse it, or **?** to show or hide help. T
 
 > Callouts: 1 Collapse common region settings separately; 2 Arrangement parameter module; 3 Help stays hidden until requested.
 
-Drag the **⠿** handle beside a module title, or use **↑ / ↓**, to change module order within the tab. Order is saved per tab in this browser, shared between single and batch editing, and retained across nodes, languages and reloads. Temporarily unavailable modules return to their saved positions. Ordering changes panel layout only, leaving compositing/filter order, project files and undo history unaffected.
+Drag the **⠿** handle beside a module title to change module order within the tab. For keyboard sorting, focus the handle and press **↑ / ↓**. Order is saved per tab in this browser, shared between single and batch editing, and retained across nodes, languages and reloads. Temporarily unavailable modules return to their saved positions. Ordering changes panel layout only, leaving compositing/filter order, project files and undo history unaffected.
 
 Sliders, number inputs, resets, and keyframe buttons remain available inside modules. Multiselection uses the same module presentation with the existing batch-editing rules.
+
+
+### Node post-processing and execution order
+
+Use **Composite → Post-processing** on a shape or group. Each effect has its own switch, disclosure, help and parameter reset. Help does not expand the parameters. Disabling an effect retains its settings. Drag its **⠿** handle, or focus the handle and press keyboard **↑ / ↓**, to change the actual execution order: each effect processes the previous result, from top to bottom. Dragging shows a floating header and placeholder while other effects move aside smoothly. Release to settle; Esc or releasing outside the panel cancels without changing effect order.
+
+Effect order belongs to the node and supports undo, unlike inspector-module sorting, which only changes the interface. Saving, copying and inserting a graphic as a component retains its parameters, switches and effect order. A group composites its children before applying its effects. Wrap content in an outer group for a whole-composition effect; there is no separate canvas post-processing state.
+
+Available effects: Gaussian blur, bloom, sharpen, chromatic aberration, posterize, pixelate, edge shading, scanlines, kaleidoscope, mirror tiling, swirl, edge detection, three-color mapping, radial mask, remove black, height to normal and hand-drawn style. Bloom retains strength, radius and highlight threshold. Chromatic aberration supports horizontal, vertical and radial offsets. Posterize has separate shadow/highlight levels; zero highlight levels follows shadows. Edge detection follows luminance changes, unlike alpha contour outlines.
+
+Numeric and color parameters use existing keyframes, batch editing and pinned controls. Zero scanline speed freezes motion; phase remains adjustable. Blur, bloom, color offsets, pixel blocks, edge widths and normal sampling steps scale from a 512-pixel short edge. Rotations use degrees. Radial masks affect alpha and height together; remove black retains existing transparency while recovering color.
+
+Height to normal converts current height into node colors while retaining alpha and height. Later compositing and color filters still affect those colors. Normal output separately derives normal data from final height. Base levels, inversion, channel curves and contours still run before this effect list. Legacy projects retain their original filter order and `postFx.*` animation paths.
+
+
+### Hand-drawn style
+
+Open **Examples → Composition exercises → Hand-drawn heart** for a ready-made example with dark double strokes and red cross-hatching. The white background comes from canvas output settings; the effect belongs to the heart node.
+
+Enable **Composite → Post-processing → Hand-drawn style**. Locally bundled Rough.js traces and redraws the current result on a shape or group, in the chosen effect order. Alpha contours are the default. For opaque images, select luminance contours and adjust the contour threshold.
+
+Roughness, bowing, stroke width/color and double strokes control the pen. Fill options are original colors, solid, hachure, cross-hatch and no fill. Adjust hatch angle, gap, width and fill color independently. Original colors overlays strokes on the source; other modes replace colors and use stroke/fill coverage as height. Contour holes stay transparent; no paper background is added.
+
+A fixed seed reproduces strokes for the same static input and parameters. Stroke and hatch sizes use a 512-pixel short edge. Contour sampling is bounded; strokes are redrawn at the requested output size. Higher contour simplification removes details. Excessively fragmented contours report a limit and suggest adjusting simplification or threshold. Clear icons/shapes work best; soft gradients, smoke, tiny fragments and changing contours can produce different or shifting strokes. Canvas redraws use 8-bit color, losing HDR precision; original colors retains the source, while added strokes remain 8-bit overlays.
+
+Settings, colors, seed and effect order travel with saved/copied nodes and components, and use existing keyframes, batch editing and pinned controls. See [ROUGH-LICENSES.txt](../web/vendor/ROUGH-LICENSES.txt) for Rough.js and dependency notices.
 
 ### Pin common settings to the node tree
 
@@ -88,7 +114,7 @@ Batch changes affect only outermost selected nodes, avoiding double edits when p
 | Shape | Matching graphics’ specific parameters; compatible UV, polar and motion settings; opacity, color source, solid/gradient fills, stops, levels and inversion |
 | Transform / Layout | Position, dimensions, pivot, mirror, fit, boundary handling, arrangement and its random/gradient/flow settings, tile interfaces, alignment and distribution |
 | Animation | Parent interval, loops/ping-pong, outside visibility, source progress, fixed progress and parameter-animation switch |
-| Composite | Blending, contour, image filters and compatible masks |
+| Composite | Blending, contour, post-processing and compatible masks |
 
 Mixed shapes do not expose the primary shape's exclusive parameters. Shared tabs remain usable. UV does not affect groups, so mixed group selections explain this limitation. Rule tiling, contour arrangements and group-only coloring require all selected items to be groups. Unify differing arrangement/density types before editing dependent fields. Each group keeps its own children; candidates and contour sources are not generated automatically.
 
@@ -155,7 +181,7 @@ Choose a **Trail style preset** in the graphic parameters module, then adjust th
 - **Refractive membrane:** a continuous sheet with separate interior opacity, edge width/brightness, crease brightness, membrane tint and edge color. Presets: Ice blue membrane, Violet gold sheen and Moonlit veil. Inherited colors retain its original palette; node colors can override it.
 - **Particle strands:** independently phased strands, with width and opacity variation controlled by Strand variation. Presets: Soft white strands, Blue flowing strands and Dusty wisps.
 
-Styles also set the palette; use the shared node color, opacity, channel curves and image filters for further adjustments. Strand and membrane edge widths are relative to graphic height, with automatic subpixel coverage, so preview and export preserve their proportions.
+Styles also set the palette; use the shared node color, opacity, channel curves and post-processing for further adjustments. Strand and membrane edge widths are relative to graphic height, with automatic subpixel coverage, so preview and export preserve their proportions.
 
 **Evolution speed** supports forward and reverse motion; 0 holds the shape still. UV scrolling remains available for texture flow. **Horizontal seamless** rounds wave and distortion frequencies to whole cycles and disables end fading to join the horizontal edges. This controls spatial tiling and does not guarantee identical first and last animation frames. Parameters support keyframes, shortcut pins, undo and project/resource saves. Export through the existing transparent PNG and sequence workflows.
 
@@ -322,7 +348,7 @@ A value gradient maps low/high pattern values, not left/right canvas position. U
 1. Select a node and open **Composite** for blending, contour and filters. Opacity, palettes and gradients are in **Shape**.
 2. Set a parent palette and inherit it for coordinated colors, or use independent node palettes.
 3. A mask affects only previously composited content in the same group. Reorder nodes to verify its scope.
-4. Adjust Levels and Invert in **Shape**. Open **Composite → Image filters** for blur, Bloom, sharpening, chromatic aberration and toon levels.
+4. Adjust Levels and Invert in **Shape**. Open **Composite → Post-processing** for blur, Bloom, sharpening, chromatic aberration and toon levels.
 
 Filters support keys. Groups composite children before filtering. Radii such as blur are normalized to a 512-pixel canvas and scale with export resolution. Bloom enhances bright regions; it does not change the underlying shape radius.
 
@@ -363,7 +389,7 @@ Select a graphic or group and open **Shape → Channel curves**. Nodes inheritin
 - Choose **Luminance / height, Master RGB, Red R, Green G, Blue B, or Alpha**. Luminance adjusts brightness and height; RGB changes color only. Alpha changes coverage and scales the height contribution accordingly.
 - Click the graph to add a point, drag or use arrow keys to move it, or enter input/output values from 0–255. Endpoint inputs stay at 0 and 255; their outputs remain editable. Internal points can be deleted. Up to 16 points use smooth cubic interpolation through the controls, with continuous tangents and no overshoot. The graph, preview and exports share the same shape. Two-point curves remain straight.
 - Editing points or applying a preset enables curves. Disable temporarily, reset one channel, or reset all curves. Undo/redo, project/resource saves and exports preserve them.
-- Curves run after basic brightness/levels and before contours/image filters. Color order is luminance, master RGB, then individual RGB channels; Alpha follows. Unmodified channels preserve their original values, avoiding HDR clipping when adjusting only Alpha.
+- Curves run after basic brightness/levels and before contours/post-processing. Color order is luminance, master RGB, then individual RGB channels; Alpha follows. Unmodified channels preserve their original values, avoiding HDR clipping when adjusting only Alpha.
 - Curve shapes currently support neither keyframes nor batch edits. For multiple selected nodes, edit the primary node. These curves remap pixel values, unlike parameter curves in the animation timeline.
 
 For softer smoke or mask coverage, adjust Alpha. To change brightness while keeping transparency, use RGB. Mapping Alpha input 0 to a nonzero output also covers previously transparent areas inside the node region.

@@ -1,3 +1,5 @@
+import {createPostEffectsEditor} from './post-effects-editor.js';
+import {POST_EFFECTS,effectEnabled,effectEnableValues,effectResetValues} from './post-effect-specs.js';
 import {segmentedChoice} from './segmented-choice.js';
 import {createGradientEditor} from './gradient-editor.js';
 import {gradientColorAt,reverseGradient} from './gradient-stops.js';
@@ -161,7 +163,11 @@ export function createSelectionInspector(host,api){
   choice(uiText("editor.blendMode"),'blend',ANIMATION_ENUMS.blend.map((v,i)=>[v,["editor.normalBlend","editor.add","editor.maximum","editor.multiply","editor.subtract","editor.screen","editor.difference","editor.overlay","editor.softLight","editor.colorDodge","editor.mask","editor.inverseMask"][i]]));
   check(uiText("editor.invertMask"),'maskInvert',{reason:nodes.every(n=>n.mask)?'':uiText("selection.allSelectedNodesMustHaveAMaskSubtreeForThisSetting")});note(uiText("selection.maskAndInverseMaskAffectEarlierSiblingsEnterThePrimarySelection"));
   heading("editor.contourProcessing");choice(uiText("editor.contourMode"),'contour.mode',[['none',"common.close"],['outline',"editor.outline"],['dilate',"editor.dilate"],['erode',"editor.erode"]]);number(uiText("editor.contourWidthFractionOfShortSide"),'contour.radius',0,.1,.001);
-  details('modules.imageFilters',parent=>{button(uiText("editor.resetImageFilters"),()=>mutate(()=>({values:Object.fromEntries(FX_SPECS.map((p,i)=>['postFx.'+i,p[3]]))})),parent);FX_SPECS.forEach(([label,min,max,def,step],i)=>number(label,'postFx.'+i,min,max,step,{parent}));});
+  details('modules.imageFilters',parent=>createPostEffectsEditor({document:doc,host:parent,node:nodes[0],scope:'batch:'+nodes.map(n=>n.id).join(','),enabled:id=>commonValue(api.nodes().map(n=>effectEnabled(api.evaluated(n),id))),locked:path=>api.locked([path]),
+   onToggle:(id,value)=>mutate(n=>({values:effectEnableValues(n,id,value)})),onReset:id=>mutate(()=>({values:effectResetValues(id)})),onOrder:order=>mutate(()=>({values:{effectOrder:order}})),
+   onResetAll:()=>mutate(n=>({values:Object.fromEntries(POST_EFFECTS.flatMap(s=>[['postEffects.'+s.id+'.enabled',false],...s.parameters.map(p=>[p.path,p.path.startsWith('postFx.')?FX_SPECS[+p.path.split('.')[1]][3]:p.default])]))})),
+   buildParameters:(parent,spec)=>{for(const p of spec.parameters){if(p.type==='boolean')check(p.label,p.path,{parent});else if(p.type==='color')color(uiText(p.label),p.path,{parent});else if(p.options)choice(p.label,p.path,p.options.map((value,index)=>[index,uiText('fx.option.'+value)]),{numeric:true,parent});else number(p.label,p.path,p.min,p.max,p.step,{parent});}}
+  }));
  }
  function animation(){
   heading("editor.playbackInParent");number(uiText("editor.parentRangeStart"),'timing.start',0,1,.001);number(uiText("editor.parentRangeEnd"),'timing.end',0,1,.001);

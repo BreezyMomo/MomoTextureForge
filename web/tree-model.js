@@ -5,6 +5,7 @@ import {sanitizeChannelSources} from './output-channels.js';
 import {messageError} from './message-catalog.js';
 import {parameterRole} from './parameter-metadata.js';
 import {FX_SPECS,fxDefaults} from './post-fx.js';
+import {POST_EFFECTS,EFFECT_PARAMETERS,effectDefaults,effectOrder,sanitizeEffects} from './post-effect-specs.js';
 import {interpolateKeys,timeKey} from './animation-values.js';
 import { BY_ID } from './catalog.js';
 import { generateArrangement } from './arrangement-layouts.js';
@@ -25,7 +26,7 @@ export function node(kind='shape',type='Circle'){
  color:{mode:kind==='group'?'preserve':'inherit',fill:'gradient',low:'#000000',high:'#ffffff'},
  arrange:sanitizeTreeArrangement([0,...Array(58).fill(undefined)]),arrangeExtra:extraDefaults(),tileEdges:0,arrangeFit:'contain',imageFit:'contain',instancePhase:0,instanceContent:'all',scatterAvoidOverlap:false,scatterGap:0,
  timing:{start:0,end:1,from:0,to:1,cycles:1,loop:false,pingpong:false,ease:'linear',outside:'hold',frozen:false,at:0,offset:0,curve:[]},
- shapeClock:{follow:true,speed:1,offset:0,value:0},contour:{mode:'none',radius:.01},animationEnabled:true,post:POST_SPECS.map(p=>p[3]),postFx:fxDefaults(),curves:curveDefaults(),invert:false,maskInvert:false,tracks:{},children:[],mask:null};
+ shapeClock:{follow:true,speed:1,offset:0,value:0},contour:{mode:'none',radius:.01},animationEnabled:true,post:POST_SPECS.map(p=>p[3]),postFx:fxDefaults(),postEffects:effectDefaults(),effectOrder:effectOrder(),curves:curveDefaults(),invert:false,maskInvert:false,tracks:{},children:[],mask:null};
 }
 export function project(){const root=node('group');root.name='画布';root.children=[node()];return {schema:TREE_SCHEMA,name:'未命名画布',root,projectResources:[],canvas:{ratio:1},output:{width:512,height:512,mode:'color',alpha:true,depth:8,seconds:3,fps:30,frames:90,columns:8,loopExport:true,exrZip:true,background:'#000000',normal:3,normalAlgorithm:'sobel',normalFlipX:false,normalFlipY:false,normalInvert:false,normalSmooth:0,channels:[0,2,3,8],channelSources:[null,null,null,null]}};}
 export function walk(root,fn,parent=null,depth=0){fn(root,parent,depth);for(const c of root.children)walk(c,fn,root,depth+1);if(root.mask)walk(root.mask,fn,root,depth+1);}
@@ -36,7 +37,10 @@ export function pathSet(n,path,value){const parts=path.split('.');let at=n;for(c
 export const ANIMATION_ENUMS={boundary:['clip','visible','repeat'],'contour.mode':['none','outline','dilate','erode'],blend:['over','add','max','multiply','subtract','screen','difference','overlay','softlight','dodge','mask','inverseMask'],'transform.fit':['stretch','contain'],'color.mode':['inherit','own','preserve','remap'],'color.fill':['solid','gradient']};
 Object.assign(ANIMATION_ENUMS,Object.fromEntries(Object.entries(EXTRA_ENUMS).map(([key,values])=>['arrangeExtra.'+key,values])));
 export const ANIMATION_BOOLS=['shapeClock.follow','enabled','transform.mirrorX','polar','invert',...EXTRA_BOOLS.map(key=>'arrangeExtra.'+key)];
+ANIMATION_BOOLS.push(...POST_EFFECTS.flatMap(s=>['postEffects.'+s.id+'.enabled',...s.parameters.filter(p=>p.type==='boolean').map(p=>p.path)]));
 export function animationType(n,path){
+ if(EFFECT_PARAMETERS.get(path)?.type==='color')return 'color';
+ if(EFFECT_PARAMETERS.get(path)?.type==='boolean'||EFFECT_PARAMETERS.get(path)?.options)return 'discrete';
  const parameter=/^params\.(\d+)$/.exec(path);if(parameter&&BY_ID.get(n.type)?.parameters.find(p=>p.slot===+parameter[1])?.type==='select')return 'discrete';
  const generatorParameter=/^params\.(\d+)$/.exec(path);if(generatorParameter&&BY_ID.get(n.type)?.definition.generator){const spec=BY_ID.get(n.type).parameters.find(p=>p.slot===+generatorParameter[1]);if(spec?.step===1||spec?.type)return 'discrete';}
  if(path==='color.low'||path==='color.high')return 'color';
@@ -48,6 +52,7 @@ export function animationType(n,path){
  return 'number';
 }
 export function fieldSpec(n,path){
+ const effect=EFFECT_PARAMETERS.get(path);if(effect)return effect.type?[0,1]:[effect.min,effect.max];
  const bezier=/^bezier\.(shape|layout)\.(\d+)$/.exec(path);if(bezier)return +bezier[2]<(n.bezier?.[bezier[1]]?.length??0)?[-BEZIER_LIMIT,BEZIER_LIMIT]:null;
  if(ANIMATION_BOOLS.includes(path)||ANIMATION_ENUMS[path]||path==='color.low'||path==='color.high')return [0,1];
  if(path==='tileEdges')return [0,15];
@@ -88,6 +93,7 @@ export function sanitizeTree(raw,{component=false}={}){
   n.shapeClock={follow:r.shapeClock?.follow!==false,speed:num(r.shapeClock?.speed,1,-10,10),offset:num(r.shapeClock?.offset,0,-600,600),value:num(r.shapeClock?.value,0,-36000,36000)};
   n.contour={mode:ANIMATION_ENUMS['contour.mode'].includes(r.contour?.mode)?r.contour.mode:'none',radius:num(r.contour?.radius,.01,0,.1)};
   n.postFx=FX_SPECS.map((p,i)=>num(r.postFx?.[i],p[3],p[1],p[2]));n.postFx[6]=Math.round(n.postFx[6]);
+  n.postEffects=sanitizeEffects(r.postEffects);n.effectOrder=effectOrder(r.effectOrder);
   n.curves=sanitizeCurves(r.curves);
   n.animationEnabled=r.animationEnabled!==false;n.post=POST_SPECS.map((p,i)=>num(r.post?.[i],p[3],p[1],p[2]));n.invert=!!r.invert;n.maskInvert=!!r.maskInvert;
   if(Array.isArray(r.color?.stops))n.color.stops=r.color.stops.slice(0,8).filter(s=>/^#[0-9a-f]{6}$/i.test(s.color)).map(s=>({color:s.color,position:num(s.position,0,0,1)})).sort((a,b)=>a.position-b.position);
@@ -149,7 +155,7 @@ export function localClock(timing,parentTime){
  return {local,progress:t.from+(t.to-t.from)*p,visible};
 }
 export const keyValue=interpolateKeys;
-export function evaluateNode(n,parentTime,progressOverride){const clock=localClock(n.timing,parentTime);if(progressOverride!==undefined)clock.progress=progressOverride;const out={...n,bezier:{shape:[...(n.bezier?.shape??[])],layout:[...(n.bezier?.layout??[])]},transform:{...n.transform},color:{...n.color},contour:{...n.contour},shapeClock:{follow:true,speed:1,offset:0,value:0,...n.shapeClock},post:[...n.post],postFx:[...(n.postFx??fxDefaults())],arrangeExtra:{...extraDefaults(),...n.arrangeExtra},params:[...n.params],uv:[...n.uv],arrange:[...n.arrange]};for(const [path,track]of Object.entries(n.animationEnabled===false?{}:n.tracks)){const v=keyValue(track,clock.progress),bounds=fieldSpec(n,path);if(track.muted||v===null||!bounds)continue;if(animationType(n,path)!=='number'){pathSet(out,path,v);continue;}const base=pathGet(n,path);pathSet(out,path,clamp(track.mode==='add'?base+v:track.mode==='multiply'?base*v:v,...bounds));}out.arrange=sanitizeTreeArrangement(out.arrange);out.arrangeExtra=sanitizeExtra(out.arrangeExtra);return {node:out,...clock,visible:clock.visible&&out.enabled&&out.transform.width>0&&out.transform.height>0};}
+export function evaluateNode(n,parentTime,progressOverride){const clock=localClock(n.timing,parentTime);if(progressOverride!==undefined)clock.progress=progressOverride;const out={...n,bezier:{shape:[...(n.bezier?.shape??[])],layout:[...(n.bezier?.layout??[])]},transform:{...n.transform},color:{...n.color},contour:{...n.contour},shapeClock:{follow:true,speed:1,offset:0,value:0,...n.shapeClock},post:[...n.post],postFx:[...(n.postFx??fxDefaults())],postEffects:sanitizeEffects(n.postEffects),effectOrder:effectOrder(n.effectOrder),arrangeExtra:{...extraDefaults(),...n.arrangeExtra},params:[...n.params],uv:[...n.uv],arrange:[...n.arrange]};for(const [path,track]of Object.entries(n.animationEnabled===false?{}:n.tracks)){const v=keyValue(track,clock.progress),bounds=fieldSpec(n,path);if(track.muted||v===null||!bounds)continue;if(animationType(n,path)!=='number'){pathSet(out,path,v);continue;}const base=pathGet(n,path);pathSet(out,path,clamp(track.mode==='add'?base+v:track.mode==='multiply'?base*v:v,...bounds));}out.arrange=sanitizeTreeArrangement(out.arrange);out.arrangeExtra=sanitizeExtra(out.arrangeExtra);return {node:out,...clock,visible:clock.visible&&out.enabled&&out.transform.width>0&&out.transform.height>0};}
 export function nodeClock(root,id,time){let result=null;function visit(n,t){const e=evaluateNode(n,t);if(n.id===id)result=e;for(const c of n.children)visit(c,e.progress);if(n.mask)visit(n.mask,e.progress);}visit(root,time);return result;}
 export function moveNode(root,id,parentId,index=Infinity){const source=find(root,id),target=find(root,parentId);if(!source?.parent||!target||target.node.kind!=='group')throw messageError("ui.selectMovableNodesAndATargetGroup");if(find(source.node,parentId))throw messageError("ui.cannotMoveANodeIntoItselfOrItsDescendants");if(source.parent.mask===source.node)source.parent.mask=null;else source.parent.children.splice(source.parent.children.indexOf(source.node),1);target.node.children.splice(Math.min(index,target.node.children.length),0,source.node);}
 export function removeNode(root,id){const x=find(root,id);if(!x?.parent)throw messageError("ui.cannotDeleteTheCanvasRoot");if(x.parent.mask===x.node)x.parent.mask=null;else x.parent.children.splice(x.parent.children.indexOf(x.node),1);}
@@ -177,9 +183,9 @@ export function instanceChildren(n,index,record){
  return [pool[Math.floor(h/4294967296*pool.length)]];
 }
 export function expandInstances(root,id,time,records){const entry=find(root,id);if(!entry)throw messageError("ui.nodeNotFound");const n=entry.node,e=nodeClock(root,id,time);if(!n.arrange[0])throw messageError("ui.nodeHasNoArrangement");
- const points=records??placements(e.node.arrange,e.node),content=cloneNode(n);content.transform=node().transform;content.boundary=n.boundary==='repeat'?'visible':n.boundary;if(content.tracks.boundary)content.tracks.boundary.keys=content.tracks.boundary.keys.map(([t,v])=>[t,v==='repeat'?'visible':v]);content.opacity=1;content.blend='over';content.arrange[0]=0;if(content.color.mode==='remap')content.color.mode='own';content.instancePhase=0;content.mask=null;content.post=POST_SPECS.map(p=>p[3]);content.postFx=fxDefaults();content.contour=node().contour;content.invert=false;content.maskInvert=false;content.timing=node().timing;
- for(const path of Object.keys(content.tracks))if(path.startsWith('arrange.')||path.startsWith('arrangeExtra.')||path.startsWith('bezier.layout.')||path.startsWith('transform.')||path==='opacity'||(path.startsWith('post.')||path.startsWith('postFx.'))||path.startsWith('contour.'))delete content.tracks[path];
- const result=node('group');Object.assign(result,{id:n.id,name:n.name,transform:n.transform,boundary:n.boundary,opacity:n.opacity,blend:n.blend,seamMode:n.seamMode,seamBlend:n.seamBlend,timing:n.timing,animationEnabled:n.animationEnabled,mask:n.mask,maskInvert:n.maskInvert,post:n.post,postFx:n.postFx,contour:n.contour,invert:n.invert,color:n.color});result.tracks=Object.fromEntries(Object.entries(n.tracks).filter(([p])=>p.startsWith('transform.')||p==='boundary'||p==='opacity'||(p.startsWith('post.')||p.startsWith('postFx.'))||p.startsWith('contour.')));
+ const points=records??placements(e.node.arrange,e.node),content=cloneNode(n);content.transform=node().transform;content.boundary=n.boundary==='repeat'?'visible':n.boundary;if(content.tracks.boundary)content.tracks.boundary.keys=content.tracks.boundary.keys.map(([t,v])=>[t,v==='repeat'?'visible':v]);content.opacity=1;content.blend='over';content.arrange[0]=0;if(content.color.mode==='remap')content.color.mode='own';content.instancePhase=0;content.mask=null;content.post=POST_SPECS.map(p=>p[3]);content.postFx=fxDefaults();content.postEffects=effectDefaults();content.effectOrder=effectOrder();content.contour=node().contour;content.invert=false;content.maskInvert=false;content.timing=node().timing;
+ for(const path of Object.keys(content.tracks))if(path.startsWith('arrange.')||path.startsWith('arrangeExtra.')||path.startsWith('bezier.layout.')||path.startsWith('transform.')||path==='opacity'||(path.startsWith('post.')||path.startsWith('postFx.')||path.startsWith('postEffects.'))||path.startsWith('contour.'))delete content.tracks[path];
+ const result=node('group');Object.assign(result,{id:n.id,name:n.name,transform:n.transform,boundary:n.boundary,opacity:n.opacity,blend:n.blend,seamMode:n.seamMode,seamBlend:n.seamBlend,timing:n.timing,animationEnabled:n.animationEnabled,mask:n.mask,maskInvert:n.maskInvert,post:n.post,postFx:n.postFx,postEffects:n.postEffects,effectOrder:n.effectOrder,contour:n.contour,invert:n.invert,color:n.color});result.tracks=Object.fromEntries(Object.entries(n.tracks).filter(([p])=>p.startsWith('transform.')||p==='boundary'||p==='opacity'||(p.startsWith('post.')||p.startsWith('postFx.')||p.startsWith('postEffects.'))||p.startsWith('contour.')));
  if(e.node.arrange[0]===14&&e.node.arrangeExtra.showSource)result.children=[cloneNode(n.children[0])];
  let size=0;walk(root,()=>size++);walk(n,()=>size--);walk(result,()=>size++);
  for(let i=0;i<points.length;i++){size++;for(const c of instanceChildren(e.node,i,points[i]))walk(c,()=>size++);if(size>LIMITS.nodes)throw messageError("ui.expandingWouldExceedTheNodeLimit");}

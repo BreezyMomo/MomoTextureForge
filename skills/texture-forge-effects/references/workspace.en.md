@@ -73,7 +73,7 @@ Double-click a tree name or press F2 to rename; Enter saves, Esc cancels. Row tr
 
 ## Shape parameters
 
-Shape and coloring share Shape. Graphic selection/parameters, UV, opacity, node colors, levels, inversion and channel curves are collapsible modules with independent help. Drag title handles or use up/down arrows to reorder modules. Expansion and order stay in this browser across nodes, languages and reloads, separately from projects, processing order and undo.
+Shape and coloring share Shape. Graphic selection/parameters, UV, opacity, node colors, levels, inversion and channel curves are collapsible modules with independent help. Drag title handles to reorder modules, or focus a handle and press the keyboard arrow keys. Expansion and order stay in this browser across nodes, languages and reloads, separately from projects, processing order and undo.
 
 Color source is a dropdown; Color fill is a solid/value-gradient segmented control. Click the strip to add a sampled stop; drag to reposition and select to edit color, HEX or position. Keep 2–8 stops; delete, choose built-in presets, reverse the gradient or restore endpoints. HEX accepts 3/6 digits with optional #. Reverse gradient mirrors positions; node Invert changes value/height and may affect derived alpha.
 
@@ -128,3 +128,5 @@ Multilingual graphic names are edited beside default names with fixed choices, s
 The graphics list automatically receives all built-in graphics on first initialization. Existing browsers receive missing built-ins once on upgrade, preserving existing resources, versions and personal edits. Built-ins are deduplicated by resource identity. Later intentional removals, including an empty list, stay removed after refresh. New/open canvases continue sharing this list; initialization does not draw every built-in on the canvas.
 
 Thumbnail grids automatically add or remove columns based on available panel width, with a minimum card width of about 120px. Widen the panel for three, four or more columns; narrow panels fall back to one. View → List remains a single column.
+
+Node effect order is saved with the node and changes rendering, unlike inspector-module order. Use an outer group for whole-composition processing; see [layout and compositing](layout-compositing.en.md).

@@ -255,7 +255,7 @@
     "Graphic-specific parameters share one module",
     "Click the question mark for help",
     "Click the header to expand or collapse UV",
-    "Drag the handle or use arrows to reorder modules"
+    "Drag the handle to reorder modules"
   ],
   "inspector-layout-modules": [
     "Collapse common region settings separately",

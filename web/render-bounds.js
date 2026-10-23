@@ -1,3 +1,4 @@
+import {effectEnabled,effectValues} from './post-effect-specs.js';
 // Logical rectangles are [left,bottom,right,top]. Texture margins never alter layout.
 export const UNIT_BOUNDS=Object.freeze([0,0,1,1]);
 export const boundsSize=b=>[b[2]-b[0],b[3]-b[1]];
@@ -20,7 +21,7 @@ export function transformBounds(rect,box,axis=[.5,.5,0,1],aspect=1,inverse=false
 export function recordPlacement(r){return {box:[r.x,r.y,r.width,r.height],axis:[.5,.5,r.turn,r.mirror??1]};}
 export function transformPlacement(t,aspect=1){let w=t.width,h=t.height;if(t.fit==='contain'){const side=Math.min(w*aspect,h);w=side/aspect;h=side;}return {box:[t.x,t.y,w,h],axis:[t.pivotX,t.pivotY,t.rotation*Math.PI/180,t.mirrorX?-1:1]};}
 export function effectMargins(n,aspect=1){
- const fx=n.postFx??[],radius=(fx[0]??0)+(fx[1]>0?fx[2]??16:0)+(fx[5]??0),contour=['outline','dilate'].includes(n.contour?.mode)?n.contour.radius:0;
+ const fx=n.postFx??[],sketch=effectEnabled(n,'sketch')?effectValues(n,'sketch'):null,radius=(effectEnabled(n,'blur')?fx[0]??0:0)+(effectEnabled(n,'bloom')?fx[2]??16:0)+(effectEnabled(n,'chromatic')?fx[5]??0:0)+(sketch?sketch.strokeWidth*2+sketch.roughness*4:0),contour=['outline','dilate'].includes(n.contour?.mode)?n.contour.radius:0;
  const short=Math.min(aspect,1),amount=radius/512+(contour??0);
  return [amount*short/aspect,amount*short];
 }

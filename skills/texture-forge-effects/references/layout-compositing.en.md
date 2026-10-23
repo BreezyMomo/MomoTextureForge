@@ -111,7 +111,7 @@ The first span stays in `params[0…7]` for ribbon shape or `arrange[40…47]` f
 
 ## Compositing, color and masks
 
-Shape contains Opacity (0–1, multiplied through parents, with keys) and Node colors. Color source is a dropdown for inherited/custom palettes; groups can preserve child colors or remap together. Visit the inheritance source or copy its evaluated palette independently. Levels, Invert and Channel curves are in Shape. Composite contains blends, masks, contours and image filters.
+Shape contains Opacity (0–1, multiplied through parents, with keys) and Node colors. Color source is a dropdown for inherited/custom palettes; groups can preserve child colors or remap together. Visit the inheritance source or copy its evaluated palette independently. Levels, Invert and Channel curves are in Shape. Composite contains blends, masks, contours and post-processing.
 
 Solid fill preserves color while edges affect alpha. Value gradients map pattern intensity, not horizontal location. Two-to-eight stops have positions 0–1, palettes and reset to endpoints. Use a gradient graphic for spatial coloring.
 
@@ -147,7 +147,33 @@ Select a graphic or group and open **Shape → Channel curves**. Nodes inheritin
 - Choose **Luminance / height, Master RGB, Red R, Green G, Blue B, or Alpha**. Luminance adjusts brightness and height; RGB changes color only. Alpha changes coverage and scales the height contribution accordingly.
 - Click the graph to add a point, drag or use arrow keys to move it, or enter input/output values from 0–255. Endpoint inputs stay at 0 and 255; their outputs remain editable. Internal points can be deleted. Up to 16 points use smooth cubic interpolation through the controls, with continuous tangents and no overshoot. The graph, preview and exports share the same shape. Two-point curves remain straight.
 - Editing points or applying a preset enables curves. Disable temporarily, reset one channel, or reset all curves. Undo/redo, project/resource saves and exports preserve them.
-- Curves run after basic brightness/levels and before contours/image filters. Color order is luminance, master RGB, then individual RGB channels; Alpha follows. Unmodified channels preserve their original values, avoiding HDR clipping when adjusting only Alpha.
+- Curves run after basic brightness/levels and before contours/post-processing. Color order is luminance, master RGB, then individual RGB channels; Alpha follows. Unmodified channels preserve their original values, avoiding HDR clipping when adjusting only Alpha.
 - Curve shapes currently support neither keyframes nor batch edits. For multiple selected nodes, edit the primary node. These curves remap pixel values, unlike parameter curves in the animation timeline.
 
 For softer smoke or mask coverage, adjust Alpha. To change brightness while keeping transparency, use RGB. Mapping Alpha input 0 to a nonzero output also covers previously transparent areas inside the node region.
+
+
+### Node post-processing and execution order
+
+Use **Composite → Post-processing** on a shape or group. Each effect has its own switch, disclosure, help and parameter reset. Help does not expand the parameters. Disabling an effect retains its settings. Drag its **⠿** handle, or focus the handle and press keyboard **↑ / ↓**, to change the actual execution order: each effect processes the previous result, from top to bottom. Dragging shows a floating header and placeholder while other effects move aside smoothly. Release to settle; Esc or releasing outside the panel cancels without changing effect order.
+
+Effect order belongs to the node and supports undo, unlike inspector-module sorting, which only changes the interface. Saving, copying and inserting a graphic as a component retains its parameters, switches and effect order. A group composites its children before applying its effects. Wrap content in an outer group for a whole-composition effect; there is no separate canvas post-processing state.
+
+Available effects: Gaussian blur, bloom, sharpen, chromatic aberration, posterize, pixelate, edge shading, scanlines, kaleidoscope, mirror tiling, swirl, edge detection, three-color mapping, radial mask, remove black, height to normal and hand-drawn style. Bloom retains strength, radius and highlight threshold. Chromatic aberration supports horizontal, vertical and radial offsets. Posterize has separate shadow/highlight levels; zero highlight levels follows shadows. Edge detection follows luminance changes, unlike alpha contour outlines.
+
+Numeric and color parameters use existing keyframes, batch editing and pinned controls. Zero scanline speed freezes motion; phase remains adjustable. Blur, bloom, color offsets, pixel blocks, edge widths and normal sampling steps scale from a 512-pixel short edge. Rotations use degrees. Radial masks affect alpha and height together; remove black retains existing transparency while recovering color.
+
+Height to normal converts current height into node colors while retaining alpha and height. Later compositing and color filters still affect those colors. Normal output separately derives normal data from final height. Base levels, inversion, channel curves and contours still run before this effect list. Legacy projects retain their original filter order and `postFx.*` animation paths.
+
+
+### Hand-drawn style
+
+Open **Examples → Composition exercises → Hand-drawn heart** for a ready-made example with dark double strokes and red cross-hatching. The white background comes from canvas output settings; the effect belongs to the heart node.
+
+Enable **Composite → Post-processing → Hand-drawn style**. Locally bundled Rough.js traces and redraws the current result on a shape or group, in the chosen effect order. Alpha contours are the default. For opaque images, select luminance contours and adjust the contour threshold.
+
+Roughness, bowing, stroke width/color and double strokes control the pen. Fill options are original colors, solid, hachure, cross-hatch and no fill. Adjust hatch angle, gap, width and fill color independently. Original colors overlays strokes on the source; other modes replace colors and use stroke/fill coverage as height. Contour holes stay transparent; no paper background is added.
+
+A fixed seed reproduces strokes for the same static input and parameters. Stroke and hatch sizes use a 512-pixel short edge. Contour sampling is bounded; strokes are redrawn at the requested output size. Higher contour simplification removes details. Excessively fragmented contours report a limit and suggest adjusting simplification or threshold. Clear icons/shapes work best; soft gradients, smoke, tiny fragments and changing contours can produce different or shifting strokes. Canvas redraws use 8-bit color, losing HDR precision; original colors retains the source, while added strokes remain 8-bit overlays.
+
+Settings, colors, seed and effect order travel with saved/copied nodes and components, and use existing keyframes, batch editing and pinned controls.

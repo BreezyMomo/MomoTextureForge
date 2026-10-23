@@ -30,20 +30,20 @@ export function dragAutoScroll(scroller,onScroll){
 }
 // Preview a permutation with transforms. The source DOM order stays untouched
 // until the owner commits the drop; cancellation restores that same order.
-export function createReorderPreview(host,items,source){
+export function createReorderPreview(host,items,source,{headingSelector=':scope>summary .inspector-module-heading',summarySelector=':scope>summary',placeholderClass='module-sort-placeholder'}={}){
  const list=[...items],rects=layoutRects(list),origin=host.getBoundingClientRect().top;
  const gaps=list.slice(1).map((element,index)=>rects.get(element).top-rects.get(list[index]).bottom).sort((a,b)=>a-b),gap=gaps[Math.floor(gaps.length/2)]??0;
- const placeholder=host.ownerDocument.createElement('div');placeholder.className='module-sort-placeholder';placeholder.setAttribute('aria-hidden','true');placeholder.inert=true;
- const heading=source.querySelector(':scope>summary .inspector-module-heading');if(heading)placeholder.append(heading.cloneNode(true));
+ const placeholder=host.ownerDocument.createElement('div');placeholder.className=placeholderClass;placeholder.setAttribute('aria-hidden','true');placeholder.inert=true;
+ const heading=source.querySelector(headingSelector);if(heading)placeholder.append(heading.cloneNode(true));
  const rect=rects.get(source),hostRect=host.getBoundingClientRect();Object.assign(placeholder.style,{left:(rect.left-hostRect.left)+'px',top:(rect.top-origin)+'px',width:rect.width+'px',height:rect.height+'px'});host.append(placeholder);
  let order=list;
  function preview(clientY){
   const y=clientY-(host.getBoundingClientRect().top-origin),rest=list.filter(element=>element!==source);
-  let index=rest.findIndex(element=>{const rect=rects.get(element),heading=element.querySelector(':scope>summary');return y<rect.top+(heading?.offsetHeight??rect.height)/2;});if(index<0)index=rest.length;
+  let index=rest.findIndex(element=>{const rect=rects.get(element),heading=element.querySelector(summarySelector);return y<rect.top+(heading?.offsetHeight??rect.height)/2;});if(index<0)index=rest.length;
   const next=[...rest.slice(0,index),source,...rest.slice(index)];if(next.every((element,i)=>element===order[i]))return;order=next;
   let top=rects.get(list[0]).top;
   for(const element of order){if(element===source)placeholder.style.top=(top-origin)+'px';else{const target=`translateY(${top-rects.get(element).top}px)`,from=getComputedStyle(element).transform;element.style.transform=target;animateUI(element,[{transform:from},{transform:target}]);}top+=rects.get(element).height+gap;}
  }
  function clear(){placeholder.remove();for(const element of list){running.get(element)?.cancel();element.style.removeProperty('transform');element.classList.remove('module-dragging');}}
- return {preview,dragImage:placeholder.firstElementChild,commit(){const before=layoutRects(list);before.set(source,placeholder.getBoundingClientRect());clear();for(const element of order)host.append(element);animateLayout(list,before);},cancel(){const before=layoutRects(list);clear();animateLayout(list,before);animateUI(source,[{opacity:0},{opacity:1}],{duration:120});}};
+ return {preview,placeholder,dragImage:placeholder.firstElementChild,commit(){const before=layoutRects(list);before.set(source,placeholder.getBoundingClientRect());clear();for(const element of order)host.append(element);animateLayout(list,before);},cancel(){const before=layoutRects(list);clear();animateLayout(list,before);animateUI(source,[{opacity:0},{opacity:1}],{duration:120});}};
 }

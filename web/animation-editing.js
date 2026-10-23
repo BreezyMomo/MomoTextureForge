@@ -1,3 +1,4 @@
+import {EFFECT_PARAMETERS} from './post-effect-specs.js';
 import {messageError} from './message-catalog.js';
 import {BY_ID as CLOCK_TYPES} from './catalog.js';
 import {find,pathGet,fieldSpec,animationType,keyValue,ANIMATION_BOOLS,ANIMATION_ENUMS,LIMITS} from './tree-model.js';
@@ -54,7 +55,8 @@ export function convertTrack(n,path,mode){const track=n.tracks[path];if(!track)r
  track.keys=values;track.mode=mode;
 }
 export function animatablePaths(n){const paths=['shapeClock.value','shapeClock.speed','shapeClock.offset','contour.radius','opacity','transform.x','transform.y','transform.width','transform.height','transform.rotation','transform.pivotX','transform.pivotY',...ANIMATION_BOOLS,...Object.keys(ANIMATION_ENUMS),'color.low','color.high','instancePhase',...Array.from({length:7},(_,i)=>'uv.'+i),...Array.from({length:7},(_,i)=>'post.'+i),...Array.from({length:7},(_,i)=>'postFx.'+i)];
- for(let i=0;i<(CLOCK_TYPES.get(n.type)?.defaults.length??16);i++)if(fieldSpec(n,'params.'+i)&&n.kind==='shape')paths.push('params.'+i);for(let i=0;i<59;i++)if(fieldSpec(n,'arrange.'+i))paths.push('arrange.'+i);for(const kind of ['shape','layout'])for(let i=0;i<(n.bezier?.[kind]?.length??0);i++)paths.push('bezier.'+kind+'.'+i);return paths.filter(p=>!p.startsWith('shapeClock.')||n.kind==='shape'&&CLOCK_TYPES.get(n.type)?.usesTime);
+ paths.push(...[...EFFECT_PARAMETERS.keys()].filter(path=>path.startsWith('postEffects.')));
+ for(let i=0;i<(CLOCK_TYPES.get(n.type)?.defaults.length??16);i++)if(fieldSpec(n,'params.'+i)&&n.kind==='shape')paths.push('params.'+i);for(let i=0;i<59;i++)if(fieldSpec(n,'arrange.'+i))paths.push('arrange.'+i);for(const kind of ['shape','layout'])for(let i=0;i<(n.bezier?.[kind]?.length??0);i++)paths.push('bezier.'+kind+'.'+i);return [...new Set(paths)].filter(p=>!p.startsWith('shapeClock.')||n.kind==='shape'&&CLOCK_TYPES.get(n.type)?.usesTime);
 }
 export const ANIMATION_TEMPLATES=[['pulse','呼吸缩放'],['fade','淡入淡出'],['rotate','旋转一周'],['pop','弹出'],['slide','横向进入'],['uv','UV滚动']];
 export function templateTracks(n,name){const absolute=(keys,ease='smooth')=>({mode:'absolute',ease,keys}),w=n.transform.width,h=n.transform.height;

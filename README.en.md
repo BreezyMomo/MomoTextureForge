@@ -45,7 +45,7 @@ Source and documentation: [GitHub primary repository](https://github.com/BreezyM
 
 The library is the resource source, the graphics list holds reusable copies, and canvas nodes are editable instances. Editing an instance does not automatically update the library.
 
-**Examples** provides 30 editable compositions and material presets with category filters. VFX examples include slash trails, hit flashes, fractured shock rings, energy vortices and dissolve masks. UI examples include diamond grids, staggered diamond tiles, diagonal stripes and dot patterns that can tile seamlessly. Other exercises include a summoning effect, radar halo, petal badge, star spiral, honeycomb shield and flame circle. Material presets contain acid splatter and curled celebration ribbons, both editable and exportable with transparency.
+**Examples** provides 31 editable compositions and material presets with category filters. VFX examples include slash trails, hit flashes, fractured shock rings, energy vortices and dissolve masks. UI examples include diamond grids, staggered diamond tiles, diagonal stripes and dot patterns that can tile seamlessly. Other exercises include a summoning effect, radar halo, petal badge, star spiral, honeycomb shield and flame circle. The hand-drawn heart demonstrates dark strokes and red cross-hatching through node post-processing. Material presets contain acid splatter and curled celebration ribbons, both editable and exportable with transparency.
 
 The new-arrangement category includes rounded border lights, star-contour dots, herringbone tiles, basket weave, fading dots, wave flow fields and connected pipes. Puzzle examples demonstrate cell spacing, four connector styles, per-corner rounding and tabs extending outside their cells. Content-boundary comparisons, cross-cell dots and a seamless halo demonstrate **Transform / Layout → Boundary handling**: Clip, Allow overflow or Seamless repeat. Children can extend outwards and parents can wrap them; the final canvas boundary stays fixed. Choose **Edit on canvas** to inspect the node structure. Animated examples include one-shot/loop playback and export settings.
 
@@ -104,7 +104,7 @@ The **Help** menu offers two downloadable Skills. The Authoring Skill helps crea
 
 Use **Help → GitHub repository ↗** for source and issue reports. **Gitee repository ↗** opens the mainland mirror for documentation and downloads. Include reproduction steps, browser version, screenshots and a minimal shareable project when reporting an issue.
 
-Public GLSL libraries retain their attribution and licenses. See [PSD-LICENSES.txt](web/vendor/PSD-LICENSES.txt) for the PSD encoder's notices.
+Public GLSL libraries retain their attribution and licenses. See [PSD-LICENSES.txt](web/vendor/PSD-LICENSES.txt) for the PSD encoder's notices, and [ROUGH-LICENSES.txt](web/vendor/ROUGH-LICENSES.txt) for Rough.js and its bundled dependencies used by hand-drawn post-processing.
 
 ## Support the project
 
