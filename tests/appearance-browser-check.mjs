@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {project,node} from '../web/tree-model.js';
-import {STYLE_IDS} from '../web/appearance.js';
+import {STYLE_IDS,COLOR_SCHEME_IDS,appearancePalette} from '../web/appearance.js';
 const built=process.argv.includes('--built'),root=path.resolve(fileURLToPath(new URL(built?'../site/':'../web/',import.meta.url)));
 const output=new URL('../test-results/appearance/',import.meta.url);await mkdir(output,{recursive:true});
 const types={'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.glsl':'text/plain','.svg':'image/svg+xml'};
@@ -51,6 +51,26 @@ try{
   assert.equal(await page.locator('[data-style='+styleId+']').getAttribute('aria-pressed'),'true');
   assert.deepEqual(await projectSnapshot(),stable);
  }
+
+ const scheme=page.locator('#appearance-scheme');assert.equal(await scheme.locator('option').count(),COLOR_SCHEME_IDS.length);
+ const initialColors=await scheme.inputValue();
+ const geometry=()=>page.locator('#inspector-tabs button.active').evaluate(e=>{const c=getComputedStyle(e);return {radius:c.borderRadius,padding:c.padding,font:c.fontSize};});
+ const shapeBefore=await geometry(),namedBefore=await snapshot();
+ for(const schemeId of COLOR_SCHEME_IDS.slice(1)){
+  await scheme.selectOption(schemeId);
+  assert.equal(await style.inputValue(),'candy');assert.equal(await tabs.inputValue(),'underline');assert.equal(await density.inputValue(),'comfortable');
+  assert.deepEqual(await geometry(),shapeBefore,'a palette preserves control geometry');
+  for(const themeId of ['classic','graphite','light']){
+   await theme.selectOption(themeId);
+   const expected=appearancePalette({scheme:schemeId,theme:themeId,style:'candy'});
+   assert.equal(await page.locator('html').evaluate(e=>e.style.getPropertyValue('--ui-panel')),expected.surfaces.panel);
+   assert.equal((await page.locator('#appearance-hex').inputValue()).toLowerCase(),expected.accent,'scheme uses its recommended accent');
+   await page.locator('#appearance-hex').fill('#336699');await page.locator('#appearance-hex').dispatchEvent('input');
+   await style.selectOption('standard');assert.equal(await scheme.inputValue(),schemeId);assert.equal(await page.locator('#appearance-hex').inputValue(),'#336699','control style preserves named colors and custom accent');
+   await style.selectOption('candy');await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));assert.deepEqual(await snapshot(),namedBefore,'schemes never change canvas pixels, project data, or history');
+  }
+ }
+ await scheme.selectOption(initialColors);
  await page.locator('.appearance-dialog').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-unified-styles.png',output))});
  await tabs.selectOption('auto');
  for(const themeId of ['classic','graphite','light']){
@@ -95,6 +115,10 @@ try{
  await theme.selectOption('light');await tabs.selectOption('auto');
  await style.selectOption('minimal');await density.selectOption('comfortable');await page.locator('[data-save]').click();
  await page.reload();await ready();assert.equal(await page.locator('html').getAttribute('data-interface-style'),'minimal');assert.equal(await page.locator('html').getAttribute('data-density'),'comfortable');
+ await open();await scheme.selectOption('xuanqing');await page.locator('[data-save]').click();await page.reload();await ready();
+ assert.equal(await page.locator('html').getAttribute('data-color-scheme'),'xuanqing');
+ await open();await scheme.selectOption('ouhe');await page.keyboard.press('Escape');assert.equal(await page.locator('html').getAttribute('data-color-scheme'),'xuanqing');
+ await open();await scheme.selectOption('auto');await page.locator('[data-save]').click();
  await page.locator('[role=treeitem]').first().click();
  for(const styleId of ['refined','standard','minimal','soft','aurora','pulse','cinema','candy']){
   await open();await style.selectOption(styleId);await page.locator('[data-save]').click();
@@ -118,5 +142,5 @@ try{
  await page.locator('[data-save]').click();await page.locator('#open-graphics-library').click();await page.locator('.graphics-card').first().waitFor();
  assert.equal(await page.locator('.graphics-dialog').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
  await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-library-light.png',output))});
- assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,checks:['live preview','custom accent','canvas/storage/history isolation','48 theme/style/density combinations','single style grid preserves palette, custom accent, tabs and density','creative palette cleanup','modern pill tabs','independent tab geometry and save/restore','real dock and inspector preview fidelity','original and refined stay distinct','saved style/density restoration','cancel','system changes','English header 1600/1100/768','320px dialog','hex validation','library surfaces'],errors}));
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,checks:['live preview','18 named scheme/mode combinations preserve geometry and artwork','scheme save/reload/cancel','custom accent','canvas/storage/history isolation','48 theme/style/density combinations','single style grid preserves palette, custom accent, tabs and density','creative palette cleanup','modern pill tabs','independent tab geometry and save/restore','real dock and inspector preview fidelity','original and refined stay distinct','saved style/density restoration','cancel','system changes','English header 1600/1100/768','320px dialog','hex validation','library surfaces'],errors}));
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

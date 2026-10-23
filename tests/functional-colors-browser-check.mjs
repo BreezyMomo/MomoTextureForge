@@ -9,7 +9,7 @@ import {project,node} from '../web/tree-model.js';
 import {createProjectResource} from '../web/project-resources.js';
 import {GRAPHIC_LIST_KEY,serializeGraphicList} from '../web/persistent-graphic-list.js';
 import {GRAPHIC_LIST_DEFAULTS_KEY} from '../web/graphic-list-defaults.js';
-import {STYLE_IDS,colorContrast} from '../web/appearance.js';
+import {STYLE_IDS,COLOR_SCHEME_IDS,colorContrast} from '../web/appearance.js';
 import en from '../web/locales/en.json' with {type:'json'};
 const built=process.argv.includes('--built'),root=fileURLToPath(new URL(built?'../site/':'../web/',import.meta.url));
 const output=new URL('../test-results/functional-colors/',import.meta.url);await mkdir(output,{recursive:true});
@@ -40,13 +40,15 @@ try{
  });
  const hex=rgb=>'#'+rgb.match(/\d+/g).slice(0,3).map(v=>(+v).toString(16).padStart(2,'0')).join('');
  const baselines=new Map();
+ for(const scheme of COLOR_SCHEME_IDS){
+  await page.locator('#appearance-scheme').selectOption(scheme);
  for(const theme of ['classic','graphite','light']){
   await page.locator('#appearance-theme').selectOption(theme);
   for(const style of STYLE_IDS){
    await page.locator('.appearance-style-card[data-style='+style+']').click();
    for(const accent of ['#000000','#FF00FF']){
     await page.locator('#appearance-hex').fill(accent);await page.locator('#appearance-hex').dispatchEvent('input');
-    const v=await read(),context=theme+' '+style+' '+accent;
+    const v=await read(),context=scheme+' '+theme+' '+style+' '+accent;
     for(const role of ['badge','interval','key','record','playhead'])assert.deepEqual(v.preview[role],v.actual[role],role+' preview matches real controls: '+context);
     for(const role of ['badge','interval','record'])assert.ok(colorContrast(hex(v.actual[role].color),hex(v.actual[role].bg))>=4.5,role+' contrast: '+context);
     assert.ok(colorContrast(hex(v.actual.key.color),v.inset)>=3,'key contrast: '+context);
@@ -58,6 +60,12 @@ try{
    }
   }
  }
+ }
+ for(const scheme of COLOR_SCHEME_IDS.slice(1))for(const theme of ['classic','light']){
+  await page.locator('#appearance-scheme').selectOption(scheme);await page.locator('#appearance-theme').selectOption(theme);await page.locator('.appearance-style-card[data-style=refined]').click();await page.locator('#appearance-tabs').selectOption('pill');
+  await page.locator('.appearance-dialog').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-'+scheme+'-'+theme+'.png',output))});
+ }
+ await page.locator('#appearance-scheme').selectOption('auto');
  assert.deepEqual(await unchanged(),before,'color settings do not edit artwork or history');
  await page.locator('#appearance-theme').selectOption('classic');await page.locator('.appearance-style-card[data-style=aurora]').click();
  await page.locator('.appearance-dialog').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-preview.png',output))});
@@ -68,5 +76,5 @@ try{
  for(const key of curve.keys){const [r,g,b]=key.match(/\d+/g).map(Number);assert.ok(r>g&&g>b,'curve keyframes stay gold');assert.ok(colorContrast(hex(key),hex(curve.bg))>=3);}
  const [cr,cg,cb]=curve.line.match(/\d+/g).map(Number);assert.ok(cb>cr&&cb>cg,'curve stays blue');
 
- assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,combinations:48,checks:['functional colors independent from accent and skin','recording beats selected-button rules','real/preview fidelity','dark/light contrast','visible playhead over interval','unchanged artwork and history'],errors}));
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,combinations:336,checks:['functional colors independent from scheme, accent and skin','recording beats selected-button rules','real/preview fidelity','dark/light contrast','visible playhead over interval','unchanged artwork and history'],errors}));
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}
