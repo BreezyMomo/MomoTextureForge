@@ -1,3 +1,4 @@
+import {normalizeDashPattern} from './sketch-options.js';
 import {sanitizeBezierTail,BEZIER_LIMIT} from './bezier-path.js';
 import {graphicAliasesField} from './graphic-name.js';
 import {curveDefaults,sanitizeCurves} from './channel-curves.js';
@@ -40,7 +41,7 @@ export const ANIMATION_BOOLS=['shapeClock.follow','enabled','transform.mirrorX',
 ANIMATION_BOOLS.push(...POST_EFFECTS.flatMap(s=>['postEffects.'+s.id+'.enabled',...s.parameters.filter(p=>p.type==='boolean').map(p=>p.path)]));
 export function animationType(n,path){
  if(EFFECT_PARAMETERS.get(path)?.type==='color')return 'color';
- if(EFFECT_PARAMETERS.get(path)?.type==='boolean'||EFFECT_PARAMETERS.get(path)?.options)return 'discrete';
+ if(['boolean','dash'].includes(EFFECT_PARAMETERS.get(path)?.type)||EFFECT_PARAMETERS.get(path)?.options)return 'discrete';
  const parameter=/^params\.(\d+)$/.exec(path);if(parameter&&BY_ID.get(n.type)?.parameters.find(p=>p.slot===+parameter[1])?.type==='select')return 'discrete';
  const generatorParameter=/^params\.(\d+)$/.exec(path);if(generatorParameter&&BY_ID.get(n.type)?.definition.generator){const spec=BY_ID.get(n.type).parameters.find(p=>p.slot===+generatorParameter[1]);if(spec?.step===1||spec?.type)return 'discrete';}
  if(path==='color.low'||path==='color.high')return 'color';
@@ -114,6 +115,7 @@ export function sanitizeTree(raw,{component=false}={}){
    const frames=new Map();for(const f of Array.isArray(track.keys)?track.keys.slice(0,LIMITS.frames):[]){
     if(!Array.isArray(f)||f.length!==2||!Number.isFinite(f[0]))continue;let v=f[1];
     if(type==='color'){if(!/^#[0-9a-f]{6}$/i.test(v))continue;}
+    else if(EFFECT_PARAMETERS.get(path)?.type==='dash'){v=normalizeDashPattern(v);if(v===null)continue;}
     else if(ANIMATION_ENUMS[path]){if(!ANIMATION_ENUMS[path].includes(v))continue;}
     else if(ANIMATION_BOOLS.includes(path)){if(typeof v!=='boolean')continue;}
     else{if(!Number.isFinite(v))continue;v=clamp(v,...bounds);}

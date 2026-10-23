@@ -21,7 +21,7 @@ export function transformBounds(rect,box,axis=[.5,.5,0,1],aspect=1,inverse=false
 export function recordPlacement(r){return {box:[r.x,r.y,r.width,r.height],axis:[.5,.5,r.turn,r.mirror??1]};}
 export function transformPlacement(t,aspect=1){let w=t.width,h=t.height;if(t.fit==='contain'){const side=Math.min(w*aspect,h);w=side/aspect;h=side;}return {box:[t.x,t.y,w,h],axis:[t.pivotX,t.pivotY,t.rotation*Math.PI/180,t.mirrorX?-1:1]};}
 export function effectMargins(n,aspect=1){
- const fx=n.postFx??[],sketch=effectEnabled(n,'sketch')?effectValues(n,'sketch'):null,radius=(effectEnabled(n,'blur')?fx[0]??0:0)+(effectEnabled(n,'bloom')?fx[2]??16:0)+(effectEnabled(n,'chromatic')?fx[5]??0:0)+(sketch?sketch.strokeWidth*2+sketch.roughness*4:0),contour=['outline','dilate'].includes(n.contour?.mode)?n.contour.radius:0;
+ const fx=n.postFx??[],sketch=effectEnabled(n,'sketch')?effectValues(n,'sketch'):null,radius=(effectEnabled(n,'blur')?fx[0]??0:0)+(effectEnabled(n,'bloom')?fx[2]??16:0)+(effectEnabled(n,'chromatic')?fx[5]??0:0)+(sketch?sketch.strokeWidth*2+sketch.roughness*Math.max(4,sketch.maxRandomnessOffset*(1.5+.5*sketch.bowing)):0),contour=['outline','dilate'].includes(n.contour?.mode)?n.contour.radius:0;
  const short=Math.min(aspect,1),amount=radius/512+(contour??0);
  return [amount*short/aspect,amount*short];
 }

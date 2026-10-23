@@ -154,7 +154,7 @@ node tools/capture-docs.mjs shortcuts ribbons appearance
 | Group | Content |
 | --- | --- |
 | examples | Four projects through the actual Open project UI |
-| combinations | 31 compositions/presets and new-arrangement category/entry |
+| combinations | 32 compositions/presets and new-arrangement category/entry |
 | overflow | Three boundary modes, logical bounds and seamless halo |
 | puzzle | Connector styles, body corners, tabs and grid counts |
 | workspace | Overview, arrangements, composites and File |

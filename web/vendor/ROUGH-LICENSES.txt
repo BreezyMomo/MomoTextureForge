@@ -1,5 +1,6 @@
 Rough.js and bundled dependencies
 Source: https://github.com/rough-stuff/rough
+Local adaptation: dot centers use seeded randomness for deterministic project and export rendering.
 
 ## roughjs 4.6.6
 

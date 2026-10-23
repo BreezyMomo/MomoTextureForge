@@ -154,7 +154,7 @@ node tools/capture-docs.mjs shortcuts ribbons appearance
 | 组 | 画面 |
 | --- | --- |
 | examples | 通过真实“打开项目”入口检查四个示例 |
-| combinations | 31 种组合/素材预设总览、十三种新增排列的分类截图与编辑入口 |
+| combinations | 32 种组合/素材预设总览、十三种新增排列的分类截图与编辑入口 |
 | overflow | 三种边界处理、逻辑蓝框、超出内容和无缝光晕接续 |
 | puzzle | 拼图接口样式、独立四角、凸耳越界与网格行列数 |
 | workspace | 总览、排列、合成和文件菜单 |

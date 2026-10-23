@@ -1,9 +1,10 @@
+import {normalizeDashPattern,SKETCH_FILL_STYLES,sketchOptions,sketchWorkEstimate} from '../web/sketch-options.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import rough from '../web/vendor/rough.js';
 import {sketchContours,simplifySketchLoop} from '../web/sketch-contours.js';
 import {project,node,sanitizeTree,evaluateNode,cloneNode} from '../web/tree-model.js';
-import {EFFECT_IDS,effectValues} from '../web/post-effect-specs.js';
+import {EFFECT_IDS,effectValues,effectParameterVisible,EFFECT_BY_ID} from '../web/post-effect-specs.js';
 import {applySketchFx} from '../web/sketch-fx.js';
 
 const ring=(size=64)=>{const pixels=new Float32Array(size*size*4);for(let y=0;y<size;y++)for(let x=0;x<size;x++){const d=Math.hypot(x+.5-size/2,y+.5-size/2);pixels[(y*size+x)*4+3]=d<size*.4&&d>size*.2?1:0;}return pixels;};
@@ -27,4 +28,29 @@ test('luminance contours distinguish an opaque image from its alpha silhouette',
 });
 test('extreme node aspects are rejected before unbounded Rough.js hatch generation',()=>{
  const values=effectValues(node(),'sketch');assert.throws(()=>applySketchFx({gl:{}},{aspect:100000,bounds:[0,0,1,1],w:512,h:1},values),error=>error.messageKey==='fx.sketchDensity');
+});
+
+test('all fill modes keep legacy style indices and native fills use seeded geometry',()=>{
+ assert.deepEqual(SKETCH_FILL_STYLES.slice(0,5),['original','solid','hachure','cross-hatch','none']);
+ const path='M0 0L80 0L80 80L0 80Z',outputs=[];
+ for(const fillStyle of ['solid','hachure','cross-hatch','zigzag','dots','dashed','zigzag-line']){
+  const options={...sketchOptions(effectValues(node(),'sketch')),fillStyle};
+  const a=rough.generator().path(path,options),b=rough.generator().path(path,options);assert.deepEqual(a,b,fillStyle+' is reproducible');outputs.push(JSON.stringify(a.sets));
+ }
+ assert.equal(new Set(outputs).size,7);
+ const parameters=EFFECT_BY_ID.get('sketch').parameters;
+ const visible=style=>parameters.filter(p=>effectParameterVisible(p,{fillStyle:style})).map(p=>p.key);
+ assert.ok(visible(6).includes('curveStepCount'));assert.ok(!visible(2).includes('curveStepCount'));assert.ok(visible(7).includes('dashLength'));assert.ok(visible(9).includes('sunburstRays'));
+});
+test('arbitrary dash patterns roundtrip, animate discretely and reject invalid imported values',()=>{
+ assert.equal(normalizeDashPattern('8, 4 2，4'),'8 4 2 4');assert.equal(normalizeDashPattern(''),'');
+ for(const value of ['-1 2','0 0','Infinity','abc','513',Array(33).fill(1).join(' ')])assert.equal(normalizeDashPattern(value),null);
+ const p=project(),n=p.root.children[0];n.postEffects.sketch.strokeDashPattern='8,4,2,4';n.postEffects.sketch.fillDashPattern='2 3';
+ n.tracks['postEffects.sketch.strokeDashPattern']={keys:[[0,'8 4'],[1,'2 2 1 2']],ease:'linear'};
+ const saved=sanitizeTree(p).root.children[0];assert.equal(saved.postEffects.sketch.strokeDashPattern,'8 4 2 4');assert.equal(evaluateNode(saved,.5).node.postEffects.sketch.strokeDashPattern,'8 4');assert.equal(evaluateNode(saved,1).node.postEffects.sketch.strokeDashPattern,'2 2 1 2');
+ assert.deepEqual(cloneNode(saved).postEffects,saved.postEffects);assert.deepEqual(sketchOptions(effectValues(saved,'sketch')).strokeLineDash,[8,4,2,4]);
+});
+test('dense dots, tiny dash and zigzag segments have bounded generation budgets',()=>{
+ const v=effectValues(node(),'sketch');assert.ok(sketchWorkEstimate({...v,fillStyle:6,hatchGap:1},512,512)>200000);assert.ok(sketchWorkEstimate({...v,fillStyle:7,hatchGap:1,dashLength:.1,dashGap:.1},512,512)>200000);assert.ok(sketchWorkEstimate({...v,fillStyle:8,hatchGap:1,zigzagOffset:.1},512,512)>200000);
+ for(const fillStyle of [6,7,8])assert.throws(()=>applySketchFx({gl:{}},{aspect:1,bounds:[0,0,1,1]}, {...v,fillStyle,hatchGap:1,dashLength:.1,dashGap:.1,zigzagOffset:.1}),e=>e.messageKey==='fx.sketchDensity');
 });

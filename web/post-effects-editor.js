@@ -25,7 +25,15 @@ export function createPostEffectsEditor({document:doc,host,node,scope=node.id,bu
    if(panel.isConnected){pendingFocus.delete(scope);grip.focus({preventScroll:true});}
   };
   summary.append(grip,input,title,info,reset);details.append(summary,body);item.append(details,help);list.append(item);details.open=expanded.get(key)??state===true;
-  details.ontoggle=()=>{if(details.isConnected)expanded.set(key,details.open);};buildParameters(body,spec);
+  details.ontoggle=()=>{if(details.isConnected)expanded.set(key,details.open);};
+  if(id!=='sketch')buildParameters(body,spec);else{
+   const groups={outline:['maxRandomnessOffset','preserveVertices','strokeDashPattern','strokeDashOffset'],fill:['fillMultiStroke','fillShapeRoughnessGain','fillDashPattern','fillDashOffset','curveStepCount','curveFitting','curveTightness'],path:['source','threshold','simplify','pathSimplification','fixedDecimalPlaceDigits']},advanced=new Set(Object.values(groups).flat());
+   buildParameters(body,{...spec,parameters:spec.parameters.filter(p=>!advanced.has(p.key))});
+   for(const [group,keys]of Object.entries(groups)){
+    const disclosure=el('details',{class:'post-effect-advanced','data-sketch-group':group}),content=el('div'),groupKey=key+':'+group;disclosure.append(el('summary',{text:uiText('fx.group.'+group)}),content);body.append(disclosure);buildParameters(content,{...spec,parameters:spec.parameters.filter(p=>keys.includes(p.key))});
+    if(!content.childElementCount){disclosure.remove();continue;}disclosure.open=expanded.get(groupKey)??false;disclosure.ontoggle=()=>{if(disclosure.isConnected)expanded.set(groupKey,disclosure.open);};
+   }
+  }
   grip.onpointerdown=start=>{
    if(start.button!==0)return;start.preventDefault();start.stopPropagation();const before=order(),events=new AbortController(),options={capture:true,signal:events.signal};let pointerY=start.clientY,preview=null,ghost=null;
    const scroller=host.closest('.tree-inspector,.tree-left')??host,scroll=dragAutoScroll(scroller,()=>preview?.preview(pointerY));

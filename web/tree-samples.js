@@ -132,6 +132,13 @@ function arrangementExamples(){
 export function treeSamples(){
  const sketchHeart=shape('HeartLeafTeardrop','手绘心形',1,'#f42521');
  Object.assign(sketchHeart.postEffects.sketch,{enabled:true,roughness:.9,bowing:1,strokeWidth:1.8,doubleStroke:true,strokeColor:'#202020',fillStyle:3,fillColor:'#f42521',hatchAngle:-44,hatchGap:7.5,hatchWidth:.8,source:0,threshold:.71,simplify:.2,seed:1});
+ const sketchStyles=group('手绘样式对照');
+ const sketchStylesNames=['原图','纯色','平行排线','交叉排线','连续锯齿','圆点','虚线排线','锯齿线排线','放射线'];
+ for(const [i,fillStyle]of [0,1,2,3,5,6,7,8,9].entries()){
+  const heart=shape('HeartLeafTeardrop',sketchStylesNames[i],.29,['#ee6055','#9272dc','#3799cf'][i%3]);
+  Object.assign(heart.transform,{x:(i%3+.5)/3,y:(2.5-Math.floor(i/3))/3});
+  Object.assign(heart.postEffects.sketch,{enabled:i>0,fillStyle,roughness:1.3,fillColor:heart.color.high,hatchGap:18,hatchWidth:2.5,dashLength:12,dashGap:10,zigzagOffset:8,sunburstRays:48});sketchStyles.children.push(heart);
+ }
  const summon=buildSamples()[2].root;
  const radar=group('雷达光环');radar.children=[.9,.6,.3].map(size=>halo(size,'#62efb4'));
  const targets=turn(group('旋转目标点'));targets.children=[shape('Circle','目标光点',1,'#dcffe9')];radial(targets,3,.33,.065);radar.children.push(targets,shape('Circle','中心信标',.045,'#dcffe9'));
@@ -145,6 +152,7 @@ export function treeSamples(){
  const flame=group('火焰法阵'),flames=node('shape','Bonfire');flames.name='中心火焰';flames.transform.width=flames.transform.height=.7;
  const fireStars=turn(shape('Star','旋转火星',1,'#ffc175'),-180);radial(fireStars,10,.4,.075);flame.children=[flames,halo(.91,'#ff9c52'),halo(.78,'#ffd385'),fireStars];
  return [...vfxSamples().map(s=>({...s,category:'vfx'})),...uiSamples().map(s=>({...s,category:'ui'})),...arrangementExamples(),...overflowExamples(),...vfxPresets(),
+  {nameKey:"examples.sketchStyles.name",root:sketchStyles,description:"examples.sketchStyles.description",tags:["fx.effect.sketch","examples.staticPNG"],output:{mode:'color',alpha:false,background:'#ffffff'}},
   {nameKey:"examples.sketchHeart.name",root:sketchHeart,description:"examples.sketchHeart.description",tags:["fx.effect.sketch","fx.option.crossHatch","examples.staticPNG"],output:{mode:'color',alpha:false,background:'#ffffff'}},
   {nameKey:"examples.summoningEffect.name",root:summon,description:"examples.concentricPulsingRingsARotatingStarArrayAndAFadingShockwave",tags:["examples.nestedGroups","editor.keyframe"]},
   {nameKey:"examples.radarHalo.name",root:radar,description:"examples.threeConcentricRingsWithOrbitingTargetsInspectRadialPlacementAndRotation",tags:["examples.radialArrangement","examples.rotationAnimation"]},

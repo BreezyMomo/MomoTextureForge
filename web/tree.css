@@ -467,3 +467,5 @@
 .post-effect-title{flex:1;min-width:0;overflow-wrap:anywhere}:is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary button{padding:1px 4px;min-width:21px;border:0;background:transparent;box-shadow:none;color:var(--ui-muted)}
 :is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary button:hover{color:var(--ui-text);background:var(--ui-hover)}.post-effect-grip{cursor:grab}:is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary input{margin:0;flex:none}
 .post-effect-body{padding:0 8px 8px;min-width:0}.post-effect-help{padding:0 8px;margin:0 0 8px}.post-effect.module-dragging{opacity:0}
+
+.post-effect-advanced{border-top:1px solid var(--ui-line);margin-top:8px;padding-top:4px}.post-effect-advanced>summary{cursor:pointer;padding:5px 0;color:var(--ui-muted);font-size:12px}.post-effect-advanced>div{padding-top:5px}
