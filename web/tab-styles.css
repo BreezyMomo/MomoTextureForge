@@ -1,0 +1,48 @@
+/* Tab geometry is independent from color and surface style. Auto leaves every
+   existing skin untouched; explicit choices apply equally to real and preview tabs. */
+.appearance-layout-options{margin-bottom:20px}
+.appearance-tabs-option small{display:block;font-size:11px;line-height:1.6;color:var(--ui-muted);margin-top:6px}
+.appearance-preview .appearance-preview-dock{height:auto;min-height:0;margin-bottom:16px;flex:none}
+.appearance-preview-content{display:flex;flex-direction:column;gap:16px;padding:12px}
+.appearance-preview-content>:is(.appearance-preview-node,.appearance-preview-tabs){margin-bottom:0}
+.appearance-preview .appearance-preview-module{margin-bottom:0}
+.appearance-preview .appearance-preview-tabs{margin-top:0}
+
+:root[data-tab-override=true] .dock-stack-header{height:calc(var(--ui-tab-height) + 8px);padding:4px 5px;align-items:center;background:transparent;border-bottom:0}
+:root[data-tab-override=true] .dock-tabs{align-items:center;gap:4px}
+:root[data-tab-override=true] .tree-editor .dock-tab{height:var(--ui-tab-height);padding:4px 12px;border:1px solid transparent;box-shadow:none;background:transparent;color:var(--ui-muted);font-size:12px;letter-spacing:0;font-weight:500}
+:root[data-tab-override=true] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs){display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 14px;padding:4px;border:0;background:var(--ui-inset);box-shadow:none}
+:root[data-tab-override=true] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs)>button{flex:1 1 auto;padding:7px 8px;border:1px solid transparent;background:transparent;color:var(--ui-muted);box-shadow:none;font-size:12px;font-weight:500}
+:root[data-tab-override=true] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs)>button:focus-visible{outline:2px solid var(--ui-accent-text);outline-offset:1px}
+
+/* Original document-style tabs, available with any palette. */
+:root[data-tab-override=true][data-tab-style=classic] .dock-stack-header{height:var(--ui-tab-height);padding:0;align-items:stretch;background:var(--ui-inset);border-bottom:1px solid var(--ui-line)}
+:root[data-tab-override=true][data-tab-style=classic] .dock-tabs{align-items:stretch;gap:2px}
+:root[data-tab-override=true][data-tab-style=classic] .tree-editor .dock-tab{height:auto;border:0;border-radius:0}
+:root[data-tab-override=true][data-tab-style=classic] .tree-editor .dock-tab[aria-selected=true]{background:var(--ui-selected);color:var(--ui-accent-text);box-shadow:inset 0 2px var(--ui-accent-text)}
+:root[data-tab-override=true][data-tab-style=classic] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs){gap:3px;padding:0 0 12px;border:0;border-bottom:1px solid var(--ui-line);border-radius:0;background:transparent}
+:root[data-tab-override=true][data-tab-style=classic] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs)>button{flex:0 1 auto;padding:6px 8px;border:1px solid var(--ui-line);border-radius:4px;background:var(--ui-surface);color:var(--ui-text)}
+:root[data-tab-override=true][data-tab-style=classic] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs)>button.active{background:var(--ui-surface);border-color:var(--ui-accent-text);color:var(--ui-accent-text);box-shadow:none}
+
+/* Segmented controls emphasize the active button without an accent fill. */
+:root[data-tab-override=true][data-tab-style=segmented] .dock-tabs{padding:2px;border:1px solid var(--ui-line);border-radius:9px;background:var(--ui-inset)}
+:root[data-tab-override=true][data-tab-style=segmented] .tree-editor .dock-tab{border-radius:6px}
+:root[data-tab-override=true][data-tab-style=segmented] .tree-editor .dock-tab[aria-selected=true]{background:var(--ui-surface);border-color:var(--ui-line);color:var(--ui-text);box-shadow:var(--ui-control-shadow,none)}
+:root[data-tab-override=true][data-tab-style=segmented] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs){border:1px solid var(--ui-line);border-radius:9px}
+:root[data-tab-override=true][data-tab-style=segmented] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs)>button{border-radius:6px}
+:root[data-tab-override=true][data-tab-style=segmented] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs)>button.active{background:var(--ui-surface);border-color:var(--ui-line);color:var(--ui-text);box-shadow:var(--ui-control-shadow,none)}
+
+/* Filled pills provide the more playful option independently of the selected skin. */
+:root[data-tab-override=true][data-tab-style=pill] .tree-editor .dock-tab{border-radius:999px}
+:root[data-tab-override=true][data-tab-style=pill] .tree-editor .dock-tab[aria-selected=true]{background:var(--ui-accent);border-color:transparent;color:var(--ui-on-accent);box-shadow:none;font-weight:600}
+:root[data-tab-override=true][data-tab-style=pill] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs){border-radius:999px}
+:root[data-tab-override=true][data-tab-style=pill] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs)>button{border-radius:999px}
+:root[data-tab-override=true][data-tab-style=pill] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs)>button.active{background:var(--ui-accent);border-color:transparent;color:var(--ui-on-accent);box-shadow:none;font-weight:600}
+
+/* Text tabs with an underline leave the artwork and surrounding controls quiet. */
+:root[data-tab-override=true][data-tab-style=underline] .dock-stack-header{height:calc(var(--ui-tab-height) + 4px);padding:2px 6px;border-bottom:1px solid var(--ui-line)}
+:root[data-tab-override=true][data-tab-style=underline] .tree-editor .dock-tab{border:0;border-radius:0;padding:5px 8px}
+:root[data-tab-override=true][data-tab-style=underline] .tree-editor .dock-tab[aria-selected=true]{background:transparent;color:var(--ui-accent-text);box-shadow:inset 0 -2px var(--ui-accent-text)}
+:root[data-tab-override=true][data-tab-style=underline] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs){padding:0;gap:8px;border:0;border-bottom:1px solid var(--ui-line);border-radius:0;background:transparent}
+:root[data-tab-override=true][data-tab-style=underline] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs)>button{padding:8px 2px;border:0;border-radius:0;background:transparent}
+:root[data-tab-override=true][data-tab-style=underline] .tree-editor :is(#inspector-tabs,.appearance-inspector-tabs)>button.active{background:transparent;color:var(--ui-accent-text);box-shadow:inset 0 -2px var(--ui-accent-text)}

@@ -6,6 +6,7 @@
  --ui-line:#363e49;--ui-line-strong:#657182;--ui-text:#e5e9ef;--ui-muted:#a7b2c1;--ui-subtle:#8795a7;
  --ui-accent:#dfae72;--ui-on-accent:#16191e;--ui-accent-text:#dfae72;--ui-selected:#453e38;--ui-accent-hover:#c79d68;
  --ui-info:#9bc9e7;--ui-info-bg:#253542;--ui-success:#a4d7be;--ui-success-bg:#263e34;--ui-danger:#ffb1b8;--ui-danger-bg:#442a31;
+ --ui-motion:var(--ui-success);--ui-motion-bg:var(--ui-success-bg);--ui-time:#b4d9ff;--ui-time-bg:#243e59;--ui-time-line:#6595c7;--ui-time-handle:#477ba9;--ui-key:#f5c66f;--ui-key-selected:#ffe5a3;--ui-playhead:#f4f7fb;
  --ui-warning:#edc489;--ui-warning-bg:#403526;--ui-purple:#d0b9ed;--ui-purple-bg:#392f49;--ui-overlay:#0009;--ui-shadow:#0005;
 }
 :root[data-interface-style=minimal]{--ui-control-radius:2px;--ui-module-radius:0px;--ui-card-radius:2px;--ui-pane-radius:0px;--ui-window-radius:4px}
@@ -30,6 +31,7 @@
  --ui-bg:#e9edf1;--ui-inset:#f0f3f6;--ui-panel:#ffffff;--ui-surface:#f4f6f8;--ui-hover:#e3e9f0;
  --ui-line:#cdd5de;--ui-line-strong:#7f8c9e;--ui-text:#242b35;--ui-muted:#526174;--ui-subtle:#607087;
  --ui-info:#245a80;--ui-info-bg:#e6f0f8;--ui-success:#256245;--ui-success-bg:#e6f3ec;--ui-danger:#a43046;--ui-danger-bg:#fbe9ed;
+ --ui-time:#245a80;--ui-time-bg:#dcebf9;--ui-time-line:#477ca8;--ui-time-handle:#79a8d1;--ui-key:#8c580d;--ui-key-selected:#6f4000;--ui-playhead:#253247;
  --ui-warning:#795018;--ui-warning-bg:#faf0df;--ui-purple:#6a4792;--ui-purple-bg:#efe9f7;--ui-overlay:#17233566;--ui-shadow:#1c2b3d22;
 }
 /* The authoring surface remains neutral; theme color is reserved for actions and selection. */
@@ -45,6 +47,7 @@
 .appearance-settings{border-right:1px solid var(--ui-line)}
 .appearance-settings>label{display:block;margin-bottom:8px;font-weight:500}
 .appearance-settings>select{width:100%;margin-bottom:22px}
+.appearance-settings .appearance-scheme-description{margin:-12px 0 20px;color:var(--ui-muted);font-size:12px;line-height:1.6}
 .appearance-layout-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .appearance-layout-options label{display:block;margin-bottom:8px;font-weight:500}
 .appearance-layout-options select{width:100%;min-width:0}
@@ -81,3 +84,22 @@
 .tree-editor .graphics-dialog .graphics-card .graphics-insert:hover{background:var(--ui-selected);border-color:var(--ui-accent-text);color:var(--ui-accent-text)}
 @media(max-width:550px){.appearance-dialog .appearance-body{grid-template-columns:1fr}.appearance-settings{border-right:0;border-bottom:1px solid var(--ui-line)}.appearance-settings,.appearance-preview{padding:16px}.appearance-dialog>header,.appearance-dialog>footer{padding:14px 16px}}
 @media(max-width:380px){.appearance-layout-options{grid-template-columns:1fr}}
+
+/* Refined is opt-in for existing preferences; original themes retain their tokens. */
+:root:is([data-interface-style=refined],[data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=cinema],[data-interface-style=candy]){
+ --ui-control-radius:6px;--ui-module-radius:10px;--ui-card-radius:8px;--ui-pane-radius:8px;--ui-window-radius:14px;
+ --ui-line-soft:color-mix(in srgb,var(--ui-line) 62%,var(--ui-panel));
+ --ui-edge-highlight:#ffffff07;--ui-control-shadow:inset 0 1px 0 var(--ui-edge-highlight),0 1px 2px #00000012;
+ --ui-pane-shadow:0 2px 7px #00000018;--ui-module-shadow:0 1px 2px #0000000b;
+ --ui-floating-shadow:0 20px 60px #0000004d,0 4px 14px #00000033,inset 0 1px 0 var(--ui-edge-highlight);
+ --ui-selection-surface:color-mix(in srgb,var(--ui-accent) 12%,var(--ui-panel));
+ --ui-selection-line:color-mix(in srgb,var(--ui-accent) 38%,var(--ui-line));
+ --ui-module-bg:color-mix(in srgb,var(--ui-surface) 12%,var(--ui-panel));
+ --ui-module-heading:color-mix(in srgb,var(--ui-surface) 42%,var(--ui-panel));
+ --ui-field-bg:color-mix(in srgb,var(--ui-inset) 48%,var(--ui-panel));
+}
+:root[data-theme=light]:is([data-interface-style=refined],[data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=cinema],[data-interface-style=candy]){
+ --ui-edge-highlight:#ffffffb3;--ui-control-shadow:inset 0 1px 0 var(--ui-edge-highlight),0 1px 2px #1c2b3d08;
+ --ui-pane-shadow:0 2px 7px #1c2b3d0a;--ui-module-shadow:0 1px 2px #1c2b3d05;
+ --ui-floating-shadow:0 20px 60px #1c2b3d24,0 4px 14px #1c2b3d14,inset 0 1px 0 var(--ui-edge-highlight);
+}

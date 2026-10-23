@@ -31,9 +31,19 @@ npm start -- --port 8799
 
 公共界面颜色在 `web/theme-tokens.css` 按背景、面板、控件、文字、边框与状态用途定义，各组件样式引用这些变量。画布辅助线、缩略图底色、用户色板和作品内容保持独立。启动入口在挂载编辑器前应用偏好；离线与静态构建内嵌同一份主题样式和逻辑。外观不进入项目模型、撤销记录、资源哈希或作品导出。
 
-偏好中的 `style`（`standard`、`minimal`、`soft`）和 `density`（`compact`、`comfortable`）独立于配色；旧偏好自动补为标准与紧凑。根元素的 `data-interface-style`、`data-density` 驱动共享圆角与间距变量，简洁风格仅弱化内容模块边框，保留输入框、键盘焦点和停靠分隔条。密度调整触发现有预览尺寸观察器，不写入画布模型。
+偏好中的 `style`（`standard`、`refined`、`minimal`、`soft`、`aurora`、`pulse`、`cinema`、`candy`）和 `density`（`compact`、`comfortable`）独立于配色。`standard` 始终对应“标准”，保留原来的语义配色和控件规则；旧配色偏好缺少风格时补为标准与紧凑，新浏览器默认使用独立的 `refined`（精致）。根元素的 `data-interface-style`、`data-density` 驱动共享圆角与间距变量，简洁风格仅弱化内容模块边框，保留输入框、键盘焦点和停靠分隔条。密度调整触发现有预览尺寸观察器，不写入画布模型。
+
+`web/editor-surfaces.css` 为精致与四个创作风格提供公共表面层级，`web/creative-skins.css` 分别定义其页签、圆角与面板结构，均以风格 ID 限定，避免覆盖标准、简洁或柔和；源码和静态包均在其他编辑器样式之后加载。背景、边框、选中态与阴影通过 `web/theme-tokens.css` 的语义变量组合，避免改动作品色板、透明棋盘和画布辅助线。视觉参考为 [Linear 的分层表面](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/linear.app/DESIGN.md) 与 [Raycast 的浮层](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/raycast/DESIGN.md)，按编辑器的紧凑布局调整，不使用官网的大字号与宣传区留白。
+
+所有界面风格由 `STYLE_IDS` 注册，并通过唯一的风格卡片入口选择。卡片只修改 `style`，保留配色方案、明暗模式、自定义强调色、密度和页签；选中态仅取决于风格 ID。每种创作风格提供深浅色表面变量，石墨配色进一步中和背景；`appearancePalette` 按实际面板颜色计算强调文字对比度。使用 `auto` 配色切回既有风格时移除全部创作风格内联颜色，避免串色。视觉参考：[Framer](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/framer/DESIGN.md)、[Spotify](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/spotify/DESIGN.md)、[Runway](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/runwayml/DESIGN.md)、[Lovable](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/lovable/DESIGN.md) 与 [MiniMax](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/minimax/DESIGN.md)。
+
+配色偏好 `scheme` 接受 `auto`、`xuanqing`、`tianqing`、`dunhuang`、`zhusha`、`zhuyue` 和 `ouhe`；旧设置缺少该字段时补为 `auto`，保留原有颜色。命名方案独立于控件风格，按深浅模式提供背景、面板、控件、边框、三级文字和推荐强调色；石墨模式中和表面颜色。选择方案将强调色重置为推荐色，随后仍可自定义。`data-color-scheme` 同步样式卡片示意图，避免暗示控件形态与颜色绑定。方案为适配编辑器自行调制的界面颜色，不作为传统色历史标准值，也不引入外部色表依赖。
+
+页签偏好 `tabs`（`auto`、`classic`、`segmented`、`pill`、`underline`）独立保存。缺少该字段的旧设置保持 `auto`，不覆盖原有外观；跟随风格时使用其默认页签，明确选择页签后切换风格仍保留该选择。根元素 `data-tab-style` 表示实际形态，`data-tab-override` 决定是否加载独立覆盖，规则在 `web/tab-styles.css`。预览复用 `.dock-stack-header` / `.dock-tab`，参数页签通过 `:is(#inspector-tabs,.appearance-inspector-tabs)` 共用规则；浏览器检查比对实际控件与预览的颜色、边框、圆角、阴影与间距。
 
 验证主题行为可运行 `node --test tests/appearance.test.mjs`、`node tests/appearance-browser-check.mjs`；静态构建后加 `--built` 检查发行版。浏览器检查覆盖预览、取消、保存恢复、系统变化、中英文入口、窄屏顶栏、画布像素与项目存储不变，截图位于 `test-results/appearance/`。
+
+编辑状态使用独立语义变量：`--ui-motion` / `--ui-motion-bg` 表示动画，`--ui-time*` 表示时间区间，`--ui-key*` 表示关键帧与收藏，`--ui-playhead` 表示播放位置，录制复用危险色。它们不从个人强调色推导；浅色主题提供对应的深色文字与轮廓。`web/tree.css` 的功能状态规则优先于通用选中样式，录制即使带 `aria-pressed=true` 仍显示红色。外观预览复用真实动画标记、时间区间、关键帧和录制按钮的类与规则。
 
 ## 构建离线版
 
@@ -155,7 +165,7 @@ node tools/capture-docs.mjs shortcuts ribbons appearance
 | bezier-editor | 多段路径、放大编辑和控制点操作 |
 | shortcuts | 节点快捷区、全部适用菜单和可移动通道曲线窗口 |
 | ribbons | 折叠线束的宽画布、风格预设与参数 |
-| appearance | 浅色主题、界面风格、密度与强调色 |
+| appearance | 国风配色、明暗模式、控件风格、页签、密度与强调色 |
 | library | 图库、生成器参数、图形列表 |
 | library-filters | 全部/收藏/最近/动态、分类多选与动态标记 |
 | parameter-states | 动画控制状态与录制/基础值操作 |

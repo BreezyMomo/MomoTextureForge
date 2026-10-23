@@ -20,15 +20,23 @@ Visit the [online editor](https://breezymomo.github.io/MomoTextureForge/). See [
 - **Center:** composite preview, texture channels, 2D/3D modes, canvas tools and playback.
 - **Right:** selected node's shape, color, transform/layout, animation and compositing. No node means no node parameters.
 
-Open **Appearance** in the toolbar to choose Momo classic dark, neutral graphite, soft light, or follow the system, and set a custom accent color. Changes preview across the workspace. **Save appearance** remembers your choice; Cancel or Esc restores the appearance from before the dialog opened. Preferences stay in this browser and site without changing artwork colors, exports, or project files.
+Open **Appearance** in the toolbar to independently choose a color scheme, control style, appearance mode, tabs, density and custom accent. Appearance mode offers Dark, Graphite dark, Light or Follow system. Changes preview across the workspace. **Save appearance** remembers your choice; Cancel or Esc restores the appearance from before the dialog opened. Preferences stay in this browser and site without changing artwork colors, exports, or project files.
 
-**Interface style** offers Standard, Minimal, and Soft: fine borders and small corners, quieter module frames, or rounder controls and panels. **Density** offers Compact and Comfortable, adjusting control height and spacing in parameter modules, node rows, and library cards. Combine either setting with any palette; saving or cancelling applies to all appearance choices together.
+**Color scheme** offers six traditional-inspired palettes: Xuanqing, Tianqing, Dunhuang, Zhusha, Zhuyue and Ouhe. Each has light and dark variants; Graphite further neutralizes the backgrounds. Selecting a scheme preserves the control style, tabs and density, while resetting the accent to its recommendation; you can customize the accent afterwards. Follow control style restores that style’s original colors. Existing preferences are not automatically switched to a new scheme.
+
+**Control style** has one card selector for all eight styles: Standard, Refined, Minimal, Soft, Aurora, Pulse, Cinema and Candy. Choosing a card changes only the style, preserving the color scheme, appearance mode, custom accent, tab choice and density. The current style stays selected after customization. Aurora adds layered panels and subtle glow; Pulse rounds controls; Cinema quiets frames to focus on artwork; Candy creates a soft, rounded studio. Only Save remembers changes; Cancel or Esc restores every setting.
+
+Standard retains the earlier module frames, selection treatment and controls; saved preferences keep that style, while fresh browsers default to Refined. Refined uses fine borders, layered surfaces and subtle shadows; nested settings use separators to avoid repeated frames. Minimal quiets module frames, while Soft rounds controls and panels further. Menus, dialogs and floating panels share one elevation treatment. **Density** offers Compact and Comfortable, adjusting control height and spacing in parameter modules, node rows, and library cards. Combine either setting with any palette; saving or cancelling applies to all appearance choices together.
+
+**Tab style** independently offers Classic, Segmented, Pills and Underlined, or Follow interface style to retain a skin’s original tabs. Changing only tabs leaves colors, skin and density unchanged; switching skins also preserves an explicit tab choice. The preview includes both dock-panel and inspector tabs, using the editor’s actual style rules.
+
+Functional colors are independent of the personal accent: green marks animation badges and animated parameters, blue marks time intervals, gold marks keyframes and favorites, and red marks recording. The playhead uses a high-contrast line and top marker. Read-only intervals retain gray stripes and dashed borders. Changing the color scheme, control style or accent preserves these meanings, and the appearance preview includes these states.
 
 While dragging a parameter module, adjacent modules smoothly make room. The new order is saved only on drop; Esc cancels. Same-level node sorting shows an insertion gap, while cross-group moves retain insertion lines and target highlights. Panel placement, section disclosures, menus, thumbnails and notifications use brief transitions; sliders, canvas manipulation and dragged objects remain immediate. Interface motion respects the system's reduced-motion preference without changing artwork animation or exports.
 
 ![Interface colors, style and density](images/en/appearance-settings.png)
 
-> Callouts: 1 Choose interface colors; 2 Choose an interface style; 3 Set interface density; 4 Customize the accent color; 5 Save appearance preferences in this browser.
+> Callouts: 1 Choose an appearance mode; 2 Choose a control style; 3 Set interface density; 4 Customize the accent color; 5 Save appearance preferences in this browser; 6 Choose a tab style independently; 7 Choose a color scheme independently.
 
 ## 2. Add your first graphic
 

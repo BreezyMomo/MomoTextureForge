@@ -285,10 +285,12 @@
     "Adjust graphic-specific parameters"
   ],
   "appearance-settings": [
-    "Choose interface colors",
-    "Choose an interface style",
+    "Choose an appearance mode",
+    "Choose a control style",
     "Set interface density",
     "Customize the accent color",
-    "Save appearance preferences in this browser"
+    "Save appearance preferences in this browser",
+    "Choose a tab style independently",
+    "Choose a color scheme independently"
   ]
 }
