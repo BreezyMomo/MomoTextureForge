@@ -30,6 +30,8 @@ Fields:
 - `parameters`: up to 16, each with required unique `variable`, optional `aliases`, `min`, `max`, `step`, `default`. Alias maps may be absent/empty; legacy `label` is read as Chinese. Options use `type:select` and numerical `value` plus optional variable/aliases. No matching alias means variable.
 - `helpers`: optional global GLSL, up to 1 MB.
 
+The resource category supports discovery by appearance and use and may follow the user’s own organization. Formula/generator and static/animated are not mandatory separate categories. For reuse, rely on the current AI catalog exported from the library, not a fixed built-in list or edits to the internal registry. The editor places graphic-specific parameters in one module; organize parameters by order and aliases rather than adding unsupported grouping or custom-panel fields.
+
 All bindings are floats; cast explicitly for integer use. Identifiers are ASCII letters/underscore followed by letters/digits/underscores, at most 80 characters, excluding reserved words, `gl_`, double underscores and function-name conflicts. Require `min < max`, positive step and an in-range default.
 
 GLSL ES 3.00 returns a finite 0–1 scalar: zero transparent, one solid. Body requires `return`; expression is only an expression. `u` is normalized 0–1, `q=u*2.-1.`, `r=length(q)`, `angle=atan(q.y,q.x)`. `time` accumulates seconds and is not automatically periodic. Variables are available in formula scope. Global helpers receive coordinates/time/parameters through arguments. Do not declare main/uniform/sampler, access files/network, include JS/external source or rely on unavailable helpers. New graphics must not use internal `a/b/c/d` or slot aliases such as R/W. Preserve existing local adapters when copying native graphics.

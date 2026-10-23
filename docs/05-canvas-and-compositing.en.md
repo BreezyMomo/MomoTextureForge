@@ -334,6 +334,10 @@ Below the preview, the left group contains Select, Pivot, UV, Pan and Snap tools
 
 **Pan view** works at fit size, reduced zoom and enlarged zoom, including drags on blank areas of the preview. Hold **Space** for temporary panning; releasing it restores the previous tool. **Reset view**, beside the zoom selector, fits and centers the canvas; choosing Fit window also centers it. Each trial session retains its own offset, and returning to the canvas restores that canvas's view. Panning leaves node positions, UVs and keyframes unchanged; export still uses the full canvas.
 
+![Canvas view toolbar and free panning](images/en/canvas-toolbar.png)
+
+> Callouts: 1 Pan the view at any zoom, including Fit window; 2 Change viewing zoom only; 3 Fit and center the canvas; 4 Set the background, pivots and node bounds; 5 Choose the tile inspection count.
+
 Shortcuts: Ctrl/Cmd+D duplicates, Delete removes, Ctrl+Z undoes and Ctrl+Shift+Z redoes. Export always uses the full canvas bounds.
 
 ## 6. Inspect effect blending on backgrounds

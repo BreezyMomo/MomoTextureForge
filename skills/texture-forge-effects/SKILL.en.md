@@ -28,7 +28,7 @@ User-facing screenshots, steps and example projects are in the [online illustrat
 
 ## References by task
 
-- [Workspace and resources](references/workspace.en.md): docking/layout, library/list/instances, versions, saving, canvas, multi-selection and 2D/3D channels.
+- [Workspace and resources](references/workspace.en.md): schemes/styles/tabs, current categories, custom ratios/free panning, docking/layout, library/list/instances, versions, saving, canvas, multi-selection and 2D/3D channels.
 - [Remote libraries](references/remote-libraries.en.md): subscriptions, offline cache, merged cards, update/delete scopes, static manager and Git/Pages/CDN publication.
 - [Arrangement and compositing](references/layout-compositing.en.md): regions/UV, border/contour/herringbone/weave/rules, gradients/flow, mixed children, overlap avoidance, fit, expansion, repeat, color and masks.
 - [Animation and export](references/animation-export.en.md): seconds versus normalized progress, keys/curves/phases, formats and budgets.

@@ -20,11 +20,15 @@ test('both downloadable skills have their own entrypoint and all reference links
  }
  assert.throws(()=>skillPackage('unknown'),/未知Skill/);
 });
-test('effects download matches maintained references and uses dynamic context instead of a fixed catalog',async()=>{
- const files=await decodeZIP(skillPackage('effects').bytes),prefix='texture-forge-effects/';
- for(const [name,bytes]of files)assert.equal(normalized(text(bytes)),normalized(await readFile(new URL('../skills/'+name,import.meta.url),'utf8')),name);
- assert.ok(!files.has(prefix+'references/patterns.md'));
- assert.ok(files.has(prefix+'references/ai-context.md'));
+test('both Skill downloads match maintained bilingual instructions and effects use dynamic catalog context',async()=>{
+ for(const kind of ['author','effects']){
+  const files=await decodeZIP(skillPackage(kind).bytes);
+  for(const [name,bytes]of files)if(name.endsWith('.md'))assert.equal(normalized(text(bytes)).trimEnd(),normalized(await readFile(new URL('../skills/'+name,import.meta.url),'utf8')).trimEnd(),name);
+  if(kind==='effects'){
+   assert.ok(!files.has('texture-forge-effects/references/patterns.md'));
+   assert.ok(files.has('texture-forge-effects/references/ai-context.md'));
+  }
+ }
 });
 
 test('generated parameter guidance contains display labels rather than internal message IDs',async()=>{

@@ -62,6 +62,12 @@ The library is the source, the graphics list holds reusable copies, and nodes ar
 
 Node region, shape radius and arranged-instance size are three different levels. If a pattern looks too small, check which level you are editing.
 
+![Set a custom canvas ratio above the preview](images/en/canvas-ratio.png)
+
+> Callouts: 1 Change canvas ratio above the preview; 2 Enter relative width; 3 Enter relative height; 4 Apply the ratio without changing node parameters.
+
+For an existing custom ratio, click the adjacent edit button or choose **Custom…** again to continue editing. You do not need to select a different ratio first.
+
 ## 4. Save a project, then export an image
 
 ![File menu](images/en/project-files.png)

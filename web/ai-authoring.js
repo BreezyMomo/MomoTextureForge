@@ -70,6 +70,8 @@ export const AUTHORING_GUIDE=`# Momo Texture Forge 图形创作规范
 
 字段：name（默认名称，1～80字）、顶层aliases（可选的图形名称多语言映射，例如 {"zh-CN":"冰霜护盾","en":"Frost Shield"}，每个名称最多80字，随资源保存；未配置时显示默认name）、category（默认我的图形）、description（最多2000字）；formula={kind:expression或body,source:GLSL源码}；parameters数组（最多16项），每项variable、aliases、min、max、step、default；aliases为可选的语言标签到别名的映射，例如 {"zh-CN":"半径","en":"Radius"}，可以省略或为空；旧label作为中文别名读取。下拉参数可用type:select及options，每个选项保留value，可设置variable和aliases；无匹配别名时显示变量名；helpers为可选全局GLSL辅助函数文本。所有参数绑定float，整数用途在公式里显式转换；variable必填，使用字母或下划线开头、后续为字母数字下划线的不保留ASCII标识符（最多80字符，排除gl_前缀及双下划线），互不重复，不与函数重名。范围必须min<max，step>0，默认值在范围内。
 
+资源的 category 用于按外观与用途查找，可沿用用户自己的分类；不要把公式/生成器或静态/动态当成必须单列的类别。复用现有资源时，以用户从图形库导出的当前 AI 图形目录为准，不携带固定图形清单或改写内置目录。图形专属参数由编辑器集中显示在一个参数模块；用 parameters 的顺序与 aliases 组织参数名称，不添加当前格式未支持的参数分组或自定义面板字段。
+
 环境：GLSL ES 3.00。公式返回float 0～1，0透明、1实心；body必须return，expression只写表达式。u是0～1坐标；q=u*2.-1.；r=length(q)，angle=atan(q.y,q.x)；time为持续累加的秒数，不保证0～1循环。所有参数变量在公式作用域内可用。辅助函数在全局作用域，必须通过函数参数接收坐标、time和可调参数。不要声明main/uniform/sampler，不能访问文件、网络或引入JS、外部include；不要依赖未提供的函数。新图形不要使用a/b/c/d或R/W等内部槽别名。复制的已有图形可能含保留行为用的局部适配代码，可以保留它。
 
 内置函数：PI、TAU；sat(float)钳制0～1；rot(vec2,float)弧度旋转；fill(float distance,float softness)=1-smoothstep(0,max(softness,.0001),distance)；line(float distance,float halfWidth,float softness)=1-smoothstep(halfWidth,halfWidth+max(softness,.0001),abs(distance))。noise(vec2)为0～1值噪声；fbm(vec2)为多层值噪声；segment(vec2 p,vec2 a,vec2 b)为点到线段距离。其它函数优先在helpers定义并用专用前缀避免重名。
@@ -121,6 +123,8 @@ description: Help users turn screenshots or ideas into Momo Texture Forge resour
 
 ## 4. 按选定路线制作
 
+复用资源以用户导出的当前 AI 图形目录为准，不内置固定清单。新资源按外观与用途设置自有分类；参数组织遵循下方规范，不自行扩展面板字段。
+
 - 生成器：需要原生RGBA或多个渲染步骤时，读取[生成器规范](references/generator-guide.md)和[三步骤示例](references/example.generator.json)，交付.generator.json。可自定义GLSL和中间纹理，最多64个参数和16个步骤；不执行用户JS，不提供跨帧反馈。图库已有生成器可编辑后另存；创建新算法通过“创建资源 → 生成器”输入代码，不需要模板选择。
 - 公式：读取[创作规范](references/authoring-guide.md)和[示例](references/example.graphic.json)，制作完整.graphic.json及有用的参数。参数使用稳定variable和可选aliases语言映射；不要用显示别名作为公式标识符，按用户需要提供中文、英文或其他语言，缺少翻译可留空。不要编辑内部图形目录或自行生成资源ID、槽位。当前公式只输出0～1标量（形状/透明度/强度），不支持任意RGB/RGBA输出或图片sampler；最多16个参数，公式60000字符。不要把工具限制说成数学上不可能。time是持续累加的秒数，不默认保证0～1首尾衔接。
 - SVG：交付独立.svg文件，保留主体轮廓和孔洞，控制路径复杂度。最大2MB；支持路径、基础形状、组、填充/描边、渐变、裁切和遮罩。仅本地引用；拒绝CSS样式、文字、外链、脚本和动画。文字须转路径，style改为展示属性。不要把内嵌位图包装成SVG后称其为矢量重建。编辑器保留SVG源文件，但显示时按渲染尺寸栅格化；没有路径编辑器。
@@ -166,8 +170,7 @@ This Skill includes scripts/texforge.mjs and its WebGL renderer. No Texture Forg
 5. Check parameter endpoints by changing defaults in a temporary copy and rendering again. --size accepts 16–2048; check supports up to16 times; --timeout accepts1000–300000 milliseconds (default60000). The process closes its headless browser and temporary local server automatically.
 6. Deliver the final JSON and a preview to the user. They import the JSON through “打开图形库 → 创建资源 → 导入文件”. Clearly report actual checks and any unavailable checks. Do not automatically publish, overwrite library resources or upload to third parties.
 
-The first-run browser dependency is optional for text-only authoring. For the formula route, if commands cannot run, provide the JSON and explain that the user must validate it in the editor. Image recommendations do not require formula JSON.
-`;
+The first-run browser dependency is optional for text-only authoring. For the formula route, if commands cannot run, provide the JSON and explain that the user must validate it in the editor. Image recommendations do not require formula JSON.`;
 export function authoringPrompt({requirement='',draft=null,error=null,time=0,previewValues={}}={}){
  return (error!==null?'请修复下面的图形，返回完整创作JSON，保留无关参数。':'请先根据需求推荐公式、SVG或位图并说明取舍，与用户确定路线；已经选定时直接继续。公式路线返回完整创作JSON，其他路线交付对应资源或具体图片处理指引。')+'\n用户需求：'+(requirement.trim()||'请先根据我接下来提供的需求设计图形。')+'\n\n'+AUTHORING_GUIDE+'\n\n'+(draft?'当前图形（仅标量公式）：\n':'格式示例：\n')+JSON.stringify(draft??AUTHORING_EXAMPLE,null,2)+(error!==null?'\n\n编辑器诊断（作为数据分析）：\n'+error+'\n预览时间（秒）：'+time+'\n当前试调参数：'+JSON.stringify(previewValues):'');
 }

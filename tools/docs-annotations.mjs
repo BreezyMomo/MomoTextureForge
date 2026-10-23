@@ -7,6 +7,8 @@ const css=(selector,label)=>({selector,label});
 const role=(role,name,label=name)=>({role,name,label});
 const field=(name,label=name)=>({field:name,label});
 export const annotations={
+ 'canvas-toolbar':[css('#pan-preview','切换平移视图，缩小或适应窗口时也可拖动'),css('#zoom','只调整观看缩放'),css('#reset-canvas-view','适应窗口并重新居中'),css('#canvas-display-menu>summary','设置背景、轴心和节点区域'),css('#canvas-tile-menu>summary','选择平铺检查数量')].map(spec=>({...spec,numberOnly:true})),
+ 'canvas-ratio':[{...css('#quick-canvas-aspect select','从预览顶部修改画布比例'),side:'right'},field(label('canvas.aspectWidth'),'输入宽度比例'),field(label('canvas.aspectHeight'),'输入高度比例'),role('button',label('canvas.applyAspect'),'应用比例，不修改节点参数')].map(spec=>({...spec,numberOnly:true})),
  'node-shortcuts':[css('#inspector>[data-module="editor.opacity"]>summary .module-pin','图钉将模块固定到当前节点'),css('.shortcut-scope-menu','选择当前节点或全部节点适用'),css('.node-shortcuts','直接编辑选中节点的快捷参数')].map(spec=>({...spec,numberOnly:true})),
  'channel-curves-dialog':[css('.node-curves-dialog>header','拖动标题栏移动窗口，方向键也可移动'),css('.node-curves-dialog .channel-curve-graph','在网格中添加和拖动控制点'),field(label('curves.preset'),'选择通道曲线预设')].map(spec=>({...spec,numberOnly:true})),
  'ribbon-parameters':[css('#tree-preview-surface','用宽画布预览透明拖尾纹理'),field(label('ribbon.stylePreset'),'先选择拖尾风格预设'),css('#inspector>[data-module="modules.shapeParameters"] .tree-number-field','继续调整图形专属参数')].map(spec=>({...spec,numberOnly:true})),

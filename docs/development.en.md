@@ -45,6 +45,8 @@ The independent `tabs` preference accepts `auto`, `classic`, `segmented`, `pill`
 
 Editing states use independent semantic variables: `--ui-motion` / `--ui-motion-bg` for animation, `--ui-time*` for time intervals, `--ui-key*` for keyframes and favorites, and `--ui-playhead` for playback position; recording uses the danger colors. They are not derived from the personal accent. Light themes provide darker text and outlines. Functional-state rules in `web/tree.css` take precedence over generic selection, keeping recording red even with `aria-pressed=true`. The appearance preview shares the real animation-badge, interval, keyframe and recording-button classes and rules.
 
+Run `node tests/functional-colors-browser-check.mjs` and, after the static build, `node tests/functional-colors-browser-check.mjs --built` to check functional colors, contrast and real/preview consistency across 336 scheme, theme and style combinations, with unchanged artwork pixels and undo history.
+
 ## Build offline
 
 ```sh

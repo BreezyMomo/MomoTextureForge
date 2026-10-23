@@ -45,6 +45,8 @@ npm start -- --port 8799
 
 编辑状态使用独立语义变量：`--ui-motion` / `--ui-motion-bg` 表示动画，`--ui-time*` 表示时间区间，`--ui-key*` 表示关键帧与收藏，`--ui-playhead` 表示播放位置，录制复用危险色。它们不从个人强调色推导；浅色主题提供对应的深色文字与轮廓。`web/tree.css` 的功能状态规则优先于通用选中样式，录制即使带 `aria-pressed=true` 仍显示红色。外观预览复用真实动画标记、时间区间、关键帧和录制按钮的类与规则。
 
+运行 `node tests/functional-colors-browser-check.mjs`，以及静态构建后的 `node tests/functional-colors-browser-check.mjs --built`，检查 336 组配色、明暗与风格组合中的功能色、对比度、真实界面与预览一致性，并确认作品像素和撤销记录不变。
+
 ## 构建离线版
 
 ```sh

@@ -130,8 +130,8 @@ try{
  });
  await run('animation',async()=>{
   await page.setViewportSize({width:1600,height:1350});await load(animated);await page.getByRole('button',{name:label('editor.select')+demoName('呼吸星形'),exact:true}).click();await page.getByRole('button',{name:label('inspector.transformLayout'),exact:true}).click();await page.locator('#workspace-layout-menu > summary').click();await page.getByRole('button',{name:label('layout.animationLayout'),exact:true}).click();
-  const timelineSplit=page.locator('.dock-split-y').filter({has:page.locator('[data-panel-tab="timeline"]')}).locator(':scope > .dock-splitter'),splitBox=await timelineSplit.boundingBox();await page.mouse.move(splitBox.x+splitBox.width/2,splitBox.y+3);await page.mouse.down();await page.mouse.move(splitBox.x+splitBox.width/2,550,{steps:10});await page.mouse.up();
-  await page.getByRole('button',{name:label('editor.parameterMode')+label('editor.record'),exact:true}).click();await changeNumber(label('editor.regionWidth'),.35);await page.getByRole('slider',{name:label('editor.scopeProgressSlider'),exact:true}).fill('0.5');await changeNumber(label('editor.regionWidth'),.8);await page.getByRole('slider',{name:label('editor.scopeProgressSlider'),exact:true}).fill('1');await changeNumber(label('editor.regionWidth'),.35);await page.getByRole('button',{name:label('editor.parameterMode')+label('editor.record'),exact:true}).click();await shot('animation-keyframes');
+  const timelineSplit=page.locator('.dock-split-y').filter({has:page.locator('[data-panel-tab="timeline"]')}).locator(':scope > .dock-splitter'),splitBox=await timelineSplit.boundingBox();await page.mouse.move(splitBox.x+splitBox.width/2,splitBox.y+3);await page.mouse.down();await page.mouse.move(splitBox.x+splitBox.width/2,650,{steps:10});await page.mouse.up();
+  await page.getByRole('button',{name:label('editor.parameterMode')+label('editor.record'),exact:true}).click();await changeNumber(label('editor.regionWidth'),.35);await page.getByRole('slider',{name:label('editor.scopeProgressSlider'),exact:true}).fill('0.5');await changeNumber(label('editor.regionWidth'),.8);await page.getByRole('slider',{name:label('editor.scopeProgressSlider'),exact:true}).fill('1');await changeNumber(label('editor.regionWidth'),.35);await page.getByRole('button',{name:label('editor.parameterMode')+label('editor.record'),exact:true}).click();await page.getByRole('slider',{name:label('editor.scopeProgressSlider'),exact:true}).fill('0.5');await page.locator('#reset-canvas-view').click();await ready();await shot('animation-keyframes');
   await page.locator('#node-animation-editor').getByRole('button',{name:label('timeline.curves'),exact:true}).click();await shot('animation-curves');await page.locator('#workspace-layout-menu > summary').click();await page.getByRole('button',{name:label('layout.restoreDefaultLayout'),exact:true}).click();await page.setViewportSize({width:1600,height:1050});
  });
  await run('docking',async()=>{
@@ -191,6 +191,11 @@ try{
  });
  await run('appearance',async()=>{
   await load(spell);await page.locator('#appearance-settings').click();await page.locator('#appearance-scheme').selectOption('tianqing');await page.locator('#appearance-theme').selectOption('light');await page.locator('.appearance-style-card[data-style=soft]').click();await page.locator('#appearance-density').selectOption('comfortable');await shot('appearance-settings');await page.locator('.appearance-dialog [data-cancel]').click();
+ });
+ await run('canvas-view',async()=>{
+  await load(spell);await page.locator('#pan-preview').click();
+  const stage=await page.locator('#canvas-stage').boundingBox();await page.mouse.move(stage.x+stage.width*.5,stage.y+stage.height*.5);await page.mouse.down();await page.mouse.move(stage.x+stage.width*.62,stage.y+stage.height*.6,{steps:8});await page.mouse.up();await shot('canvas-toolbar',page.locator('.tree-preview'));
+  await page.locator('#reset-canvas-view').click();await page.locator('#quick-canvas-aspect select').selectOption('custom');const ratio=page.locator('#quick-canvas-aspect');await ratio.getByLabel(label('canvas.aspectWidth'),{exact:true}).fill('5');await ratio.getByLabel(label('canvas.aspectHeight'),{exact:true}).fill('2');await shot('canvas-ratio',page.locator('.tree-preview'));await ratio.getByRole('button',{name:label('common.cancel'),exact:true}).click();
  });
  await run('manager',async()=>{
   await load(water);

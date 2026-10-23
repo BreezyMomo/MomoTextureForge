@@ -24,6 +24,8 @@
 
 字段：name（默认名称，1～80字）、顶层aliases（可选的图形名称多语言映射，例如 {"zh-CN":"冰霜护盾","en":"Frost Shield"}，每个名称最多80字，随资源保存；未配置时显示默认name）、category（默认我的图形）、description（最多2000字）；formula={kind:expression或body,source:GLSL源码}；parameters数组（最多16项），每项variable、aliases、min、max、step、default；aliases为可选的语言标签到别名的映射，例如 {"zh-CN":"半径","en":"Radius"}，可以省略或为空；旧label作为中文别名读取。下拉参数可用type:select及options，每个选项保留value，可设置variable和aliases；无匹配别名时显示变量名；helpers为可选全局GLSL辅助函数文本。所有参数绑定float，整数用途在公式里显式转换；variable必填，使用字母或下划线开头、后续为字母数字下划线的不保留ASCII标识符（最多80字符，排除gl_前缀及双下划线），互不重复，不与函数重名。范围必须min<max，step>0，默认值在范围内。
 
+资源的 category 用于按外观与用途查找，可沿用用户自己的分类；不要把公式/生成器或静态/动态当成必须单列的类别。复用现有资源时，以用户从图形库导出的当前 AI 图形目录为准，不携带固定图形清单或改写内置目录。图形专属参数由编辑器集中显示在一个参数模块；用 parameters 的顺序与 aliases 组织参数名称，不添加当前格式未支持的参数分组或自定义面板字段。
+
 环境：GLSL ES 3.00。公式返回float 0～1，0透明、1实心；body必须return，expression只写表达式。u是0～1坐标；q=u*2.-1.；r=length(q)，angle=atan(q.y,q.x)；time为持续累加的秒数，不保证0～1循环。所有参数变量在公式作用域内可用。辅助函数在全局作用域，必须通过函数参数接收坐标、time和可调参数。不要声明main/uniform/sampler，不能访问文件、网络或引入JS、外部include；不要依赖未提供的函数。新图形不要使用a/b/c/d或R/W等内部槽别名。复制的已有图形可能含保留行为用的局部适配代码，可以保留它。
 
 内置函数：PI、TAU；sat(float)钳制0～1；rot(vec2,float)弧度旋转；fill(float distance,float softness)=1-smoothstep(0,max(softness,.0001),distance)；line(float distance,float halfWidth,float softness)=1-smoothstep(halfWidth,halfWidth+max(softness,.0001),abs(distance))。noise(vec2)为0～1值噪声；fbm(vec2)为多层值噪声；segment(vec2 p,vec2 a,vec2 b)为点到线段距离。其它函数优先在helpers定义并用专用前缀避免重名。

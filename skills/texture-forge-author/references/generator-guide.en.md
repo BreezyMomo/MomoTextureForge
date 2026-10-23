@@ -10,6 +10,8 @@ Deliver UTF-8 `.generator.json` with `schema: momo.generator-authoring/v1`. Past
 
 See the [complete three-pass example](example.generator.json). Do not generate resource IDs, slots, hashes or manifests.
 
+The resource category supports discovery by appearance and use and may follow the user’s own organization. Formula/generator and static/animated are not mandatory separate categories. For reuse, rely on the current AI catalog exported from the library, not a fixed built-in list or edits to the internal registry. The editor places graphic-specific parameters in one module; organize parameters by order and aliases rather than adding unsupported grouping or custom-panel fields.
+
 ## JSON fields
 
 - `name`, `category`, `description`: name 1–80 characters, personal category default, description up to 2000. Editor metadata supplies final saved values.

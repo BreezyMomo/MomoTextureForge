@@ -1,4 +1,17 @@
 {
+  "canvas-toolbar": [
+    "Pan the view at any zoom, including Fit window",
+    "Change viewing zoom only",
+    "Fit and center the canvas",
+    "Set the background, pivots and node bounds",
+    "Choose the tile inspection count"
+  ],
+  "canvas-ratio": [
+    "Change canvas ratio above the preview",
+    "Enter relative width",
+    "Enter relative height",
+    "Apply the ratio without changing node parameters"
+  ],
   "workspace": [
     "Open the graphics library",
     "Select a node",
