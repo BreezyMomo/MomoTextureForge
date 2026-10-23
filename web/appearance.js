@@ -1,7 +1,7 @@
 // User preferences never enter a canvas, its undo history, or resource identity.
 export const APPEARANCE_KEY='momo-texture-appearance:v1';
 export const THEME_IDS=Object.freeze(['system','classic','graphite','light']);
-export const STYLE_IDS=Object.freeze(['refined','standard','minimal','soft','aurora','pulse','cinema','candy']);
+export const STYLE_IDS=Object.freeze(['standard','refined','minimal','soft','aurora','pulse','cinema','candy']);
 export const DENSITY_IDS=Object.freeze(['compact','comfortable']);
 export const TAB_STYLE_IDS=Object.freeze(['auto','classic','segmented','pill','underline']);
 const defaultTabs={standard:'classic',minimal:'classic',soft:'classic',refined:'segmented',aurora:'pill',pulse:'pill',cinema:'underline',candy:'pill'};

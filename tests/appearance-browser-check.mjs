@@ -25,7 +25,7 @@ try{
  assert.notEqual(await page.locator('.dock-stack').first().evaluate(e=>getComputedStyle(e).boxShadow),'none');
  const open=async()=>{await appearance.click();await page.locator('.appearance-dialog').waitFor();};
  const theme=page.locator('#appearance-theme');
- await open();assert.equal(await page.locator('[data-style=refined] .appearance-style-label').innerText(),'精致');assert.equal(await page.locator('[data-style=standard] .appearance-style-label').innerText(),'原版');assert.notEqual(await page.locator('.appearance-dialog').evaluate(e=>getComputedStyle(e).boxShadow),'none');await theme.selectOption('light');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
+ await open();assert.equal(await page.locator('[data-style=refined] .appearance-style-label').innerText(),'精致');assert.equal(await page.locator('[data-style=standard] .appearance-style-label').innerText(),'标准');assert.notEqual(await page.locator('.appearance-dialog').evaluate(e=>getComputedStyle(e).boxShadow),'none');await theme.selectOption('light');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
  assert.equal(await page.locator('.appearance-dialog').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
  await page.locator('#appearance-hex').fill('#ffff00');await page.locator('#appearance-hex').dispatchEvent('input');
  await page.locator('[data-save]').click();assert.equal(await page.locator('.appearance-dialog').count(),0);
@@ -102,7 +102,7 @@ try{
  }
  await open();await style.selectOption('soft');await page.locator('[data-save]').click();
  await open();await density.selectOption('compact');await theme.selectOption('graphite');assert.equal(await style.inputValue(),'soft');assert.equal(await density.inputValue(),'compact');await page.keyboard.press('Escape');assert.equal(await page.locator('html').getAttribute('data-density'),'comfortable');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
- await page.locator('#language-settings').selectOption('en');await open();assert.equal(await page.locator('#appearance-title').innerText(),'Appearance');assert.equal(await page.locator('[data-style=refined] .appearance-style-label').innerText(),'Refined');assert.equal(await page.locator('[data-style=standard] .appearance-style-label').innerText(),'Original');assert.equal(await theme.locator('option').count(),4);await theme.selectOption('graphite');await page.locator('[data-save]').click();
+ await page.locator('#language-settings').selectOption('en');await open();assert.equal(await page.locator('#appearance-title').innerText(),'Appearance');assert.equal(await page.locator('[data-style=refined] .appearance-style-label').innerText(),'Refined');assert.equal(await page.locator('[data-style=standard] .appearance-style-label').innerText(),'Standard');assert.equal(await theme.locator('option').count(),4);await theme.selectOption('graphite');await page.locator('[data-save]').click();
  await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-graphite.png',output))});
  for(const width of [1600,1100,768]){
   await page.setViewportSize({width,height:960});

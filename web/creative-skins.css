@@ -1,5 +1,5 @@
 /* Creative styles adapt Framer, Spotify, Runway, Lovable and MiniMax references.
-   Every rule is opt-in. Original, Refined, Minimal and Soft keep their own chrome. */
+   Every rule is opt-in. Standard, Refined, Minimal and Soft keep their own chrome. */
 .appearance-style-picker{padding:18px 22px 0}
 .appearance-style-picker>label{display:block;margin-bottom:8px;font-weight:500}
 .appearance-style-picker .appearance-style-description{margin:10px 0 0;min-height:36px;color:var(--ui-muted);font-size:12px}

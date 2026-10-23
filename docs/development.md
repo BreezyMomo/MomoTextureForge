@@ -31,9 +31,9 @@ npm start -- --port 8799
 
 公共界面颜色在 `web/theme-tokens.css` 按背景、面板、控件、文字、边框与状态用途定义，各组件样式引用这些变量。画布辅助线、缩略图底色、用户色板和作品内容保持独立。启动入口在挂载编辑器前应用偏好；离线与静态构建内嵌同一份主题样式和逻辑。外观不进入项目模型、撤销记录、资源哈希或作品导出。
 
-偏好中的 `style`（`refined`、`standard`、`minimal`、`soft`、`aurora`、`pulse`、`cinema`、`candy`）和 `density`（`compact`、`comfortable`）独立于配色。`standard` 始终对应“原版”，保留原来的语义配色和控件规则；旧配色偏好缺少风格时补为原版与紧凑，新浏览器默认使用独立的 `refined`（精致）。根元素的 `data-interface-style`、`data-density` 驱动共享圆角与间距变量，简洁风格仅弱化内容模块边框，保留输入框、键盘焦点和停靠分隔条。密度调整触发现有预览尺寸观察器，不写入画布模型。
+偏好中的 `style`（`standard`、`refined`、`minimal`、`soft`、`aurora`、`pulse`、`cinema`、`candy`）和 `density`（`compact`、`comfortable`）独立于配色。`standard` 始终对应“标准”，保留原来的语义配色和控件规则；旧配色偏好缺少风格时补为标准与紧凑，新浏览器默认使用独立的 `refined`（精致）。根元素的 `data-interface-style`、`data-density` 驱动共享圆角与间距变量，简洁风格仅弱化内容模块边框，保留输入框、键盘焦点和停靠分隔条。密度调整触发现有预览尺寸观察器，不写入画布模型。
 
-`web/editor-surfaces.css` 为精致与四个创作风格提供公共表面层级，`web/creative-skins.css` 分别定义其页签、圆角与面板结构，均以风格 ID 限定，避免覆盖原版、简洁或柔和；源码和静态包均在其他编辑器样式之后加载。背景、边框、选中态与阴影通过 `web/theme-tokens.css` 的语义变量组合，避免改动作品色板、透明棋盘和画布辅助线。视觉参考为 [Linear 的分层表面](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/linear.app/DESIGN.md) 与 [Raycast 的浮层](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/raycast/DESIGN.md)，按编辑器的紧凑布局调整，不使用官网的大字号与宣传区留白。
+`web/editor-surfaces.css` 为精致与四个创作风格提供公共表面层级，`web/creative-skins.css` 分别定义其页签、圆角与面板结构，均以风格 ID 限定，避免覆盖标准、简洁或柔和；源码和静态包均在其他编辑器样式之后加载。背景、边框、选中态与阴影通过 `web/theme-tokens.css` 的语义变量组合，避免改动作品色板、透明棋盘和画布辅助线。视觉参考为 [Linear 的分层表面](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/linear.app/DESIGN.md) 与 [Raycast 的浮层](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/raycast/DESIGN.md)，按编辑器的紧凑布局调整，不使用官网的大字号与宣传区留白。
 
 所有界面风格由 `STYLE_IDS` 注册，并通过唯一的风格卡片入口选择。卡片只修改 `style`，保留配色模式、自定义强调色、密度和页签；选中态仅取决于风格 ID。每种创作风格提供深浅色表面变量，石墨配色进一步中和背景；`appearancePalette` 按实际面板颜色计算强调文字对比度。切回既有风格时移除全部创作风格内联颜色，避免串色。视觉参考：[Framer](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/framer/DESIGN.md)、[Spotify](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/spotify/DESIGN.md)、[Runway](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/runwayml/DESIGN.md)、[Lovable](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/lovable/DESIGN.md) 与 [MiniMax](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/minimax/DESIGN.md)。
 
