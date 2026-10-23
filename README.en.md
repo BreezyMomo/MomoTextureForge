@@ -30,7 +30,7 @@ Source and documentation: [GitHub primary repository](https://github.com/BreezyM
 - **Effect inspection:** compare alpha and additive blending on dark and light backgrounds using the same frame. Adjust playback, display size and preview brightness.
 - **Custom workspaces:** dock, split, merge tabs and float panels inside the page. Layouts are remembered automatically and can be saved by name.
 - **Common controls and appearance:** collapse, reorder and pin parameter modules to one or all nodes; move curve windows and customize themes, accents, style and density.
-- **Delivery and reuse:** PNG, EXR, frame ZIPs, atlases, PSD, SVG contours, editable projects, resource backups and remote libraries.
+- **Delivery and reuse:** PNG, GIF animations, EXR, frame ZIPs, atlases, PSD, SVG contours, editable projects, resource backups and remote libraries.
 
 | Edit an effect generator | Inspect normals and lighting |
 | --- | --- |
@@ -64,7 +64,7 @@ Each chapter includes real interface screenshots with numbered callouts, entry p
 | Select/group, transform, arrange, blend, mask and filter | [Canvas, arrangement and compositing](docs/05-canvas-and-compositing.en.md) |
 | Record keys, edit curves, configure local time and loops | [Animation and timeline](docs/06-animation.en.md) |
 | Convert images to normals, inspect height and lighting | [Normals and 3D preview](docs/07-normal-and-material.en.md) |
-| Deliver PNG, EXR, frame sequences, atlases, PSD and SVG | [Export and delivery](docs/08-export.en.md) |
+| Deliver PNG, GIF, EXR, frame sequences, atlases, PSD and SVG | [Export and delivery](docs/08-export.en.md) |
 | Subscribe, host a no-build GitHub Pages library, maintain and publish | [Remote libraries and manager](docs/09-remote-libraries.en.md) |
 | Download Skills, provide a catalog, import AI output | [AI collaboration and help](docs/10-ai-and-help.en.md) |
 | Dock, split, float and save your workspace | [Custom panel layouts](docs/11-workspace-layout.en.md) |

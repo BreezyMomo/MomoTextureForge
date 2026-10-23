@@ -1,3 +1,4 @@
+import {gifSettings} from './gif-settings.js';
 import {normalizeDashPattern} from './sketch-options.js';
 import {sanitizeBezierTail,BEZIER_LIMIT} from './bezier-path.js';
 import {graphicAliasesField} from './graphic-name.js';
@@ -29,7 +30,7 @@ export function node(kind='shape',type='Circle'){
  timing:{start:0,end:1,from:0,to:1,cycles:1,loop:false,pingpong:false,ease:'linear',outside:'hold',frozen:false,at:0,offset:0,curve:[]},
  shapeClock:{follow:true,speed:1,offset:0,value:0},contour:{mode:'none',radius:.01},animationEnabled:true,post:POST_SPECS.map(p=>p[3]),postFx:fxDefaults(),postEffects:effectDefaults(),effectOrder:effectOrder(),curves:curveDefaults(),invert:false,maskInvert:false,tracks:{},children:[],mask:null};
 }
-export function project(){const root=node('group');root.name='画布';root.children=[node()];return {schema:TREE_SCHEMA,name:'未命名画布',root,projectResources:[],canvas:{ratio:1},output:{width:512,height:512,mode:'color',alpha:true,depth:8,seconds:3,fps:30,frames:90,columns:8,loopExport:true,exrZip:true,background:'#000000',normal:3,normalAlgorithm:'sobel',normalFlipX:false,normalFlipY:false,normalInvert:false,normalSmooth:0,channels:[0,2,3,8],channelSources:[null,null,null,null]}};}
+export function project(){const root=node('group');root.name='画布';root.children=[node()];return {schema:TREE_SCHEMA,name:'未命名画布',root,projectResources:[],canvas:{ratio:1},output:{width:512,height:512,mode:'color',alpha:true,depth:8,seconds:3,exportSeconds:3,fps:30,frames:90,columns:8,loopExport:true,gif:gifSettings(),exrZip:true,background:'#000000',normal:3,normalAlgorithm:'sobel',normalFlipX:false,normalFlipY:false,normalInvert:false,normalSmooth:0,channels:[0,2,3,8],channelSources:[null,null,null,null]}};}
 export function walk(root,fn,parent=null,depth=0){fn(root,parent,depth);for(const c of root.children)walk(c,fn,root,depth+1);if(root.mask)walk(root.mask,fn,root,depth+1);}
 export function find(root,id){let found=null;walk(root,(n,p,d)=>{if(n.id===id)found={node:n,parent:p,depth:d};});return found;}
 export function cloneNode(n){const c=structuredClone(n);walk(c,x=>x.id=uid());return c;}
@@ -142,7 +143,10 @@ if(!component)p.root=canvasRoot(p.root);p.name=String(raw.name??p.name).slice(0,
  if(/^#[0-9a-f]{6}$/i.test(raw.output?.background))p.output.background=raw.output.background;
  p.canvas.ratio=num(raw.canvas?.ratio,p.output.width/p.output.height,1/8,8);
  p.output.mode=['color','height','normal','rgba'].includes(raw.output?.mode)?raw.output.mode:'color';p.output.alpha=raw.output?.alpha!==false;p.output.exrZip=raw.output?.exrZip!==false;p.output.loopExport=raw.output?.loopExport!==false;
- const legacy=Number(raw.output?.frames);const fallback=Number.isFinite(legacy)?Math.max(1,legacy-(p.output.loopExport?0:1))/p.output.seconds:30;
+ p.output.gif=gifSettings(raw.output?.gif);
+ // Missing export duration migrates to the original one-cycle duration.
+ p.output.exportSeconds=num(raw.output?.exportSeconds,p.output.seconds,.05,600);
+ const legacy=Number(raw.output?.frames);const fallback=Number.isFinite(legacy)?Math.max(1,legacy-(p.output.loopExport?0:1))/p.output.exportSeconds:30;
  p.output.fps=num(raw.output?.fps,fallback,1,120);p.output.fps=clamp(p.output.fps,1,120);p.output.frames=exportFrameCount(p.output);return p;
 }
 export const shiftedProgress=(time,offset)=>Math.abs(offset%1)<1e-9?time:((time+offset)%1+1)%1;
@@ -196,5 +200,12 @@ export function expandInstances(root,id,time,records){const entry=find(root,id);
  if(!entry.parent)return result;if(entry.parent.mask===n)entry.parent.mask=result;else entry.parent.children[entry.parent.children.indexOf(n)]=result;return root;
 }
 
-export function exportFrameCount(o){return Math.max(1,Math.ceil(o.seconds*o.fps-1e-9))+(o.loopExport?0:1);}
-export function exportFrameProgress(o,i){return Math.min(1,i/(o.fps*o.seconds));}
+export function exportDuration(o){return Number.isFinite(o.exportSeconds)&&o.exportSeconds>0?o.exportSeconds:o.seconds;}
+export function exportFrameCount(o){return Math.max(1,Math.ceil(exportDuration(o)*o.fps-1e-9))+(o.loopExport===false?1:0);}
+export function exportFrameSeconds(o,i){return Math.min(exportDuration(o),Math.max(0,i)/o.fps);}
+export function exportFrameProgress(o,i){
+ const phase=exportFrameSeconds(o,i)/o.seconds,nearest=Math.round(phase);
+ // Only the optional final sample retains progress 1; interior cycle boundaries restart at 0.
+ if(Math.abs(phase-nearest)<1e-9)return o.loopExport===false&&i===exportFrameCount(o)-1&&nearest>0?1:0;
+ return phase-Math.floor(phase);
+}

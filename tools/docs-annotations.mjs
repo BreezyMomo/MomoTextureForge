@@ -57,7 +57,7 @@ export const annotations={
  'material-preview':[css('#preview-mode','切换三维材质'),field(label('material.previewMesh'),'选择球体或平面'),css('#material-preview','拖动旋转检查受光')],
  'effect-preview':[css('#preview-mode','切换特效预览'),field(label('effect.effectBackground'),'切换深浅背景'),field(label('effect.effectBlending'),'对比透明与相加混合'),css('#tree-time','播放或定位动画')].map(spec=>({...spec,numberOnly:true})),
  'export-png':[field(label('editor.exportFormat'),'选择 PNG 当前帧'),field(label('editor.outputChannel'),'选择颜色或法线'),css('#confirm-export','开始导出')],
- 'export-atlas':[field(label('editor.exportFormat'),'选择序列帧图集'),field(label('editor.framesPerSecondFPS'),'设置帧率'),field(label('editor.durationInSeconds'),'设置序列时长'),field(label('editor.atlasColumns'),'设置图集排布')],
+ 'export-atlas':[field(label('editor.exportFormat'),'选择序列帧图集'),field(label('editor.framesPerSecondFPS'),'设置帧率'),field(label('export.durationSeconds'),'设置序列时长'),field(label('editor.atlasColumns'),'设置图集排布')],
  'atlas-preview':[{...role('img',label('editor.fullCanvasAtlasPreview'),'首帧'),portion:[0,0,.25,.25]},{...role('img',label('editor.fullCanvasAtlasPreview'),'末帧'),portion:[.75,.75,.25,.25]}],
  'export-vector':[field(label('editor.exportFormat'),'选择矢量轮廓格式'),css('#confirm-export','导出前检查轮廓设置')],
  'remote-libraries':[field(label('subscription.newLibraryName'),'填写订阅名称'),field(label('subscription.remoteCatalogURL'),'填写 index.json 地址'),role('button',label('subscription.addSubscription'),'添加图库订阅')],

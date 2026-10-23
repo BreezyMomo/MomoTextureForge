@@ -32,15 +32,33 @@ Open the [flame-sequence example](examples/fire-sequence.json):
 
 1. Play to inspect motion, then open Export.
 2. Choose **Frame PNG ZIP** for separate files or **Sprite atlas PNG** for frames arranged on one image.
-3. Use `128 × 128` per frame, `16 FPS`, `1 second`, and `4 columns` for this exercise.
-4. Enabling **Loop export: omit duplicate endpoint** gives 16 frames: 4 columns × 4 rows in a `512 × 512` atlas.
-5. Check the arrangement with **Preview sprite atlas**, then select the actual atlas format and download.
+3. Use `128 × 128` per frame, `16 FPS`, a `1 second` animation cycle, a `1 second` export duration, and `4 columns` for this exercise.
+4. Enabling **Omit export endpoint frame** gives 16 frames: 4 columns × 4 rows in a `512 × 512` atlas.
+5. Keep the delivery type selected and choose **Animation preview → Generate preview**. Inspect playback, scrub frames or expand **All frames**, then choose **Start export**.
 
 ![Generated flame atlas](images/en/atlas-preview.png)
 
 > Callouts: 1 First frame; 2 Last frame.
 
-Omitting the endpoint avoids duplicate sampling; it does not repair a discontinuous animation. Use the same FPS and grid dimensions in your engine. The tool does not directly export GIF or video.
+Omitting the endpoint avoids duplicate sampling; it does not repair a discontinuous animation. Use the same FPS and grid dimensions in your engine. Use GIF export below for directly playable sharing; video export is not supported.
+
+### Export a GIF animation directly
+
+1. Choose **Export… → Export format → GIF animation**, set frame dimensions, FPS, animation cycle and export duration, and check the GIF summary for actual frame count and playback duration.
+2. Defaults are 256 colors and a shared palette. Shared palettes sample up to 12 evenly spaced frames to reduce color flicker; choose **Per-frame palette** for rich color changes or missed brief colors. Select 16/32/64/128/256 colors; ordered dithering can improve gradients.
+3. **Repeat GIF playback** controls repeating versus playing once. **Omit export endpoint frame** separately controls endpoint sampling. Including the endpoint adds a frame interval; the summary shows the actual playback duration.
+4. GIF supports binary transparency. Alpha threshold is 0–255: pixels below the threshold become transparent, and fully transparent pixels always remain transparent. Disable transparent background to composite soft glow or semitransparent edges onto the background color. Use PNG/EXR for continuous alpha or precise channel data.
+5. Choose **Start export**, wait for palette sampling, frame rendering and background encoding, and download `.gif`. Export can be canceled without changing the canvas or current animation progress. GIF settings persist with projects.
+
+GIF export caps FPS at 50 without changing other formats' FPS settings; frame delays use 10 ms steps with cumulative rounding to reduce timing drift. The selected Color/Height/Normal/Custom RGBA output includes node animation, groups and post-processing. Preview zoom, solo and guides are excluded. GIF palette/alpha quantization loses precision; Custom RGBA is suitable only for visual previews.
+
+### Animation cycle versus export duration
+
+**Animation cycle (seconds, 0→1)** sets the speed of one keyframe cycle and is shared with the playback bar and canvas settings. **Export duration (seconds)** independently sets how long to record. A 2-second cycle exported for 6 seconds at 30 FPS with the endpoint omitted produces 180 frames spanning three progress cycles; a 1-second export samples half that cycle. Changing the cycle does not change export duration, and changing export duration does not change preview speed. GIF, PNG sequences, PNG/EXR atlases, atlas previews and three-size atlases share this rule.
+
+Keyframe progress wraps each cycle while formula/generator seconds keep advancing. Omitting the endpoint removes only the final export sample, retaining intermediate cycle starts. Including it samples progress 1 at an exact cycle boundary, or the corresponding progress for a partial cycle. Multiple exported cycles or GIF repeat playback do not guarantee seamless motion. Old projects initialize both durations from their original duration; subsequent edits are independent.
+
+GIF, PNG sequences, PNG/EXR atlases and three-size atlases each include an **Animation preview** module within their existing export panel. Keep the format selected and choose **Generate preview**. Sequences/atlases provide playback, pause, frame scrubbing and **All frames**; GIF displays an actual animation encoded with the current palette, dithering, alpha threshold and repeat settings, with replay available. Parameter or format changes retain the old result with an explicit stale notice; choose **Update preview**. Export always reads current settings. Three-size atlases offer 64/128/256 preview tiers. Preview frames use up to 128 pixels on the longest side, reduced further when needed. Sequences/atlases display in 8-bit; GIF uses current encoding settings. Delivery dimensions and precision stay unchanged.
 
 ## 3. Choose PSD, SVG or EXR
 
@@ -60,7 +78,7 @@ The default threshold is 50%; smoothing reduces stepped edges. A 0% threshold in
 ## 4. When a budget limit appears
 
 - A single image is limited to 4096 pixels per side. Check the actual aspect-linked dimensions.
-- Atlases allow up to 8192 per side and 16,777,216 total pixels. Sequences allow up to 10,000 frames and 33,554,432 sampled pixels overall.
+- Atlases allow up to 8192 per side and 16,777,216 total pixels. Sequences and GIF allow up to 10,000 frames and 33,554,432 sampled pixels overall.
 - These limits cannot all be reached simultaneously. Maximum frame dimensions usually cannot accompany maximum frame count; devices may have lower limits.
 - Single PNG export composes on demand to reduce intermediate-texture memory. Complex canvases can be slower; arbitrary workloads are not guaranteed to complete.
 - Use Cancel in the progress UI when needed. Read the specific error before reducing dimensions, frames or complexity.

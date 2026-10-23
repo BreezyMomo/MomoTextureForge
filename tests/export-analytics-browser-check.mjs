@@ -7,7 +7,7 @@ import {project,node} from '../web/tree-model.js';
 await mkdir('test-results/export-analytics',{recursive:true});
 const html=await readFile('site/index.html','utf8'),p=project();
 p.name='PRIVATE_CANVAS_NAME';p.root.children=[node('shape','Circle')];
-Object.assign(p.output,{width:64,height:64,seconds:.2,fps:10,frames:2,columns:2});
+Object.assign(p.output,{width:64,height:64,seconds:.2,exportSeconds:.2,fps:10,frames:2,columns:2});
 const hash=Buffer.from(JSON.stringify(p)).toString('base64');
 const browser=await chromium.launch({channel:'msedge',headless:true});
 let page;
@@ -58,7 +58,7 @@ try{
  await page.getByRole('button',{name:'取消导出',exact:true}).click();
  await page.evaluate(()=>{window.__clipboardHold=false;window.__finishClipboard();});await idle();
  assert.equal((await events()).length,count);assert.equal(downloads.length,11);
- await select('atlas-preview');await page.locator('#confirm-export').click();await idle();
+ await select('atlas');await page.locator('#generate-export-preview').click();await idle();
  await page.locator('#global-controls img').waitFor();assert.equal((await events()).length,count);
  await page.locator('#close-global').click();await page.locator('#export-now').click();
  await select('png');await page.evaluate(()=>{window.__holdExportWorker=true;window.__exportWorkerHeld=false;});

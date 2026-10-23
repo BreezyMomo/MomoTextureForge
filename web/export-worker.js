@@ -10,8 +10,10 @@ self.onmessage=async({data})=>{
    const bytes=await ({'encode-png':()=>encodePNG(pixels,width,height,depth),'encode-exr':()=>encodeEXR(pixels,width,height,zip),'encode-zip':()=>encodeZIP(entries)}[data.kind])();
    self.postMessage({type:'done',result:bytes},[bytes.buffer]);return;
   }
-  const {exportVectorTask}=await import('./export-vector-task.js');
-  const result=await exportVectorTask(data,(project,w,h,t)=>new Promise((resolve,reject)=>{pending={resolve,reject};self.postMessage({type:'render',project,w,h,t});}));
+  const render=(project,w,h,t,seconds)=>new Promise((resolve,reject)=>{pending={resolve,reject};self.postMessage({type:'render',project,w,h,t,seconds});});
+  const result=data.kind==='gif'
+   ?await (await import('./gif-export.js')).exportGIF(data.project,{render,stage:message=>self.postMessage({type:'stage',message})})
+   :await (await import('./export-vector-task.js')).exportVectorTask(data,render);
   self.postMessage({type:'done',result},result.bytes?[result.bytes.buffer]:[]);
  }catch(error){self.postMessage({type:'error',...serializeMessageError(error)});}
 };
