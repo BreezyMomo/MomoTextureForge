@@ -35,10 +35,13 @@
 .dock-workspace #animation-panel>summary[hidden]{display:none}
 .dock-animation-content{height:100%;min-height:0}
 .dock-workspace #node-animation-editor .animation-workspace{min-height:190px}
-.dock-floating{position:absolute;min-width:0;min-height:0;box-shadow:0 14px 40px var(--ui-shadow);border:1px solid var(--ui-line-strong);border-radius:var(--ui-window-radius);overflow:hidden;background:var(--ui-panel)}
-.dock-floating .dock-tabs{padding-left:20px}
-.tree-editor .dock-window-move{position:absolute;top:2px;left:1px;padding:1px 4px;border:0;background:transparent;color:var(--ui-muted);cursor:move;touch-action:none;font-size:17px;line-height:24px}
-.tree-editor .dock-window-resize{position:absolute;bottom:0;right:0;padding:0 2px;border:0;border-radius:0;background:var(--ui-hover);color:var(--ui-text);cursor:nwse-resize;touch-action:none;font-size:13px;line-height:18px}
+.dock-floating{position:absolute;display:flex;flex-direction:column;min-width:0;min-height:0;box-shadow:0 14px 40px var(--ui-shadow);border:1px solid var(--ui-line-strong);border-radius:var(--ui-window-radius);overflow:hidden;background:var(--ui-panel)}
+.dock-floating>:is(.dock-stack,.dock-split){flex:1;min-height:0;height:auto}
+.dock-floating>.dock-stack{border:0;border-radius:0}
+.tree-editor .dock-window-move{position:static;flex:0 0 24px;align-self:center;width:24px;height:28px;padding:0;border:0;background:transparent;color:var(--ui-muted);cursor:move;touch-action:none;font-size:17px;line-height:28px;box-shadow:none}
+.dock-window-footer{display:flex;justify-content:flex-end;flex:0 0 24px;min-height:24px;border-top:1px solid var(--ui-line);background:var(--ui-inset)}
+.tree-editor .dock-window-resize{position:static;width:28px;height:24px;min-height:24px;padding:0;border:0;border-radius:0;background:transparent;color:var(--ui-muted);cursor:nwse-resize;touch-action:none;font-size:13px;line-height:24px;box-shadow:none}
+.tree-editor :is(.dock-window-move,.dock-window-resize):hover{background:var(--ui-hover);color:var(--ui-text)}
 .dock-is-dragging,.dock-is-dragging *{user-select:none!important}
 .dock-drag-ghost{position:fixed;z-index:10000;pointer-events:none;padding:7px 14px;background:var(--ui-hover);border:1px solid var(--ui-line-strong);border-radius:var(--ui-control-radius);color:var(--ui-text);font-size:13px;box-shadow:0 4px 15px var(--ui-shadow)}
 .dock-drop-preview{position:absolute;z-index:1000;pointer-events:none;border:2px solid var(--ui-line-strong);background:var(--ui-selected);color:var(--ui-text);display:grid;place-items:center;font-size:14px;font-weight:600;box-sizing:border-box}

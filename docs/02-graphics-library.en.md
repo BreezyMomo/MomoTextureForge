@@ -35,7 +35,7 @@ Use **☆ / ★** in the upper-right corner of a card to favorite or unfavorite 
 
 ![Search effect resources](images/en/graphics-library.png)
 
-> Callouts: 1 Search resources; 2 Add directly to canvas; 3 Add to the reusable list; 4 Edit a resource.
+> Callouts: 1 Search resources; 2 Add directly to canvas; 3 Add to the reusable list; 4 Expand details and resource management.
 
 1. Open **Graphics library** in the toolbar. Search names, categories or tags, such as “Smoke and fire”, “Water and caustics” or a specific graphic name.
 2. Filter by source and type to distinguish built-in, local and remote resources.

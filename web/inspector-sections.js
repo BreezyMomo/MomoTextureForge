@@ -13,6 +13,7 @@ export function inspectorSectionState(storage){
   remember(id,open){expanded[id]=open;try{storage?.setItem(INSPECTOR_SECTIONS_KEY,JSON.stringify(expanded));}catch{}},
   order(tab,keys){const saved=orders[tab]??[];return [...saved.filter(key=>keys.includes(key)),...keys.filter(key=>!saved.includes(key))];},
   rememberOrder(tab,keys){const remaining=[...keys],visible=new Set(keys);orders[tab]=(orders[tab]??[]).map(key=>visible.has(key)?remaining.shift():key).concat(remaining);try{storage?.setItem(INSPECTOR_ORDER_KEY,JSON.stringify(orders));}catch{}},
+  resetOrder(tab){delete orders[tab];try{storage?.setItem(INSPECTOR_ORDER_KEY,JSON.stringify(orders));}catch{}},
   help
  };
 }
@@ -62,7 +63,12 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false,sh
  }
  flush();host.replaceChildren(...result);
  const modules=()=>[...host.children].filter(child=>child.matches('details.inspector-module'));
- const ordered=state.order(tab,modules().map(module=>module.dataset.module));
+ const defaults=modules().map(module=>module.dataset.module);
+ if(tab==='shape'){
+  const priority=['modules.shapeParameters','editor.nodeColors','modules.node','modules.generator'];
+  defaults.sort((a,b)=>(priority.includes(a)?priority.indexOf(a):priority.length)-(priority.includes(b)?priority.indexOf(b):priority.length));
+ }
+ const ordered=state.order(tab,defaults);
  const byKey=new Map(modules().map(module=>[module.dataset.module,module]));for(const key of ordered)host.append(byKey.get(key));
  let dragging=null,preview=null,dragEvents=null,ghost=null,capture=null,scroll=null;
  function save(){state.rememberOrder(tab,modules().map(module=>module.dataset.module));}

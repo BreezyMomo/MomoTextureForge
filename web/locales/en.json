@@ -2508,5 +2508,23 @@
   "fx.previewBefore": "Before",
   "fx.previewAfter": "After",
   "fx.previewMotion": "Hover to play",
-  "fx.previewRenderFailed": "Could not render the effect preview."
+  "fx.previewRenderFailed": "Could not render the effect preview.",
+  "workspace.viewOptions": "View",
+  "workspace.categorySelection": "Categories · {0}",
+  "workspace.saveResource": "Save as resource",
+  "workspace.graphicsList": "Graphics list · Working resources",
+  "workspace.graphicsLibrary": "Graphics library · Reusable resources",
+  "workspace.resourceSession": "Current trial edit",
+  "workspace.resourceEditingHint": "Trial editing a resource. Updating the graphics list leaves existing canvas instances unchanged; adding to canvas creates a new instance.",
+  "workspace.parameterLayout": "Parameter layout",
+  "workspace.parameterLayoutHint": "Drag a module handle to reorder, or focus it and use the Up/Down arrows. Pin frequently used parameters to the node.",
+  "workspace.resetParameterOrder": "Reset module order for this tab",
+  "workspace.parameterOrderRestored": "Default module order restored for this tab",
+  "workspace.playbackSettings": "Playback settings",
+  "workspace.savingResource": "Trial edit: {0}. Use “Update in graphics list” to update the original; save a separate resource below.",
+  "workspace.savingSelection": "Selected: {0}. Save the selected node, or save the whole canvas as a composition.",
+  "workspace.savingCanvas": "No node selected. Save the whole canvas as a composition resource.",
+  "workspace.browseLayout": "Resource browsing layout",
+  "workspace.libraryManagement": "Manage resources",
+  "workspace.resourceDetails": "Details and management"
 }

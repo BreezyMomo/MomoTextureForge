@@ -7,6 +7,7 @@ test('presets expose the expected panels',()=>{
  assert.deepEqual(panels(layoutPreset()),['canvas','inspector','library','nodes']);
  assert.deepEqual(panels(layoutPreset('animation')),[...PANEL_IDS].sort());
  assert.deepEqual(panels(layoutPreset('focus')),['canvas']);
+ assert.deepEqual(panels(layoutPreset('browse')),['canvas','inspector','library','nodes']);
 });
 test('default matches the reference four-column order and gives the canvas most of the width',()=>{
  const columns=[];
@@ -17,7 +18,7 @@ test('default matches the reference four-column order and gives the canvas most 
  }
  const layout=layoutPreset();measure(layout.root);
  assert.deepEqual(columns.map(c=>c.panels),[['library'],['nodes'],['canvas'],['inspector']]);
- for(const [index,expected]of [.13,.10,.59,.18].entries())assert.ok(Math.abs(columns[index].width-expected)<.01);
+ for(const [index,expected]of [.154,.126,.4968,.2232].entries())assert.ok(Math.abs(columns[index].width-expected)<.01);
  assert.deepEqual(sanitizeLayout(layout),layout,'default ratios survive persistence without clamping');
  assert.deepEqual(layout.floats,[]);
 });

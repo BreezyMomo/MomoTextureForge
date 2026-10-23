@@ -13,9 +13,10 @@ const split=(axis,ratio,first,second)=>({kind:'split',id:uid('split'),axis,ratio
 export function layoutPreset(name='default'){
  const animation=name==='animation';
  // Default: full-height graphics list, node tree, canvas, and inspector.
- const left=animation?split('y',.42,stack(['nodes']),stack(['library'])):split('x',.565,stack(['library']),stack(['nodes']));
+ if(name==='browse')return {root:split('x',.32,stack(['library']),split('x',.70,split('y',.72,stack(['canvas']),stack(['nodes'])),stack(['inspector']))),floats:[]};
+ const left=animation?split('y',.42,stack(['nodes']),stack(['library'])):split('x',.55,stack(['library']),stack(['nodes']));
  const center=name==='animation'?split('y',.55,stack(['canvas']),stack(['timeline'])):stack(['canvas']);
- return {root:name==='focus'?center:split('x',animation?.21:.235,left,split('x',animation?.73:.765,center,stack(['inspector']))),floats:[]};
+ return {root:name==='focus'?center:split('x',animation?.23:.28,left,split('x',animation?.71:.69,center,stack(['inspector']))),floats:[]};
 }
 export function sanitizeLayout(raw){
  const panels=new Set(),ids=new Set();let count=0;

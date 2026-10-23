@@ -2508,5 +2508,23 @@
   "fx.previewBefore": "原图",
   "fx.previewAfter": "效果",
   "fx.previewMotion": "悬停播放",
-  "fx.previewRenderFailed": "无法渲染效果示例。"
+  "fx.previewRenderFailed": "无法渲染效果示例。",
+  "workspace.viewOptions": "显示",
+  "workspace.categorySelection": "分类 · {0}",
+  "workspace.saveResource": "保存为资源",
+  "workspace.graphicsList": "图形列表 · 当前可用资源",
+  "workspace.graphicsLibrary": "图形库 · 可复用资源",
+  "workspace.resourceSession": "当前试编辑",
+  "workspace.resourceEditingHint": "正在试编辑资源。更新到图形列表不会改变画布已有实例；添加到画布会创建新实例。",
+  "workspace.parameterLayout": "参数布局",
+  "workspace.parameterLayoutHint": "拖动模块标题旁的把手可排序；聚焦把手后也可用上下方向键移动。图钉可将常用参数固定到节点。",
+  "workspace.resetParameterOrder": "恢复当前页的模块顺序",
+  "workspace.parameterOrderRestored": "已恢复当前页的默认模块顺序",
+  "workspace.playbackSettings": "播放设置",
+  "workspace.savingResource": "当前试编辑：{0}。更新原资源请使用“更新到图形列表”；下方可另存资源。",
+  "workspace.savingSelection": "当前选中：{0}。可保存选中节点，或将整个画布保存为组合。",
+  "workspace.savingCanvas": "未选中节点，可将整个画布保存为组合资源。",
+  "workspace.browseLayout": "资源浏览布局",
+  "workspace.libraryManagement": "资源管理",
+  "workspace.resourceDetails": "详情与管理"
 }

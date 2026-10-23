@@ -8,7 +8,7 @@
 
 The node tree, graphics list, canvas preview, inspector and timeline can be positioned independently. Enlarge the canvas, move parameters closer to the preview, or reserve more room for animation editing.
 
-The default places **Graphics, Node tree, Canvas preview, and Inspector** from left to right in four full-height columns, using approximately 13%, 10%, 59%, and 18% of the width. The canvas keeps most of the space while graphics remain browsable in a full column. Existing current and named layouts are retained; choose **Layout → Restore default layout** to adopt the new arrangement.
+The default places **Graphics, Node tree, Canvas preview, and Inspector** from left to right in four full-height columns, using approximately 15%, 13%, 50%, and 22% of the width. The canvas keeps the largest area, with more room for node names and parameters. Existing current and named layouts are retained; choose **Layout → Restore default layout** to adopt the new arrangement.
 
 ## 1. Drag, split and merge tabs
 
@@ -30,7 +30,7 @@ Press **Esc** to cancel dragging. Panel content, selection, parameters and canva
 > Callouts: 1 Move with the handle; 2 Resize with the corner handle; 3 Drag the tab to dock again.
 
 - Click **↗** to float the active tab inside the webpage, or Alt-drag its tab.
-- Use the upper-left handle to move a floating window and the lower-right handle to resize it.
+- Move a floating window with the handle on the left of its title bar, and resize it with the handle on the right of its bottom edge. Both handles have space separate from tabs and scrolling content.
 - Drag its title tab onto another panel to dock or merge it again.
 - **×** closes the active tab. Reopen it by checking its name in **Layout**; canvas content is retained.
 
@@ -45,8 +45,16 @@ Floating windows stay within the page; they do not open separate browser windows
 1. Arrange panels, then open **Layout**.
 2. Enter a name and choose **Save current layout**. Saving the same name replaces it; up to 12 named layouts are supported.
 3. Select a saved name and **Apply layout**, or delete an unneeded saved layout.
-4. **Restore default layout** starts over; **Animation layout** opens a separate timeline, and **Focus canvas** displays only the preview.
+4. **Restore default layout** starts over; **Resource browsing layout** enlarges the graphics list, **Animation layout** opens a separate timeline, and **Focus canvas** displays only the preview.
 
 The current layout is remembered automatically and restored after reload. Named layouts let you switch between working arrangements.
 
 Layouts store panel positions, proportions, tabs and visibility. Nodes, graphics, parameters, animations and project files keep their own persistence. Layouts belong to the current browser and origin: they are not stored in project ZIPs, shared with canvases or synchronized across devices. Switching layouts does not replace **File → Save project**.
+
+## 4. Panel contents and parameter order
+
+- Expand **Categories** to filter the graphics list; the collapsed summary retains the active selection. **View** switches between grid/list and collapses or expands graphic groups. Bottom-docked lists keep a separate scrolling thumbnail area.
+- The Shape tab starts with graphic parameters and node colors. Existing custom orders are retained. **Parameter layout → Reset module order for this tab** resets only that tab, preserving panel positions, section expansion and pinned controls.
+- Wide inspectors align labels, sliders, values and action buttons on one row. Narrower inspectors wrap the controls; very narrow inspectors place sliders on their own row, with values, reset and keyframe buttons below.
+- **Save as resource** groups graphics-list and graphics-library actions and identifies the current selection. Project saving remains in **File**. Trial editing explains how updates affect existing instances.
+- Play and scrubbing stay beneath the canvas; cycle duration, restart and node time are under **Playback settings**.

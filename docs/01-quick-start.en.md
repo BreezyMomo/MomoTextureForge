@@ -53,7 +53,7 @@ For reusable favorites, also **Add to graphics list** and use **+ Add** from the
 
 ![Library resource cards](images/en/graphics-library.png)
 
-> Callouts: 1 Search resources; 2 Add directly to canvas; 3 Add to the reusable list; 4 Edit a resource.
+> Callouts: 1 Search resources; 2 Add directly to canvas; 3 Add to the reusable list; 4 Expand details and resource management.
 
 The library is the source, the graphics list holds reusable copies, and nodes are canvas instances. See the [library chapter](02-graphics-library.en.md).
 
