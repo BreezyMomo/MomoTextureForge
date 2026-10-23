@@ -52,6 +52,7 @@ export function createGraphicListView({container,thumbnails,el,isFavorite,onBrow
   record.more=el('details',{class:'component-more'},[record.summary,record.panel]);
   record.summary.onclick=event=>{event.preventDefault();if(active===record){closeMore();return;}closeMore();record.more.open=true;active=record;record.panel.showPopover();positionMore();};
   record.star=el('button',{type:'button',class:'graphic-favorite',onkeydown:event=>{if(event.key===' '||event.key==='Enter')event.stopPropagation();},onclick:()=>{onFavorite(record.entry);if(!record.star.isConnected)onFavoriteRemoved();}});
+  record.star.append(actionIcon('M12 3l2.78 5.93 6.22.95-4.5 4.62L17.56 21 12 17.93 6.44 21l1.06-6.5L3 9.88l6.22-.95L12 3Z'));
   element.append(record.inspect,record.add,record.more,record.star);cards.set(entry.id,record);return record;
  }
  function updateCard(entry){
@@ -73,7 +74,7 @@ export function createGraphicListView({container,thumbnails,el,isFavorite,onBrow
    record.metadata=metadata;
   }
   const favorite=isFavorite(entry),label=uiFormat(favorite?'library.unfavoriteGraphic':'library.favoriteGraphic',name);
-  text(record.star,favorite?'★':'☆');attr(record.star,'aria-pressed',favorite);attr(record.star,'aria-label',label);attr(record.star,'title',label);
+  attr(record.star,'aria-pressed',favorite);attr(record.star,'aria-label',label);attr(record.star,'title',label);
   if(renderChanged){thumbnails.invalidate('preset:'+entry.id);thumbnails.observe(record.image,'preset:'+entry.id,entry.root);}
   return record;
  }
