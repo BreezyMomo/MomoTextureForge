@@ -8,8 +8,8 @@ import {effectMargins} from '../web/render-bounds.js';
 import {noiseWarpSamples} from '../web/noise-warp-samples.js';
 const defaults=()=>effectDefaults().noiseWarp;
 test('noise distortion appends one stable effect without replacing glitch or old ordering',()=>{
- const n=node(),saved=n.effectOrder.filter(id=>id!=='noiseWarp');assert.equal(EFFECT_IDS.length,28);assert.equal(saved.length,27);
- assert.deepEqual(effectOrder(saved),[...saved,'noiseWarp']);assert.equal(n.postEffects.noiseWarp.enabled,false);assert.equal(n.postEffects.glitch.enabled,false);assert.notEqual(n.postEffects.glitch,n.postEffects.noiseWarp);
+ const n=node(),saved=n.effectOrder.slice(0,27);assert.equal(EFFECT_IDS.indexOf('noiseWarp'),27);assert.equal(saved.length,27);
+ assert.deepEqual(effectOrder(saved),EFFECT_IDS);assert.equal(n.postEffects.noiseWarp.enabled,false);assert.equal(n.postEffects.glitch.enabled,false);assert.notEqual(n.postEffects.glitch,n.postEffects.noiseWarp);
  assert.equal(new Set(NOISE_WARP_SPEC.parameters.map(p=>p.key)).size,NOISE_WARP_SPEC.parameters.length);const a=defaults(),b=defaults();a.seed=9;assert.equal(b.seed,1);
 });
 test('continuous movement uses physical speed, direction and absolute time, not frame history',()=>{

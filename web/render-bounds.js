@@ -1,3 +1,4 @@
+import {contentEffectActive} from './content-effects.js';
 import {effectEnabled,effectValues} from './post-effect-specs.js';
 // Logical rectangles are [left,bottom,right,top]. Texture margins never alter layout.
 export const UNIT_BOUNDS=Object.freeze([0,0,1,1]);
@@ -24,7 +25,8 @@ export function effectMargins(n,aspect=1){
  const fx=n.postFx??[],sketch=effectEnabled(n,'sketch')?effectValues(n,'sketch'):null,radius=(effectEnabled(n,'blur')?fx[0]??0:0)+(effectEnabled(n,'bloom')?fx[2]??16:0)+(effectEnabled(n,'chromatic')?fx[5]??0:0)+(sketch?sketch.strokeWidth*2+sketch.roughness*Math.max(4,sketch.maxRandomnessOffset*(1.5+.5*sketch.bowing)):0),contour=['outline','dilate'].includes(n.contour?.mode)?n.contour.radius:0;
  const moving=id=>effectEnabled(n,id)&&effectValues(n,id).mix>0;
  const extra=(moving('glitch')?effectValues(n,'glitch').displacement+effectValues(n,'glitch').rgbOffset:0)+(moving('zoomBlur')?effectValues(n,'zoomBlur').blurDistance:0);
- const short=Math.min(aspect,1),amount=(radius+extra)/512+(contour??0);
+ const contentRadius=['shockwave','liquidFusion'].reduce((sum,id)=>{if(!effectEnabled(n,id))return sum;const v=effectValues(n,id);return sum+(contentEffectActive(id,v)?id==='shockwave'?v.displacement*v.mix:v.fusionRadius:0);},0);
+ const short=Math.min(aspect,1),amount=(radius+extra+contentRadius)/512+(contour??0);
  const warp=moving('noiseWarp')?effectValues(n,'noiseWarp'):null;
  return [(amount+(warp?warp.warpX*warp.mix/512:0))*short/aspect,(amount+(warp?warp.warpY*warp.mix/512:0))*short];
 }

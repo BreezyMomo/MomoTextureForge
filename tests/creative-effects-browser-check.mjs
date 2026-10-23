@@ -1,3 +1,4 @@
+import {EFFECT_IDS} from '../web/post-effect-specs.js';
 import {createServer} from 'node:http';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
@@ -39,7 +40,7 @@ try{
    return {modes,bypasses,temporal,alpha,heights,examples,fallback8bit:true,palette:true};
   }finally{r.destroy();}
  });
- const p=project();p.root.children=[node('shape','WaterCaustics')];p.root.children[0].shapeClock.follow=false;p.root.children[0].color={mode:'own',fill:'gradient',low:'#273fbc',high:'#ffba74'};
+ const p=project();p.root.children=[node('shape','WaterCaustics')];p.root.children[0].effectPresence=Object.fromEntries(EFFECT_IDS.map(id=>[id,true]));p.root.children[0].shapeClock.follow=false;p.root.children[0].color={mode:'own',fill:'gradient',low:'#273fbc',high:'#ffba74'};
  await page.goto(origin+(built?'/built.html':'/')+'#tree='+Buffer.from(JSON.stringify(p)).toString('base64'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');
  await page.locator('[role=treeitem]').first().click();await page.locator('#inspector-tabs').getByRole('button',{name:'合成',exact:true}).click();const panel=page.locator('#inspector details[data-module="modules.imageFilters"]');await panel.locator(':scope>summary .inspector-module-title').click();
  const save=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('momo-texture-tree:draft:v1'))),effect=id=>panel.locator('[data-effect="'+id+'"]');

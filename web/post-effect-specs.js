@@ -1,3 +1,4 @@
+import {CONTENT_EFFECTS} from './content-effects.js';
 import {CREATIVE_EFFECTS} from './creative-effect-specs.js';
 import {NOISE_WARP_SPEC,noiseWarpActive} from './noise-warp.js';
 import {normalizeDashPattern} from './sketch-options.js';
@@ -42,22 +43,42 @@ export const POST_EFFECTS=[
   number('pathSimplification',0,1,0,.01),number('fixedDecimalPlaceDigits',-1,6,-1,1),
   number('sunburstCenterX',0,1,.5),number('sunburstCenterY',0,1,.5),number('sunburstRays',4,720,72,1)
  ]}
-,...CREATIVE_EFFECTS,NOISE_WARP_SPEC
+,...CREATIVE_EFFECTS,NOISE_WARP_SPEC,...CONTENT_EFFECTS
 ].map(spec=>({...spec,label:'fx.effect.'+spec.id,description:'fx.help.'+spec.id,parameters:spec.parameters.map(p=>({...p,path:p.path??'postEffects.'+spec.id+'.'+p.key}))}));
 export const EFFECT_IDS=POST_EFFECTS.map(s=>s.id);
 export const EFFECT_BY_ID=new Map(POST_EFFECTS.map(s=>[s.id,s]));
 export const EFFECT_PARAMETERS=new Map(POST_EFFECTS.flatMap(s=>s.parameters.map(p=>[p.path,p])));
 export function effectDefaults(){return Object.fromEntries(POST_EFFECTS.map(s=>[s.id,{enabled:s.legacy===undefined?false:null,...Object.fromEntries(s.parameters.filter(p=>!p.path.startsWith('postFx.')).map(p=>[p.key,p.default]))}]));}
 export function effectOrder(order){return [...new Set([...(Array.isArray(order)?order:[]).filter(id=>EFFECT_BY_ID.has(id)),...EFFECT_IDS])];}
-export function effectEnabled(n,id){const spec=EFFECT_BY_ID.get(id);if(!spec)return false;const enabled=n.postEffects?.[id]?.enabled;return typeof enabled==='boolean'?enabled:spec.legacy!==undefined&&(n.postFx?.[spec.legacy]??0)>0;}
+export function effectEnabled(n,id){const spec=EFFECT_BY_ID.get(id);if(!spec||n.effectPresence?.[id]===false)return false;const enabled=n.postEffects?.[id]?.enabled;return typeof enabled==='boolean'?enabled:spec.legacy!==undefined&&(n.postFx?.[spec.legacy]??0)>0;}
+// Presence is structural. Removing an effect never rewrites its parameter/enable tracks.
+// Missing entries retain legacy/programmatic behavior and migrate from authored values.
+export const sanitizeEffectPresence=raw=>Object.fromEntries(EFFECT_IDS.filter(id=>typeof raw?.[id]==='boolean').map(id=>[id,raw[id]]));
+export function effectPresent(n,id){
+ if(typeof n.effectPresence?.[id]==='boolean')return n.effectPresence[id];
+ const spec=EFFECT_BY_ID.get(id);if(!spec)return false;
+ return effectEnabled(n,id)||spec.parameters.some(p=>{const value=p.path.startsWith('postFx.')?n.postFx?.[+p.path.split('.')[1]]:n.postEffects?.[id]?.[p.key];return value!==undefined&&value!==p.default;})||Object.keys(n.tracks??{}).some(path=>path.startsWith('postEffects.'+id+'.')||spec.parameters.some(p=>p.path===path));
+}
+export const effectStack=n=>effectOrder(n.effectOrder).filter(id=>effectPresent(n,id));
+export const reorderEffects=(n,visible)=>effectOrder([...visible,...effectOrder(n.effectOrder).filter(id=>!visible.includes(id))]);
+export function effectAddValues(n,id){
+ if(effectPresent(n,id))return {};
+ const stack=[...effectStack(n),id],restoring=n.effectPresence?.[id]===false;
+ return {...(restoring?{}:effectEnableValues(n,id,true)),['effectPresence.'+id]:true,effectOrder:reorderEffects(n,stack)};
+}
+export const effectRemoveValues=id=>({['effectPresence.'+id]:false});
 export function sanitizeEffects(raw){const result=effectDefaults();for(const s of POST_EFFECTS){const value=raw?.[s.id];if(typeof value?.enabled==='boolean')result[s.id].enabled=value.enabled;for(const p of s.parameters){if(p.path.startsWith('postFx.'))continue;const v=value?.[p.key];result[s.id][p.key]=p.type==='dash'?normalizeDashPattern(v)??p.default:p.type==='boolean'?typeof v==='boolean'?v:p.default:p.type==='color'?/^#[0-9a-f]{6}$/i.test(v)?v:p.default:Number.isFinite(v)?Math.max(p.min,Math.min(p.max,p.step===1?Math.round(v):v)):p.default;}}return result;}
 export function effectValues(n,id){const spec=EFFECT_BY_ID.get(id);return Object.fromEntries(spec.parameters.map(p=>[p.key,p.path.startsWith('postFx.')?n.postFx?.[+p.path.split('.')[1]]??p.default:n.postEffects?.[id]?.[p.key]??p.default]));}
-export function effectEnableValues(n,id,enabled){const s=EFFECT_BY_ID.get(id),values={['postEffects.'+id+'.enabled']:enabled};if(enabled&&s.legacy!==undefined&&!(n.postFx?.[s.legacy]>0))values['postFx.'+s.legacy]=s.start;return values;}
+export function effectEnableValues(n,id,enabled){const s=EFFECT_BY_ID.get(id),values={['effectPresence.'+id]:true,['postEffects.'+id+'.enabled']:enabled};if(enabled&&s.legacy!==undefined&&!(n.postFx?.[s.legacy]>0))values['postFx.'+s.legacy]=s.start;return values;}
 export function effectResetValues(id){const s=EFFECT_BY_ID.get(id);return Object.fromEntries(s.parameters.map(p=>[p.path,p.path==='postFx.'+s.legacy?s.start:p.default]));}
+export const effectResetAllValues=n=>Object.fromEntries(POST_EFFECTS.flatMap(s=>[...(effectPresent(n,s.id)?[['effectPresence.'+s.id,true]]:[]),['postEffects.'+s.id+'.enabled',false],...s.parameters.map(p=>[p.path,p.default])]));
 export const effectsUseTime=n=>(effectEnabled(n,'scanline')&&effectValues(n,'scanline').speed!==0)||['glitch','crt'].some(id=>effectEnabled(n,id)&&effectValues(n,id).rate!==0)||(effectEnabled(n,'noiseWarp')&&noiseWarpActive(effectValues(n,'noiseWarp'))&&effectValues(n,'noiseWarp').motionSpeed>0);
 
 // Style-specific controls are hidden without discarding their stored values.
 export function effectParameterVisible(p,values){
+ if(p.path==='postEffects.dissolve.dissolveAngle')return values.dissolvePattern===2;
+ if(['postEffects.dissolve.edgeWidth','postEffects.dissolve.burnColor'].includes(p.path))return values.dissolveStyle===1;
+ if(p.path==='postEffects.liquidFusion.liquidColor')return values.fusionColor===1;
  if(p.path==='postEffects.noiseWarp.loopSeconds')return values.warpMotion===1;
  if(p.path.startsWith('postEffects.halftone.')&&['inkColor','paperColor'].includes(p.key))return values.inkMode===0;
  if(p.path.startsWith('postEffects.dither.')){if(p.key==='levels')return values.paletteMode<2;if(['inkColor','paperColor'].includes(p.key))return values.paletteMode>=2;if(p.key==='seed')return values.ditherPattern===2;}

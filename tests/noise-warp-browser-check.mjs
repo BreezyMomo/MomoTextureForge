@@ -13,7 +13,7 @@ try{
   const {imageAsset,encodeResourcePack}=await import('./resource-pack.js'),{registerAsset,prepareAsset,contentHash}=await import('./resource-assets.js'),{project,node}=await import('./tree-model.js'),{encodePNG}=await import('./encoders.js');
   const size=48,pixels=new Float32Array(size*size*4);for(let y=0;y<size;y++)for(let x=0;x<size;x++){const a=x<5||y<5||x>42||y>42?0:1,v=(x%12<6)!==(y%12<6)?1:.15;pixels.set([v,.2+.6*y/size,.7,a],(y*size+x)*4);}
   const asset=await imageAsset(new File([await encodePNG(pixels,size,size)],'Warp source.png',{type:'image/png'})),id='asset_'+await contentHash(asset);registerAsset(id,asset,await prepareAsset(asset));
-  const p=project(),g=node('group');g.name='Noise scene';const image=node('shape',id),star=node('shape','Star');star.transform.width=star.transform.height=.4;g.children=[image,star];p.root.children=[g];
+  const p=project(),g=node('group');g.name='Noise scene';g.effectPresence=Object.fromEntries((await import('./post-effect-specs.js')).EFFECT_IDS.map(id=>[id,true]));const image=node('shape',id),star=node('shape','Star');star.transform.width=star.transform.height=.4;g.children=[image,star];p.root.children=[g];
   const bytes=await encodeResourcePack(p);let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));return {pack:btoa(binary),imageId:id};
  });
  const gpu=built||process.argv.includes('--ui-only')?{}:await page.evaluate(async imageId=>{

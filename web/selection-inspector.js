@@ -1,6 +1,7 @@
 import {normalizeDashPattern} from './sketch-options.js';
+import {compactEffectSummary} from './post-effect-catalog.js';
 import {createPostEffectsEditor} from './post-effects-editor.js';
-import {POST_EFFECTS,effectEnabled,effectEnableValues,effectResetValues,effectValues,effectParameterVisible} from './post-effect-specs.js';
+import {POST_EFFECTS,effectEnabled,effectEnableValues,effectResetValues,effectValues,effectParameterVisible,effectPresent,effectAddValues,effectRemoveValues,effectResetAllValues,reorderEffects} from './post-effect-specs.js';
 import {segmentedChoice} from './segmented-choice.js';
 import {createGradientEditor} from './gradient-editor.js';
 import {gradientColorAt,reverseGradient} from './gradient-stops.js';
@@ -165,11 +166,12 @@ export function createSelectionInspector(host,api){
   check(uiText("editor.invertMask"),'maskInvert',{reason:nodes.every(n=>n.mask)?'':uiText("selection.allSelectedNodesMustHaveAMaskSubtreeForThisSetting")});note(uiText("selection.maskAndInverseMaskAffectEarlierSiblingsEnterThePrimarySelection"));
   for(const spec of POST_EFFECTS)for(const p of spec.parameters)if(p.options||p.type==='boolean'||p.key==='paperOpacity')variantPaths.add(p.path);
   heading("editor.contourProcessing");choice(uiText("editor.contourMode"),'contour.mode',[['none',"common.close"],['outline',"editor.outline"],['dilate',"editor.dilate"],['erode',"editor.erode"]]);number(uiText("editor.contourWidthFractionOfShortSide"),'contour.radius',0,.1,.001);
-  details('modules.imageFilters',parent=>createPostEffectsEditor({document:doc,host:parent,node:nodes[0],allowShaderExport:false,scope:'batch:'+nodes.map(n=>n.id).join(','),enabled:id=>commonValue(api.nodes().map(n=>effectEnabled(api.evaluated(n),id))),locked:path=>api.locked([path]),
-   onToggle:(id,value)=>mutate(n=>({values:effectEnableValues(n,id,value)})),onReset:id=>mutate(()=>({values:effectResetValues(id)})),onOrder:order=>mutate(()=>({values:{effectOrder:order}})),
-   onResetAll:()=>mutate(n=>({values:Object.fromEntries(POST_EFFECTS.flatMap(s=>[['postEffects.'+s.id+'.enabled',false],...s.parameters.map(p=>[p.path,p.path.startsWith('postFx.')?FX_SPECS[+p.path.split('.')[1]][3]:p.default])]))})),
+  details('modules.imageFilters',parent=>{const editor=createPostEffectsEditor({document:doc,host:parent,node:nodes[0],allowShaderExport:false,scope:'batch:'+nodes.map(n=>n.id).join(','),context:nodes.map(n=>n.id).sort().join(','),getNodes:api.effectNodes??api.nodes,prepare:api.prepare,present:id=>commonValue((api.effectNodes??api.nodes)().map(n=>effectPresent(n,id))),summary:id=>compactEffectSummary((api.effectNodes??api.nodes)().map(n=>api.evaluated(n)),id),enabled:id=>commonValue((api.effectNodes??api.nodes)().map(n=>effectEnabled(api.evaluated(n),id))),locked:path=>api.locked([path]),
+   onAdd:id=>mutate(n=>({values:effectAddValues(n,id)})),onRemove:id=>mutate(n=>({values:effectPresent(n,id)?effectRemoveValues(id):{}})),
+   onToggle:(id,value)=>mutate(n=>({values:effectEnableValues(n,id,value)})),onReset:id=>mutate(()=>({values:effectResetValues(id)})),onOrder:order=>mutate(n=>({values:{effectOrder:reorderEffects(n,order)}})),
+   onResetAll:()=>mutate(n=>({values:effectResetAllValues(n)})),
    buildParameters:(parent,spec)=>{const values=nodes.map(n=>Object.fromEntries(spec.parameters.map(p=>[p.key,val(n,p.path)])));for(const p of spec.parameters.filter(p=>values.some(value=>effectParameterVisible(p,value)))){if(p.type==='dash'){const input=el('input',{type:'text','aria-label':uiText('selection.batch')+uiText(p.label),placeholder:uiText('fx.dashPatternPlaceholder')});row(uiText(p.label),[input],parent);bind([input],[p.path],n=>val(n,p.path),v=>{const value=normalizeDashPattern(v);if(value===null){api.notify(uiText('fx.dashPatternInvalid'));return false;}return assign(p.path,value);});}else if(p.type==='boolean')check(p.label,p.path,{parent});else if(p.type==='color')color(uiText(p.label),p.path,{parent});else if(p.options)choice(p.label,p.path,p.options.map((value,index)=>[index,uiText('fx.option.'+value)]),{numeric:true,parent});else number(p.label,p.path,p.min,p.max,p.step,{parent});}}
-  }));
+  });bindings.push(()=>editor.refreshEffectState());});
  }
  function animation(){
   heading("editor.playbackInParent");number(uiText("editor.parentRangeStart"),'timing.start',0,1,.001);number(uiText("editor.parentRangeEnd"),'timing.end',0,1,.001);

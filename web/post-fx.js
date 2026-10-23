@@ -1,3 +1,4 @@
+import {CONTENT_FX_GLSL,contentEffectActive} from './content-effects.js';
 import {boundsSize} from './render-bounds.js';
 import {hasChannelCurves} from './channel-curves.js';
 import {fxDefaults,POST_EFFECTS,effectOrder,effectEnabled,effectValues} from './post-effect-specs.js';
@@ -21,6 +22,7 @@ vec4 fxColor(vec2 p){if(repeatNode==1)p=fract(p);if(any(lessThan(p,vec2(0)))||an
 float fxHeight(vec2 p){if(repeatNode==1)p=fract(p);if(any(lessThan(p,vec2(0)))||any(greaterThan(p,vec2(1))))return 0.;return filtered(srcHeight,p).r;}
 ${CREATIVE_FX_GLSL}
 ${NOISE_WARP_GLSL}
+${CONTENT_FX_GLSL}
 void applyFx(out vec4 c,out float h){
  c=texture(srcColor,uv);h=texture(srcHeight,uv).r;
  if(operation==10){c=vec4(0);h=0.;float sum=0.;for(int i=-8;i<=8;i++){float x=float(i)/8.,weight=exp(-x*x*3.);vec2 q=uv+contourStep*x;c+=fxColor(q)*weight;h+=fxHeight(q)*weight;sum+=weight;}c/=sum;h/=sum;}
@@ -41,6 +43,7 @@ void applyFx(out vec4 c,out float h){
  if(operation==31){vec4 ink=texture(tableTex,uv);if(fxData[0].x<.5){c=ink+c*(1.-ink.a);h=ink.a+h*(1.-ink.a);}else{c=ink;h=ink.a;}}
  if(operation>=32&&operation<=41)applyCreativeFx(c,h);
  if(operation==42)applyNoiseWarp(c,h);
+ if(operation>=43&&operation<=45)applyContentFx(c,h);
 }
 `;
 export function applyPostFx(renderer,source,node){
@@ -86,6 +89,11 @@ export function applyPostFx(renderer,source,node){
   if(id==='crt')replace(pass(out,39,{...common,fxData:[v.curvature,v.lineDensity,v.lineStrength,v.maskStrength,Math.floor((renderer.formulaSeconds??0)*v.rate),v.phase,v.seed,v.grain,v.flicker,v.edgeShade]}));
   if(id==='ascii')replace(pass(out,40,{...common,fxData:[v.glyphSize,v.characterSet,+v.colored,+v.invert,v.paperOpacity],fxColors:colors(v.inkColor,v.paperColor)}));
   if(id==='pixelSort')replace(applyPixelSortFx(renderer,out,v));
+  if(id==='dissolve'&&contentEffectActive(id,v))replace(pass(out,43,{...common,fxData:[v.progress,v.dissolveStyle,v.dissolvePattern,v.dissolveScale,v.dissolveAngle*Math.PI/180,v.edgeWidth,v.edgeSoftness,v.seed],fxColors:colors(v.burnColor)}));
+  if(id==='shockwave'&&contentEffectActive(id,v))replace(pass(out,44,{...common,fxData:[v.centerX,v.centerY,v.waveRadius,v.waveWidth,v.progress,v.displacement,v.waveDecay]}));
+  if(id==='liquidFusion'&&contentEffectActive(id,v)){
+   let soft;try{soft=blur(out,v.fusionRadius);replace(pass(out,45,{...common,dest:soft,fxData:[v.fusionThreshold,v.fusionSoftness,v.fusionColor],fxColors:colors(v.liquidColor)}));}finally{renderer.release(soft);}
+  }
   if(id==='noiseWarp'&&noiseWarpActive(v))replace(pass(out,42,{...common,fxData:[v.warpX,v.warpY,v.warpMode,v.warpDetail,...noiseWarpMotion(v,renderer.formulaSeconds??0),v.warpScale,0,v.seed]}));
  }
  return out;
@@ -96,6 +104,7 @@ export function applyPostFx(renderer,source,node){
 export function specializeFxShader(source,operation){
  if(operation<32||operation>41)source=source.replace(CREATIVE_FX_GLSL,'').replace('if(operation>=32&&operation<=41)applyCreativeFx(c,h);','');
  if(operation!==42)source=source.replace(NOISE_WARP_GLSL,'').replace('if(operation==42)applyNoiseWarp(c,h);','');
- if(operation<32||operation>42)return source;
+ if(operation<43||operation>45)source=source.replace(CONTENT_FX_GLSL,'').replace('if(operation>=43&&operation<=45)applyContentFx(c,h);','');
+ if(operation<32||operation>45)return source;
  return source.replace('blendMode,operation,recordCount','blendMode,recordCount').replace('#version 300 es','#version 300 es\n#define operation '+operation);
 }
