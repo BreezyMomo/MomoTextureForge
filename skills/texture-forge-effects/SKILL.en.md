@@ -31,7 +31,7 @@ User-facing screenshots, steps and example projects are in the [online illustrat
 - [Workspace and resources](references/workspace.en.md): schemes/styles/tabs, current categories, custom ratios/free panning, docking/layout, library/list/instances, versions, saving, canvas, multi-selection and 2D/3D channels.
 - [Remote libraries](references/remote-libraries.en.md): subscriptions, offline cache, merged cards, update/delete scopes, static manager and Git/Pages/CDN publication.
 - [Arrangement and compositing](references/layout-compositing.en.md): regions/UV, border/contour/herringbone/weave/rules, gradients/flow, mixed children, overlap avoidance, fit, expansion, repeat, color, ordered node post-processing and masks.
-- [Animation and export](references/animation-export.en.md): seconds versus normalized progress, keys/curves/phases, formats and budgets.
+- [Animation and export](references/animation-export.en.md): seconds versus normalized progress, keys/curves/phases, GIF animation export, formats and budgets.
 - [Resource and image editing](references/image-editor.en.md): image/JSON/formula/generator entries, backgrounds, center/color/contours/SVG and normals.
 - [Recipes and troubleshooting](references/recipes.en.md): complete ability presets and component reuse, replaceable arrays, flowing rings, layered curtains, mixed flowers, halos, holes and diagnostics.
 - [Dynamic catalog context](references/ai-context.en.md): current graphics/parameters without a fixed built-in list.

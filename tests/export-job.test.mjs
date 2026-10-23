@@ -29,6 +29,12 @@ test('worker errors reject and release worker',async t=>{
  const task=runExportWorker('svg',{},{}),w=FakeWorker.latest;
  await w.emit({type:'error',message:'bad contour'});await assert.rejects(task,/bad contour/);assert.equal(w.terminated,true);
 });
+test('GIF worker rendering preserves elapsed seconds independently of wrapped progress',async t=>{
+ const previous=globalThis.Worker;globalThis.Worker=FakeWorker;t.after(()=>{if(previous)globalThis.Worker=previous;else delete globalThis.Worker;});
+ let clock;const task=runExportWorker('gif',{}, {},{render:(project,w,h,progress,seconds)=>{clock=[progress,seconds];return new Float32Array(w*h*4);}}),worker=FakeWorker.latest;
+ await worker.emit({type:'render',project:{},w:1,h:1,t:0,seconds:6});assert.deepEqual(clock,[0,6]);
+ await worker.emit({type:'done',result:'ok'});assert.equal(await task,'ok');
+});
 
 test('worker error transport preserves message IDs and user interpolation for the selected UI language',async t=>{
  const previous=globalThis.Worker;globalThis.Worker=FakeWorker;t.after(()=>{if(previous)globalThis.Worker=previous;else delete globalThis.Worker;setLanguage('zh-CN');});

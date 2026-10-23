@@ -126,7 +126,7 @@ function curtain(kind){
 
 export function effectSamples(){
  const make=(id,root,category,seconds,loopExport,tags)=>({name:root.name,nameKey:`examples.${id}.name`,description:`examples.${id}.description`,root,category,tags,previewTime:.3,
-  output:{mode:'color',alpha:true,width:loopExport?256:512,height:loopExport?256:512,fps:30,seconds,frames:Math.round(seconds*30)+(loopExport?0:1),columns:8,loopExport}});
+  output:{mode:'color',alpha:true,width:loopExport?256:512,height:loopExport?256:512,fps:30,seconds,exportSeconds:seconds,frames:Math.round(seconds*30)+(loopExport?0:1),columns:8,loopExport}});
  return [
   ...[['lightningStrike',lightning(),1.2],['frostNova',frost(),1.6],['fireExplosion',explosion(),1.8],['holographicImpact',shieldImpact(),1.4]].map(([id,root,seconds])=>make(id,root,'vfx',seconds,false,['examples.completeAbility','examples.oneShotAnimation'])),
   make('replaceableDotArray',dotArray(),'arrangement',3,true,['examples.replaceableUnit','examples.mixedChildInstances']),

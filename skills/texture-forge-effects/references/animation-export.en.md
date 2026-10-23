@@ -6,7 +6,7 @@
 
 ## Two time systems
 
-- Playback/restart, duration 0.05–600 seconds and scope progress remain outside the collapsed timeline. Switching graphics is not a playback-stop instruction.
+- Playback/restart, animation cycle 0.05–600 seconds and scope progress remain outside the collapsed timeline. Switching graphics is not a playback-stop instruction.
 - Parameter keys use node-local 0–1 progress. Parent intervals determine start/end and speed.
 - Time-aware graphics expose built-in autoplay, speed −10–10 and offset −600–600 seconds. Motion uses accumulated seconds × speed + offset, without resetting each timeline cycle. Disable autoplay to set/freeze/key shape time from −36000 to 36000 seconds.
 - Disabling built-in motion does not necessarily stop transform keys, and disabling keys does not necessarily stop time/UV motion. Identify the intended mechanism.
@@ -34,18 +34,22 @@ Export uses the entire canvas, ignoring solo, preview channel, zoom and guides. 
 | Layered current-frame PSD | Editable hierarchy where possible; complex effects may rasterize |
 | PSD/SVG vector contours | Alpha threshold (default 50%) and smoothing; monochrome parts/holes, simplified gradients/soft edges; SVG 2 MB |
 | Current-frame EXR | High-precision data, optional lossless ZIP, float-support dependent |
+| GIF animation | Direct playback/sharing; 16–256 colors, binary alpha, up to 50 FPS; repeat or play once |
 | Frame PNG ZIP | Separate animation frames |
-| PNG/EXR sprite atlas | Grid frames played at matching FPS; no direct GIF/video |
-| Atlas preview | Inspect packing |
+| PNG/EXR sprite atlas | Grid frames played at matching FPS; choose GIF for direct playback |
 | Three-size/three-atlas ZIP | Current tiers: static 256/512/1024 and frame 64/128/256 |
 
 Choose Color/Height/Normal/Custom RGBA separately from preview. Normal strength 0–20, Sobel/Scharr, X/Y flips, inverted height and smoothing 0–8 persist with projects and exports. Models/lights/material/view/repeat are preview-only. RGBA can pack height/inverse, normal XYZ, constants 0/1/0.5, alpha and normal slope. Contours do not use height/normal channels. Choose alpha/background explicitly; checkerboards are not output.
 
-Animation supports FPS 1–120, duration and atlas columns 1–32. Check the resulting frame summary. Omitting loop endpoints avoids redundant frames, not mismatched motion. For seamless loops, close controlled keys and built-in time/UV behavior together.
+Animation cycle (0.05–600 seconds) sets 0→1 progress speed; export duration (0.05–600 seconds) independently controls recording length. A 2-second cycle exported for 6 seconds at 30 FPS produces 180 frames with the endpoint omitted. GIF, PNG sequences, PNG/EXR atlases, previews and three-size atlases share this schedule. Formula seconds keep advancing as keyframe progress wraps; partial cycles are supported. Duration edits persist independently; old projects initialize both from the original duration. FPS supports 1–120 (GIF capped at 50), with atlas columns 1–32. Omitting the export endpoint removes only the final sample, retaining interior cycle starts. Check the resulting frame summary. Omitting loop endpoints avoids redundant frames, not mismatched motion. For seamless loops, close controlled keys and built-in time/UV behavior together.
 
 Budgets: up to 10,000 frames and 33,554,432 sampled pixels per sequence; atlas sides 8192 and 16,777,216 pixels overall. Hardware can limit further. Maximum dimensions cannot necessarily accompany maximum frames. Above 50,000 contour anchors is guidance; SVG size still limits output. A preview budget failure does not alone prove 4096 PNG export is impossible.
 
 Export displays stages/progress and cancellation. Background encoding/vector work can still accompany short GPU pauses. Read failures and reduce workload rather than repeatedly clicking.
+
+GIF export: shared palettes sample up to 12 evenly spaced frames for stable colors; choose per-frame palettes for missed brief colors or rich changes. Ordered dithering can improve gradients. Color limits are 16/32/64/128/256; transparency reserves one palette entry. Alpha threshold is 0–255: fully transparent pixels stay transparent and other pixels below the threshold become transparent. Disable transparent background to composite soft edges onto the background color. Choose PNG/EXR for continuous alpha or precise RGBA data. GIF repeat playback is separate from omitting the endpoint; including the endpoint adds a frame interval. Check the GIF summary for actual frame count/duration. FPS above 50 exports at 50 with 10 ms timing steps without rewriting other formats' FPS. Frames sample keyframes and elapsed formula seconds, groups, node effects and the selected output channel, excluding preview guides. Settings persist with projects; encoding is cancellable. GIF shares the 10,000-frame/33,554,432-total-pixel budget.
+
+GIF, PNG sequences, PNG/EXR atlases and three-size atlases each include an **Animation preview** module within their existing export panel. Keep the format selected and choose **Generate preview**. Sequences/atlases provide playback, pause, frame scrubbing and **All frames**; GIF displays an actual animation encoded with the current palette, dithering, alpha threshold and repeat settings, with replay available. Parameter or format changes retain the old result with an explicit stale notice; choose **Update preview**. Export always reads current settings. Three-size atlases offer 64/128/256 preview tiers. Preview frames use up to 128 pixels on the longest side, reduced further when needed. Sequences/atlases display in 8-bit; GIF uses current encoding settings. Delivery dimensions and precision stay unchanged.
 
 ## Single-PNG memory handling
 

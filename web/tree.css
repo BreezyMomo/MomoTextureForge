@@ -469,3 +469,7 @@
 .post-effect-body{padding:0 8px 8px;min-width:0}.post-effect-help{padding:0 8px;margin:0 0 8px}.post-effect.module-dragging{opacity:0}
 
 .post-effect-advanced{border-top:1px solid var(--ui-line);margin-top:8px;padding-top:4px}.post-effect-advanced>summary{cursor:pointer;padding:5px 0;color:var(--ui-muted);font-size:12px}.post-effect-advanced>div{padding-top:5px}
+
+.tree-export-preview{display:grid;gap:8px;margin:14px 0;padding:12px;border:1px solid var(--ui-line);border-radius:var(--ui-control-radius)}
+.tree-export-preview input[type=range]{width:100%}
+.tree-export-preview[data-stale=true] [role=status]{color:var(--ui-accent-text)}

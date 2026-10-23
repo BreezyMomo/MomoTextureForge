@@ -19,7 +19,7 @@ Download the [breathing-star starting project](examples/animation-star.json), op
 3. Move progress to `0`, enable **● Record**, and set region width to `0.35`.
 4. Move to `0.5` and set the same parameter to `0.8`.
 5. Move to `1` and return it to `0.35`.
-6. Disable recording and play. A duration of 3 seconds makes the width change easy to inspect.
+6. Disable recording and play. An animation cycle of 3 seconds makes the width change easy to inspect.
 
 The screenshot changes only width, stretching the star horizontally. To scale proportionally, also record height or use the breathing-scale template. The first recorded change preserves the starting base state. You can also add keys explicitly with the button beside a parameter.
 
@@ -66,4 +66,4 @@ Per-instance animation phase offsets stagger repeated instances, useful for puls
 
 Graphics with built-in motion can expose autoplay, speed and offset. Disabling autoplay allows a fixed shape time. Stopping one time mechanism does not necessarily stop the other.
 
-Loop playback does not guarantee matching endpoints. For seamless sequences, check keys, built-in seconds, UV scrolling and instance phase together. Export frame count depends on FPS and duration; see [Export](08-export.en.md).
+Loop playback does not guarantee matching endpoints. For seamless sequences, check keys, built-in seconds, UV scrolling and instance phase together. Animation cycle controls 0→1 progress speed; independent export duration and FPS control frame count. A 2-second cycle exported for 6 seconds records three cycles while formula seconds keep advancing; see [Export](08-export.en.md).

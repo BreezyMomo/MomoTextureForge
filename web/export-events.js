@@ -1,6 +1,6 @@
 // A local completion signal. Only the official-site analytics entry subscribes.
 export const EXPORT_COMPLETED_EVENT='momo:export-completed';
-const FORMATS=new Set(['png','exr','svg','psd','psd-vector','frames','atlas','atlas-exr','batch','batch-atlas']);
+const FORMATS=new Set(['png','gif','exr','svg','psd','psd-vector','frames','atlas','atlas-exr','batch','batch-atlas']);
 const CHANNELS=new Set(['color','height','normal','rgba']);
 
 export function exportEventData(input){

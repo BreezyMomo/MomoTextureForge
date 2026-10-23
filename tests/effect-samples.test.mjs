@@ -9,7 +9,7 @@ test('effect presets retain editable resources, tracks and export settings after
  for(const sample of samples){
   const p=project();p.name=sample.name;p.root.children=[sample.root];Object.assign(p.output,sample.output);
   assert.deepEqual(sanitizeTree(JSON.parse(JSON.stringify(p))),p,sample.name);
-  assert.equal(p.output.alpha,true);assert.equal(p.output.frames,Math.round(p.output.seconds*p.output.fps)+(p.output.loopExport?0:1));
+  assert.equal(p.output.alpha,true);assert.equal(p.output.exportSeconds,p.output.seconds);assert.equal(p.output.frames,Math.round(p.output.exportSeconds*p.output.fps)+(p.output.loopExport?0:1));
   const atlasWidth=p.output.width*p.output.columns,atlasHeight=p.output.height*Math.ceil(p.output.frames/p.output.columns);
   assert.ok(atlasWidth<=8192&&atlasHeight<=8192&&atlasWidth*atlasHeight<=16777216,sample.name+' default atlas must fit the export budget');
   assert.ok(p.output.width*p.output.height*p.output.frames<=33554432,sample.name+' sequence must fit the sampling budget');
