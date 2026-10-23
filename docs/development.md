@@ -116,6 +116,8 @@ node tests/startup-browser-check.mjs
 
 面板布局回归：`node tests/dock-workspace-browser-check.mjs`；构建后加 `--standalone` 检查单文件版。覆盖实际拖动、标签合并、悬浮移动/缩放、保存与刷新恢复、三维上下文和 PNG 导出。布局模型在 `web/dock-layout.js`，DOM 控制器与样式在 `web/dock-workspace.js`、`web/dock-workspace.css`；只移动原有控件，布局本地存储与项目数据分开。
 
+`web/dock-resize.js` 按拖动开始时的坐标固定其他分隔线，只让紧邻面板吸收尺寸变化；横向最小宽度 96px，纵向最小高度 72px，已小于最小尺寸的面板不会在开始拖动时跳变。鼠标、方向键和 Home/End 共用限制，取消会恢复所有补偿比例。`node tests/dock-resize-browser-check.mjs`（静态版加 `--standalone`）检查四栏、四行、混合方向、最小尺寸、取消、刷新与窗口适配。
+
 参数与颜色面板回归：`node tests/inspector-color-browser-check.mjs --no-screenshots`，构建后加 `--standalone`。检查合并后的图形页签、继承来源、独立配色的画面一致性、透明度、HEX、撤销和关键帧、多色色标，以及图形/组合的可用设置。
 
 模块与贝塞尔回归分别运行 `node tests/inspector-sections-browser-check.mjs --no-screenshots` 和 `node tests/bezier-editor-browser-check.mjs --no-screenshots`；静态版加 `--built`。覆盖折叠与帮助独立、模块拖放/上下移动及本地顺序恢复、多段路径的缩放平移、点命中区域/光标/锁定、撤销和导出。展开状态使用 `momo-texture-tree:inspector-sections:v1`，排序使用 `momo-texture-tree:inspector-module-order:v1`，均不写入作品。

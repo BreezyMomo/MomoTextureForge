@@ -116,6 +116,8 @@ General overflow: `node tests/overflow-browser-check.mjs`, optionally `--standal
 
 Docking: `node tests/dock-workspace-browser-check.mjs`, optionally `--standalone`, covers dragging, merged tabs, floating move/resize, saved/reloaded layouts, 3D contexts and PNG export. Model/controller/styles are `web/dock-layout.js`, `web/dock-workspace.js`, `web/dock-workspace.css`. They move existing controls; layout storage stays separate from projects.
 
+`web/dock-resize.js` keeps other separators at their drag-start coordinates so only adjacent panels absorb size changes. Minimum pane width is 96px and minimum height is 72px; existing smaller panes do not jump when a drag begins. Pointer, arrow-key and Home/End resizing share these limits, and cancellation restores every compensated ratio. Run `node tests/dock-resize-browser-check.mjs` (add `--standalone` for the static build) for four columns, four rows, mixed axes, minimums, cancellation, reload and window adaptation.
+
 Inspector/color regression: `node tests/inspector-color-browser-check.mjs --no-screenshots`; add `--standalone` after building. It covers the merged Shape tab, inheritance and visually identical independent copies, opacity, HEX, undo, keys, multicolor stops and graphic/group controls.
 
 Module and Bezier checks: `node tests/inspector-sections-browser-check.mjs --no-screenshots` and `node tests/bezier-editor-browser-check.mjs --no-screenshots`; add `--built` for the static site. These cover independent collapse/help, drag/arrow ordering and restored preferences, multisegment zoom/pan, point hit areas/cursors/locks, undo and export. Expansion uses `momo-texture-tree:inspector-sections:v1`; ordering uses `momo-texture-tree:inspector-module-order:v1`. Neither belongs to the project.
