@@ -1,14 +1,8 @@
+import {editorIcon} from './editor-icons.js';
 import {uiText,uiFormat} from './ui-language.js';
 import {onLanguageChange} from './language.js';
 
-const paths={
- select:'m4 3 14 9-7 1-3 7Z',pivot:'M12 3v18M3 12h18M17 12a5 5 0 1 1-10 0 5 5 0 0 1 10 0',
- uv:'M4 4h16v16H4ZM4 12h16M12 4v16',pan:'M9 12V5a2 2 0 0 1 4 0v6-7a2 2 0 0 1 4 0v8-5a2 2 0 0 1 4 0v8c0 4-3 7-7 7h-1c-2 0-3-1-4-2l-5-6a2 2 0 0 1 3-3l2 2',
- snap:'M5 4v9a7 7 0 0 0 14 0V4h-4v9a3 3 0 0 1-6 0V4ZM5 8h4m6 0h4',
- display:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Zm13 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0',
- tile:'M3 3h7v7H3Zm11 0h7v7h-7ZM3 14h7v7H3Zm11 0h7v7h-7Z',clear:'m6 6 12 12M6 18 18 6',edit:'m15 4 5 5M4 20l5-1L21 7a2 2 0 0 0-4-4L5 15Z',frame:'M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5'
-};
-export function toolIcon(name){const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[name]);svg.append(path);return svg;}
+export const toolIcon=name=>editorIcon(name);
 export function canvasToolLabel(button,icon,key,shortKey=key){
  button.classList.add('canvas-tool');button.setAttribute('aria-label',uiText(key));button.title=uiText(key);
  const text=document.createElement('span');text.className='canvas-tool-label';text.textContent=uiText(shortKey);button.replaceChildren(toolIcon(icon),text);

@@ -1,3 +1,4 @@
+import {editorIcon} from './editor-icons.js';
 import {uiText,uiFormat} from './ui-language.js';
 import {EFFECT_BY_ID,effectOrder,effectEnabled,effectPresent} from './post-effect-specs.js';
 import {compactEffectSummary} from './post-effect-catalog.js';
@@ -18,10 +19,10 @@ export function createPostEffectsEditor({document:doc,host,node,scope=node.id,co
  for(const id of initialOrder){
   const spec=EFFECT_BY_ID.get(id),key=scope+':'+id,name=uiText(spec.label),item=el('section',{class:'post-effect','data-effect':id}),details=el('details'),summary=el('summary'),body=el('div',{class:'post-effect-body'}),input=el('input',{type:'checkbox','aria-label':uiFormat('fx.enable',name)}),state=enabled(id);
   input.dataset.effectEnabled=id;input.checked=state===true;input.indeterminate=state===undefined;input.disabled=locked('postEffects.'+id+'.enabled');input.onclick=e=>e.stopPropagation();input.onchange=()=>{expanded.set(key,true);onToggle(id,input.checked);};
-  const grip=button('⠿',uiFormat('fx.move',name),()=>{});grip.className='post-effect-grip';grip.style.touchAction='none';
+  const grip=button('⠿',uiFormat('fx.move',name),()=>{});grip.className='post-effect-grip';grip.replaceChildren(editorIcon('drag',doc));grip.style.touchAction='none';
   const title=el('span',{class:'post-effect-title',text:name}),heading=el('span',{class:'post-effect-heading'}),caption=el('span',{class:'post-effect-current'}),help=el('p',{class:'tree-note post-effect-help',text:uiText(spec.description)});heading.append(title,caption);help.hidden=!helpOpen.has(key);
-  const info=button('?',uiFormat('fx.info',name),()=>{help.hidden=!help.hidden;info.setAttribute('aria-expanded',String(!help.hidden));help.hidden?helpOpen.delete(key):helpOpen.add(key);});info.setAttribute('aria-expanded',String(!help.hidden));
-  const reset=button('↺',uiFormat('fx.reset',name),()=>onReset(id));reset.disabled=spec.parameters.some(p=>locked(p.path));
+  const info=button('?',uiFormat('fx.info',name),()=>{help.hidden=!help.hidden;info.setAttribute('aria-expanded',String(!help.hidden));help.hidden?helpOpen.delete(key):helpOpen.add(key);});info.replaceChildren(editorIcon('help',doc));info.setAttribute('aria-expanded',String(!help.hidden));
+  const reset=button('↺',uiFormat('fx.reset',name),()=>onReset(id));reset.replaceChildren(editorIcon('reset',doc));reset.disabled=spec.parameters.some(p=>locked(p.path));
   grip.onkeydown=event=>{
    if(!['ArrowUp','ArrowDown'].includes(event.key))return;event.preventDefault();event.stopPropagation();
    const target=event.key==='ArrowUp'?item.previousElementSibling:item.nextElementSibling;if(!target)return;

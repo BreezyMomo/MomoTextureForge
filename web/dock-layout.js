@@ -1,6 +1,9 @@
 export const PANEL_IDS=['nodes','library','canvas','inspector','timeline'];
 export const PANEL_TITLES={nodes:"layout.nodeTree",library:"layout.graphics",canvas:"layout.canvasPreview",inspector:"layout.inspector",timeline:"layout.timeline"};
 export const LAYOUT_KEY='momo-texture-forge:workspace-layouts:v1';
+// Pixel minimums are enforced while resizing. Nested splits may legitimately
+// need less than 12% to keep an unrelated panel's absolute width unchanged.
+export const MIN_SPLIT_RATIO=.01,MAX_SPLIT_RATIO=.99;
 let serial=0;
 const uid=prefix=>prefix+'-'+Date.now().toString(36)+'-'+(++serial);
 const clamp=(v,min,max,fallback)=>Math.max(min,Math.min(max,Number.isFinite(v)?v:fallback));
@@ -24,7 +27,7 @@ export function sanitizeLayout(raw){
    return list.length?{kind:'stack',id,panels:list,active:list.includes(n.active)?n.active:list[0]}:null;
   }
   if(n.kind!=='split')return null;const first=clean(n.first,depth+1),second=clean(n.second,depth+1);
-  return !first?second:!second?first:{kind:'split',id,axis:n.axis==='y'?'y':'x',ratio:clamp(n.ratio,.12,.88,.5),first,second};
+  return !first?second:!second?first:{kind:'split',id,axis:n.axis==='y'?'y':'x',ratio:clamp(n.ratio,MIN_SPLIT_RATIO,MAX_SPLIT_RATIO,.5),first,second};
  }
  const root=clean(raw?.root),floats=[];
  for(const f of (Array.isArray(raw?.floats)?raw.floats:[]).slice(0,5)){

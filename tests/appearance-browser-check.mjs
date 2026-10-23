@@ -1,153 +1,48 @@
-// Exercise the real editor and its built distribution without changing artwork.
+// Verify the unified settings, legacy migration and independent custom roles.
 import http from 'node:http';
 import path from 'node:path';
 import {readFile,mkdir} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {project,node} from '../web/tree-model.js';
-import {STYLE_IDS,COLOR_SCHEME_IDS,appearancePalette} from '../web/appearance.js';
-const built=process.argv.includes('--built'),root=path.resolve(fileURLToPath(new URL(built?'../site/':'../web/',import.meta.url)));
-const output=new URL('../test-results/appearance/',import.meta.url);await mkdir(output,{recursive:true});
-const types={'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.glsl':'text/plain','.svg':'image/svg+xml'};
-const server=http.createServer(async(req,res)=>{try{const target=path.resolve(root,'.'+(req.url==='/'?'/index.html':new URL(req.url,'http://localhost').pathname));if(!target.startsWith(root+path.sep)||!types[path.extname(target)])throw Error();res.setHeader('Content-Type',types[path.extname(target)]);res.end(await readFile(target));}catch{res.writeHead(404);res.end();}});
-await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));let browser;
+import {restoreGraphicList} from '../web/persistent-graphic-list.js';
+import {APPEARANCE_KEY,STYLE_IDS,COLOR_SCHEME_IDS,COLOR_ROLE_IDS,TAB_STYLE_IDS,normalizeAppearance,appearancePalette} from '../web/appearance.js';
+const built=process.argv.includes('--built'),root=fileURLToPath(new URL(built?'../site/':'../web/',import.meta.url)),output=fileURLToPath(new URL('../test-results/appearance/',import.meta.url));await mkdir(output,{recursive:true});
+const types={'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.glsl':'text/plain'};
+const server=http.createServer(async(req,res)=>{try{const name=new URL(req.url,'http://localhost').pathname,file=path.resolve(root,'.'+(name==='/'?'/index.html':name));if(!file.startsWith(root)||!types[path.extname(file)])throw Error();res.setHeader('Content-Type',types[path.extname(file)]);res.end(await readFile(file));}catch{res.writeHead(404);res.end();}});
+await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
 try{
- browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-webgl','--ignore-gpu-blocklist']});
- const page=await browser.newPage({viewport:{width:1440,height:960},reducedMotion:'reduce'}),errors=[];page.on('pageerror',error=>errors.push(error.message));
- const draft=project();draft.name='Theme isolation';draft.root.children=[node('shape','Circle')];
- await page.goto(`http://127.0.0.1:${server.address().port}/#tree=`+Buffer.from(JSON.stringify(draft)).toString('base64'));
- const ready=async()=>{await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('#startup-screen').waitFor({state:'detached'});};await ready();
- await page.locator('[role=treeitem]').first().click();
- const snapshot=()=>page.evaluate(()=>({storage:Object.fromEntries(Object.entries(localStorage).filter(([key])=>key!=='momo-texture-appearance:v1')),hash:location.hash,undo:document.querySelector('#undo').disabled,redo:document.querySelector('#redo').disabled,pixels:document.querySelector('#tree-canvas').toDataURL(),guides:getComputedStyle(document.querySelector('#tree-preview-surface'),'::after').borderColor}));
- const before=await snapshot(),appearance=page.locator('#appearance-settings');
- assert.equal(await page.locator('html').getAttribute('data-interface-style'),'refined');
- assert.notEqual(await page.locator('.dock-stack').first().evaluate(e=>getComputedStyle(e).boxShadow),'none');
- const open=async()=>{await appearance.click();await page.locator('.appearance-dialog').waitFor();};
- const theme=page.locator('#appearance-theme');
- await open();assert.equal(await page.locator('[data-style=refined] .appearance-style-label').innerText(),'精致');assert.equal(await page.locator('[data-style=standard] .appearance-style-label').innerText(),'标准');assert.notEqual(await page.locator('.appearance-dialog').evaluate(e=>getComputedStyle(e).boxShadow),'none');await theme.selectOption('light');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
- assert.equal(await page.locator('.appearance-dialog').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
- await page.locator('#appearance-hex').fill('#ffff00');await page.locator('#appearance-hex').dispatchEvent('input');
- await page.locator('[data-save]').click();assert.equal(await page.locator('.appearance-dialog').count(),0);
- assert.deepEqual(await snapshot(),before);
- await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-light.png',output))});
- await page.reload();await ready();assert.equal(await page.locator('html').getAttribute('data-theme'),'light');assert.equal(await page.locator('html').evaluate(e=>e.style.getPropertyValue('--ui-accent')),'#ffff00');
- await open();await theme.selectOption('graphite');await page.keyboard.press('Escape');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
- await open();await theme.selectOption('system');await page.emulateMedia({colorScheme:'dark'});await page.waitForFunction(()=>document.documentElement.dataset.theme==='classic');await page.emulateMedia({colorScheme:'light'});await page.waitForFunction(()=>document.documentElement.dataset.theme==='light');await page.locator('[data-save]').click();
- await page.locator('[role=treeitem]').first().click();await open();await theme.selectOption('light');await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-settings-chinese.png',output))});await page.locator('[data-save]').click();
- const style={selectOption:id=>page.locator('.appearance-style-card[data-style='+id+']').click(),inputValue:()=>page.locator('html').getAttribute('data-interface-style')},density=page.locator('#appearance-density'),tabs=page.locator('#appearance-tabs');
- const projectSnapshot=async()=>{const {pixels,...stable}=await snapshot();return stable;},stable=await projectSnapshot();
- await open();
- await density.selectOption('comfortable');
- assert.equal(await page.locator('#appearance-style,.appearance-presets').count(),0,'one style entry point');
- assert.equal(await page.locator('.appearance-style-card').count(),STYLE_IDS.length,'all old and new styles available');
- await tabs.selectOption('underline');await page.locator('#appearance-hex').fill('#7EC5A5');await page.locator('#appearance-hex').dispatchEvent('input');
- const independent={theme:await theme.inputValue(),accent:await page.locator('#appearance-hex').inputValue(),density:await density.inputValue(),tabs:await tabs.inputValue()};
- for(const styleId of STYLE_IDS){
-  await style.selectOption(styleId);
-  assert.equal(await style.inputValue(),styleId);
-  assert.deepEqual({theme:await theme.inputValue(),accent:await page.locator('#appearance-hex').inputValue(),density:await density.inputValue(),tabs:await tabs.inputValue()},independent,'style cards preserve independent choices');
-  assert.equal(await page.locator('.appearance-style-card[aria-pressed=true]').count(),1);
-  assert.equal(await page.locator('[data-style='+styleId+']').getAttribute('aria-pressed'),'true');
-  assert.deepEqual(await projectSnapshot(),stable);
- }
-
- const scheme=page.locator('#appearance-scheme');assert.equal(await scheme.locator('option').count(),COLOR_SCHEME_IDS.length);
- const initialColors=await scheme.inputValue();
- const thumbnails=()=>page.locator('.appearance-style-card').evaluateAll(cards=>cards.map(card=>{
-  const css=selector=>getComputedStyle(card.querySelector(selector));
-  return {style:card.dataset.style,background:css('.appearance-style-art').background,sidebar:css('.preset-mini-sidebar').background,tab:css('.preset-mini-tab').background,field:css('.preset-mini-field').background,orbit:css('.preset-mini-orbit').borderColor,glow:css('.preset-mini-orbit').boxShadow};
- }));
- const originalThumbnails=await thumbnails();
-
- const geometry=()=>page.locator('#inspector-tabs button.active').evaluate(e=>{const c=getComputedStyle(e);return {radius:c.borderRadius,padding:c.padding,font:c.fontSize};});
- const shapeBefore=await geometry(),namedBefore=await snapshot();
- for(const schemeId of COLOR_SCHEME_IDS.slice(1)){
-  await scheme.selectOption(schemeId);
-  assert.equal(await style.inputValue(),'candy');assert.equal(await tabs.inputValue(),'underline');assert.equal(await density.inputValue(),'comfortable');
-  assert.deepEqual(await geometry(),shapeBefore,'a palette preserves control geometry');
-  for(const themeId of ['classic','graphite','light']){
-   await theme.selectOption(themeId);
-   const expected=appearancePalette({scheme:schemeId,theme:themeId,style:'candy'});
-   assert.equal(await page.locator('html').evaluate(e=>e.style.getPropertyValue('--ui-panel')),expected.surfaces.panel);
-   assert.equal((await page.locator('#appearance-hex').inputValue()).toLowerCase(),expected.accent,'scheme uses its recommended accent');
-   await page.locator('#appearance-hex').fill('#336699');await page.locator('#appearance-hex').dispatchEvent('input');
-   assert.deepEqual(await thumbnails(),originalThumbnails,'reference thumbnails stay fixed across schemes, modes and custom accents');
-   await style.selectOption('standard');assert.equal(await scheme.inputValue(),schemeId);assert.equal(await page.locator('#appearance-hex').inputValue(),'#336699','control style preserves named colors and custom accent');
-   await style.selectOption('candy');await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));assert.deepEqual(await snapshot(),namedBefore,'schemes never change canvas pixels, project data, or history');
-  }
- }
- await scheme.selectOption(initialColors);
- await page.locator('.appearance-dialog').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-unified-styles.png',output))});
- await tabs.selectOption('auto');
- for(const themeId of ['classic','graphite','light']){
-  await theme.selectOption(themeId);
-  for(const [styleId,radius]of [['refined','6px'],['standard','5px'],['minimal','2px'],['soft','8px'],['aurora','9px'],['pulse','10px'],['cinema','6px'],['candy','10px']]){
-   await style.selectOption(styleId);
-   for(const densityId of ['compact','comfortable']){
-    await density.selectOption(densityId);
-    assert.equal(await page.locator('html').getAttribute('data-interface-style'),styleId);assert.equal(await page.locator('html').getAttribute('data-density'),densityId);
-    assert.equal(await page.locator('#appearance-hex').evaluate(e=>getComputedStyle(e).borderRadius),radius);
-    assert.equal(await page.locator('.inspector-module').first().evaluate(e=>getComputedStyle(e).borderLeftWidth),['minimal','cinema'].includes(styleId)?'0px':'1px');
-    assert.equal(await page.locator('.inspector-module-body').first().evaluate(e=>getComputedStyle(e).paddingTop),densityId==='compact'?'9px':'14px');
-    assert.equal(await page.locator('.dock-stack').first().evaluate(e=>getComputedStyle(e).boxShadow==='none'),!['refined','aurora'].includes(styleId));
-    assert.equal(await page.locator('.dock-workspace').evaluate(e=>getComputedStyle(e).paddingTop),['refined','aurora','pulse','cinema','candy'].includes(styleId)?'6px':'3px');
-    assert.equal(await page.locator('.tree-visibility').first().evaluate(e=>getComputedStyle(e).backgroundColor),'rgba(0, 0, 0, 0)');
-    const inlinePanel=await page.locator('html').evaluate(e=>e.style.getPropertyValue('--ui-panel'));
-    assert.equal(Boolean(inlinePanel),['aurora','pulse','cinema','candy'].includes(styleId),'palette overrides clear when leaving creative skins');
-    if(['aurora','pulse','candy'].includes(styleId))assert.equal(await page.locator('#inspector-tabs button.active').evaluate(e=>getComputedStyle(e).borderRadius),'999px');
-    assert.deepEqual(await projectSnapshot(),stable);
-   }
-  }
- }
-
- const tabVisuals=()=>page.evaluate(()=>{
-  const fields=['backgroundColor','color','borderRadius','borderTopWidth','borderBottomWidth','boxShadow','padding','fontSize'];
-  const read=selector=>{const css=getComputedStyle(document.querySelector(selector));return Object.fromEntries(fields.map(key=>[key,css[key]]));};
-  return {real:read('#inspector-tabs button.active'),preview:read('.appearance-inspector-tabs button.active'),dock:read('.dock-workspace .dock-tab[aria-selected=true]'),previewDock:read('.appearance-preview-dock .dock-tab[aria-selected=true]')};
- });
- for(const [skin,themeId]of [['aurora','classic'],['standard','classic'],['candy','light']]){
-  await style.selectOption(skin);await theme.selectOption(themeId);
-  const unchanged={skin:await style.inputValue(),theme:await theme.inputValue(),accent:await page.locator('#appearance-hex').inputValue(),density:await density.inputValue()};
-  for(const tabStyle of ['classic','segmented','pill','underline']){
-   await tabs.selectOption(tabStyle);assert.equal(await page.locator('html').getAttribute('data-tab-style'),tabStyle);
-   assert.deepEqual({skin:await style.inputValue(),theme:await theme.inputValue(),accent:await page.locator('#appearance-hex').inputValue(),density:await density.inputValue()},unchanged);
-   const visuals=await tabVisuals();assert.deepEqual(visuals.preview,visuals.real,'inspector preview matches '+skin+' '+tabStyle);assert.deepEqual(visuals.previewDock,visuals.dock,'dock preview matches '+skin+' '+tabStyle);
-   assert.deepEqual(await projectSnapshot(),stable);
-  }
- }
- await page.locator('.appearance-dialog').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-independent-tabs.png',output))});
- await page.locator('[data-save]').click();await page.reload();await ready();assert.equal(await page.locator('html').getAttribute('data-tab-style'),'underline');
- await page.locator('[role=treeitem]').first().click();await open();await style.selectOption('pulse');assert.equal(await tabs.inputValue(),'underline');
- await theme.selectOption('light');await tabs.selectOption('auto');
- await style.selectOption('minimal');await density.selectOption('comfortable');await page.locator('[data-save]').click();
- await page.reload();await ready();assert.equal(await page.locator('html').getAttribute('data-interface-style'),'minimal');assert.equal(await page.locator('html').getAttribute('data-density'),'comfortable');
- await open();await scheme.selectOption('xuanqing');await page.locator('[data-save]').click();await page.reload();await ready();
- assert.equal(await page.locator('html').getAttribute('data-color-scheme'),'xuanqing');
- await open();await scheme.selectOption('ouhe');await page.keyboard.press('Escape');assert.equal(await page.locator('html').getAttribute('data-color-scheme'),'xuanqing');
- await open();await scheme.selectOption('auto');await page.locator('[data-save]').click();
- await page.locator('[role=treeitem]').first().click();
- for(const styleId of ['refined','standard','minimal','soft','aurora','pulse','cinema','candy']){
-  await open();await style.selectOption(styleId);await page.locator('[data-save]').click();
-  await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-style-'+styleId+'.png',output))});
- }
- await open();await style.selectOption('soft');await page.locator('[data-save]').click();
- await open();await density.selectOption('compact');await theme.selectOption('graphite');assert.equal(await style.inputValue(),'soft');assert.equal(await density.inputValue(),'compact');await page.keyboard.press('Escape');assert.equal(await page.locator('html').getAttribute('data-density'),'comfortable');assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
- await page.locator('#language-settings').selectOption('en');await open();assert.equal(await page.locator('#appearance-title').innerText(),'Appearance');assert.equal(await page.locator('[data-style=refined] .appearance-style-label').innerText(),'Refined');assert.equal(await page.locator('[data-style=standard] .appearance-style-label').innerText(),'Standard');assert.equal(await theme.locator('option').count(),4);await theme.selectOption('graphite');await page.locator('[data-save]').click();
- await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-graphite.png',output))});
- for(const width of [1600,1100,768]){
-  await page.setViewportSize({width,height:960});
-  const boxes=await page.locator('.tree-brand,.tree-canvas-actions,.tree-resource-actions,.tree-tool-actions').evaluateAll(elements=>elements.map(e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom};}));
-  for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++)assert.ok(Math.min(boxes[i].right,boxes[j].right)-Math.max(boxes[i].x,boxes[j].x)<1||Math.min(boxes[i].bottom,boxes[j].bottom)-Math.max(boxes[i].y,boxes[j].y)<1,'header overlap at '+width);
-  assert.ok(await appearance.isVisible());
- }
- await page.setViewportSize({width:768,height:960});await open();await theme.selectOption('light');
- await page.locator('#appearance-hex').fill('invalid');await page.locator('[data-save]').click();assert.ok(await page.locator('.appearance-dialog').isVisible());
- await page.locator('[data-reset]').click();assert.equal(await page.locator('#appearance-hex').inputValue(),'#3866AF');
- await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-settings-english.png',output))});
- await page.setViewportSize({width:320,height:800});assert.ok(await page.locator('.appearance-dialog').evaluate(e=>e.scrollWidth<=e.clientWidth+1));await page.locator('[data-save]').scrollIntoViewIfNeeded();await page.locator('[data-save]').click();await page.setViewportSize({width:768,height:960});await open();
- await page.locator('[data-save]').click();await page.locator('#open-graphics-library').click();await page.locator('.graphics-card').first().waitFor();
- assert.equal(await page.locator('.graphics-dialog').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
- await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-library-light.png',output))});
- assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,checks:['live preview','fixed reference thumbnails across schemes, modes and custom accents','18 named scheme/mode combinations preserve geometry and artwork','scheme save/reload/cancel','custom accent','canvas/storage/history isolation','48 theme/style/density combinations','single style grid preserves palette, custom accent, tabs and density','creative palette cleanup','modern pill tabs','independent tab geometry and save/restore','real dock and inspector preview fidelity','original and refined stay distinct','saved style/density restoration','cancel','system changes','English header 1600/1100/768','320px dialog','hex validation','library surfaces'],errors}));
-}finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}
+ browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-webgl','--ignore-gpu-blocklist']});const page=await browser.newPage({viewport:{width:1600,height:1100},reducedMotion:'reduce'}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const legacy={theme:'light',style:'aurora',scheme:'tianqing',tabs:'auto',density:'compact',accent:'#336699'};
+ await page.addInitScript(({key,legacy})=>{if(!localStorage.getItem('appearance-migration-fixture')){localStorage.setItem(key,JSON.stringify(legacy));localStorage.setItem('appearance-migration-fixture','1');}},{key:APPEARANCE_KEY,legacy});
+ const draft=project();draft.name='Appearance isolation';draft.root.children=[node('shape','Circle')];await page.goto('http://127.0.0.1:'+server.address().port+'/#tree='+Buffer.from(JSON.stringify(draft)).toString('base64'));
+ const ready=async()=>{await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('#startup-screen').waitFor({state:'detached'});};await ready();await page.locator('[role=treeitem]').first().click();
+ // The shelf's project wrapper gets a fresh UUID on reload; compare its actual resources.
+ const snapshot=async()=>{const value=await page.evaluate(()=>({storage:Object.fromEntries(Object.entries(localStorage).filter(([key])=>key!=='momo-texture-appearance:v1')),hash:location.hash,undo:document.querySelector('#undo').disabled,redo:document.querySelector('#redo').disabled}));const digest=v=>createHash('sha256').update(v).digest('hex');return {...value,hash:digest(value.hash),storage:Object.fromEntries(Object.entries(value.storage).map(([k,v])=>[k,digest(k==='momo-texture-tree:graphic-list:v1'?JSON.stringify(restoreGraphicList(v)):v)]))};};
+ const initial=await snapshot(),open=()=>page.locator('#appearance-settings').click(),dialog=page.locator('.appearance-dialog'),scheme=page.locator('#appearance-scheme'),theme=page.locator('#appearance-theme'),tabs=page.locator('#appearance-tabs'),density=page.locator('#appearance-density'),style=id=>page.locator('.appearance-style-card[data-style='+id+']').click();
+ const colorField=role=>page.locator(role==='action'?'#appearance-hex':'#appearance-hex-'+role),custom=async(role,value)=>{const advanced=page.locator('#appearance-colors');if(!await advanced.evaluate(e=>e.open))await advanced.locator('summary').click();await colorField(role).fill(value);await colorField(role).dispatchEvent('input');};
+ const settings=async()=>({scheme:await scheme.inputValue(),theme:await theme.inputValue(),tabs:await tabs.inputValue(),density:await density.inputValue(),colors:await Promise.all(COLOR_ROLE_IDS.map(role=>colorField(role).inputValue()))});
+ const thumb=()=>page.locator('.appearance-style-art').evaluateAll(cards=>cards.map(e=>{const css=getComputedStyle(e),orb=getComputedStyle(e.querySelector('.preset-mini-orbit'));return [css.background,orb.borderColor,orb.boxShadow];}));
+ const visual=()=>page.evaluate(()=>{const fields=['backgroundColor','color','borderRadius','borderTopWidth','borderBottomWidth','boxShadow','padding','fontSize'],read=s=>{const css=getComputedStyle(document.querySelector(s));return Object.fromEntries(fields.map(k=>[k,css[k]]));};return {real:read('#inspector-tabs>button.active'),preview:read('.appearance-inspector-tabs>button.active'),dock:read('.dock-workspace .dock-tab[aria-selected=true]'),previewDock:read('.appearance-preview-dock .dock-tab[aria-selected=true]')};});
+ assert.equal(await page.locator('html').getAttribute('data-color-scheme'),'qingci');assert.equal(await page.locator('html').getAttribute('data-tab-style'),'pill');
+ await open();assert.equal(await page.locator('#appearance-colors').evaluate(e=>e.open),false);assert.equal(await scheme.locator('option').count(),COLOR_SCHEME_IDS.length);assert.deepEqual(await tabs.locator('option').evaluateAll(o=>o.map(e=>e.value)),TAB_STYLE_IDS);assert.equal(await page.locator('#appearance-styles-title').innerText(),'控件样式');assert.equal(await page.locator('.appearance-style-card').count(),STYLE_IDS.length);
+ const reference=await thumb();assert.equal(new Set(reference.map(v=>v[0])).size,1,'style cards use a shared neutral palette');
+ const colors={action:'#DD7755',selection:'#DDBB88',navigation:'#6688BB',control:'#66AA99'};for(const role of COLOR_ROLE_IDS)await custom(role,colors[role]);await density.selectOption('comfortable');const independent=await settings();
+ for(const id of STYLE_IDS){await style(id);assert.deepEqual(await settings(),independent,'control style preserves all other settings');assert.deepEqual(await thumb(),reference,'shape cards never become palette choices');assert.deepEqual(await snapshot(),initial);}
+ for(const tab of TAB_STYLE_IDS){await tabs.selectOption(tab);const v=await visual();assert.deepEqual(v.real,v.preview);assert.deepEqual(v.dock,v.previewDock);}
+ for(const mode of ['classic','graphite','light','system']){await theme.selectOption(mode);assert.deepEqual((await settings()).colors,independent.colors,'appearance mode retains custom colors');}
+ await page.emulateMedia({colorScheme:'dark'});await page.waitForFunction(()=>document.documentElement.dataset.theme==='classic');await page.emulateMedia({colorScheme:'light'});await page.waitForFunction(()=>document.documentElement.dataset.theme==='light');
+ await theme.selectOption('light');await page.locator('[data-save]').click();const saved=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),APPEARANCE_KEY);assert.deepEqual(saved.colors,Object.fromEntries(Object.entries(colors).map(([k,v])=>[k,v.toLowerCase()])));assert.equal('accent' in saved,false);assert.equal(saved.scheme,'qingci');assert.equal(saved.tabs,'underline');assert.deepEqual(saved,normalizeAppearance(saved));
+ await page.reload();await ready();await page.locator('[role=treeitem]').first().click();await open();const restored=await settings();assert.deepEqual(restored.colors,independent.colors);assert.equal(await page.locator('#appearance-colors').evaluate(e=>e.open),false);
+ await scheme.selectOption('ouhe');await custom('navigation','#FF00FF');await style('minimal');await page.keyboard.press('Escape');assert.equal(await page.locator('html').getAttribute('data-color-scheme'),'qingci');await open();assert.deepEqual(await settings(),restored,'cancel restores every role and independent setting');
+ for(const id of COLOR_SCHEME_IDS){await scheme.selectOption(id);assert.equal(await page.locator('html').getAttribute('data-palette-roles'),'true');assert.equal(await page.locator('.appearance-palette-color').count(),6);assert.deepEqual(await thumb(),reference);}
+ await custom('selection','#112233');const beforeReset=await settings();await page.locator('[data-reset]').click();const reset=await settings();assert.deepEqual({...reset,colors:[]},{...beforeReset,colors:[]},'reset affects colors only');const recommended=appearancePalette({scheme:reset.scheme,theme:reset.theme});assert.deepEqual(reset.colors,COLOR_ROLE_IDS.map(role=>recommended.colors[role].toUpperCase()));
+ await custom('navigation','invalid');await page.locator('[data-save]').click();assert.equal(await dialog.count(),1);assert.equal(await colorField('navigation').evaluate(e=>e.validity.valid),false);await page.locator('[data-reset]').click();await page.locator('#appearance-colors>summary').click();
+ await scheme.selectOption('shuimo');await style('refined');await tabs.selectOption('segmented');await density.selectOption('compact');await theme.selectOption('classic');await dialog.screenshot({path:path.join(output,(built?'built':'source')+'-unified-settings.png')});await page.locator('[data-save]').click();assert.deepEqual(await snapshot(),initial);
+ await page.locator('#language-settings').selectOption('en');await open();assert.equal(await page.locator('#appearance-title').innerText(),'Appearance');assert.equal(await page.locator('#appearance-styles-title').innerText(),'Control style');assert.equal(await scheme.locator('option[value=qingci]').innerText(),'Celadon & Gold');
+ for(const width of [1600,1100,768]){await page.locator('[data-cancel]').click();await page.setViewportSize({width,height:1100});const boxes=await page.locator('.tree-brand,.tree-canvas-actions,.tree-resource-actions,.tree-tool-actions').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom};}));for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++)assert.ok(Math.min(boxes[i].right,boxes[j].right)-Math.max(boxes[i].x,boxes[j].x)<1||Math.min(boxes[i].bottom,boxes[j].bottom)-Math.max(boxes[i].y,boxes[j].y)<1,'header at '+width);await open();}
+ await custom('control','#88AA99');await page.setViewportSize({width:320,height:850});assert.ok(await dialog.evaluate(e=>e.scrollWidth<=e.clientWidth+1));await page.locator('[data-save]').scrollIntoViewIfNeeded();await page.locator('[data-save]').click();await page.setViewportSize({width:1600,height:1100});
+ assert.deepEqual(errors,[]);console.log({built,pass:true,legacyMigration:true,palettes:COLOR_SCHEME_IDS.length,independentStylesTabsModes:true,fourCustomRoles:true,saveReloadCancel:true,neutralCards:true,resetValidation:true,projectUnchanged:true,englishNarrow:true,errors});
+}finally{await browser?.close();await new Promise(r=>server.close(r));}

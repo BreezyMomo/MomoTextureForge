@@ -3,7 +3,7 @@
 .appearance-style-picker{padding:18px 22px 0}
 .appearance-style-picker>label{display:block;margin-bottom:8px;font-weight:500}
 .appearance-style-picker .appearance-style-description{margin:10px 0 0;min-height:36px;color:var(--ui-muted);font-size:12px}
-.appearance-styles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.appearance-styles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
 .tree-editor .appearance-styles .appearance-style-card{display:flex;flex-direction:column;gap:4px;min-width:0;margin:0;padding:7px;text-align:left;white-space:normal;border:1px solid var(--ui-line);border-radius:10px;background:var(--ui-panel);color:var(--ui-text);box-shadow:none}
 .tree-editor .appearance-styles .appearance-style-card:hover{border-color:var(--ui-line-strong);background:var(--ui-surface)}
 .tree-editor .appearance-styles .appearance-style-card[aria-pressed=true]{border-color:var(--ui-accent-text);background:var(--ui-selected);color:var(--ui-text);box-shadow:inset 0 0 0 1px var(--ui-accent-text)}
@@ -103,3 +103,24 @@
 :where(:root[data-interface-style=candy]) .tree-editor .tree-timeline{background:var(--ui-inset);border-color:transparent}
 :where(:root[data-interface-style=candy]) #shape-library .tree-pattern-card{background:var(--ui-panel);box-shadow:0 2px 8px color-mix(in srgb,var(--ui-accent) 5%,transparent)}
 :where(:root[data-interface-style=candy]) #shape-library.tree-library-grid .tree-pattern-text{background:var(--ui-panel)}
+
+/* Airy is a separate opt-in style; existing framed styles retain their geometry. */
+.appearance-style-card[data-style=airy]{--preset-bg:#1e2229;--preset-accent:#dfae72;--preset-surface:#343941}
+.appearance-style-card[data-style=airy] .appearance-style-art{--preset-round:6px}
+.appearance-style-card[data-style=airy] .preset-mini-sidebar{background:transparent;border-top:1px solid var(--preset-surface);border-bottom:1px solid var(--preset-surface)}
+:root[data-interface-style=airy]{--ui-module-bg:transparent;--ui-module-heading:transparent;--ui-module-shadow:none;--ui-pane-shadow:0 2px 7px #00000018}
+:root[data-interface-style=airy] .tree-editor .inspector-module{border-color:transparent;border-radius:0;background:transparent;box-shadow:none}
+:root[data-interface-style=airy] .tree-editor .inspector-module+.inspector-module{border-top-color:var(--ui-line-soft)}
+:root[data-interface-style=airy] .tree-editor .inspector-module>summary{background:transparent;border-bottom-color:transparent}
+:root[data-interface-style=airy] .tree-editor .inspector-module>summary:hover{background:var(--ui-hover)}
+:root[data-interface-style=airy] .tree-editor :is(#inspector,.node-shortcuts) :is(input:not([type=range]):not([type=checkbox]):not([type=radio]):not([type=color]),select){border-color:transparent;background:var(--ui-field-bg);box-shadow:none}
+:root[data-interface-style=airy] .tree-editor :is(#inspector,.node-shortcuts) :is(input,select):hover:not(:disabled){border-color:var(--ui-line-strong)}
+:root[data-interface-style=airy] .tree-editor :is(#inspector,.node-shortcuts) :is(input,select):focus-visible{outline:2px solid var(--ui-accent-text);outline-offset:1px}
+:root[data-interface-style=airy] .tree-editor :is(.inspector-module-body>button,.tree-number-field>button,.selection-number-field>button):not(.primary):not(.recording):not([aria-pressed=true]):not(.key-at-cursor){border-color:transparent;background:transparent;box-shadow:none}
+:root[data-interface-style=airy] .tree-editor :is(.inspector-module-body>button,.tree-number-field>button,.selection-number-field>button):hover:not(:disabled){background:var(--ui-hover)}
+:root[data-interface-style=airy] .appearance-preview-module{border-color:transparent;border-top-color:var(--ui-line-soft);border-radius:0;background:transparent;box-shadow:none}
+:root[data-interface-style=airy] .appearance-preview-module>strong{background:transparent;border-bottom-color:transparent}
+:root[data-interface-style=airy] .appearance-preview-value :is(output,.appearance-preview-icon){border-color:transparent;box-shadow:none}
+:root[data-interface-style=airy] .appearance-preview-icon{background:transparent}
+:root[data-interface-style=airy] .tree-editor .post-effect{border-color:transparent;border-top-color:var(--ui-line-soft);border-radius:0;background:transparent}
+:root[data-interface-style=airy] .tree-editor .post-effect>details>summary{background:transparent}

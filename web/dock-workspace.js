@@ -2,9 +2,11 @@ import {onLanguageChange} from './language.js';
 import {uiText,uiFormat} from './ui-language.js';
 import {animateUI,animateLayout,layoutRects,reducedMotion} from './editor-motion.js';
 import {PANEL_IDS,PANEL_TITLES,LAYOUT_KEY,layoutPreset,sanitizeLayoutSettings,panelStack,findLayoutNode,closePanel,activatePanel,dockPanel,floatPanel,showPanel} from './dock-layout.js';
+import {createSplitResize} from './dock-resize.js';
 
 const element=(tag,className,text)=>{const e=document.createElement(tag);if(className)e.className=className;if(text)e.textContent=uiText(text);return e;};
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+const splitPercent=ratio=>String(Math.round(ratio*10000)/100);
 
 // Move the existing elements: controls, canvas contexts, selection and animation retain their owners.
 export function createDockWorkspace({host,menuHost,panels,onChange=()=>{},onMessage=()=>{},onVisibility=()=>{}}){
@@ -50,8 +52,9 @@ export function createDockWorkspace({host,menuHost,panels,onChange=()=>{},onMess
   if(n.kind==='split'){
    const container=element('div','dock-split dock-split-'+n.axis);container.dataset.splitId=n.id;
    const first=element('div','dock-branch'),second=element('div','dock-branch');first.style.flex=`0 0 calc(${n.ratio*100}% - 3px)`;second.style.flex='1 1 0';first.append(renderTree(n.first));second.append(renderTree(n.second));
-   const handle=element('div','dock-splitter');handle.tabIndex=0;handle.setAttribute('role','separator');handle.setAttribute('aria-label',(n.axis==='x' ? uiText("layout.resizePanelWidth") : uiText("layout.resizePanelHeight")));handle.setAttribute('aria-orientation',n.axis==='x'?'vertical':'horizontal');handle.setAttribute('aria-valuemin','12');handle.setAttribute('aria-valuemax','88');handle.setAttribute('aria-valuenow',String(Math.round(n.ratio*100)));
-   handle.onpointerdown=e=>splitGesture(e,container,first,n);handle.onkeydown=e=>{const keys=n.axis==='x'?['ArrowLeft','ArrowRight']:['ArrowUp','ArrowDown'];if(![...keys,'Home','End'].includes(e.key))return;e.preventDefault();e.stopPropagation();n.ratio=e.key==='Home'?.12:e.key==='End'?.88:clamp(n.ratio+(e.key===keys[0]?-.02:.02),.12,.88);apply(layout,{motion:false});host.querySelector(`[data-split-id="${n.id}"] > .dock-splitter`)?.focus();};container.append(first,handle,second);return container;
+   const handle=element('div','dock-splitter');handle.tabIndex=0;handle.setAttribute('role','separator');handle.setAttribute('aria-label',(n.axis==='x' ? uiText("layout.resizePanelWidth") : uiText("layout.resizePanelHeight")));handle.setAttribute('aria-orientation',n.axis==='x'?'vertical':'horizontal');handle.setAttribute('aria-valuemin','1');handle.setAttribute('aria-valuemax','99');handle.setAttribute('aria-valuenow',splitPercent(n.ratio));
+   handle.onfocus=()=>prepareSplitResize(container,n);
+   handle.onpointerdown=e=>splitGesture(e,container,n);handle.onkeydown=e=>{const keys=n.axis==='x'?['ArrowLeft','ArrowRight']:['ArrowUp','ArrowDown'];if(![...keys,'Home','End'].includes(e.key))return;e.preventDefault();e.stopPropagation();const resize=prepareSplitResize(container,n);resize.update(e.key==='Home'?resize.minDelta:e.key==='End'?resize.maxDelta:resize.size*(e.key===keys[0]?-.02:.02));apply(layout,{motion:false});host.querySelector(`[data-split-id="${n.id}"] > .dock-splitter`)?.focus();};container.append(first,handle,second);return container;
   }
   const container=element('section','dock-stack');container.dataset.stackId=n.id;
   const head=element('div','dock-stack-header'),tabs=element('div','dock-tabs');tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label',uiText("layout.panelTabs"));
@@ -67,9 +70,17 @@ export function createDockWorkspace({host,menuHost,panels,onChange=()=>{},onMess
   document.addEventListener('pointercancel',event=>{if(event.pointerId!==e.pointerId)return;cleanup();cancel();},opts);
   document.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();cleanup();cancel();}},opts);
  }
- function splitGesture(e,container,first,n){
-  if(e.button!==0)return;e.preventDefault();e.stopPropagation();const rect=container.getBoundingClientRect(),before=n.ratio;document.body.classList.add('dock-is-dragging');
-  listenGesture(e,event=>{if(event.pointerId!==e.pointerId)return;const size=n.axis==='x'?rect.width:rect.height,pos=n.axis==='x'?event.clientX-rect.left:event.clientY-rect.top;n.ratio=clamp(pos/Math.max(1,size),.12,.88);first.style.flexBasis=`calc(${n.ratio*100}% - 3px)`;onChange();},()=>apply(layout,{motion:false}),()=>{n.ratio=before;render();});
+ function prepareSplitResize(container,n){
+  const dimension=n.axis==='x'?'width':'height',size=container.getBoundingClientRect()[dimension],handle=container.querySelector(':scope > .dock-splitter');
+  const resize=createSplitResize(n,size,{gap:handle.getBoundingClientRect()[dimension]});
+  handle.setAttribute('aria-valuemin',splitPercent(n.ratio+resize.minDelta/size));handle.setAttribute('aria-valuemax',splitPercent(n.ratio+resize.maxDelta/size));
+  const elements=new Map([container,...container.querySelectorAll('.dock-split')].map(e=>[e.dataset.splitId,e]));
+  const views=resize.splits.map(({node})=>({node,first:elements.get(node.id).firstElementChild,handle:elements.get(node.id).querySelector(':scope > .dock-splitter')}));
+  return {...resize,size,update(delta){resize.resize(delta);for(const view of views){view.first.style.flexBasis=`calc(${view.node.ratio*100}% - 3px)`;view.handle.setAttribute('aria-valuenow',splitPercent(view.node.ratio));}}};
+ }
+ function splitGesture(e,container,n){
+  if(e.button!==0)return;e.preventDefault();e.stopPropagation();const resize=prepareSplitResize(container,n),start=n.axis==='x'?e.clientX:e.clientY;document.body.classList.add('dock-is-dragging');
+  listenGesture(e,event=>{if(event.pointerId!==e.pointerId)return;resize.update((n.axis==='x'?event.clientX:event.clientY)-start);onChange();},()=>apply(layout,{motion:false}),()=>{resize.restore();render();});
  }
  function windowGesture(e,win,f,kind){
   if(e.button!==0)return;e.preventDefault();e.stopPropagation();const rect=host.getBoundingClientRect(),before={x:f.x,y:f.y,w:f.w,h:f.h};document.body.classList.add('dock-is-dragging');

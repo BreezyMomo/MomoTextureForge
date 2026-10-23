@@ -19,7 +19,7 @@ The default places **Graphics, Node tree, Canvas preview, and Inspector** from l
 1. Drag a panel's title tab, such as Graphics.
 2. Move it to a target panel's left, right, top or bottom edge. Release when the blue docking region and docking hint appear to create a split.
 3. Move to the target's center and release on the merge-tabs hint to share its space. Click tab names to switch panels.
-4. Drag separators to change proportions, or focus a separator and use arrow keys for small adjustments.
+4. Drag a separator to resize only the panels immediately beside it; other separators stay in place. This also applies to panels stacked vertically. Resizing stops at the adjacent panels' minimum size without pushing other panels. Focus a separator and use arrow keys for small adjustments, or Home/End for the available limits. Press Esc during a drag to cancel. Resizing the browser window still scales the overall layout proportionally.
 
 Press **Esc** to cancel dragging. Panel content, selection, parameters and canvas undo history remain intact. Dragging a panel tab differs from dragging a node in the tree.
 
