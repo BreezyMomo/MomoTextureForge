@@ -1,8 +1,9 @@
+import {noiseWarpActive} from './noise-warp.js';
 import {NORMAL_GLSL,setNormalUniforms} from './normal-map.js';
 import {CURVES_GLSL,curveUniforms,hasChannelCurves} from './channel-curves.js';
 import {channelSourceSelection,sanitizeChannelSources} from './output-channels.js';
-import {FX_GLSL,applyPostFx} from './post-fx.js';
-import {effectsUseTime,effectEnabled} from './post-effect-specs.js';
+import {FX_GLSL,applyPostFx,specializeFxShader} from './post-fx.js';
+import {effectsUseTime,effectEnabled,effectValues} from './post-effect-specs.js';
 import {resources} from './resource-assets.js';
 import {formulaTime} from './formula-time.js';
 import {contourPasses} from './contour.js';
@@ -69,7 +70,7 @@ const blendIds={over:0,add:1,max:2,multiply:3,subtract:4,screen:5,difference:6,o
 const rgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255);
 export class TreeRenderer{
  constructor(canvas){this.base=new Renderer(canvas);this.canvas=canvas;this.gl=this.base.gl;this.float=this.base.float;this.programs=new Map();this.uniforms=new Map();this.pool=[];this.reclaimable=new Set();this.cache=new Map();this.live=new Set();this.allocated=0;this.usedKeys=new Set();this.budget=256*1024*1024;this.lastCounts=new Map();}
- program(final=false){const key=final?'final':'tree';if(this.programs.has(key))return this.programs.get(key);const gl=this.gl,compile=(src,type)=>{const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){const msg=gl.getShaderInfoLog(s);gl.deleteShader(s);throw Error(msg);}return s;};const v=compile(VERTEX_GLSL,gl.VERTEX_SHADER),f=compile(final?FINAL:HEADER,gl.FRAGMENT_SHADER),p=gl.createProgram();gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);gl.deleteShader(v);gl.deleteShader(f);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(p));this.programs.set(key,p);return p;}
+ program(final=false,operation=0){const key=final?'final':operation>=32&&operation<=42?'effect:'+operation:'tree';if(this.programs.has(key))return this.programs.get(key);const gl=this.gl,compile=(src,type)=>{const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){const msg=gl.getShaderInfoLog(s);gl.deleteShader(s);throw Error(msg);}return s;};const v=compile(VERTEX_GLSL,gl.VERTEX_SHADER),f=compile(final?FINAL:specializeFxShader(HEADER,operation),gl.FRAGMENT_SHADER),p=gl.createProgram();gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);gl.deleteShader(v);gl.deleteShader(f);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(p));this.programs.set(key,p);return p;}
  location(program,name){let locations=this.uniforms.get(program);if(!locations){locations=new Map();this.uniforms.set(program,locations);}if(!locations.has(name))locations.set(name,this.gl.getUniformLocation(program,name));return locations.get(name);}
  discard(t){for(const tex of t.textures)this.gl.deleteTexture(tex);this.gl.deleteFramebuffer(t.fb);this.allocated-=t.bytes;}
  trimPool(limit=0){while(this.pool.length&&this.allocated>limit)this.discard(this.pool.shift());}
@@ -101,7 +102,7 @@ export class TreeRenderer{
  pass(target,{source=null,dest=null,mask=null,op=3,box=[.5,.5,1,1],axis=[.5,.5,0,1],repeat=false,opacity=1,blend='over',palette=['#000000','#ffffff'],recolor=false,imageLuminance=false,post=[0,1,1,0,1,0,1],inverted=false,contourStep=[0,0],table=null,count=0,inPlace=false,fxAmount=0,fxThreshold=0,fxData=[],fxColors=[],curves=null}={}){
  if(op===1)({box,axis}=boundedPlacement(box,axis,source?.bounds,target.bounds));
  else if(![0,4,5,9].includes(op))target.bounds=source?.bounds??UNIT_BOUNDS;
- const gl=this.gl,p=this.program();gl.useProgram(p);const loc=n=>this.location(p,n);gl.bindFramebuffer(gl.FRAMEBUFFER,target.fb);gl.drawBuffers([gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1]);gl.viewport(0,0,target.w,target.h);gl.disable(gl.BLEND);
+ const gl=this.gl,p=this.program(false,op);gl.useProgram(p);const loc=n=>this.location(p,n);gl.bindFramebuffer(gl.FRAMEBUFFER,target.fb);gl.drawBuffers([gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1]);gl.viewport(0,0,target.w,target.h);gl.disable(gl.BLEND);
  const fallback=source?.textures[0]??dest?.textures[0]??mask?.textures[0];if(!fallback)return;
  const textures=[source?.textures[0],source?.textures[1],dest?.textures[0],dest?.textures[1],mask?.textures[1],table];
  ['srcColor','srcHeight','dstColor','dstHeight','maskTex','tableTex'].forEach((name,i)=>{gl.activeTexture(gl.TEXTURE0+i);gl.bindTexture(gl.TEXTURE_2D,textures[i]??fallback);gl.uniform1i(loc(name),i);});
@@ -227,7 +228,7 @@ export class TreeRenderer{
  const animated=x=>effectsUseTime(x)||Object.keys(x.tracks).length||x.uv[4]!==0||x.timing.outside==='hide'||x.timing.before==='hide'||x.timing.after==='hide'||x.instancePhase||x.kind==='shape'&&x.shapeClock?.follow!==false&&CATALOG.find(p=>p.id===x.type)?.usesTime||x.children.some(animated)||x.mask&&animated(x.mask);
  const key=JSON.stringify([this.packSelection?.id??null,this.quality,original,animated(original)?[e.progress,this.formulaSeconds]:0,e.visible,w,h,aspect,need,palette,palette.stops]);this.usedKeys.add(key);if(this.cache.has(key)){const t=this.cache.get(key);this.reclaimable.delete(t);this.cache.delete(key);this.cache.set(key,t);for(const [id,count]of t.layoutCounts??[])this.lastCounts.set(id,count);return t;}
  if(!e.visible){const blank=this.target(w,h,false,aspect);if(!this.streaming)this.cache.set(key,blank);return blank;}
- const records=this.records(n,e.progress,{original,aspect});this.lastCounts.set(n.id,records.length);const effectNeed=['kaleidoscope','mirror','swirl','pixelate','sketch'].some(id=>effectEnabled(n,id))?null:need;const outputBounds=this.nodeBounds(n,e.progress,aspect,effectNeed,original,parentTime,records);let out;
+ const records=this.records(n,e.progress,{original,aspect});this.lastCounts.set(n.id,records.length);const needsFullWarp=effectEnabled(n,'noiseWarp')&&noiseWarpActive(effectValues(n,'noiseWarp'));const effectNeed=needsFullWarp||['kaleidoscope','mirror','swirl','pixelate','sketch'].some(id=>effectEnabled(n,id))?null:need;const outputBounds=this.nodeBounds(n,e.progress,aspect,effectNeed,original,parentTime,records);let out;
  if(n.arrange[0]){
   out=this.boundedTarget(w,h,outputBounds,aspect);
   if(n.arrange[0]===14&&n.arrangeExtra.showSource){const src=this.content({kind:'group',children:[n.children[0]],boundary:n.boundary==='repeat'?'visible':n.boundary},e.progress,w,h,palette,aspect,n.boundary==='repeat'?null:out.bounds);out=this.composite(out,src,{op:1,repeat:n.boundary==='repeat'});}

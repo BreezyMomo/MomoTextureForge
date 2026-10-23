@@ -14,7 +14,7 @@ test('catalog contains all current graph bodies and matching thumbnails',async()
 });
 
 test('loaded formula sources match the current files and pattern versions are valid',async()=>{
- for(const [file,source] of Object.entries(BUILTIN.sources))assert.equal(await readFile(new URL('web/definitions/'+file,root),'utf8'),source,file);
+ for(const [file,source] of Object.entries(BUILTIN.sources))assert.equal((await readFile(new URL('web/definitions/'+file,root),'utf8')).replace(/\r\n?/g,'\n'),source,file);
  for(const p of BUILTIN.catalog)assert.ok(Number.isSafeInteger(p.definition.revision)&&p.definition.revision>=1,p.id);
 });
 

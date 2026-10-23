@@ -30,7 +30,7 @@ description: Guide users to create visual effects in Momo Texture Forge and to s
 
 - [界面与资源管理](references/workspace.md)：配色/控件风格/页签、当前图库分类、自定义画布比例与自由平移、面板拖动停靠/拆分/标签/悬浮与布局保存、图库、图形列表、实例、版本、项目保存、画布、多选、组合、图形参数与二维/三维贴图预览。
 - [远程图库使用与管理](references/remote-libraries.md)：添加多个订阅、下载与离线使用、同ID卡片、更新/删除范围、纯静态本地管理器、Git/Pages/CDN发布与报错处理。
-- [排列与合成](references/layout-compositing.md)：区域与UV、边框/透明轮廓/人字与编织/接口拼接、渐变/流场、随机/取模子节点混排、防堆叠、铺满区域、实例比例、展开编辑、无缝重复、颜色、通道曲线、可排序的节点后处理和遮罩。
+- [排列与合成](references/layout-compositing.md)：区域与UV、边框/透明轮廓/人字与编织/接口拼接、渐变/流场、随机/取模子节点混排、防堆叠、铺满区域、实例比例、展开编辑、无缝重复、颜色、通道曲线、可排序的节点后处理（含网点、抖动、油画、故障、字符画、像素排序、热浪/水波/能量噪声扭曲）和遮罩。
 - [动画与导出](references/animation-export.md)：累计秒数与0～1进度、录制/关键帧/曲线、相位、按节点打包 RGBA、GIF动画导出、格式和尺寸预算。
 - [资源创建与图片处理](references/image-editor.md)：图片/JSON/公式入口、背景、居中、颜色、轮廓、SVG与图片转法线。
 - [效果配方与排错](references/recipes.md)：完整技能预设的拆解与组件复用、可替换单元点阵、波形环纹、分层光帘、花型杂排、呼吸光环、镂空和常见问题。
