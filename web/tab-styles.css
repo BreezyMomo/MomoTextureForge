@@ -3,7 +3,8 @@
 .appearance-layout-options{margin-bottom:20px}
 .appearance-tabs-option small{display:block;font-size:11px;line-height:1.6;color:var(--ui-muted);margin-top:6px}
 .appearance-preview .appearance-preview-dock{height:auto;min-height:0;margin-bottom:16px;flex:none}
-.appearance-preview-content{padding:12px}
+.appearance-preview-content{display:flex;flex-direction:column;gap:16px;padding:12px}
+.appearance-preview-content>:is(.appearance-preview-node,.appearance-preview-tabs){margin-bottom:0}
 .appearance-preview .appearance-preview-module{margin-bottom:0}
 .appearance-preview .appearance-preview-tabs{margin-top:0}
 

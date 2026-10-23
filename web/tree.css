@@ -406,11 +406,12 @@
 .tree-editor button.animation-key[aria-pressed=true]{color:var(--ui-key-selected);outline:1px solid var(--ui-text);outline-offset:-1px;border-radius:3px;filter:none;box-shadow:none}
 .tree-editor .animation-tools button.recording[aria-pressed=true]{background:var(--ui-danger-bg);border-color:var(--ui-danger);color:var(--ui-danger);box-shadow:none}
 .tree-editor #shape-library .graphic-favorite[aria-pressed=true]{background:var(--ui-warning-bg);color:var(--ui-key)}
-.appearance-preview-signals .animation-tools{justify-content:space-between;margin:0;padding:0 0 6px}
+.appearance-preview-signals{display:flex;flex-direction:column;gap:10px}
+.appearance-preview-signals .animation-tools{justify-content:space-between;margin:0;padding:0}
 .appearance-preview-signals .appearance-motion-sample{display:flex;align-items:center;gap:6px}
 .appearance-preview-signals .graphic-animated{position:static;flex:none}
 .appearance-preview-signals .animation-lane{height:36px;border:1px solid var(--ui-line);border-radius:var(--ui-control-radius);background-color:var(--ui-inset)}
 .appearance-preview-signals .animation-interval{left:10%;width:75%}
 .appearance-preview-signals .animation-key{left:42%}
 .appearance-preview-signals .animation-playhead{left:62%}
-.appearance-preview-signals>small{display:block;margin:8px 0 12px;color:var(--ui-muted);line-height:1.6}
+.appearance-preview-signals>small{display:block;margin:0;color:var(--ui-muted);line-height:1.6}
