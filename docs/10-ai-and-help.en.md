@@ -20,6 +20,8 @@
 - **Gitee repository ↗:** opens the mainland source mirror for documentation and downloads; it follows GitHub synchronization.
 - **Support:** an independent toolbar entry opens the WeChat appreciation code for voluntary donations toward maintenance and development.
 
+The hand-drawn effect panel offers **Download fill shader reference**, including sources, current settings, mask and comparison images for AI integration. See [Shader reference packages](14-shader-reference.en.md).
+
 Skills download as ZIPs. Extract them and load them in a Skill-capable AI application. They are not graphic resources and should not be imported into the library.
 
 ## 2. Give the AI your current graphics catalog

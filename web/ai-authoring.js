@@ -81,7 +81,7 @@ export const AUTHORING_GUIDE=`# Momo Texture Forge 图形创作规范
 验收：结构校验不代表GLSL编译或视觉正确。必须通过编辑器或随附命令行工具验证预览，检查默认值、参数两端和中间值；动画查看0、0.5、1、2秒。避免除零、非法sqrt/pow/normalize、无界循环。确认画面与用户描述一致，参数实际生效，无意外裁边；编译失败时使用“复制修复信息”。不宣称未经执行的检查通过。`;
 export const AUTHORING_SKILL=`---
 name: texture-forge-author
-description: Help users turn screenshots or ideas into Momo Texture Forge resources by choosing formula, custom generator, SVG or bitmap workflows, optionally refining images, debugging procedural graphics, and guiding image editing and import.
+description: Create Momo Texture Forge graphics and textures from references, or adapt its supplied reference shaders to a game project with supporting masks. Supports formula, generator, SVG and bitmap workflows, preview validation and shader integration guidance.
 ---
 
 # Texture Forge 图形创作
@@ -91,6 +91,8 @@ description: Help users turn screenshots or ideas into Momo Texture Forge resour
 <!-- /doc-language -->
 
 帮助用户把截图、参考图或文字想法变成可导入资源。流程：理解需求 → 辅助选择公式/生成器/SVG/位图 → 按需整理参考图 → 制作与验证 → 导入编辑器 → 根据反馈修改。公式最灵活，但不必强求公式。
+
+用户要把内置参考Shader接入游戏项目时，直接阅读[参考Shader与配套贴图](references/shader-reference.md)，结合包内源码、参数和目标引擎处理；无需先走图形JSON路线。需要遮罩等贴图时复用下方创作流程。参考源码随本Skill提供，不假设能直接访问用户当前画布。
 
 ## 1. 理解需求
 

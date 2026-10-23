@@ -29,6 +29,7 @@
 | 在深浅背景上对比透明、相加，检查动画消散 | [特效预览](05-canvas-and-compositing.md#6-在背景上检查特效混合) |
 | 录制关键帧、编辑曲线、设置时间与循环 | [06 · 动画与时间轴](06-animation.md) |
 | 完整技能、可替换点阵、波形环纹和极光帘 | [13 · 技能、环纹与光帘预设](13-effect-presets.md) |
+| 从效果面板导出Shader参考与遮罩、交给AI接入游戏 | [14 · Shader参考包](14-shader-reference.md) |
 | 图片转法线、查看高度、检查三维材质 | [07 · 法线与三维预览](07-normal-and-material.md) |
 | 导出 PNG、EXR、序列帧、图集、PSD、SVG | [08 · 导出与交付](08-export.md) |
 | 订阅远程图形库、维护与发布自己的图库 | [09 · 远程图库与管理器](09-remote-libraries.md) |

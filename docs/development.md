@@ -8,6 +8,8 @@
 
 ## 本地启动
 
+Shader参考从手绘后处理面板直接下载，无独立试验台。`web/shaders/handdrawn-fill.hlsl` 为规范核心，内部GLSL参考图采用固定语法映射；`build-shader-references.mjs` 嵌入源码和双语说明，`build-authoring-kit.mjs` 同步到创作Skill。`node tests/shader-reference-browser-check.mjs`（静态版加 `--built`）检查参数映射、源码包、两种预览图、项目不变及英文入口，不截图。`node tests/shader-reference-hlsl-check.mjs --fxc <fxc.exe路径>` 验证核心SM5编译，不能替代目标Unity/URP验证；源码/静态版仍需双语界面回归。
+
 需要 Node.js 22+ 和支持 WebGL2 的桌面浏览器。在仓库根目录执行：
 
 ```sh

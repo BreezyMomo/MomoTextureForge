@@ -31,6 +31,7 @@ Source and documentation: [GitHub primary repository](https://github.com/BreezyM
 - **Custom workspaces:** dock, split, merge tabs and float panels inside the page. Layouts are remembered automatically and can be saved by name.
 - **Common controls and appearance:** collapse, reorder and pin parameter modules to one or all nodes; move curve windows and customize themes, accents, style and density.
 - **Delivery and reuse:** PNG, GIF animations, EXR, frame ZIPs, atlases, PSD, SVG contours, editable projects, resource backups and remote libraries.
+- **Reference shaders:** the [Shader reference packages](docs/14-shader-reference.en.md) exports HLSL, a Unity URP reference wrapper, current effect settings, comparison images and masks from the hand-drawn effect panel for AI-assisted project integration using the Authoring Skill.
 
 | Edit an effect generator | Inspect normals and lighting |
 | --- | --- |

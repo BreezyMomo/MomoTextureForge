@@ -1,6 +1,6 @@
 ---
 name: texture-forge-author
-description: Help users turn screenshots or ideas into Momo Texture Forge resources by choosing formula, custom generator, SVG or bitmap workflows, optionally refining images, debugging procedural graphics, and guiding image editing and import.
+description: Create Momo Texture Forge graphics and textures from references, or adapt its supplied reference shaders to a game project with supporting masks. Supports formula, generator, SVG and bitmap workflows, preview validation and shader integration guidance.
 ---
 
 # Texture Forge resource authoring
@@ -10,6 +10,8 @@ description: Help users turn screenshots or ideas into Momo Texture Forge resour
 <!-- /doc-language -->
 
 Turn references or ideas into importable resources: understand → choose formula/generator/SVG/bitmap → prepare references if useful → create/validate → import → revise from feedback. Formulas are flexible, not mandatory.
+
+For game-project integration of supplied shaders, read [Reference shaders and supporting textures](references/shader-reference.en.md) directly and use the actual source package, parameters and target environment. No graphic JSON is required for that route. Reuse the authoring workflow below for masks or other textures. Reference sources are bundled; do not assume access to the user's current canvas.
 
 ## 1. Understand the request
 

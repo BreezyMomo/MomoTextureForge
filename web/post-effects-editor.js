@@ -3,7 +3,7 @@ import {EFFECT_BY_ID,effectOrder,effectEnabled} from './post-effect-specs.js';
 import {dragAutoScroll,createReorderPreview,animateUI,animateLayout,layoutRects} from './editor-motion.js';
 const expanded=new Map(),helpOpen=new Set(),pendingMotion=new Map(),pendingFocus=new Map();
 // One shared editor is used by the inspector, multi-selection and pinned node controls.
-export function createPostEffectsEditor({document:doc,host,node,scope=node.id,buildParameters,onToggle,onReset,onOrder,onResetAll,enabled=id=>effectEnabled(node,id),locked=()=>false}){
+export function createPostEffectsEditor({document:doc,host,node,scope=node.id,buildParameters,onToggle,onReset,onOrder,onResetAll,enabled=id=>effectEnabled(node,id),locked=()=>false,allowShaderExport=true}){
  const el=(tag,attrs={})=>{const e=doc.createElement(tag);for(const [key,value]of Object.entries(attrs))if(key==='text')e.textContent=value;else e.setAttribute(key,value);return e;};
  const panel=el('div',{class:'post-effects-editor'}),toolbar=el('div',{class:'post-effects-toolbar'}),list=el('div',{class:'post-effects-list','aria-label':uiText('fx.order')});host.append(panel);panel.append(toolbar,el('p',{class:'tree-note',text:uiText('fx.hint')}),list);
  const button=(text,label,action)=>{const b=el('button',{type:'button',text,title:label,'aria-label':label});b.onclick=e=>{e.preventDefault();e.stopPropagation();action();};return b;};
@@ -33,6 +33,10 @@ export function createPostEffectsEditor({document:doc,host,node,scope=node.id,bu
     const disclosure=el('details',{class:'post-effect-advanced','data-sketch-group':group}),content=el('div'),groupKey=key+':'+group;disclosure.append(el('summary',{text:uiText('fx.group.'+group)}),content);body.append(disclosure);buildParameters(content,{...spec,parameters:spec.parameters.filter(p=>keys.includes(p.key))});
     if(!content.childElementCount){disclosure.remove();continue;}disclosure.open=expanded.get(groupKey)??false;disclosure.ontoggle=()=>{if(disclosure.isConnected)expanded.set(groupKey,disclosure.open);};
    }
+  }
+  if(id==='sketch'&&allowShaderExport){
+   const exportButton=button(uiText('shader.downloadFill'),uiText('shader.downloadFill'),()=>doc.dispatchEvent(new doc.defaultView.CustomEvent('momo-download-shader-reference',{detail:{nodeId:node.id}})));
+   body.append(el('p',{class:'tree-note',text:uiText('shader.fillReferenceHint')}),exportButton);
   }
   grip.onpointerdown=start=>{
    if(start.button!==0)return;start.preventDefault();start.stopPropagation();const before=order(),events=new AbortController(),options={capture:true,signal:events.signal};let pointerY=start.clientY,preview=null,ghost=null;
