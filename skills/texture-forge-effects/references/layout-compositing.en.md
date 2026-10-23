@@ -155,7 +155,7 @@ For softer smoke or mask coverage, adjust Alpha. To change brightness while keep
 
 ### Node post-processing and execution order
 
-Choose **Composite → Post-processing → Add effects**. The main panel shows only effects already added to this node. The picker searches Chinese and English names and uses, offers one-click clearing, and filters Lighting and blur, Distortion, Color mapping, Contours and material, Stylization, or Masks and dissolves. Move the window by its header. It stays open after adding an effect for consecutive additions. Every thumbnail renders the same frozen specimen with that effect's saved parameters when the window opens. It does not preview the whole artwork or edit the canvas. Visible cards render first; closing releases preview resources.
+Choose **Composite → Post-processing → Add effects**. The main panel shows only effects already added to this node. The picker searches Chinese and English names and uses, offers one-click clearing, and filters Lighting and blur, Distortion, Color mapping, Contours and material, Stylization, or Masks and dissolves. Move the window by its header. It stays open after adding an effect for consecutive additions. Thumbnails use effect-specific geometric details, neon marks, grids, landscape illustrations, hearts or droplets with curated demonstration settings, rendered through the real post-processing pipeline. Before is on the left and After on the right; drag the divider, or focus the comparison slider and use arrows or Home/End. Motion examples play on hover or keyboard focus and return to their still image on leave/blur; reduced-motion preferences keep them still. Demonstrations neither read nor overwrite node parameters; adding retains existing settings under the usual rules and browsing never edits the canvas. Visible cards render first, and closing releases preview resources.
 
 Each effect shows key parameters or bypass/mixed status below its name. The switch only bypasses the effect, keeping it in the stack. **⋯ → About this effect** toggles help without expanding parameters; the menu also offers parameter reset and **Remove from stack (keep settings)**. Removal stops the effect even where an enable keyframe is on, retaining parameters, keyframes and the original switch state. Readding places it at the bottom and restores these settings; previously bypassed effects remain bypassed. Parameter reset and removal are separate operations.
 
@@ -174,7 +174,7 @@ Height to normal converts current height into node colors while retaining alpha 
 
 ### Creative style effects
 
-Ten new effects share the node stack with the original seventeen. Open **Composition examples → Composition practice → Creative effect comparison** for the original and all ten styles. Three additional examples demonstrate Comic print, Retro handheld and Hologram glitch. Read the comparison left to right, top to bottom; select a node to inspect its settings.
+These ten creative styles share the node stack with the other post-effects. Open **Composition examples → Composition practice → Creative effect comparison** for the original and all ten styles. Three additional examples demonstrate Comic print, Retro handheld and Hologram glitch. Read the comparison left to right, top to bottom; select a node to inspect its settings.
 
 | Effect | Controls and uses |
 | --- | --- |

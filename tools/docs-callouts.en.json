@@ -151,8 +151,10 @@
     "Enter a hexadecimal color"
   ],
   "compositing": [
-    "Bloom strength",
-    "Bloom radius"
+    "Open the picker and add effects consecutively",
+    "Open help, reset or remove while keeping settings",
+    "Adjust this node’s Bloom strength",
+    "Drag the effect handle to change processing order"
   ],
   "effect-preview": [
     "Effect preview",
@@ -305,5 +307,11 @@
     "Save appearance preferences in this browser",
     "Choose a tab style independently",
     "Choose a color scheme independently"
+  ],
+  "post-effect-picker": [
+    "Search effect names or uses",
+    "Filter by effect category",
+    "Drag the divider to compare Before and After",
+    "Add the effect while retaining existing settings"
   ]
 }

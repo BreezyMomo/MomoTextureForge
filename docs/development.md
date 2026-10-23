@@ -6,6 +6,8 @@
 
 [手册目录](README.md) · [返回项目首页](../README.md)
 
+后处理卡片的演示素材和参数在 `web/post-effect-specimens.js`，使用独立渲染器和真实 `applyPostFx`，不注册图库资源、不读取节点设置。缩略图为384×240的原图/效果对照，懒加载且只播放当前悬停/聚焦卡片，遵循减少动态偏好并在关闭时释放上下文。`node tests/post-effect-previews-browser-check.mjs`（静态版加 `--built`）检查全部31项的像素差异、运动、对照拖动、项目隔离、保留设置和窄屏；测试仅导出演示素材联系表供检查，不拍界面截图。
+
 ## 本地启动
 
 Shader参考从手绘后处理面板直接下载，无独立试验台。`web/shaders/handdrawn-fill.hlsl` 为规范核心，内部GLSL参考图采用固定语法映射；`build-shader-references.mjs` 嵌入源码和双语说明，`build-authoring-kit.mjs` 同步到创作Skill。`node tests/shader-reference-browser-check.mjs`（静态版加 `--built`）检查参数映射、源码包、两种预览图、项目不变及英文入口，不截图。`node tests/shader-reference-hlsl-check.mjs --fxc <fxc.exe路径>` 验证核心SM5编译，不能替代目标Unity/URP验证；源码/静态版仍需双语界面回归。
@@ -171,6 +173,8 @@ node tools/capture-docs.mjs resources animation normal export remote-ai manager
 node tools/capture-docs.mjs docking
 node tools/capture-docs.mjs colors
 node tools/capture-docs.mjs shortcuts ribbons appearance
+node tools/capture-docs.mjs post-effects
+node tools/capture-docs.mjs --language en post-effects
 ```
 
 | 组 | 画面 |
@@ -184,6 +188,7 @@ node tools/capture-docs.mjs shortcuts ribbons appearance
 | project-files | 只更新文件菜单，按实际控件位置自动取景 |
 | docking | 面板标签、网页内悬浮与布局保存菜单 |
 | colors | 图形页签内的透明度、配色来源、渐变色标、色阶/反相和 HEX |
+| post-effects | 仅更新后处理效果栈和效果选择器，保留其他截图 |
 | node-tree | 行内改名、垃圾桶与松开确认的虚拟组合 |
 | inspector-modules | 模块折叠、独立帮助与模块排序 |
 | bezier-editor | 多段路径、放大编辑和控制点操作 |

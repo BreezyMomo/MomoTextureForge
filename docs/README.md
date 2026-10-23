@@ -23,6 +23,7 @@
 | 上传图片、去背景、提取颜色、居中、转 SVG | [03 · 图片与 SVG](03-images-and-svg.md) |
 | 自己写公式、输入生成器 JSON、调火焰与烟雾 | [04 · 公式与生成器](04-formulas-and-generators.md) |
 | 选中/组合节点、变换、重复排列、混合与滤镜 | [05 · 画布、排列与合成](05-canvas-and-compositing.md) |
+| 搜索后处理、对照效果、调整顺序与保留设置 | [节点后处理](05-canvas-and-compositing.md#节点后处理与执行顺序) |
 | 把参数固定到节点树，设置全部节点适用 | [节点快捷操作](05-canvas-and-compositing.md#把常用设置固定到节点树) |
 | 制作折叠线束、折光薄膜和粒子细丝拖尾贴图 | [飘带与拖尾纹理](05-canvas-and-compositing.md#飘带与拖尾纹理) |
 | 多选统一改色、改大小、对齐和等距分布 | [批量编辑](05-canvas-and-compositing.md#多选后批量修改对齐与等距分布) |

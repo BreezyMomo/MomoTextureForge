@@ -53,7 +53,11 @@ Sliders, number inputs, resets, and keyframe buttons remain available inside mod
 
 ### Node post-processing and execution order
 
-Choose **Composite → Post-processing → Add effects**. The main panel shows only effects already added to this node. The picker searches Chinese and English names and uses, offers one-click clearing, and filters Lighting and blur, Distortion, Color mapping, Contours and material, Stylization, or Masks and dissolves. Move the window by its header. It stays open after adding an effect for consecutive additions. Every thumbnail renders the same frozen specimen with that effect's saved parameters when the window opens. It does not preview the whole artwork or edit the canvas. Visible cards render first; closing releases preview resources.
+Choose **Composite → Post-processing → Add effects**. The main panel shows only effects already added to this node. The picker searches Chinese and English names and uses, offers one-click clearing, and filters Lighting and blur, Distortion, Color mapping, Contours and material, Stylization, or Masks and dissolves. Move the window by its header. It stays open after adding an effect for consecutive additions. Thumbnails use effect-specific geometric details, neon marks, grids, landscape illustrations, hearts or droplets with curated demonstration settings, rendered through the real post-processing pipeline. Before is on the left and After on the right; drag the divider, or focus the comparison slider and use arrows or Home/End. Motion examples play on hover or keyboard focus and return to their still image on leave/blur; reduced-motion preferences keep them still. Demonstrations neither read nor overwrite node parameters; adding retains existing settings under the usual rules and browsing never edits the canvas. Visible cards render first, and closing releases preview resources.
+
+![Effect-specific specimens with Before and After comparison](images/en/post-effect-picker.png)
+
+> Callouts: 1 Search effect names or uses; 2 Filter by effect category; 3 Drag the divider to compare Before and After; 4 Add the effect while retaining existing settings.
 
 Each effect shows key parameters or bypass/mixed status below its name. The switch only bypasses the effect, keeping it in the stack. **⋯ → About this effect** toggles help without expanding parameters; the menu also offers parameter reset and **Remove from stack (keep settings)**. Removal stops the effect even where an enable keyframe is on, retaining parameters, keyframes and the original switch state. Readding places it at the bottom and restores these settings; previously bypassed effects remain bypassed. Parameter reset and removal are separate operations.
 
@@ -72,7 +76,7 @@ Height to normal converts current height into node colors while retaining alpha 
 
 ### Creative style effects
 
-Ten new effects share the node stack with the original seventeen. Open **Composition examples → Composition practice → Creative effect comparison** for the original and all ten styles. Three additional examples demonstrate Comic print, Retro handheld and Hologram glitch. Read the comparison left to right, top to bottom; select a node to inspect its settings.
+These ten creative styles share the node stack with the other post-effects. Open **Composition examples → Composition practice → Creative effect comparison** for the original and all ten styles. Three additional examples demonstrate Comic print, Retro handheld and Hologram glitch. Read the comparison left to right, top to bottom; select a node to inspect its settings.
 
 | Effect | Controls and uses |
 | --- | --- |
@@ -416,16 +420,16 @@ A value gradient maps low/high pattern values, not left/right canvas position. U
 
 ### Compositing and filters
 
-![Outer-ring compositing and postprocessing](images/en/compositing.png)
+![Node post-effect stack and Bloom settings](images/en/compositing.png)
 
-> Callouts: 1 Bloom strength; 2 Bloom radius.
+> Callouts: 1 Open the picker and add effects consecutively; 2 Open help, reset or remove while keeping settings; 3 Adjust this node’s Bloom strength; 4 Drag the effect handle to change processing order.
 
 1. Select a node and open **Composite** for blending, contour and filters. Opacity, palettes and gradients are in **Shape**.
 2. Set a parent palette and inherit it for coordinated colors, or use independent node palettes.
-3. A mask affects only previously composited content in the same group. Reorder nodes to verify its scope.
-4. Adjust Levels and Invert in **Shape**. Open **Composite → Post-processing** for blur, Bloom, sharpening, chromatic aberration and toon levels.
+3. Mask and Inverse mask blend modes affect earlier siblings within the same group, leaving later siblings unaffected. Reorder nodes to verify the scope.
+4. Adjust Levels and Invert in **Shape**. Open **Composite → Post-processing → Add effects**, search and add blur, Bloom, sharpening, chromatic aberration or posterization, then tune their parameters.
 
-Filters support keys. Groups composite children before filtering. Radii such as blur are normalized to a 512-pixel canvas and scale with export resolution. Bloom enhances bright regions; it does not change the underlying shape radius.
+Filters support keys. Groups composite children before filtering. Radii such as blur use a 512-pixel node short side and scale with rendering resolution. Bloom enhances bright regions; it does not change the underlying shape radius.
 
 ## 5. UV and viewing aids
 

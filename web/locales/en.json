@@ -2404,10 +2404,10 @@
   "fx.category": "Effect category",
   "fx.resultCount": "{0} effects",
   "fx.noMatches": "No matching effects. Try another search or category.",
-  "fx.previewSpecimen": "Shared specimen preview, rendered with saved settings when opened. Your canvas is unchanged.",
+  "fx.previewSpecimen": "Curated demonstration art and settings. Drag to compare; hover for motion. Adding keeps your existing effect settings.",
   "fx.previewLoading": "Rendering preview…",
   "fx.previewUnavailable": "Preview unavailable; you can still add",
-  "fx.previewOf": "Shared specimen preview of {0}",
+  "fx.previewOf": "Before and after preview of {0}",
   "fx.actions": "Actions for {0}",
   "fx.showHelp": "About this effect",
   "fx.resetParameters": "Reset parameters",
@@ -2503,5 +2503,10 @@
   "parameter.pivot": "Pivot",
   "parameter.uvOffset": "UV offset",
   "parameter.layoutCenter": "Layout center",
-  "parameter.timeOffset": "Time offset"
+  "parameter.timeOffset": "Time offset",
+  "fx.comparePreview": "Compare before and after {0}",
+  "fx.previewBefore": "Before",
+  "fx.previewAfter": "After",
+  "fx.previewMotion": "Hover to play",
+  "fx.previewRenderFailed": "Could not render the effect preview."
 }

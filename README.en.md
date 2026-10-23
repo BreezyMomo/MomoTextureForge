@@ -24,14 +24,14 @@ Source and documentation: [GitHub primary repository](https://github.com/BreezyM
 - **Custom resources:** write GLSL formulas or multipass generator JSON, expose parameters, colors and opacity, and validate the live preview.
 - **Animated effects:** fire, smoke, lightning, sparks, water, caustics and volumetric effects, with built-in time motion and parameter keyframes.
 - **Ribbon textures:** folded strands, refractive membranes and particle strands, with trail style presets, evolving shapes and horizontal seamless tiling.
-- **Compositions:** groups, regions and UVs; grid, radial, scatter, border, contour, herringbone, weave and rule-based arrangements; gradients, flow fields, blending, masks and postprocessing.
+- **Compositions:** groups, regions and UVs; grid, radial, scatter, border, contour, herringbone, weave and rule-based arrangements; gradients, flow fields, blending, masks and node postprocessing with searchable effects, Before/After comparisons and drag ordering.
 - **Batch editing:** multi-selection retains Shape (including coloring), Transform / Layout, Animation and Composite tabs for shared settings. Matching shapes also share shape-specific parameters. Alignment and even distribution are available.
 - **Material inspection:** Color, Height and Normal channels; 2D textures or lit sphere, plane and cube previews.
 - **Effect inspection:** compare alpha and additive blending on dark and light backgrounds using the same frame. Adjust playback, display size and preview brightness.
 - **Custom workspaces:** dock, split, merge tabs and float panels inside the page. Layouts are remembered automatically and can be saved by name.
 - **Common controls and appearance:** collapse, reorder and pin parameter modules to one or all nodes; move curve windows and customize themes, accents, style and density.
 - **Delivery and reuse:** PNG, GIF animations, EXR, frame ZIPs, atlases, PSD, SVG contours, editable projects, resource backups and remote libraries.
-- **Reference shaders:** the [Shader reference packages](docs/14-shader-reference.en.md) exports HLSL, a Unity URP reference wrapper, current effect settings, comparison images and masks from the hand-drawn effect panel for AI-assisted project integration using the Authoring Skill.
+- **Reference shaders:** [Shader reference packages](docs/14-shader-reference.en.md) export HLSL, a Unity URP reference wrapper, current effect settings, comparison images and masks from the hand-drawn effect panel for AI-assisted project integration using the Authoring Skill.
 
 | Edit an effect generator | Inspect normals and lighting |
 | --- | --- |

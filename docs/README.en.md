@@ -23,6 +23,7 @@ Start with Quick start, then consult individual chapters as needed. Screenshots 
 | Upload, remove backgrounds, extract colors, center and convert SVG | [03 · Images and SVG](03-images-and-svg.en.md) |
 | Write formulas, enter generator JSON, adjust fire and smoke | [04 · Formulas and generators](04-formulas-and-generators.en.md) |
 | Select/group, transform, repeat, blend and filter | [05 · Canvas, arrangement and compositing](05-canvas-and-compositing.en.md) |
+| Search post-effects, compare previews, reorder and retain settings | [Node post-processing](05-canvas-and-compositing.en.md#node-post-processing-and-execution-order) |
 | Pin controls to the node tree or apply them to all nodes | [Node shortcuts](05-canvas-and-compositing.en.md#pin-common-settings-to-the-node-tree) |
 | Create folded ribbon, membrane and particle strand textures | [Ribbon and trail textures](05-canvas-and-compositing.en.md#ribbon-and-trail-textures) |
 | Batch-edit colors/sizes, align and distribute | [Batch editing](05-canvas-and-compositing.en.md#batch-editing-alignment-and-even-distribution) |

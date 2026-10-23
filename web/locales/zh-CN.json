@@ -2404,10 +2404,10 @@
   "fx.category": "效果分类",
   "fx.resultCount": "{0} 项效果",
   "fx.noMatches": "没有匹配的效果，试试其他关键词或分类。",
-  "fx.previewSpecimen": "统一示例预览：按打开时的效果参数渲染，不改变画布。",
+  "fx.previewSpecimen": "使用专门的演示素材与参数；拖动分隔线对照原图和效果，悬停播放动态示例。添加时保留节点已有设置。",
   "fx.previewLoading": "生成预览…",
   "fx.previewUnavailable": "预览不可用，仍可添加",
-  "fx.previewOf": "{0} 的统一示例预览",
+  "fx.previewOf": "{0} 的原图与效果对照",
   "fx.actions": "{0} 的操作",
   "fx.showHelp": "效果说明",
   "fx.resetParameters": "复位参数",
@@ -2503,5 +2503,10 @@
   "parameter.pivot": "轴心",
   "parameter.uvOffset": "UV 偏移",
   "parameter.layoutCenter": "排列中心",
-  "parameter.timeOffset": "时间偏移"
+  "parameter.timeOffset": "时间偏移",
+  "fx.comparePreview": "调整 {0} 的原图与效果分隔位置",
+  "fx.previewBefore": "原图",
+  "fx.previewAfter": "效果",
+  "fx.previewMotion": "悬停播放",
+  "fx.previewRenderFailed": "无法渲染效果示例。"
 }

@@ -40,6 +40,20 @@ try{
  const changeNumber=async(label,value,scope=page)=>{const input=scope.getByRole('spinbutton',{name:label,exact:true});await input.fill(String(value));await input.press('Tab');};
  const resizeSeparator=async(handle,x)=>{const box=await handle.boundingBox();await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();await page.mouse.move(x,box.y+box.height/2,{steps:8});await page.mouse.up();};
  const resizeColumn=(panel,x)=>resizeSeparator(page.locator('.dock-stack').filter({has:page.locator('[data-panel-tab="'+panel+'"]')}).first().locator('..').locator('..').locator(':scope>.dock-splitter'),x);
+ const postEffectsShot=async(withPicker=false)=>{
+  await page.getByRole('button',{name:label('editor.select')+demoName('外环'),exact:true}).click();await page.getByRole('button',{name:label('inspector.composite'),exact:true}).click();await showModules(['modules.imageFilters']);
+  const panel=page.locator('#inspector [data-module="modules.imageFilters"]');
+  for(const id of ['bloom','noiseWarp'])if(!await panel.locator('[data-effect="'+id+'"]').count()){
+   await panel.locator('.post-effects-add').click();const picker=page.locator('.post-effect-picker');await picker.getByRole('searchbox').fill(id);await picker.locator('[data-effect-choice="'+id+'"]>button').click();await picker.getByRole('button',{name:label('common.close'),exact:true}).click();
+  }
+  for(const id of ['bloom','noiseWarp']){const item=panel.locator('[data-effect="'+id+'"]'),open=await item.locator('details').getAttribute('open')!==null;if(open!==(id==='bloom'))await item.locator('.post-effect-title').click();}
+  await changeNumber(label('fx.param.strength'),.8,panel.locator('[data-effect=bloom]'));await changeNumber(label('fx.param.radius'),24,panel.locator('[data-effect=bloom]'));await panel.scrollIntoViewIfNeeded();await shot('compositing',panel);
+  if(withPicker){
+   await panel.locator('.post-effects-add').click();const picker=page.locator('.post-effect-picker');
+   await page.waitForFunction(()=>['blur','bloom','sharpen','chromatic','posterize','pixelate'].every(id=>document.querySelector('[data-effect-choice="'+id+'"]')?.dataset.previewState==='ready'),null,{timeout:120000});
+   await picker.getByRole('searchbox').evaluate(e=>e.blur());await shot('post-effect-picker',picker);await picker.getByRole('button',{name:label('common.close'),exact:true}).click();
+  }
+ };
  const library=async()=>{await page.locator('#open-graphics-library').click();await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).waitFor();};
  const editorReady=async()=>{const d=page.locator('dialog').last();await d.getByRole('status').filter({hasText:label('library.previewReady').trim()}).first().waitFor();return d;};
  const fileMenuShot=async()=>{await page.locator('details.header-dropdown > summary').filter({hasText:label('menu.file')}).click();const boxes=await Promise.all(['#open-project','#save-project','#export-now'].map(selector=>page.locator(selector).boundingBox()));const x=Math.max(0,Math.floor(Math.min(...boxes.map(box=>box.x))-25)),right=Math.min(page.viewportSize().width,Math.ceil(Math.max(...boxes.map(box=>box.x+box.width))+300));await shot('project-files',null,{x,y:0,width:right-x,height:520});};
@@ -74,7 +88,7 @@ try{
   await load(spell);await page.getByRole('button',{name:label('editor.select')+demoName('环形星光'),exact:true}).click();await shot('workspace');
   if(workspaceOverviewOnly)return;
   await page.getByRole('button',{name:label('inspector.transformLayout'),exact:true}).click();await shot('transform-region');await page.getByLabel(label('editor.instanceSize'),{exact:true}).scrollIntoViewIfNeeded();await shot('arrangement');
-  await page.getByRole('button',{name:label('editor.select')+demoName('外环'),exact:true}).click();await page.getByRole('button',{name:label('inspector.composite'),exact:true}).click();await page.getByText(label('modules.imageFilters'),{exact:true}).click();await changeNumber(label('ui.bloomIntensity'),.35);await page.getByLabel(label('ui.bloomIntensity'),{exact:true}).evaluate(e=>e.scrollIntoView({block:'center'}));await shot('compositing');
+  await postEffectsShot();
   await fileMenuShot();
  });
  await run('bezier-editor',async()=>{
@@ -145,8 +159,9 @@ try{
   await page.getByRole('button',{name:label('editor.useIndependentColors'),exact:true}).click();const ramp=page.locator('.gradient-track'),box=await ramp.boundingBox();await ramp.click({position:{x:box.width*.5,y:7}});await shot('color-gradient');
   await showModules(['modules.levels','modules.invert']);await shot('color-levels');await showModules(['editor.opacity','editor.nodeColors']);
   await page.getByRole('radiogroup',{name:label('editor.colorFill'),exact:true}).locator('input[value=solid]').check();await page.getByRole('textbox',{name:label('editor.fillColor')+' HEX',exact:true}).fill('#ff9b57');await page.getByRole('textbox',{name:label('editor.fillColor')+' HEX',exact:true}).press('Tab');await shot('color-solid');
-  await page.getByRole('button',{name:label('editor.select')+demoName('外环'),exact:true}).click();await page.getByRole('button',{name:label('inspector.composite'),exact:true}).click();await showModules(['modules.imageFilters']);await changeNumber(label('ui.bloomIntensity'),.35);await shot('compositing');await page.setViewportSize({width:1600,height:1050});
+  await postEffectsShot();await page.setViewportSize({width:1600,height:1050});
  });
+ await run('post-effects',async()=>{await page.setViewportSize({width:1600,height:1050});await load(spell);await resizeColumn('inspector',1130);await postEffectsShot(true);});
  await run('node-tree',async()=>{
   const p=project(),a=node('shape','Circle'),b=node('shape','Star');a.name=inLanguage('圆形装饰','Circle decoration');b.name=inLanguage('星形装饰','Star decoration');p.name=inLanguage('节点树编辑','Node tree editing');a.color={mode:'own',fill:'solid',low:'#80dfff',high:'#80dfff'};b.color={mode:'own',fill:'solid',low:'#ffcf66',high:'#ffcf66'};a.transform.x=.38;b.transform.x=.62;for(const n of [a,b])n.transform.width=n.transform.height=.55;p.root.children=[a,b];await load(cleanIds(p));await resizeSeparator(page.locator('.dock-workspace>.dock-split>.dock-splitter'),570);await resizeColumn('library',210);const rows=page.locator('#node-tree .tree-node'),nodes=page.locator('.dock-stack').filter({has:page.locator('[data-panel-tab="nodes"]')}).first();await rows.first().locator('.tree-node-name').dblclick();await shot('node-rename',nodes);await page.locator('.tree-node-rename').press('Escape');
   await page.evaluate(()=>{const rows=document.querySelectorAll('#node-tree .tree-node'),dataTransfer=new DataTransfer(),target=rows[1],box=target.getBoundingClientRect();rows[0].dispatchEvent(new DragEvent('dragstart',{bubbles:true,cancelable:true,dataTransfer}));target.dispatchEvent(new DragEvent('dragover',{bubbles:true,cancelable:true,dataTransfer,clientX:box.x+box.width*.55,clientY:box.y+box.height*.5}));});await page.locator('.node-group-preview').waitFor({state:'visible'});await shot('node-auto-group',null,null,true);await page.evaluate(()=>document.querySelector('#node-tree .tree-node').dispatchEvent(new DragEvent('dragend',{bubbles:true})));

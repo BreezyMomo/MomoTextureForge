@@ -6,6 +6,8 @@
 
 [Manual contents](README.en.md) · [Project home](../README.en.md)
 
+Post-effect specimen art and curated settings live in `web/post-effect-specimens.js`, using an isolated renderer and real `applyPostFx` without registering resources or reading node settings. Lazy 384×240 before/after cards animate only on hover/focus, honor reduced motion and release their context on close. `node tests/post-effect-previews-browser-check.mjs` (add `--built`) covers all 31 pixel differences, motion, comparison dragging, project isolation, preserved settings and narrow layouts. It exports an artwork contact sheet for inspection, without UI screenshots.
+
 ## Run locally
 
 Shader references download directly from the hand-drawn effect panel, without a separate workbench. `web/shaders/handdrawn-fill.hlsl` is canonical; internal GLSL reference images use a fixed dialect mapping. `build-shader-references.mjs` embeds sources and bilingual instructions; `build-authoring-kit.mjs` includes them in the Skill. `node tests/shader-reference-browser-check.mjs` (add `--built`) checks mappings, packages, both previews, project preservation and English entry points without screenshots. `node tests/shader-reference-hlsl-check.mjs --fxc <fxc.exe>` checks SM5 core compilation, not Unity/URP integration. Run source/static UI-language regression as well.
@@ -171,6 +173,8 @@ node tools/capture-docs.mjs resources animation normal export remote-ai manager
 node tools/capture-docs.mjs docking
 node tools/capture-docs.mjs colors
 node tools/capture-docs.mjs shortcuts ribbons appearance
+node tools/capture-docs.mjs post-effects
+node tools/capture-docs.mjs --language en post-effects
 ```
 
 | Group | Content |
@@ -184,6 +188,7 @@ node tools/capture-docs.mjs shortcuts ribbons appearance
 | project-files | File menu only, framed from actual control positions |
 | docking | Panel tabs, floating and saved layouts |
 | colors | Opacity, color sources, gradient stops, levels/inversion and HEX in Shape |
+| post-effects | Update only the effect stack and picker, preserving other screenshots |
 | node-tree | Inline rename, trash icons and release-to-confirm virtual groups |
 | inspector-modules | Module collapse, independent help and ordering |
 | bezier-editor | Multisegment paths, expanded editing and point interaction |

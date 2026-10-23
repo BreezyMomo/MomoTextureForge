@@ -1,23 +1,43 @@
 import {TreeRenderer} from './tree-renderer.js';
-import {node,project} from './tree-model.js';
-import {effectValues,effectPresent,EFFECT_BY_ID} from './post-effect-specs.js';
-// Every thumbnail uses the same frozen specimen, independent of the user's project.
-// One renderer/context is owned by one picker and destroyed when it closes.
-export function createPostEffectPreview(document,settings){
- const renderer=new TreeRenderer(document.createElement('canvas')),p=project();
- const make=(type,size,color)=>{const n=node('shape',type);n.shapeClock.follow=false;n.color={mode:'own',fill:'gradient',low:'#263f9c',high:color};n.transform.width=n.transform.height=size;return n;};
- const group=node('group');group.children=[make('WaterCaustics',.86,'#e9aa61'),make('Ring',.74,'#8fd4e0'),make('Star',.38,'#fff1ba')];p.root.children=[group];p.canvas.ratio=4/3;
- return {
-  draw(id){
-   const spec=EFFECT_BY_ID.get(id),n=structuredClone(group);n.effectPresence={};
-   if(spec){
-   for(const param of spec.parameters){const value=effectValues(settings,id)[param.key];const parts=param.path.split('.');let at=n;for(const key of parts.slice(0,-1))at=at[key];at[parts.at(-1)]=value;}
-   n.effectPresence[id]=true;n.postEffects[id].enabled=true;
-   if(spec.legacy!==undefined&&!effectPresent(settings,id)&&settings.effectPresence?.[id]!==false&&!(n.postFx[spec.legacy]>0))n.postFx[spec.legacy]=spec.start;
+import {node,pathSet} from './tree-model.js';
+import {applyPostFx} from './post-fx.js';
+import {EFFECT_BY_ID} from './post-effect-specs.js';
+import {drawEffectSpecimen,effectPreviewSpec,EFFECT_PREVIEW_SIZE} from './post-effect-specimens.js';
+import {messageError} from './message-catalog.js';
+// One isolated renderer/context per picker; no assets are registered in the user's library.
+export function createPostEffectPreview(document){
+ const renderer=new TreeRenderer(document.createElement('canvas')),gl=renderer.gl,[width,height]=EFFECT_PREVIEW_SIZE;
+ renderer.quality=1;
+ function pair(id,seconds=null){
+  const demo=effectPreviewSpec(id),art=drawEffectSpecimen(document,demo.art,seconds),before=art.getContext('2d').getImageData(0,0,width,height),spec=EFFECT_BY_ID.get(id);
+  if(!spec)return {before,after:before};
+  const n=node('group');n.effectPresence={[id]:true};n.postEffects[id].enabled=true;
+  const values={...demo.values};
+  if(seconds!==null){const phase=((seconds%3)+3)%3/3;
+   if(id==='dissolve')values.progress=.1+.78*(1-Math.cos(phase*Math.PI*2))*.5;
+   if(id==='shockwave')values.progress=phase;
+  }
+  for(const param of spec.parameters)if(values[param.key]!==undefined)pathSet(n,param.path,values[param.key]);
+  renderer.formulaSeconds=seconds??.85;
+  const source=renderer.target(width,height),rgba=renderer.float?new Float32Array(width*height*4):new Uint8Array(width*height*4),heights=renderer.float?new Float32Array(width*height):new Uint8Array(width*height);
+  try{
+   for(let y=0;y<height;y++)for(let x=0;x<width;x++){
+    const at=(y*width+x)*4,to=((height-y-1)*width+x)*4,a=before.data[at+3]/255,scale=renderer.float?1/255:1;
+    for(let k=0;k<3;k++)rgba[to+k]=before.data[at+k]*a*scale;rgba[to+3]=before.data[at+3]*scale;
+    heights[to/4]=(.2126*before.data[at]+.7152*before.data[at+1]+.0722*before.data[at+2])*a*scale;
    }
-   p.root.children=[n];const pixels=renderer.draw(p,120,90,{time:.35,formulaSeconds:.7,quality:1,read:true});
-   return new ImageData(Uint8ClampedArray.from(pixels,v=>Math.round(Math.max(0,Math.min(1,v))*255)),120,90);
-  },
-  destroy(){renderer.destroy();renderer.gl.getExtension('WEBGL_lose_context')?.loseContext();}
- };
+   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
+   gl.bindTexture(gl.TEXTURE_2D,source.textures[0]);gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,width,height,gl.RGBA,renderer.float?gl.FLOAT:gl.UNSIGNED_BYTE,rgba);
+   gl.bindTexture(gl.TEXTURE_2D,source.textures[1]);gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,width,height,gl.RED,renderer.float?gl.FLOAT:gl.UNSIGNED_BYTE,heights);
+   const out=applyPostFx(renderer,source,n),raw=renderer.float?new Float32Array(width*height*4):new Uint8Array(width*height*4),result=new Uint8ClampedArray(raw.length);
+   gl.bindFramebuffer(gl.FRAMEBUFFER,out.fb);gl.readBuffer(gl.COLOR_ATTACHMENT0);gl.readPixels(0,0,width,height,gl.RGBA,renderer.float?gl.FLOAT:gl.UNSIGNED_BYTE,raw);
+   if(gl.getError())throw messageError('fx.previewRenderFailed');
+   for(let y=0;y<height;y++)for(let x=0;x<width;x++){
+    const at=(y*width+x)*4,to=((height-y-1)*width+x)*4,a=raw[at+3]/(renderer.float?1:255);
+    for(let k=0;k<3;k++)result[to+k]=a>0?raw[at+k]*(renderer.float?255:1)/a:0;result[to+3]=a*255;
+   }
+   return {before,after:new ImageData(result,width,height)};
+  }finally{for(const target of [...renderer.live])renderer.release(target);gl.bindFramebuffer(gl.FRAMEBUFFER,null);}
+ }
+ return {pair,draw:id=>pair(id).after,destroy(){renderer.destroy();gl.getExtension('WEBGL_lose_context')?.loseContext();}};
 }

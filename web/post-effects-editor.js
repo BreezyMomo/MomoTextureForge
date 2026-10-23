@@ -11,7 +11,7 @@ export function createPostEffectsEditor({document:doc,host,node,scope=node.id,co
  const el=(tag,attrs={})=>{const e=doc.createElement(tag);for(const [key,value]of Object.entries(attrs))if(key==='text')e.textContent=value;else e.setAttribute(key,value);return e;};
  const panel=el('div',{class:'post-effects-editor'}),toolbar=el('div',{class:'post-effects-toolbar'}),list=el('div',{class:'post-effects-list','aria-label':uiText('fx.order')});host.append(panel);panel.append(toolbar,el('p',{class:'tree-note',text:uiText('fx.hint')}),list);
  const button=(text,label,action)=>{const b=el('button',{type:'button',text,title:label,'aria-label':label});b.onclick=e=>{e.preventDefault();e.stopPropagation();action();};return b;};
- const count=el('span',{class:'post-effects-count'}),add=button(uiText('fx.addEffects'),uiText('fx.addEffects'),()=>openPostEffectPicker({document:doc,anchor:add,context,settings:getNodes()[0],present,onAdd:id=>{expanded.set(scope+':'+id,true);return onAdd(id);}}));add.className='post-effects-add';
+ const count=el('span',{class:'post-effects-count'}),add=button(uiText('fx.addEffects'),uiText('fx.addEffects'),()=>openPostEffectPicker({document:doc,anchor:add,context,present,onAdd:id=>{expanded.set(scope+':'+id,true);return onAdd(id);}}));add.className='post-effects-add';
  const resetAll=button('↺',uiText('fx.resetAll'),onResetAll);resetAll.className='post-effects-reset';toolbar.append(count,add,resetAll);
  const items=()=>[...list.children].filter(e=>e.dataset.effect),motionKey=e=>e.dataset.effect;
  const initialOrder=effectOrder(node.effectOrder).filter(id=>present(id)!==false),order=()=>items().map(motionKey);
