@@ -6,6 +6,14 @@ export function installWorkspaceWorkflow({resetModules,getScope}){
  const $=id=>document.getElementById(id);
  const make=(tag,className,key)=>{const e=document.createElement(tag);if(className)e.className=className;if(key){e.dataset.i18n=key;e.textContent=uiText(key);}return e;};
  const menus=[];
+ const nodeActions=$('add-shape').parentElement;nodeActions.classList.add('node-action-toolbar');
+ for(const [className,ids]of [['node-create-actions',['add-shape','add-group']],['node-organize-actions',['wrap-top-level','group-selected']],['node-edit-actions',['duplicate','delete','node-count']]]){
+  const row=make('div',className);for(const id of ids)row.append($(id));nodeActions.append(row);
+ }
+ $('add-shape').classList.add('ui-action-primary');$('add-group').classList.add('ui-action-secondary');
+ for(const id of ['wrap-top-level','group-selected','duplicate','delete','solo'])$(id).classList.add('ui-action-quiet');
+ $('delete').classList.add('ui-action-destructive');
+ for(const button of document.querySelectorAll('.selection-tools>button'))button.classList.add('ui-action-quiet');
  function menu(key){
   const details=make('details','workspace-menu'),summary=make('summary','',key),panel=make('div','workspace-menu-panel');
   panel.setAttribute('popover','auto');details.append(summary,panel);

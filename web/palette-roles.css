@@ -1,22 +1,57 @@
-/* Grouped palettes assign colors by purpose. Geometry and functional state
-   colors continue to come from the independently selected style and mode. */
-:root[data-palette-roles=true] .tree-editor .tree-header{background:var(--ui-header);border-bottom-color:var(--ui-line)}
+/* Complete themes map a coordinated palette to workspace, headers and content.
+   Geometry is independent; functional colors use the theme's contrast mode. */
+:root[data-palette-roles=true] .tree-editor .tree-header{background:var(--ui-bg);border-bottom-color:var(--ui-line)}
 :root[data-palette-roles=true] .tree-header .tree-brand strong{color:var(--ui-selection)}
-:root[data-palette-roles=true] .dock-stack-header{background:color-mix(in srgb,var(--ui-navigation) 6%,var(--ui-panel))}
+:root[data-palette-roles=true]{
+ --ui-panel-header-bg:var(--ui-header);--ui-section-header-bg:var(--ui-section);
+ --ui-module-bg:var(--ui-panel);
+ --ui-module-heading:var(--ui-section-header-bg);--ui-field-bg:var(--ui-surface);
+ --ui-tab-active-bg:var(--ui-navigation-bg);--ui-tab-active-fg:var(--ui-navigation);
+ --ui-focus-ring:var(--ui-navigation);
+}
+:root[data-tab-override=true][data-palette-roles=true] .dock-stack-header{background:var(--ui-panel-header-bg);border-bottom:1px solid var(--ui-line);--ui-text:var(--ui-header-text);--ui-muted:var(--ui-header-muted);--ui-tab-active-fg:var(--ui-header-navigation);--ui-tab-active-bg:var(--ui-header-navigation-bg)}
+:root[data-palette-roles=true] .dock-panel-body{background:var(--ui-bg)}
+:root[data-palette-roles=true] .dock-panel-body>:is(.tree-left,.tree-inspector){background:transparent}
+:root[data-palette-roles=true] .tree-editor :is(.tree-pattern-card,.graphics-card,#node-tree){background:var(--ui-panel)}
+:root[data-palette-roles=true] #node-tree:empty{background:transparent}
+:root[data-tab-override=true][data-palette-roles=true] .dock-tabs{background:transparent;border-color:transparent}
+:root[data-palette-roles=true] .tree-editor .dock-stack-header :is(.dock-stack-actions button,.dock-window-move){color:var(--ui-muted)}
+:root[data-palette-roles=true] .tree-editor .dock-tab[aria-selected=false]{color:var(--ui-muted)}
 :root[data-palette-roles=true] .tree-editor :is(.dock-tab[aria-selected=true],#inspector-tabs>button.active,.appearance-inspector-tabs>button.active){
- --ui-accent:var(--ui-navigation);--ui-accent-text:var(--ui-navigation);--ui-on-accent:var(--ui-on-navigation);
- --ui-text:var(--ui-navigation);--ui-surface:var(--ui-navigation-bg);--ui-selected:var(--ui-navigation-bg);
- --ui-selection-surface:var(--ui-navigation-bg);--ui-selection-line:var(--ui-navigation);
+ --ui-accent:var(--ui-tab-active-fg);--ui-accent-text:var(--ui-tab-active-fg);--ui-on-accent:var(--ui-on-navigation);
+ --ui-text:var(--ui-tab-active-fg);--ui-surface:var(--ui-tab-active-bg);--ui-selected:var(--ui-tab-active-bg);
+ --ui-selection-surface:var(--ui-tab-active-bg);--ui-selection-line:var(--ui-tab-active-fg);
 }
 :root[data-palette-roles=true] :is(.tree-node.selected,.appearance-preview-node){--ui-accent-text:var(--ui-selection)}
-:root[data-palette-roles=true] #selected-heading{color:var(--ui-selection)}
+:root[data-palette-roles=true] #selected-heading{color:var(--ui-text)}
+:root[data-palette-roles=true] .tree-editor :is(.tree-node.selected,.appearance-preview-node){background:var(--ui-selection-surface);box-shadow:inset 3px 0 var(--ui-selection)}
+:root[data-palette-roles=true] .tree-editor :is(.inspector-module,.appearance-preview-module){background:var(--ui-module-bg);border-color:transparent;box-shadow:none}
+:root[data-palette-roles=true] .tree-editor :is(.inspector-module>summary,.appearance-preview-module>strong){background:var(--ui-section-header-bg);color:var(--ui-text)}
+:root[data-palette-roles=true] .tree-editor .inspector-module[open]>summary{border-bottom:1px solid var(--ui-line-soft,var(--ui-line))}
+:root[data-palette-roles=true] .tree-editor .inspector-module>summary :is(.inspector-module-help,.module-drag-handle,.module-pin,.shortcut-scope,.inspector-module-arrow){color:var(--ui-muted)}
+:root[data-palette-roles=true] .tree-editor .inspector-module>summary .module-pin[aria-pressed=true]{color:var(--ui-selection);background:var(--ui-selection-surface)}
+:root[data-palette-roles=true] .tree-editor .inspector-module-body .inspector-module{background:transparent}
+:root[data-palette-roles=true] .tree-editor .tree-timeline{background:var(--ui-panel);border:1px solid var(--ui-line-soft,var(--ui-line));padding:6px 8px}
+:root[data-palette-roles=true] .tree-timeline #play{background:var(--ui-surface);color:var(--ui-text)}
+:root[data-palette-roles=true] .tree-timeline #play[aria-pressed=true]{background:var(--ui-time-bg);color:var(--ui-time);border-color:var(--ui-time-line)}
+:root[data-palette-roles=true] .tree-timeline #tree-time{accent-color:var(--ui-control)}
+:root[data-palette-roles=true] .tree-editor :is(button,input,select,summary):focus-visible{outline:2px solid var(--ui-focus-ring);outline-offset:2px}
 :root[data-palette-roles=true] .tree-editor :is(.library-filter-chips,.tree-toolbar){
  --ui-accent-text:var(--ui-navigation);--ui-selected:var(--ui-navigation-bg);--ui-selection-surface:var(--ui-navigation-bg);--ui-selection-line:var(--ui-navigation);
 }
 :root[data-palette-roles=true] .tree-editor :is(.tree-number-field,.selection-number-field,.appearance-preview-value){--ui-accent-text:var(--ui-control)}
 :root[data-palette-roles=true] .tree-editor :is(input[type=range],input[type=checkbox],input[type=radio],.appearance-preview-value progress){accent-color:var(--ui-control)}
-:root[data-palette-roles=true] .tree-editor .dock-panel-body>.tree-preview{background:var(--ui-stage)}
+/* Only the artwork stage owns a neutral background; its surrounding tools
+   belong to the same workspace surface as the other docked panels. */
+:root[data-palette-roles=true] .tree-editor .dock-panel-body>.tree-preview{background:var(--ui-bg)}
 :root[data-palette-roles=true] .tree-editor .appearance-style-card[aria-pressed=true]{border-color:var(--ui-selection);box-shadow:inset 0 0 0 1px var(--ui-selection)}
+
+/* Light surfaces need drawn edges, not the luminous bevel used by dark skins.
+   Keep borders for outer sections and fields; nested sections remain flat. */
+:root[data-palette-roles=true][data-theme=light]{--ui-line-soft:var(--ui-line);--ui-edge-highlight:transparent;--ui-control-shadow:none}
+:root[data-palette-roles=true][data-theme=light] .dock-stack{border-color:var(--ui-line);box-shadow:none}
+:root[data-palette-roles=true][data-theme=light] .tree-editor :is(.inspector-module,.appearance-preview-module){border-color:var(--ui-line)}
+:root[data-palette-roles=true][data-theme=light] .tree-editor :is(input[type=text],input[type=number],input[type=search],input:not([type]),textarea,select,.appearance-preview-value output){border-color:var(--ui-line-strong);box-shadow:none}
 
 /* The preview uses the real tab and state classes and a neutral sample artwork. */
 .tree-editor .appearance-dialog{width:min(940px,calc(100vw - 32px))}
@@ -38,12 +73,12 @@
 .appearance-palette-color{min-width:0;display:flex;flex-direction:column;gap:6px;text-align:center;color:var(--ui-muted);font-size:10px;line-height:1.5}
 .appearance-palette-color>i{display:block;height:28px;border:1px solid color-mix(in srgb,var(--ui-text) 18%,transparent);border-radius:5px;background:var(--palette-color)}
 .appearance-palette-color>span{overflow-wrap:anywhere}
-.appearance-preview-toolbar{display:flex;align-items:center;gap:6px;padding:8px;background:var(--ui-header,var(--ui-inset));border-bottom:1px solid var(--ui-line)}
+.appearance-preview-toolbar{display:flex;align-items:center;gap:6px;padding:8px;background:var(--ui-bg);border-bottom:1px solid var(--ui-line)}
 .appearance-preview-toolbar>span{flex:1;min-width:0;font-size:11px;color:var(--ui-text)}
 .tree-editor .appearance-preview-toolbar button{font-size:11px;padding:5px 8px;flex:none}
-.appearance-preview-stage{position:relative;display:grid;place-items:center;min-height:64px;border-bottom:1px solid var(--ui-line);background:#20242a}
+.appearance-preview-stage{position:relative;display:grid;place-items:center;min-height:64px;border-bottom:1px solid var(--ui-line);background:var(--ui-stage)}
 .appearance-preview-stage svg{display:block;width:140px;height:60px;fill:none;stroke:#edf0f2;stroke-width:2}
 .appearance-preview-stage>span{position:absolute;left:10px;bottom:7px;color:#b8c1ca;font-size:10px}
-.appearance-preview-content{gap:10px;padding:10px}
-:root[data-palette-roles=true] .appearance-preview-value .appearance-preview-icon:last-child{color:var(--ui-key)}
+.appearance-preview-content{gap:10px;padding:10px;background:var(--ui-bg)}
+:root[data-palette-roles=true] .appearance-preview-value .appearance-preview-icon:last-child{color:var(--ui-muted)}
 @media(max-width:550px){.appearance-palette-color{font-size:10px}.appearance-settings .appearance-styles{grid-template-columns:repeat(2,minmax(0,1fr))}}

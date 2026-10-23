@@ -1,4 +1,33 @@
 /* Adapt to panel geometry, including floating and bottom-docked workspaces. */
+/* Commands use weight; mode controls use a shared surface and state feedback. */
+.tree-editor button.ui-action-primary{background:var(--ui-accent);color:var(--ui-on-accent);border-color:transparent;box-shadow:none;font-weight:600;min-height:32px}
+.tree-editor button.ui-action-primary:hover:not(:disabled){background:var(--ui-accent-hover)}
+.tree-editor button.ui-action-secondary{background:transparent;color:var(--ui-text);border-color:var(--ui-line-strong);box-shadow:none;min-height:32px}
+.tree-editor button.ui-action-quiet{background:transparent;color:var(--ui-muted);border-color:transparent;box-shadow:none}
+.tree-editor button.ui-action-quiet:hover:not(:disabled),.tree-editor button.ui-action-secondary:hover:not(:disabled){background:var(--ui-hover);color:var(--ui-text)}
+.tree-editor button.ui-action-destructive:hover:not(:disabled){color:var(--ui-danger);background:var(--ui-danger-bg)}
+.tree-editor button.ui-action-quiet[aria-pressed=true]{background:var(--ui-navigation-bg);color:var(--ui-navigation);border-color:transparent}
+.ui-mode-group{display:flex;align-items:center;flex-wrap:wrap;gap:2px;padding:3px;background:var(--ui-inset);border-radius:var(--ui-control-radius);max-width:100%}
+.tree-editor button.ui-mode-button{background:transparent;color:var(--ui-muted);border-color:transparent;box-shadow:none;min-height:30px}
+.tree-editor button.ui-mode-button:hover:not(:disabled):not(.recording){background:var(--ui-hover);color:var(--ui-text)}
+.tree-editor button.ui-mode-button[aria-pressed=true]:not(.recording){background:var(--ui-navigation-bg);color:var(--ui-navigation);border-color:transparent;box-shadow:inset 0 -2px var(--ui-navigation)}
+.node-action-toolbar{display:flex;flex-direction:column;align-items:stretch;gap:7px}
+.node-create-actions,.node-organize-actions,.node-edit-actions{display:flex;align-items:center;flex-wrap:wrap;gap:4px;min-width:0}
+.node-create-actions>button{flex:1;white-space:nowrap}
+.node-organize-actions>button{white-space:normal;text-align:left}
+.node-edit-actions{border-top:1px solid var(--ui-line-soft,var(--ui-line));padding-top:6px}
+.node-edit-actions .tree-node-count{margin-left:auto}
+.node-action-toolbar button,.tree-editor .selection-tools>button{min-height:28px}
+.tree-editor .selection-tools{gap:4px}
+.tree-editor .canvas-tools{border-right:0;padding-right:0;gap:7px}
+.tree-editor .canvas-views .canvas-dropdown>summary{background:transparent;border-color:transparent;color:var(--ui-muted)}
+.tree-editor .canvas-views .canvas-dropdown[open]>summary,.tree-editor .canvas-views .canvas-dropdown>summary:hover{background:var(--ui-hover);color:var(--ui-text)}
+.tree-editor .tree-timeline #play{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:72px;min-height:32px;border-color:var(--ui-line-strong);font-weight:600}
+.tree-editor #play>.editor-icon{width:14px;height:14px;flex:none}
+.animation-view-modes{margin-left:auto}
+.animation-key-actions{border-top:1px solid var(--ui-line-soft,var(--ui-line));margin-top:4px;padding-top:7px}
+.animation-workspace .ui-action-quiet,.animation-workspace .ui-mode-button{font-size:12px;min-height:28px}
+.tree-editor .workspace-menu>summary{border-color:transparent}
 #dock-content-library{container:graphic-browser / size}
 #dock-content-inspector{container:parameter-panel / inline-size}
 .dock-panel-body>.dock-library-content{display:flex;flex-direction:column;overflow:hidden;gap:10px}
@@ -44,8 +73,8 @@
 .dock-workspace .preview-actions button{font-size:12px;padding:6px 9px}
 #inspector-layout-menu{margin:0 0 10px;width:fit-content;max-width:100%}
 #inspector-layout-menu>summary{padding:3px 6px;border-color:transparent;font-size:11px}
-:root[data-tab-override=true] .tree-editor #inspector-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
-.tree-editor #inspector-tabs>button{white-space:normal;overflow-wrap:anywhere;min-width:0;min-height:30px;font-size:12px;padding:5px 7px}
+:root[data-tab-override=true] .tree-editor #inspector-tabs{display:flex;flex-wrap:nowrap;gap:4px;overflow-x:auto;scrollbar-width:thin}
+.tree-editor #inspector-tabs>button{flex:1 0 auto;white-space:nowrap;min-width:64px;min-height:30px;font-size:12px;padding:5px 9px}
 .tree-editor .inspector-module{margin-block:0 12px;border-color:var(--ui-line-soft,var(--ui-line))}
 .tree-editor .inspector-module>summary{padding:0}
 .tree-editor .inspector-module-heading{display:grid;grid-template-columns:24px minmax(0,1fr) 24px auto 12px;gap:4px;padding:7px;min-height:40px}
@@ -53,6 +82,13 @@
 .tree-editor .inspector-module-heading .inspector-module-help,.tree-editor .inspector-module-heading .module-drag-handle,.tree-editor .inspector-module-heading .module-pin,.tree-editor .inspector-module-heading .shortcut-scope{min-width:24px;width:24px;min-height:24px;height:24px;padding:4px}
 .tree-editor .inspector-module-title{line-height:1.5;overflow-wrap:anywhere;white-space:normal}
 .tree-editor .inspector-module-heading .inspector-module-arrow{margin-left:0}
+.tree-editor .inspector-secondary-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding-top:8px;border-top:1px solid var(--ui-line-soft,var(--ui-line))}
+.tree-editor .inspector-secondary-actions>button{background:transparent;border-color:transparent;box-shadow:none;color:var(--ui-muted);font-size:12px;padding:5px 7px}
+.tree-editor .inspector-secondary-actions>button:hover{background:var(--ui-hover);color:var(--ui-text)}
+.tree-editor .graphics-card-origin{min-height:18px;gap:6px}
+.tree-editor .graphics-origin-label{background:transparent;border:0;padding:0;color:var(--ui-muted);font-size:11px}
+.graphics-added-state{margin-left:auto;font-size:11px;color:var(--ui-muted)}
+.tree-editor .graphics-list-action.is-added{display:none}
 .tree-editor .tree-pattern-card .component-add,.tree-editor .tree-pattern-card .component-more>summary{font-size:12px;min-height:28px}
 .tree-editor .tree-pattern-text{font-size:12px;line-height:1.5}
 .dock-workspace .tree-timeline{border-color:transparent;padding:4px 0;flex-wrap:nowrap}
@@ -81,9 +117,6 @@
  .dock-panel-body>.dock-library-content{gap:4px}
  .library-category-disclosure #library-categories{max-height:65px}
  .tree-editor .dock-library-content .tree-pattern-card img{height:68px}
-}
-@container parameter-panel (min-width:370px){
- :root[data-tab-override=true] .tree-editor #inspector-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 @container parameter-panel (min-width:560px){
  #inspector .tree-number-field:has(>input[type=range]){grid-template-columns:minmax(100px,1fr) minmax(0,3fr) 80px 28px 28px;align-items:center}

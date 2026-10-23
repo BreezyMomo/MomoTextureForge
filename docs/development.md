@@ -31,9 +31,11 @@ npm start -- --port 8799
 
 ## 界面主题
 
-`web/appearance.js` 管理浏览器偏好 `momo-texture-appearance:v1`。规范化后包含 `scheme`、`style`、`tabs`、`theme`、`density` 与 `colors:{action,selection,navigation,control}`；颜色接受六位 HEX 或 null（跟随当前方案）。背景与文字由方案提供，交互颜色派生可读对比度。实时预览、取消、保存均覆盖全部设置，不进入项目、撤销或资源哈希。
+`web/appearance.js` 管理浏览器偏好 `momo-texture-appearance:v1`。规范化后包含 `theme`、`style`、`tabs`、`density` 与 `colors:{action,selection,navigation,control}`；颜色接受六位 HEX 或 null（跟随当前方案）。背景与文字由方案提供，交互颜色派生可读对比度。实时预览、取消、保存均覆盖全部设置，不进入项目、撤销或资源哈希。
 
 公共界面颜色在 `web/theme-tokens.css` 按背景、面板、控件、文字、边框与状态用途定义，各组件样式引用这些变量。画布辅助线、缩略图底色、用户色板和作品内容保持独立。启动入口在挂载编辑器前应用偏好；离线与静态构建内嵌同一份主题样式和逻辑。外观不进入项目模型、撤销记录、资源哈希或作品导出。
+
+`appearancePalette` 解析完整主题并派生可读交互色。`--ui-bg` 用于工作区，`--ui-header` 用于全部同级标题栏，`--ui-panel` 用于内容卡片，`--ui-section` 用于分组标题。标题栏具有独立的文字与当前标签对比色。`data-appearance-theme` 记录实际主题，`data-theme` 仅是功能状态样式使用的内部深浅对比环境。外观预览复用真实组件规则，见[界面设计规则](ui-design-guidelines.md)。
 
 偏好中的 `style`（`standard`、`refined`、`airy`、`minimal`、`soft`、`aurora`、`pulse`、`cinema`、`candy`）和 `density`（`compact`、`comfortable`）独立于配色。`standard` 始终对应“标准”，保留标准控件规则；旧配色偏好缺少风格时补为标准与紧凑，新浏览器默认使用独立的 `refined`（精致）。根元素的 `data-interface-style`、`data-density` 驱动共享圆角与间距变量，简洁风格仅弱化内容模块边框，保留输入框、键盘焦点和停靠分隔条。密度调整触发现有预览尺寸观察器，不写入画布模型。
 
@@ -41,31 +43,27 @@ npm start -- --port 8799
 
 所有控件样式由 `STYLE_IDS` 注册并保留唯一卡片入口，只修改形态。卡片统一使用中性参考颜色，根节点始终启用明确页签覆盖，不从样式选择配色或页签。风格特有的圆角、边框、阴影与模块组织继续保留。
 
-配色 `scheme` 仅提供 `shuimo`、`qingci`、`mineral`、`xuanqing`、`zhuyue`、`ouhe`、`qinghua`、`zhujin`、`yanzhi`、`zitong`、`ailv`、`taoyao`、`qiuxiang`、`tonglv` 十四套完整多色方案。旧 `tianqing`、`zhusha`、`dunhuang` 映射到前三者，旧 `accent` 迁入 `colors.action`；历史 `auto` 根据读取时已有样式和模式解析一次，随后只存明确 ID。旧自动页签同样解析为原有形态，之后换控件样式不会联动。读取迁移不写入项目，显式保存时使用规范化结构。
+`PRESET_THEME_IDS` 注册 `shuimo`、`xuanhei`、`yuebai`、`qingci`、`qinghua`、`mineral`、`ouhe`，`THEME_IDS` 使用同一主题列表。偏好只保存一个 `theme` ID，不再组合配色与模式，不做历史迁移。新浏览器与无效 ID 默认使用 `xuanhei`；主题不受系统外观变化影响。四种自定义交互色仍独立；切换主题清除交互色覆盖，保留形态与密度。
 
-新增八组参考 [Chinese Color Atlas 中国传统色配色库](https://chinesecoloratlas.com/zh-Hans/palettes)。下列原始 HEX 用于确定组合关系；编辑器的表面、文字和交互色按深浅模式另行适配对比度，不直接把原色平均铺满界面。已有六组色值保持不变。
+传统色参考用于确定配色关系，不直接套用到各个控件：
 
-- `qinghua` · [青花映月](https://chinesecoloratlas.com/zh-Hans/palettes/blue-white-porcelain)：`#4994C4 / #D6ECF0 / #C0EBD7 / #065279 / #50616D`。
-- `zhujin` · [朱金宫阙](https://chinesecoloratlas.com/zh-Hans/palettes/ming-palace)：`#FF4C00 / #EACD76 / #7BCFA6 / #50616D / #F0F0F4`。
-- `yanzhi` · [黛蓝胭脂](https://chinesecoloratlas.com/zh-Hans/palettes/ancient-illustration)：`#425066 / #9D2933 / #ECD452 / #206864 / #E0F0E9`。
-- `zitong` · [紫绶古铜](https://chinesecoloratlas.com/zh-Hans/palettes/premium-jewelry)：`#80515F / #4A372E / #3B2D2B / #D8A7AD / #E9E7EF`。
-- `ailv` · [艾绿茶白](https://chinesecoloratlas.com/zh-Hans/palettes/wellness-spa)：`#A4E2C6 / #D4F2E7 / #D6ECF0 / #9E8368 / #75878A`。
-- `taoyao` · [桃夭湖光](https://chinesecoloratlas.com/zh-Hans/palettes/children-education)：`#F6BEC8 / #30DFF3 / #FFF143 / #425066`。
-- `qiuxiang` · [秋香赭石](https://chinesecoloratlas.com/zh-Hans/palettes/autumn-editorial)：`#BF9C46 / #955539 / #9E8368 / #D6ECF0`。
-- `tonglv` · [铜绿流光](https://chinesecoloratlas.com/zh-Hans/palettes/architecture-interior)：`#549688 / #4A372E / #622A1D / #F0F0F4 / #9A6655`。
+- [水墨网页](https://chinesecoloratlas.com/zh-Hans/palettes/ink-wash-web)：中性底色与克制的朱砂操作色。
+- [宋代美学](https://chinesecoloratlas.com/zh-Hans/palettes/song-dynasty)：青瓷、浅底与少量金色。
+- [青花瓷器](https://chinesecoloratlas.com/zh-Hans/palettes/blue-white-porcelain)：蓝色与月白的关系。
 
+实际界面色值在 `web/appearance.js`，按文字与背景对比度适配。矿彩采用暖砂与石绿，藕荷采用藕荷、雪青与象牙白，不宣称历史色彩还原。
 
-所有方案均返回选中、导航、参数、顶栏与中性画布周边角色，由 `web/palette-roles.css` 映射至真实控件与预览。`colors` 中四个可自定义角色相互独立；切换明暗保留自定义值，选择另一套方案与恢复默认按钮仅清除颜色覆盖。高级颜色区默认折叠。`node tests/grouped-palettes-browser-check.mjs`（静态版加 `--built`）检查全部方案、明暗、九种样式与四种页签，验证对比度、预览一致和作品像素不变。
+每个主题提供共享表面、交互色；作品背景独立于主题，周边工具区使用工作区底色，`web/palette-roles.css` 同时映射到编辑器与预览。`tests/grouped-palettes-browser-check.mjs`（静态版加 `--built`）检查全部主题、九种样式与四种页签，覆盖区域颜色一致性、标题栏可读性、取消/保存与作品像素不变。`tests/appearance-browser-check.mjs` 检查单一选择入口、主题独立于系统外观与自定义颜色。
 
 `airy`（轻盈）复用精致风格的共享表面与控件变量，仅在自身选择器下以透明模块外框、分组分隔线和填充输入区实现减少边框；不修改既有风格或默认选择。`web/editor-icons.js` 为画布工具、节点类型、参数重置/关键帧和模块操作提供统一 SVG，图标按钮保留语义名称与本地化提示，关键帧状态通过 `data-key-state` 更新且不替换按钮。参数数值与操作列在 `web/tree.css` 中对齐，多选数值行使用 `selection-number-field`；`web/parameter-presentation.js` 按稳定路径标记 X/Y 轴与角度/秒单位，不分析翻译后的名称；紧凑快捷区与全局设置保留自身布局。运行 `node tests/editor-polish-browser-check.mjs`（静态版加 `--built`）验证风格切换与保存、240/300/400px 排版、重置/撤销/关键帧及多选控件。
 
-页签偏好 `tabs` 仅接受 `classic`、`segmented`、`pill`、`underline`。`data-tab-style` 表示明确选择，`data-tab-override` 始终为 true，规则在 `web/tab-styles.css`。历史 auto 仅在读取时迁移。停靠与参数页签预览共用实际规则，浏览器检查比对颜色、边框、圆角、阴影与间距。
+页签偏好 `tabs` 仅接受 `classic`、`segmented`、`pill`、`underline`。`data-tab-style` 表示明确选择，`data-tab-override` 始终为 true，规则在 `web/tab-styles.css`。缺失或无效的页签 ID 使用当前控件样式的默认形态。停靠与参数页签预览共用实际规则，浏览器检查比对颜色、边框、圆角、阴影与间距。
 
 验证主题行为可运行 `node --test tests/appearance.test.mjs`、`node tests/appearance-browser-check.mjs`；静态构建后加 `--built` 检查发行版。浏览器检查覆盖预览、取消、保存恢复、系统变化、中英文入口、窄屏顶栏、画布像素与项目存储不变，截图位于 `test-results/appearance/`。
 
 编辑状态使用独立语义变量：`--ui-motion` / `--ui-motion-bg` 表示动画，`--ui-time*` 表示时间区间，`--ui-key*` 表示关键帧与收藏，`--ui-playhead` 表示播放位置，录制复用危险色。它们不从个人强调色推导；浅色主题提供对应的深色文字与轮廓。`web/tree.css` 的功能状态规则优先于通用选中样式，录制即使带 `aria-pressed=true` 仍显示红色。外观预览复用真实动画标记、时间区间、关键帧和录制按钮的类与规则。
 
-运行 `node tests/functional-colors-browser-check.mjs`，以及静态构建后的 `node tests/functional-colors-browser-check.mjs --built`，检查所有配色、明暗与风格组合中的功能色、对比度、真实界面与预览一致性，并确认作品像素和撤销记录不变。
+运行 `node tests/functional-colors-browser-check.mjs`，以及静态构建后的 `node tests/functional-colors-browser-check.mjs --built`，检查所有完整主题与控件样式组合中的功能色、对比度、真实界面与预览一致性，并确认作品像素和撤销记录不变。
 
 ## 构建离线版
 
@@ -194,7 +192,7 @@ node tools/capture-docs.mjs --language en post-effects
 | bezier-editor | 多段路径、放大编辑和控制点操作 |
 | shortcuts | 节点快捷区、全部适用菜单和可移动通道曲线窗口 |
 | ribbons | 折叠线束的宽画布、风格预设与参数 |
-| appearance | 国风配色、明暗模式、控件样式、页签、密度与强调色 |
+| appearance | 完整主题、颜色用途预览、控件样式、页签、密度与交互色 |
 | library | 图库、生成器参数、图形列表 |
 | library-filters | 全部/收藏/最近/动态、分类多选与动态标记 |
 | parameter-states | 动画控制状态与录制/基础值操作 |

@@ -1,8 +1,7 @@
 // User preferences never enter a canvas, its undo history, or resource identity.
 export const APPEARANCE_KEY='momo-texture-appearance:v1';
-export const THEME_IDS=Object.freeze(['system','classic','graphite','light']);
-export const COLOR_SCHEME_IDS=Object.freeze(['shuimo','qingci','mineral','xuanqing','zhuyue','ouhe','qinghua','zhujin','yanzhi','zitong','ailv','taoyao','qiuxiang','tonglv']);
-export const GROUPED_SCHEME_IDS=COLOR_SCHEME_IDS;
+export const PRESET_THEME_IDS=Object.freeze(['xuanhei','shuimo','yuebai','qingci','qinghua','mineral','ouhe']);
+export const THEME_IDS=PRESET_THEME_IDS;
 export const COLOR_ROLE_IDS=Object.freeze(['action','selection','navigation','control']);
 export const STYLE_IDS=Object.freeze(['standard','refined','airy','minimal','soft','aurora','pulse','cinema','candy']);
 export const DENSITY_IDS=Object.freeze(['compact','comfortable']);
@@ -10,75 +9,27 @@ export const TAB_STYLE_IDS=Object.freeze(['classic','segmented','pill','underlin
 const defaultTabs={standard:'classic',minimal:'classic',soft:'classic',refined:'segmented',airy:'segmented',aurora:'pill',pulse:'pill',cinema:'underline',candy:'pill'};
 const surfaceKeys=['bg','inset','panel','surface','hover','line','line-strong','text','muted','subtle'];
 const skin=(accent,values)=>({accent,surfaces:Object.fromEntries(surfaceKeys.map((key,i)=>[key,values[i]]))});
-const groupedSkin=(accent,values,selection,navigation,control,header,stage)=>({...skin(accent,values),roles:{selection,navigation,control,header,stage}});
-// Modern interface palettes inspired by traditional colors, each with light/dark roles.
-const colorSchemes={
- shuimo:{
-  dark:groupedSkin('#ef795b',['#141b20','#182329','#22272b','#2d353a','#39464b','#414e52','#809599','#f1eee6','#c0cac8','#a4b4b2'],'#dec286','#91c4ce','#93c5b4','#182b32','#1a1e23'),
-  light:groupedSkin('#b7412b',['#e8edeb','#edf3f0','#faf8f2','#e7eeeb','#d8e3df','#bdcdc6','#718a83','#263a3e','#4d6466','#607573'],'#7e602a','#356d7c','#356e62','#dce8e5','#e9edef')
- },
- qingci:{
-  dark:groupedSkin('#82c7b4',['#132222','#182a29','#1e302f','#2b403b','#37534b','#426258','#7e9e8e','#f0f2e5','#c1d1c4','#a4baab'],'#e5c47e','#abc3e1','#94cfbd','#182c35','#1a2024'),
-  light:groupedSkin('#286d61',['#e9eee6','#f1f4eb','#fcfbf2','#e8eddf','#dbe4d2','#c3cfb8','#7e9276','#2b3e35','#526651','#5e7058'],'#7e5e24','#4b658b','#346f64','#e0e9e8','#e9edef')
- },
- mineral:{
-  dark:groupedSkin('#e69a70',['#211e20','#28272b','#302e2b','#3e3c36','#4c4a41','#625c50','#a3947c','#f5ebd9','#d0c4ac','#b9aa8e'],'#e3c775','#87c4cc','#a7c39b','#202f39','#1d2025'),
-  light:groupedSkin('#a44f2e',['#eee7d9','#f3eddf','#fcf7e9','#ece2cc','#ded4ba','#cabd9e','#938166','#423a2e','#655944','#7b6a51'],'#7c6124','#346d7a','#4e7052','#dde8e6','#e9edef')
- },
- xuanqing:{dark:groupedSkin('#8ac9be',['#101c22','#132027','#17272d','#21353c','#2d454d','#3a5259','#738e91','#e4eeeb','#b0c4be','#95aaa7'],'#dbbf7c','#a6b9e8','#9fc7bd','#152a37','#1a2024'),light:groupedSkin('#2d6b64',['#e8efec','#f2f6f2','#f8faf6','#e0e9e3','#d3e0d9','#bbcfc4','#6e8b80','#243c3d','#4d665f','#5d786d'],'#7a5e25','#505f90','#3c6b68','#dce5e8','#e9edef')},
- zhuyue:{dark:groupedSkin('#a6c78d',['#17221d','#1b2922','#223229','#2c4236','#3a5544','#445f4e','#809b83','#e7efe0','#b9cbb0','#9eb492'],'#ddbd86','#9fc6d5','#bec78e','#192e2e','#1a2024'),light:groupedSkin('#4c6d3f',['#eef1e5','#f5f7ee','#fafbf4','#e6ecd9','#d9e3c7','#c2ceb0','#7c9066','#2d3b2b','#56674d','#68785b'],'#80602d','#3d6c7f','#68743b','#e5eadf','#e9edef')},
- ouhe:{dark:groupedSkin('#d4b2ce',['#241f2a','#2c2533','#332c3b','#453a4d','#574963','#62516c','#a18aa9','#f5eaf1','#cfbbcd','#b39cb0'],'#dec58f','#9dbfdb','#bdb3e3','#252b3c','#1a2024'),light:groupedSkin('#875584',['#f2edf3','#f8f4f8','#fffafd','#efe4ed','#e4d5e1','#cfbbcd','#9b7d97','#403144','#6d586d','#846c83'],'#7d5c2b','#47647d','#6e5b91','#e7e6ef','#e9edef')},
- // Adapted from Chinese Color Atlas palette combinations. Source colors and
- // their original palette links are listed in docs/development.md and .en.md.
- qinghua:{
-  dark:groupedSkin('#71b9e4',['#111c2a','#162335','#1b2c40','#263b51','#334d64','#405c73','#7c9cb1','#e8f5f6','#c2d6df','#a4bfcc'],'#b0dcca','#8fb8f1','#9dc3d0','#132a43','#181f29'),
-  light:groupedSkin('#23658e',['#e6eff5','#edf5f9','#f8fcfd','#e0edf5','#cfe2ee','#b5ccdc','#6c8a9f','#223d53','#456076','#587084'],'#2d705b','#28558e','#426c7b','#d9e8f3','#e8edf1')
- },
- zhujin:{
-  dark:groupedSkin('#ff845c',['#23191a','#2b1f20','#342729','#443438','#534147','#654f53','#a68a82','#f7eee3','#ddc9bd','#c2a99b'],'#eacd76','#8fcfaf','#aabacb','#382220','#211c20'),
-  light:groupedSkin('#b53822',['#f1e7e0','#f8eee7','#fffaf1','#f0e2d7','#e5d4c6','#cdb5a5','#98796b','#472f2b','#6a4b43','#7a5b50'],'#806120','#347354','#48687d','#eed9ce','#eee9e7')
- },
- yanzhi:{
-  dark:groupedSkin('#e58294',['#191e2c','#1f2637','#272e42','#343e53','#414e65','#53637a','#8f9fb3','#eff3e9','#c9d2d6','#afbfc8'],'#ecd452','#8cc3b7','#b3cbe0','#202940','#1c202a'),
-  light:groupedSkin('#9d2933',['#e9edf1','#f0f4f6','#f9fcf7','#e2eaf0','#d3e0e8','#bdccd7','#7d91a3','#2c394b','#4c6071','#617382'],'#79651b','#206864','#4e6988','#dce5ef','#e9edf0')
- },
- zitong:{
-  dark:groupedSkin('#d7a3b9',['#251d26','#2d2430','#352b39','#463849','#56465a','#69576b','#a58a9f','#f4edf4','#d8c9d5','#bfaabb'],'#d8aa7d','#e3b9ba','#b6bce5','#30232b','#211e27'),
-  light:groupedSkin('#80515f',['#eee7ed','#f6eff3','#fcf9fc','#ece1e9','#e0d3dc','#cab6c6','#94738b','#453145','#634c62','#755e71'],'#815735','#934e65','#5c6492','#e6d9df','#ede9ef')
- },
- ailv:{
-  dark:groupedSkin('#a4e2c6',['#152221','#1a2b28','#203530','#2b443d','#37544b','#44675b','#86a89a','#e9f6ed','#c3dacf','#a7c3b4'],'#d9b491','#9fcbdc','#d1dca9','#1c3036','#1b2325'),
-  light:groupedSkin('#326c56',['#e6f1eb','#edf8f1','#f8fcf7','#dfeee2','#cde2d2','#b4cdbb','#739581','#263e35','#476452','#5a7464'],'#805d3e','#3d6c80','#64753b','#dcece8','#e9efec')
- },
- taoyao:{
-  dark:groupedSkin('#f6bec8',['#1c2030','#22283b','#2b3147','#39425a','#46536b','#596880','#95a4bd','#f5f2f5','#d2d7e4','#b4c1d6'],'#f3dc77','#70dce9','#bfb6ed','#26243a','#1c202b'),
-  light:groupedSkin('#a54268',['#f3eaf0','#faf2f6','#fffbfd','#eee3ed','#e3d6e3','#ccb9cf','#967d9c','#3b354f','#5e526e','#72627e'],'#7c661f','#196e82','#6e5794','#e3e9f3','#ecebf1')
- },
- qiuxiang:{
-  dark:groupedSkin('#d8b657',['#231e17','#2c271e','#352f25','#453c2f','#534938','#675a44','#a99670','#f5edda','#ddcfb4','#c3b28f'],'#e2a386','#b4d2d4','#c6ce9a','#292d2c','#24211e'),
-  light:groupedSkin('#83631d',['#f1eadb','#f7f0e3','#fffbf0','#eee3cb','#e2d6b8','#cbbd97','#93815d','#443928','#65553b','#766447'],'#955539','#386d75','#606e3e','#e8e6d8','#eeeae1')
- },
- tonglv:{
-  dark:groupedSkin('#82c1b3',['#1a201e','#202926','#29332f','#37443d','#45544b','#56675b','#90a696','#f0f3e9','#ccd7cb','#b3c2b3'],'#d7ac83','#daaba0','#b9cba6','#302621','#1e2323'),
-  light:groupedSkin('#326e61',['#eaece5','#f2f3ec','#fafbf5','#e3e8dc','#d5decd','#bdcbb3','#7e9374','#313e32','#52634e','#63755b'],'#805737','#945d4f','#597346','#e8dfd5','#ebede7')
- }
+// Complete themes assign the palette to areas, not just small accents. Mode
+// is an internal contrast environment, never a second user-facing choice.
+const themeSkin=(mode,accent,values,header,interaction,selection=interaction)=>({mode,...skin(accent,values),roles:{header,selection,navigation:interaction,control:interaction}});
+const themes={
+ shuimo:themeSkin('classic','#ef795b',['#20252b','#252d35','#303740','#39434d','#46525f','#505f6d','#91a0ae','#f1f2f4','#c5ced8','#b0bdca'],'#344e5c','#bbdce5','#e7c28b'),
+ xuanhei:themeSkin('classic','#c5a36a',['#101010','#181818','#222222','#2c2c2c','#393939','#454545','#858585','#ededeb','#bcbcb8','#a6a6a1'],'#292929','#d2cec4','#d7bb82'),
+ yuebai:themeSkin('light','#416d83',['#e0e5e8','#edf0f2','#fafcfc','#edf1f3','#d8e1e6','#a5b3bc','#788994','#293c46','#4f626a','#5c6c72'],'#bfcfd5','#345d73','#77603c'),
+ qingci:themeSkin('light','#926c30',['#dce4de','#e9efea','#fbfcf8','#edf1ea','#d7e2d8','#a6b6aa','#798e7e','#293e35','#476251','#59705d'],'#b5cbbd','#305e51','#795b2a'),
+ qinghua:themeSkin('light','#27678b',['#dfe6ed','#eaf0f5','#fcfcfa','#edf1f6','#d6e2ed','#a3b3c5','#788da4','#263e4a','#496571','#5b717b'],'#b2c7dc','#235b7d','#376653'),
+ mineral:themeSkin('light','#a95736',['#e7e1d5','#f0ece4','#fcfaf5','#f0ece3','#e3ddcf','#b8ac98','#8e816b','#403c31','#625b48','#716851'],'#becbbf','#3a6259','#805b27'),
+ ouhe:themeSkin('light','#ad653f',['#e8dfe4','#f0e9ed','#fdfbf9','#f0ebef','#e1d9e4','#b5a7b4','#8b7e8f','#34404b','#53606b','#626b75'],'#c8bed5','#655078','#655078')
 };
-const neutralSurfaces=skin(null,['#1c1d1f','#202123','#262729','#303234','#3c3f43','#41454a','#727981','#eceeef','#b3b9c2','#929aa7']).surfaces;
 const literalColor=value=>typeof value==='string'&&/^#[a-f\d]{6}$/i.test(value)?value.toLowerCase():null;
 export const defaultAppearanceColors=()=>Object.fromEntries(COLOR_ROLE_IDS.map(role=>[role,null]));
 const copyPreferences=value=>({...value,colors:{...value.colors}});
 export function normalizeAppearance(value){
- const theme=THEME_IDS.includes(value?.theme)?value.theme:'classic';
- const style=STYLE_IDS.includes(value?.style)?value.style:THEME_IDS.includes(value?.theme)?'standard':'refined',density=DENSITY_IDS.includes(value?.density)?value.density:'compact';
- // Resolve historical automatic choices once. Live edits always carry explicit
- // scheme/tab IDs, so changing a control style cannot change either choice.
- const tabs=TAB_STYLE_IDS.includes(value?.tabs)?value.tabs:value?.tabs==='auto'||value?.tabs===undefined?defaultTabs[style]:'segmented';
- const aliases={tianqing:'qingci',dunhuang:'mineral',zhusha:'shuimo'};
- let scheme=COLOR_SCHEME_IDS.includes(value?.scheme)?value.scheme:Object.hasOwn(aliases,value?.scheme)?aliases[value.scheme]:null;
- if(!scheme)scheme=(value?.scheme==='auto'||!value?.scheme)&&THEME_IDS.includes(value?.theme)?({aurora:'ouhe',pulse:'zhuyue',candy:'ouhe',cinema:'shuimo'}[style]??(theme==='light'?'qingci':theme==='graphite'?'xuanqing':'mineral')):'shuimo';
+ const theme=THEME_IDS.includes(value?.theme)?value.theme:'xuanhei';
+ const style=STYLE_IDS.includes(value?.style)?value.style:'refined',density=DENSITY_IDS.includes(value?.density)?value.density:'compact';
+ const tabs=TAB_STYLE_IDS.includes(value?.tabs)?value.tabs:defaultTabs[style];
  const colors=defaultAppearanceColors();for(const role of COLOR_ROLE_IDS)colors[role]=literalColor(value?.colors?.[role]);
- if(!value?.colors||!Object.hasOwn(value.colors,'action'))colors.action=literalColor(value?.accent);
- return {theme,style,density,tabs,scheme,colors};
+ return {theme,style,density,tabs,colors};
 }
 const rgb=hex=>[1,3,5].map(at=>parseInt(hex.slice(at,at+2),16));
 const mix=(a,b,amount)=>'#'+rgb(a).map((v,i)=>Math.round(v*(1-amount)+rgb(b)[i]*amount).toString(16).padStart(2,'0')).join('');
@@ -86,34 +37,42 @@ const onColor=color=>colorContrast(color,'#ffffff')>=colorContrast(color,'#00000
 function readableColor(color,background,text,tint=0){let result=color;for(let i=1;colorContrast(result,mix(background,result,tint))<4.5&&i<=20;i++)result=mix(color,text,i/20);return result;}
 function luminance(hex){const [r,g,b]=rgb(hex).map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});return .2126*r+.7152*g+.0722*b;}
 export function colorContrast(a,b){const values=[luminance(a),luminance(b)].sort((x,y)=>x-y);return (values[1]+.05)/(values[0]+.05);}
-export function appearancePalette(preferences,dark=false){
- const value=normalizeAppearance(preferences),theme=value.theme==='system'?(dark?'classic':'light'):value.theme;
- const variant=colorSchemes[value.scheme][theme==='light'?'light':'dark'];
- const surfaces=theme==='graphite'?Object.fromEntries(Object.entries(variant.surfaces).map(([key,color])=>[key,mix(color,neutralSurfaces[key],.5)])):variant.surfaces;
+export function appearancePalette(preferences){
+ const value=normalizeAppearance(preferences),id=value.theme;
+ const variant=themes[id],theme=variant.mode,surfaces={...variant.surfaces};
+ const backgrounds=['bg','inset','panel','surface','hover'];
+ for(const key of ['muted','subtle'])for(const bg of backgrounds)surfaces[key]=readableColor(surfaces[key],surfaces[bg],surfaces.text);
  const base={accent:variant.accent,panel:surfaces.panel,text:surfaces.text},accent=value.colors.action??base.accent;
  const onAccent=onColor(accent),accentText=readableColor(accent,base.panel,base.text);
  const roles={...variant.roles};
- for(const role of ['selection','navigation','control'])roles[role]=readableColor(value.colors[role]??roles[role],base.panel,base.text,role==='control'?0:theme==='light'?.12:role==='navigation'?.18:.20);
- if(theme==='graphite')roles.header=mix(roles.header,neutralSurfaces.inset,.5);
- return {theme,accent,onAccent,accentText,selected:mix(base.panel,roles.selection,theme==='light'?.12:.20),hover:mix(accent,onAccent==='#ffffff'?'#000000':'#ffffff',.10),surfaces:{...surfaces},roles,colors:{action:accent,selection:roles.selection,navigation:roles.navigation,control:roles.control}};
+ const tint=theme==='light'?.12:.18;
+ for(const role of ['selection','navigation','control']){roles[role]=value.colors[role]??roles[role];for(const bg of ['panel','bg','inset'])roles[role]=readableColor(roles[role],surfaces[bg],base.text,tint);}
+ roles.stage='#20242a';
+ roles['header-text']=readableColor(surfaces.text,roles.header,theme==='light'?'#17222a':'#ffffff');
+ roles['header-muted']=readableColor(surfaces.muted,roles.header,roles['header-text']);
+ roles['header-navigation']=readableColor(roles.navigation,roles.header,theme==='light'?'#17222a':'#ffffff',tint);
+ roles['header-navigation-bg']=mix(roles.header,roles['header-navigation'],tint);
+ roles['section']=mix(surfaces.panel,roles.header,.22);
+ const roleSurfaces=Object.fromEntries(['selection','navigation','control'].map(role=>[role,mix(base.panel,roles[role],tint)]));
+ return {id,theme,accent,onAccent,accentText,selected:roleSurfaces.selection,roleSurfaces,hover:mix(accent,onAccent==='#ffffff'?'#000000':'#ffffff',.10),surfaces:{...surfaces},roles,colors:{action:accent,selection:roles.selection,navigation:roles.navigation,control:roles.control}};
 }
-export function createAppearance({storage,root,media}={}){
+export function createAppearance({storage,root}={}){
  let preferences;try{preferences=normalizeAppearance(JSON.parse(storage?.getItem(APPEARANCE_KEY)??'null'));}catch{preferences=normalizeAppearance(null);}
  const listeners=new Set();
  function render(){
-  const palette=appearancePalette(preferences,media?.matches);
-  if(root){root.dataset.theme=palette.theme;root.dataset.colorScheme=preferences.scheme;root.dataset.paletteRoles='true';root.dataset.interfaceStyle=preferences.style;root.dataset.density=preferences.density;root.dataset.tabStyle=preferences.tabs;root.dataset.tabOverride='true';root.style.colorScheme=palette.theme==='light'?'light':'dark';
+  const palette=appearancePalette(preferences);
+  if(root){root.dataset.theme=palette.theme;root.dataset.appearanceTheme=palette.id;root.dataset.paletteRoles='true';root.dataset.interfaceStyle=preferences.style;root.dataset.density=preferences.density;root.dataset.tabStyle=preferences.tabs;root.dataset.tabOverride='true';root.style.colorScheme=palette.theme==='light'?'light':'dark';
    for(const key of surfaceKeys){if(palette.surfaces)root.style.setProperty('--ui-'+key,palette.surfaces[key]);else root.style.removeProperty?.('--ui-'+key);}
    for(const [key,value]of Object.entries({accent:palette.accent,'on-accent':palette.onAccent,'accent-text':palette.accentText,selected:palette.selected,'accent-hover':palette.hover}))root.style.setProperty('--ui-'+key,value);
-   const roles=palette.roles,roleTokens=roles?{...roles,'on-navigation':onColor(roles.navigation),'navigation-bg':mix(palette.surfaces.panel,roles.navigation,palette.theme==='light'?.12:.18),'selection-surface':palette.selected,'selection-line':mix(palette.surfaces.panel,roles.selection,.55)}:{};
-   for(const key of ['selection','navigation','control','header','stage','on-navigation','navigation-bg','selection-surface','selection-line']){if(roles)root.style.setProperty('--ui-'+key,roleTokens[key]);else root.style.removeProperty?.('--ui-'+key);}
+   const roles=palette.roles,roleTokens=roles?{...roles,'on-navigation':onColor(roles.navigation),'on-control':onColor(roles.control),'on-selection':onColor(roles.selection),'navigation-bg':palette.roleSurfaces.navigation,'control-bg':palette.roleSurfaces.control,'selection-surface':palette.selected,'selection-line':mix(palette.surfaces.panel,roles.selection,.55)}:{};
+   for(const key of ['selection','navigation','control','header','stage','header-text','header-muted','header-navigation','header-navigation-bg','section','on-navigation','on-control','on-selection','navigation-bg','control-bg','selection-surface','selection-line']){if(roles)root.style.setProperty('--ui-'+key,roleTokens[key]);else root.style.removeProperty?.('--ui-'+key);}
   }
   for(const listener of listeners)listener(copyPreferences(preferences),palette);
  }
  function preview(value){preferences=normalizeAppearance(value);render();}
  function save(value){preview(value);try{if(!storage)return false;storage.setItem(APPEARANCE_KEY,JSON.stringify(preferences));return true;}catch{return false;}}
- const onSystemChange=()=>{if(preferences.theme==='system')render();};media?.addEventListener?.('change',onSystemChange);render();
- return {get:()=>copyPreferences(preferences),palette:()=>appearancePalette(preferences,media?.matches),preview,save,subscribe(fn){listeners.add(fn);return ()=>listeners.delete(fn);},dispose(){media?.removeEventListener?.('change',onSystemChange);listeners.clear();}};
+ render();
+ return {get:()=>copyPreferences(preferences),palette:()=>appearancePalette(preferences),preview,save,subscribe(fn){listeners.add(fn);return ()=>listeners.delete(fn);},dispose(){listeners.clear();}};
 }
 let storage;try{storage=globalThis.localStorage;}catch{}
-export const appearance=globalThis.document?createAppearance({storage,root:document.documentElement,media:globalThis.matchMedia?.('(prefers-color-scheme: dark)')}):null;
+export const appearance=globalThis.document?createAppearance({storage,root:document.documentElement}):null;

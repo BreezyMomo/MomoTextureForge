@@ -300,13 +300,13 @@
     "Adjust graphic-specific parameters"
   ],
   "appearance-settings": [
-    "Choose an appearance mode",
+    "Choose a complete theme",
     "Choose a control style",
     "Set interface density",
     "Expand advanced settings to customize colors",
     "Save appearance preferences in this browser",
     "Choose a tab style independently",
-    "Choose a color scheme independently"
+    "See where each color is used"
   ],
   "post-effect-picker": [
     "Search effect names or uses",

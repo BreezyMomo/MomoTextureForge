@@ -9,7 +9,7 @@ import {project,node} from '../web/tree-model.js';
 import {createProjectResource} from '../web/project-resources.js';
 import {GRAPHIC_LIST_KEY,serializeGraphicList} from '../web/persistent-graphic-list.js';
 import {GRAPHIC_LIST_DEFAULTS_KEY} from '../web/graphic-list-defaults.js';
-import {STYLE_IDS,COLOR_SCHEME_IDS,colorContrast} from '../web/appearance.js';
+import {STYLE_IDS,PRESET_THEME_IDS,appearancePalette,colorContrast} from '../web/appearance.js';
 import en from '../web/locales/en.json' with {type:'json'};
 const built=process.argv.includes('--built'),root=fileURLToPath(new URL(built?'../site/':'../web/',import.meta.url));
 const output=new URL('../test-results/functional-colors/',import.meta.url);await mkdir(output,{recursive:true});
@@ -41,10 +41,8 @@ try{
  });
  const hex=rgb=>'#'+rgb.match(/\d+/g).slice(0,3).map(v=>(+v).toString(16).padStart(2,'0')).join('');
  const baselines=new Map();
- for(const scheme of COLOR_SCHEME_IDS){
-  await page.locator('#appearance-scheme').selectOption(scheme);
- for(const theme of ['classic','graphite','light']){
-  await page.locator('#appearance-theme').selectOption(theme);
+ for(const scheme of PRESET_THEME_IDS){const theme=appearancePalette({theme:scheme}).theme;
+  await page.locator('#appearance-theme').selectOption(scheme);
   for(const style of STYLE_IDS){
    await page.locator('.appearance-style-card[data-style='+style+']').click();
    for(const accent of ['#000000','#FF00FF']){
@@ -61,22 +59,21 @@ try{
    }
   }
  }
- }
- for(const theme of ['classic','graphite','light']){
-  await page.locator('#appearance-theme').selectOption(theme);
+ for(const id of PRESET_THEME_IDS){const theme=appearancePalette({theme:id}).theme;
+  await page.locator('#appearance-theme').selectOption(id);
   for(const role of ['selection','navigation','control'])for(const color of ['#000000','#FFFFFF']){
    const input=page.locator('#appearance-hex-'+role);await input.fill(color);await input.dispatchEvent('input');
    const v=await read();assert.deepEqual(v.actual,baselines.get(theme),'functional colors remain independent of custom '+role);
    for(const key of ['badge','interval','key','record','playhead'])assert.deepEqual(v.preview[key],v.actual[key]);
   }
  }
- for(const scheme of COLOR_SCHEME_IDS)for(const theme of ['classic','light']){
-  await page.locator('#appearance-scheme').selectOption(scheme);await page.locator('#appearance-theme').selectOption(theme);await page.locator('.appearance-style-card[data-style=refined]').click();await page.locator('#appearance-tabs').selectOption('pill');
+ for(const scheme of PRESET_THEME_IDS){const theme=appearancePalette({theme:scheme}).theme;
+  await page.locator('#appearance-theme').selectOption(scheme);await page.locator('.appearance-style-card[data-style=refined]').click();await page.locator('#appearance-tabs').selectOption('pill');
   await page.locator('.appearance-dialog').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-'+scheme+'-'+theme+'.png',output))});
  }
- await page.locator('#appearance-scheme').selectOption('shuimo');
+ await page.locator('#appearance-theme').selectOption('shuimo');
  assert.deepEqual(await unchanged(),before,'color settings do not edit artwork or history');
- await page.locator('#appearance-theme').selectOption('classic');await page.locator('.appearance-style-card[data-style=aurora]').click();
+ await page.locator('.appearance-style-card[data-style=aurora]').click();
  await page.locator('.appearance-dialog').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-preview.png',output))});
  await page.locator('[data-save]').click();
  await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-editor.png',output))});
@@ -85,5 +82,5 @@ try{
  for(const key of curve.keys){const [r,g,b]=key.match(/\d+/g).map(Number);assert.ok(r>g&&g>b,'curve keyframes stay gold');assert.ok(colorContrast(hex(key),hex(curve.bg))>=3);}
  const [cr,cg,cb]=curve.line.match(/\d+/g).map(Number);assert.ok(cb>cr&&cb>cg,'curve stays blue');
 
- assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,combinations:COLOR_SCHEME_IDS.length*3*STYLE_IDS.length*2,checks:['functional colors independent from scheme, accent and skin','recording beats selected-button rules','real/preview fidelity','dark/light contrast','visible playhead over interval','unchanged artwork and history'],errors}));
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,combinations:PRESET_THEME_IDS.length*STYLE_IDS.length*2,checks:['functional colors independent from scheme, accent and skin','recording beats selected-button rules','real/preview fidelity','dark/light contrast','visible playhead over interval','unchanged artwork and history'],errors}));
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

@@ -17,7 +17,7 @@ try{
  const module=key=>page.locator('#inspector>[data-module="'+key+'"]'),snapshot=()=>page.evaluate(()=>({draft:localStorage.getItem('momo-texture-tree:draft:v1'),hash:location.hash,undo:document.querySelector('#undo').disabled}));
  for(const key of ['editor.opacity','curves.title'])await module(key).locator(':scope>summary .module-pin').click();
  const sameToken=async(selector,property,token)=>assert.equal(await page.locator(selector).evaluate((e,{property,token})=>{const probe=document.createElement('span');probe.style[property]='var('+token+')';e.append(probe);const expected=getComputedStyle(probe)[property],actual=getComputedStyle(e)[property];probe.remove();return actual===expected;},{property,token}),true,selector+' follows '+token);
- for(const theme of ['light','graphite','classic']){
+ for(const theme of ['yuebai','ouhe','shuimo']){
   const before=await snapshot();await page.locator('#appearance-settings').click();await page.locator('#appearance-theme').selectOption(theme);await page.locator('.appearance-dialog [data-save]').click();
   await sameToken('.node-shortcuts','backgroundColor','--ui-inset');await sameToken('#inspector>[data-module="editor.opacity"]>summary .module-pin','color','--ui-accent-text');
   await module('editor.opacity').locator('.shortcut-scope').click();await sameToken('.shortcut-scope-menu','backgroundColor','--ui-panel');await sameToken('.shortcut-scope-menu','color','--ui-text');await page.keyboard.press('Escape');

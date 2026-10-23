@@ -36,6 +36,12 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false,sh
  function decorate(details,key,title,defaultOpen=true){
   details.classList.remove('arrangement-advanced');details.classList.add('inspector-module');details.dataset.module=key;const id=scope(key),summary=details.querySelector(':scope>summary'),label=make('span','inspector-module-title');label.textContent=title;label.title=title;
   const body=make('div','inspector-module-body');for(const child of [...details.childNodes])if(child!==summary)body.append(child);
+  const secondary=[...body.querySelectorAll('[data-parameter-action]')];
+  if(secondary.length){
+   const footer=make('div','inspector-secondary-actions');
+   for(const action of secondary){const parent=action.parentElement;footer.append(action);if(!parent.children.length)parent.remove();}
+   body.append(footer);
+  }
   for(const heading of body.querySelectorAll(':scope>h3[data-inspector-section]'))if(heading.dataset.inspectorSection===key)heading.remove();
   const help=make('span','tree-note inspector-module-description'),heading=make('span','inspector-module-heading'),button=make('button','inspector-module-help'),arrow=make('span','inspector-module-arrow');arrow.setAttribute('aria-hidden','true');
   const notes=[...body.querySelectorAll(':scope>p[data-inspector-help]')];if(notes.length){help.textContent=notes.map(note=>note.textContent).join('\n');notes.forEach(note=>note.remove());}else help.textContent=uiText(descriptions[key]??'modules.sectionHelp');help.hidden=!state.help.has(id);button.type='button';button.append(editorIcon('help',doc));button.title=uiFormat('modules.helpTitle',title);button.setAttribute('aria-label',button.title);button.setAttribute('aria-expanded',String(!help.hidden));

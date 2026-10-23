@@ -1,0 +1,43 @@
+import http from 'node:http';
+import path from 'node:path';
+import {readFile,mkdir} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import {chromium} from 'playwright';
+import {project,node} from '../web/tree-model.js';
+import {STYLE_IDS,colorContrast} from '../web/appearance.js';
+
+const built=process.argv.includes('--built'),root=path.resolve(built?'site':'web');
+const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.glsl':'text/plain'};
+const server=http.createServer(async(req,res)=>{try{const file=path.resolve(root,'.'+(new URL(req.url,'http://localhost').pathname.replace(/^\/$/,'/index.html')));if(!file.startsWith(root+path.sep))throw Error();res.setHeader('Content-Type',types[path.extname(file)]??'application/octet-stream');res.end(await readFile(file));}catch{res.writeHead(404);res.end();}});
+await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
+try{
+ browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-webgl','--ignore-gpu-blocklist']});
+ const page=await browser.newPage({viewport:{width:1600,height:1100},reducedMotion:'reduce'}),errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ const p=project(),n=node('shape','Circle');n.tracks.opacity={mode:'absolute',ease:'linear',keys:[[0,1],[1,.5]]};p.root.children=[n];
+ await page.goto('http://127.0.0.1:'+server.address().port+'/#tree='+Buffer.from(JSON.stringify(p)).toString('base64'));
+ await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');
+ assert.equal(await page.locator('.selection-tools>button').first().isDisabled(),true);
+ await page.locator('#node-tree .tree-node-name').first().click();assert.equal(await page.locator('.selection-tools>button').first().isEnabled(),true);
+ await page.locator('#open-docked-timeline').click();
+ const action=id=>page.locator('[data-key-action='+id+']');
+ for(const id of ['copy','paste','delete'])assert.equal(await action(id).isDisabled(),true);
+ await page.locator('.animation-key[data-path=opacity]').first().click();assert.equal(await action('copy').isEnabled(),true);assert.equal(await action('delete').isEnabled(),true);
+ await action('copy').click();assert.equal(await action('paste').isEnabled(),true);
+ await action('delete').click();assert.equal(await page.locator('.animation-key[data-path=opacity]').count(),1);await page.locator('#undo').click();assert.equal(await page.locator('.animation-key[data-path=opacity]').count(),2);
+ await page.locator('#tree-time').fill('0.5');await action('paste').click();assert.equal(await page.locator('.animation-key[data-path=opacity]').count(),3);await page.locator('#undo').click();
+ await page.locator('[data-animation-view=curves]').focus();await page.keyboard.press('Space');assert.equal(await page.locator('#play').getAttribute('aria-pressed'),'false');assert.equal(await page.locator('[data-animation-view=curves]').getAttribute('aria-pressed'),'true');assert.equal(await page.locator('[data-animation-view=keys]').getAttribute('aria-pressed'),'false');await page.locator('[data-animation-view=keys]').focus();await page.keyboard.press('Enter');
+ await page.locator('[data-animation-mode=record]').click();assert.equal(await page.locator('[data-animation-mode=record]').getAttribute('aria-pressed'),'true');assert.match(await page.locator('[data-animation-mode=record]').getAttribute('class'),/recording/);await page.locator('[data-animation-mode=record]').click();
+ await page.locator('#play').click();assert.equal(await page.locator('#play').getAttribute('aria-pressed'),'true');assert.equal(await page.locator('#play svg').count(),1);await page.locator('#play').click();
+ await page.locator('#add-shape').click();await page.locator('.graphics-library-dialog').waitFor();await page.locator('.graphics-library-dialog header .graphics-close').click();
+ await page.locator('#appearance-settings').click();let checks=0;
+ for(const theme of ['shuimo','xuanhei','yuebai','qingci','qinghua','mineral','ouhe']){await page.locator('#appearance-theme').selectOption(theme);for(const style of STYLE_IDS){await page.locator('.appearance-style-card[data-style='+style+']').click();
+  const result=await page.evaluate(()=>{const css=s=>getComputedStyle(document.querySelector(s));return {primary:css('#add-shape').backgroundColor,fg:css('#add-shape').color,secondary:css('#add-group').backgroundColor,quiet:css('#duplicate').backgroundColor,mode:css('[data-animation-view=keys]').backgroundColor,inactive:css('[data-animation-view=curves]').backgroundColor};});
+  const hex=rgb=>'#'+rgb.match(/\d+/g).slice(0,3).map(v=>(+v).toString(16).padStart(2,'0')).join('');
+  assert.equal(result.quiet,'rgba(0, 0, 0, 0)');assert.equal(result.secondary,'rgba(0, 0, 0, 0)');assert.notEqual(result.mode,result.inactive);assert.ok(colorContrast(hex(result.fg),hex(result.primary))>=4.5);checks++;
+ }}await page.locator('[data-cancel]').click();
+ await page.locator('#language-settings').selectOption('en');await page.setViewportSize({width:1100,height:1000});assert.ok(await page.locator('.node-action-toolbar').evaluate(e=>e.scrollWidth<=e.clientWidth+1));
+ await mkdir('test-results/button-hierarchy',{recursive:true});await page.screenshot({path:'test-results/button-hierarchy/'+(built?'built':'source')+'-english.png'});
+ await page.setViewportSize({width:1700,height:1200});await page.locator('#language-settings').selectOption('zh-CN');await page.screenshot({path:'test-results/button-hierarchy/'+(built?'built':'source')+'.png'});
+ assert.deepEqual(errors,[]);console.log({built,checks,clipboardAndUndo:true,modeStates:true,playback:true,creation:true,englishNarrow:true,errors});
+}finally{await browser?.close();await new Promise(r=>server.close(r));}

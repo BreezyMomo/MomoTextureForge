@@ -14,7 +14,7 @@ try{
  const load=async p=>{await page.goto(origin+'/#tree='+Buffer.from(JSON.stringify(p)).toString('base64'));await page.reload();await page.locator('#open-graphics-library').waitFor();};
  const saved=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('momo-texture-tree:draft:v1')));
  const openCard=async name=>{await page.locator('#open-graphics-library').click();await page.getByPlaceholder('搜索名称、分类或标签').fill(name);const card=page.locator('.graphics-card').filter({has:page.locator('strong').getByText(name,{exact:true})});await card.waitFor();return card;};
- await load(p);let card=await openCard('圆形');await card.getByRole('button',{name:'添加到图形列表',exact:true}).click();await card.getByRole('button',{name:'已添加',exact:true}).waitFor();
+ await load(p);await page.evaluate(()=>{const key='momo-texture-tree:graphic-list:v1',list=JSON.parse(localStorage.getItem(key));list.projectResources=list.projectResources.filter(entry=>entry.root.type!=='Circle');localStorage.setItem(key,JSON.stringify(list));});await page.reload();await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');let card=await openCard('圆形');await card.locator('.graphics-card-details>summary').click();await card.getByRole('button',{name:'添加到图形列表',exact:true}).click();await card.locator('.graphics-added-state').waitFor();
  await page.locator('.graphics-library-dialog').screenshot({path:'test-results/editor-entry/library'+(standalone?'-standalone':'')+'.png'});
  const shelf=await page.evaluate(()=>JSON.parse(localStorage.getItem('momo-texture-tree:graphic-list:v1')).projectResources);
  await card.getByRole('button',{name:'直接添加到画布',exact:true}).click();await page.locator('.graphics-library-dialog').waitFor({state:'detached'});

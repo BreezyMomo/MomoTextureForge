@@ -4,7 +4,7 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {project,node} from '../web/tree-model.js';
-import {COLOR_SCHEME_IDS,colorContrast} from '../web/appearance.js';
+import {PRESET_THEME_IDS,colorContrast} from '../web/appearance.js';
 
 const built=process.argv.includes('--built'),root=path.resolve(built?'site':'web'),output=path.resolve('test-results/workspace-workflow');
 await mkdir(output,{recursive:true});
@@ -25,7 +25,10 @@ try{
  const params=page.locator('#inspector>[data-module="modules.shapeParameters"]');
  await params.locator('.module-drag-handle').press('ArrowDown');assert.notEqual((await order())[0],'modules.shapeParameters');
  await page.locator('#inspector-layout-menu>summary').click();await page.locator('#reset-inspector-order').click();assert.equal((await order())[0],'modules.shapeParameters');
- report.checks.push('default parameter priority, keyboard reorder and explicit reset');
+ assert.equal(await params.locator('.inspector-secondary-actions [data-parameter-action]').count(),2);
+ const lastParameter=await params.locator('input[type=range]').last().boundingBox(),secondary=await params.locator('.inspector-secondary-actions').boundingBox();assert.ok(secondary.y>lastParameter.y+lastParameter.height,'group actions follow parameter values');
+ const playColor=()=>page.locator('#play').evaluate(e=>getComputedStyle(e).backgroundColor);const stoppedColor=await playColor();assert.equal(await page.locator('#play').getAttribute('aria-pressed'),'false');await page.locator('#play').click();assert.equal(await page.locator('#play').getAttribute('aria-pressed'),'true');assert.notEqual(await playColor(),stoppedColor);await page.locator('#play').click();assert.equal(await page.locator('#play').getAttribute('aria-pressed'),'false');assert.equal(await playColor(),stoppedColor);
+ report.checks.push('parameter actions follow values','playback state matches visual feedback','default parameter priority, keyboard reorder and explicit reset');
  await page.locator('#resource-actions-menu>summary').click();assert.equal(await page.locator('#save-selected-component').isVisible(),true);assert.match(await page.locator('#resource-actions-menu .workspace-scope-note').innerText(),/Outer ring/);await page.keyboard.press('Escape');
  await page.locator('#playback-settings>summary').click();assert.equal(await page.locator('#play-duration').isVisible(),true);await page.keyboard.press('Escape');assert.equal(await page.locator('#play').isVisible(),true);
  const categories=page.locator('#library-category-disclosure');assert.equal(await categories.getAttribute('open'),null);await categories.locator('summary').click();await page.locator('#library-categories button[data-value]').nth(1).click();assert.doesNotMatch(await categories.locator('summary').innerText(),/全部/);await page.locator('#library-categories button[data-value=""]').click();await categories.locator('summary').click();
@@ -41,6 +44,8 @@ try{
  await page.locator('#node-tree .tree-node-name').first().click();
  const slider=await page.locator('#inspector input[type=range]').first().boundingBox();assert.ok(slider.width>140,'narrow panels give sliders their own row');
  assert.equal(await page.locator('#inspector').evaluate(e=>e.scrollWidth<=e.clientWidth+1),true);
+ await page.locator('#language-settings').selectOption('en');await settle();
+ const tabRows=await page.locator('#inspector-tabs>button').evaluateAll(es=>es.map(e=>e.getBoundingClientRect().y));assert.equal(new Set(tabRows).size,1,'narrow English tabs stay on one row');await page.locator('#inspector-tabs>button').last().focus();assert.ok(await page.locator('#inspector-tabs').evaluate(e=>{const tab=e.lastElementChild.getBoundingClientRect(),r=e.getBoundingClientRect();return tab.right<=r.right+2&&tab.left>=r.left-2;}),'keyboard-focused tab scrolls into view');await page.locator('#language-settings').selectOption('zh-CN');
  await page.screenshot({path:path.join(output,(built?'built':'source')+'-narrow-inspector.png')});
  report.checks.push('merged tab keyboard activation','bottom library scroll area','narrow floating inspector');
  await floating.evaluate(e=>e.style.width='760px');await settle();
@@ -72,16 +77,16 @@ try{
  await page.locator('#node-tree .tree-node-name').first().click();await page.setViewportSize({width:1280,height:900});await settle();await page.screenshot({path:path.join(output,(built?'built':'source')+'-english-browse.png')});
  // Measure actual backgrounds, including theme-specific component overrides.
  await page.locator('#appearance-settings').click();
- for(const theme of ['classic','graphite','light'])for(const scheme of COLOR_SCHEME_IDS){
-  await page.locator('#appearance-theme').selectOption(theme);await page.locator('#appearance-scheme').selectOption(scheme);
+ for(const theme of PRESET_THEME_IDS){const scheme=theme;
+  await page.locator('#appearance-theme').selectOption(theme);
   const colors=await page.evaluate(()=>{
    const hex=color=>{const c=document.createElement('canvas').getContext('2d');c.fillStyle=color;c.fillRect(0,0,1,1);return '#'+[...c.getImageData(0,0,1,1).data].slice(0,3).map(v=>v.toString(16).padStart(2,'0')).join('');};
    const e=document.querySelector('#shape-search'),b=document.querySelector('#library-filter [aria-pressed=true]');return {placeholder:hex(getComputedStyle(e,'::placeholder').color),field:hex(getComputedStyle(e).backgroundColor),fg:hex(getComputedStyle(b).color),bg:hex(getComputedStyle(b).backgroundColor)};
   });
   const placeholder=colorContrast(colors.placeholder,colors.field),filter=colorContrast(colors.fg,colors.bg);report.contrasts.push({theme,scheme,placeholder,filter});assert.ok(placeholder>=4.5,theme+'/'+scheme+' placeholder '+placeholder);assert.ok(filter>=4.5,theme+'/'+scheme+' filter '+filter);
  }
- await page.locator('#appearance-theme').selectOption('light');await page.locator('#appearance-scheme').selectOption('shuimo');await page.locator('[data-save]').click();await page.screenshot({path:path.join(output,(built?'built':'source')+'-light.png')});
- await page.locator('#open-graphics-library').click();await page.locator('.graphics-card').first().waitFor();assert.equal(await page.locator('.graphics-browse-controls input').isVisible(),true);await page.locator('.graphics-card-details').first().locator('summary').click();assert.ok(await page.locator('.graphics-card-details').first().getByRole('button').count()>0);await page.screenshot({path:path.join(output,(built?'built':'source')+'-library.png')});
- report.checks.push('custom workspace persistence','English browsing preset','42 theme/palette contrast combinations','resource library browsing and management');
+ await page.locator('#appearance-theme').selectOption('yuebai');await page.locator('[data-save]').click();await page.screenshot({path:path.join(output,(built?'built':'source')+'-light.png')});
+ await page.locator('#open-graphics-library').click();await page.locator('.graphics-card').first().waitFor();assert.equal(await page.locator('.graphics-browse-controls input').isVisible(),true);const firstCard=page.locator('.graphics-card').first();assert.equal(await firstCard.locator(':scope>button:visible').count(),1,'only Add to canvas is a direct card action');assert.equal(await firstCard.locator('.graphics-card-details .graphics-list-action').count(),1,'list insertion remains in details');assert.equal(await firstCard.locator('.graphics-added-state').isVisible(),true);await page.locator('.graphics-card-details').first().locator('summary').click();assert.ok(await page.locator('.graphics-card-details').first().getByRole('button').count()>0);await page.screenshot({path:path.join(output,(built?'built':'source')+'-library.png')});
+ report.checks.push('custom workspace persistence','English browsing preset',`${PRESET_THEME_IDS.length} theme/palette contrast combinations`,'resource library browsing and management');
  assert.deepEqual(errors,[]);await writeFile(path.join(output,(built?'built':'source')+'.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({built,checks:report.checks,contrasts:report.contrasts.length,errors}));
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

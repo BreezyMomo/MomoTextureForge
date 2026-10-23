@@ -16,12 +16,15 @@ export function fitCanvasPopup(panel){
 export function installCanvasToolbar({tiled,tileGrid}){
  const $=id=>document.getElementById(id),toolbar=$('preview-2d-toolbar');toolbar.classList.add('canvas-toolbar');
  const tools=document.createElement('div'),views=document.createElement('div');tools.className='canvas-tools';views.className='canvas-views';tools.setAttribute('role','group');
- tools.append($('canvas-transform'),$('canvas-pivot'),$('grab-uv'),$('pan-preview'),$('canvas-snap'));
+ const modes=document.createElement('div');modes.className='ui-mode-group canvas-mode-group';
+ modes.append($('canvas-transform'),$('canvas-pivot'),$('grab-uv'),$('pan-preview'));
+ for(const button of modes.children)button.classList.add('ui-mode-button');
+ $('canvas-snap').classList.add('ui-mode-button');tools.append(modes,$('canvas-snap'));
  const stage=$('canvas-stage');stage.tabIndex=-1;
  tools.addEventListener('click',event=>{if(event.detail>0&&event.target.closest('button'))stage.focus({preventScroll:true});});
  const zoom=$('zoom').closest('label');zoom.classList.add('canvas-zoom');zoom.firstElementChild.classList.add('canvas-visually-hidden');
  $('zoom').setAttribute('aria-label',uiText('editor.zoom'));
- const reset=document.createElement('button');reset.id='reset-canvas-view';reset.type='button';reset.className='canvas-tool canvas-reset-view';reset.append(toolIcon('frame'));
+ const reset=document.createElement('button');reset.id='reset-canvas-view';reset.type='button';reset.className='canvas-tool canvas-reset-view ui-action-quiet';reset.append(toolIcon('frame'));
  reset.addEventListener('click',event=>{if(event.detail>0)stage.focus({preventScroll:true});});
  const zoomControls=document.createElement('div');zoomControls.className='canvas-zoom-controls';zoomControls.append(zoom,reset);
  function menu(id,icon,key){const details=document.createElement('details'),summary=document.createElement('summary'),panel=document.createElement('div');details.id=id;details.className='canvas-dropdown';panel.className='canvas-dropdown-panel';canvasToolLabel(summary,icon,key);details.append(summary,panel);return {details,summary,panel};}
@@ -31,7 +34,7 @@ export function installCanvasToolbar({tiled,tileGrid}){
  const tileMenu=menu('canvas-tile-menu','tile','canvas.tileOptions');tileMenu.summary.replaceChildren(document.createTextNode('▾'));tileMenu.summary.classList.add('canvas-menu-arrow');
  const off=document.createElement('button');off.type='button';off.onclick=()=>{if(tiled())$('tile-preview').click();tileMenu.details.open=false;tileMenu.summary.focus();};
  tileMenu.panel.append($('tile-grid').closest('label'),off);tiles.append($('tile-preview'),tileMenu.details);
- views.append(zoomControls,display.details,tiles);toolbar.replaceChildren(tools,views);
+ tiles.querySelector('#tile-preview').classList.add('ui-mode-button');views.append(zoomControls,display.details,tiles);toolbar.replaceChildren(tools,views);
  const menus=[display,tileMenu];
  for(const menu of menus)menu.summary.addEventListener('click',event=>{event.preventDefault();menu.details.open=!menu.details.open;if(menu.details.open){fitCanvasPopup(menu.panel);for(const other of menus)if(other!==menu)other.details.open=false;}});
  for(const menu of menus)menu.details.addEventListener('toggle',()=>{if(menu.details.open){fitCanvasPopup(menu.panel);for(const other of menus)if(other!==menu)other.details.open=false;}});

@@ -2,9 +2,9 @@
 :root{
  --ui-control-radius:5px;--ui-module-radius:7px;--ui-card-radius:6px;--ui-pane-radius:4px;--ui-window-radius:10px;
  --ui-control-pad-y:6px;--ui-control-pad-x:8px;--ui-field-gap:10px;--ui-module-padding:9px;--ui-module-gap:9px;--ui-heading-padding:8px 10px;--ui-pane-padding:10px;--ui-tab-height:32px;--ui-node-padding:5px;--ui-card-padding:10px;--ui-card-gap:8px;
- --ui-bg:#15171b;--ui-inset:#191d24;--ui-panel:#1e2229;--ui-surface:#272d36;--ui-hover:#333c48;
- --ui-line:#363e49;--ui-line-strong:#657182;--ui-text:#e5e9ef;--ui-muted:#a7b2c1;--ui-subtle:#8795a7;
- --ui-accent:#dfae72;--ui-on-accent:#16191e;--ui-accent-text:#dfae72;--ui-selected:#453e38;--ui-accent-hover:#c79d68;
+ --ui-bg:#101010;--ui-inset:#181818;--ui-panel:#222222;--ui-surface:#2c2c2c;--ui-hover:#393939;
+ --ui-line:#454545;--ui-line-strong:#858585;--ui-text:#ededeb;--ui-muted:#bcbcb8;--ui-subtle:#a6a6a1;
+ --ui-accent:#c5a36a;--ui-on-accent:#000000;--ui-accent-text:#c5a36a;--ui-selected:#433e33;--ui-accent-hover:#cbac79;
  --ui-info:#9bc9e7;--ui-info-bg:#253542;--ui-success:#a4d7be;--ui-success-bg:#263e34;--ui-danger:#ffb1b8;--ui-danger-bg:#442a31;
  --ui-motion:var(--ui-success);--ui-motion-bg:var(--ui-success-bg);--ui-time:#b4d9ff;--ui-time-bg:#243e59;--ui-time-line:#6595c7;--ui-time-handle:#477ba9;--ui-key:#f5c66f;--ui-key-selected:#ffe5a3;--ui-playhead:#f4f7fb;
  --ui-warning:#edc489;--ui-warning-bg:#403526;--ui-purple:#d0b9ed;--ui-purple-bg:#392f49;--ui-overlay:#0009;--ui-shadow:#0005;
@@ -21,12 +21,6 @@
 :root[data-interface-style=minimal] #shape-library .tree-pattern-card,
 :root[data-interface-style=minimal] .graphics-dialog .graphics-card{border-color:transparent;border-bottom-color:var(--ui-line);border-radius:0;background:transparent}
 :root[data-interface-style=minimal] #shape-library .tree-pattern-card.picked{border-color:var(--ui-accent-text);background:var(--ui-selected)}
-:root[data-theme=graphite]{
- --ui-bg:#1c1d1f;--ui-inset:#202123;--ui-panel:#262729;--ui-surface:#303234;--ui-hover:#3c3f43;
- --ui-line:#41454a;--ui-line-strong:#727981;--ui-text:#eceeef;--ui-muted:#b3b9c2;--ui-subtle:#929aa7;
- --ui-info:#aaccec;--ui-info-bg:#2a3540;--ui-success:#acd6c1;--ui-success-bg:#2a3c34;--ui-danger:#f9b2b8;--ui-danger-bg:#422c32;
- --ui-warning:#e6c792;--ui-warning-bg:#3f372a;--ui-purple:#cfbce7;--ui-purple-bg:#393142;
-}
 :root[data-theme=light]{
  --ui-bg:#e9edf1;--ui-inset:#f0f3f6;--ui-panel:#ffffff;--ui-surface:#f4f6f8;--ui-hover:#e3e9f0;
  --ui-line:#cdd5de;--ui-line-strong:#7f8c9e;--ui-text:#242b35;--ui-muted:#526174;--ui-subtle:#607087;
@@ -34,7 +28,7 @@
  --ui-time:#245a80;--ui-time-bg:#dcebf9;--ui-time-line:#477ca8;--ui-time-handle:#79a8d1;--ui-key:#8c580d;--ui-key-selected:#6f4000;--ui-playhead:#253247;
  --ui-warning:#795018;--ui-warning-bg:#faf0df;--ui-purple:#6a4792;--ui-purple-bg:#efe9f7;--ui-overlay:#17233566;--ui-shadow:#1c2b3d22;
 }
-/* The authoring surface remains neutral; theme color is reserved for actions and selection. */
+/* Workspace chrome follows the complete theme; artwork keeps independent colors. */
 .tree-editor .appearance-trigger{display:flex;align-items:center;gap:6px}
 .tree-editor button.primary:hover{background:var(--ui-accent-hover);color:var(--ui-on-accent)}
 .appearance-trigger::before{content:'';width:10px;height:10px;border-radius:50%;background:var(--ui-accent);border:1px solid var(--ui-accent-text)}
@@ -47,7 +41,7 @@
 .appearance-settings{border-right:1px solid var(--ui-line)}
 .appearance-settings>label{display:block;margin-bottom:8px;font-weight:500}
 .appearance-settings>select{width:100%;margin-bottom:22px}
-.appearance-settings .appearance-scheme-description{margin:-12px 0 20px;color:var(--ui-muted);font-size:12px;line-height:1.6}
+.appearance-settings .appearance-theme-description{margin:-12px 0 20px;color:var(--ui-muted);font-size:12px;line-height:1.6}
 .appearance-layout-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .appearance-layout-options label{display:block;margin-bottom:8px;font-weight:500}
 .appearance-layout-options select{width:100%;min-width:0}

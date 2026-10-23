@@ -1,5 +1,6 @@
 // Shared geometry for editor controls. Icons carry no translated text or project data.
 const paths={
+ play:'m8 4 12 8-12 8Z',pause:'M8 4v16M16 4v16',
  reset:'M3 10a9 9 0 1 1 2 8M3 4v6h6',
  keyframe:'m12 3 9 9-9 9-9-9Z',
  drag:'M8 5h.01M16 5h.01M8 12h.01M16 12h.01M8 19h.01M16 19h.01',

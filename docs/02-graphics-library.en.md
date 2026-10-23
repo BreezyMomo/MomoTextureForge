@@ -40,7 +40,7 @@ Use **☆ / ★** in the upper-right corner of a card to favorite or unfavorite 
 1. Open **Graphics library** in the toolbar. Search names, categories or tags, such as “Smoke and fire”, “Water and caustics” or a specific graphic name.
 2. Filter by source and type to distinguish built-in, local and remote resources.
 3. Choose **Add directly to canvas**. The library closes and the inspector selects the new node. Formulas, generators, images and compositions share this entry point.
-4. For frequent reuse, also choose **Add to graphics list**. Multiple selected resources can be added together. Use **+ Add** in the left panel to insert instances later.
+4. For frequent reuse, expand the card’s **Details and management**, then choose **Add to graphics list**. Multiple selected resources can be added together. Use **+ Add** in the left panel to insert instances later.
 
 Batch add shows processed/total counts and the current resource name, then saves the list once. **Cancel** stops further processing and keeps completed resources; unprocessed and failed items remain selected for retry. Undo reverses the whole addition. Matching versions are skipped; newer versions still require separate confirmation.
 

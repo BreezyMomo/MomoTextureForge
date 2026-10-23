@@ -130,7 +130,7 @@
 .animation-selection-box{position:fixed;border:1px solid var(--ui-line-strong);background:var(--ui-hover);pointer-events:none;z-index:100}
 .animation-workspace button,.animation-workspace select{font-size:11px}.animation-workspace .animation-track-name{align-items:center;justify-content:flex-start}
 .animation-track-name>button:first-of-type{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.key-at-cursor{color:var(--ui-text)!important;background:var(--ui-hover)!important}.tree-field input:disabled,.tree-field select:disabled{opacity:.7}
+.key-at-cursor{background:var(--ui-hover)!important}.tree-field input:disabled,.tree-field select:disabled{opacity:.7}
 #animation-panel[open]{max-height:60vh;resize:vertical;min-height:210px}
 
 .animation-extra{padding:3px 0}.animation-extra>summary{cursor:pointer;color:var(--ui-muted);font-size:12px}.animation-workspace .animation-tools{gap:5px}.animation-workspace .animation-tools input{width:76px}
@@ -503,6 +503,8 @@
 .tree-disclosure[aria-expanded=true]>.editor-icon{transform:rotate(90deg)}
 .tree-editor :is(.tree-header,.canvas-tool,.module-pin,.tree-visibility,.tree-node-delete) svg{stroke-width:1.7}
 .tree-editor .shortcut-scope .editor-icon{width:12px;height:12px}
+.tree-editor button[data-key-path]{color:var(--ui-muted)}
+.tree-editor button[data-key-path]:is([data-key-state=animated],[data-key-state=current]){color:var(--ui-key)}
 .tree-editor [data-key-path] .keyframe-dot{display:none;fill:currentColor;stroke:none}
 .tree-editor [data-key-state=animated] .keyframe-dot{display:block}
 .tree-editor [data-key-state=current] .editor-icon>path{fill:currentColor}
