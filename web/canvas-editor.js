@@ -84,7 +84,7 @@ export function createCanvasEditor(surface,api){
  surface.addEventListener('dblclick',e=>{if(!enabled())return;const n=find(api.project().root,api.primary())?.node;if(n?.kind==='group'){scope=n.id;api.select([]);}});
  function closeMenu(){menu?.remove();menu=null;}
  surface.addEventListener('contextmenu',e=>{if(!enabled())return;e.preventDefault();closeMenu();try{const found=hits(point(e));if(!found.length)return;menu=doc.createElement('div');menu.className='canvas-pick-menu';menu.style.left=e.clientX+'px';menu.style.top=e.clientY+'px';for(const h of found)menu.append(button('',find(api.project().root,h.id).node.name,()=>{activeCopy=h.copy;api.select([h.id],h.id);closeMenu();}));doc.body.append(menu);}catch(error){api.notify(error.message);}});
- surface.addEventListener('pointerenter',()=>hover=true);surface.addEventListener('pointerleave',()=>hover=false);
+ const viewport=surface.parentElement;viewport.addEventListener('pointerenter',()=>hover=true);viewport.addEventListener('pointerleave',()=>hover=false);
  doc.addEventListener('keydown',e=>{
   if(surface.hidden||['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)||e.target.closest('button,summary,.gradient-editor')||api.busy())return;
   if(e.key==='Escape'&&gesture){e.preventDefault();e.stopImmediatePropagation();cancel();return;}

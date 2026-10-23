@@ -332,6 +332,8 @@ Filters support keys. Groups composite children before filtering. Radii such as 
 
 Below the preview, the left group contains Select, Pivot, UV, Pan and Snap tools. The right group contains zoom, **View** and **Tile**. **View** contains checkerboard/black/white backgrounds, node bounds, pivots and the boundary explanation. The arrow beside Tile offers **2×2, 3×3, 4×4** and an off action. Choosing a count enables tiling; toggling Tile preserves that count, which appears on the button while enabled. These viewing aids do not change the canvas, project or export dimensions. Tile inspection reveals seams but does not remove them; inspect even after enabling Seamless repeat.
 
+**Pan view** works at fit size, reduced zoom and enlarged zoom, including drags on blank areas of the preview. Hold **Space** for temporary panning; releasing it restores the previous tool. **Reset view**, beside the zoom selector, fits and centers the canvas; choosing Fit window also centers it. Each trial session retains its own offset, and returning to the canvas restores that canvas's view. Panning leaves node positions, UVs and keyframes unchanged; export still uses the full canvas.
+
 Shortcuts: Ctrl/Cmd+D duplicates, Delete removes, Ctrl+Z undoes and Ctrl+Shift+Z redoes. Export always uses the full canvas bounds.
 
 ## 6. Inspect effect blending on backgrounds

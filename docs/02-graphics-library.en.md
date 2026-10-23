@@ -41,7 +41,7 @@ Direct insertion uses the card's currently selected version and creates an indep
 
 “Added” means the resource is already in the graphics list, not that a node exists on the canvas. Instances can be adjusted independently without changing the library original.
 
-If an older list contains retired graphics or missing dependencies, the editor backs up the original data, sets unreadable entries aside and restores the remaining resources. The upper-right notification offers details and an original backup download including currently available custom dependencies. Do not clear browser data first. Errors and warnings remain until dismissed.
+If an older list contains retired graphics or missing dependencies, the editor backs up the original data, sets unreadable entries aside and restores the remaining resources. The upper-right notification offers details and an original backup download including currently available custom dependencies. Do not clear browser data first. Recovery notifications describe unreadable entries found during the current load. Once the list is restored, retained historical backups do not repeat old warnings on reload; newly encountered failures still trigger a warning. Errors and warnings remain until dismissed.
 
 ## 2. Trial editing and saving copies
 

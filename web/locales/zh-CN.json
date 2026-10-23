@@ -428,7 +428,7 @@
   "editor.overlay": "叠加",
   "editor.ownColors": "自定义配色",
   "editor.packagingFiles": "正在打包文件…",
-  "editor.panCanvas": "移动画布",
+  "editor.panCanvas": "平移视图",
   "editor.parameterBoundaryReachedDragCanceled": "已到达参数范围边界，本次拖动已取消",
   "editor.parameterMode": "参数模式 ",
   "editor.parentRangeEnd": "父级区间结束",
@@ -1905,7 +1905,7 @@
   "canvas.selectShort": "选择",
   "canvas.pivotShort": "轴心",
   "canvas.uvShort": "UV",
-  "canvas.panShort": "移动",
+  "canvas.panShort": "平移",
   "canvas.display": "显示",
   "canvas.tools": "画布编辑工具",
   "canvas.tileOptions": "平铺选项",
@@ -1921,5 +1921,6 @@
   "canvas.aspectHint": "输入宽高比例，不是导出像素尺寸。范围 1:8～8:1。",
   "canvas.aspectInvalid": "宽和高须为正数，比例须在 1:8～8:1 之间。",
   "canvas.editAspect": "编辑自定义比例",
-  "canvas.currentCustomAspect": "自定义 ({0})"
+  "canvas.currentCustomAspect": "自定义 ({0})",
+  "canvas.resetView": "视图归位（适应并居中）"
 }

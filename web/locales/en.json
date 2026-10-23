@@ -428,7 +428,7 @@
   "editor.overlay": "Overlay",
   "editor.ownColors": "Own colors",
   "editor.packagingFiles": "Packaging files…",
-  "editor.panCanvas": "Pan canvas",
+  "editor.panCanvas": "Pan view",
   "editor.parameterBoundaryReachedDragCanceled": "Parameter boundary reached; drag canceled",
   "editor.parameterMode": "Parameter mode ",
   "editor.parentRangeEnd": "Parent range end",
@@ -1921,5 +1921,6 @@
   "canvas.aspectHint": "Enter a width-to-height ratio, rather than export pixels. Range: 1:8 to 8:1.",
   "canvas.aspectInvalid": "Width and height must be positive, with a ratio between 1:8 and 8:1.",
   "canvas.editAspect": "Edit custom ratio",
-  "canvas.currentCustomAspect": "Custom ({0})"
+  "canvas.currentCustomAspect": "Custom ({0})",
+  "canvas.resetView": "Reset view (fit and center)"
 }

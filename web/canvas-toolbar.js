@@ -6,7 +6,7 @@ const paths={
  uv:'M4 4h16v16H4ZM4 12h16M12 4v16',pan:'M9 12V5a2 2 0 0 1 4 0v6-7a2 2 0 0 1 4 0v8-5a2 2 0 0 1 4 0v8c0 4-3 7-7 7h-1c-2 0-3-1-4-2l-5-6a2 2 0 0 1 3-3l2 2',
  snap:'M5 4v9a7 7 0 0 0 14 0V4h-4v9a3 3 0 0 1-6 0V4ZM5 8h4m6 0h4',
  display:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Zm13 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0',
- tile:'M3 3h7v7H3Zm11 0h7v7h-7ZM3 14h7v7H3Zm11 0h7v7h-7Z',clear:'m6 6 12 12M6 18 18 6',edit:'m15 4 5 5M4 20l5-1L21 7a2 2 0 0 0-4-4L5 15Z'
+ tile:'M3 3h7v7H3Zm11 0h7v7h-7ZM3 14h7v7H3Zm11 0h7v7h-7Z',clear:'m6 6 12 12M6 18 18 6',edit:'m15 4 5 5M4 20l5-1L21 7a2 2 0 0 0-4-4L5 15Z',frame:'M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5'
 };
 export function toolIcon(name){const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[name]);svg.append(path);return svg;}
 export function canvasToolLabel(button,icon,key,shortKey=key){
@@ -23,8 +23,13 @@ export function installCanvasToolbar({tiled,tileGrid}){
  const $=id=>document.getElementById(id),toolbar=$('preview-2d-toolbar');toolbar.classList.add('canvas-toolbar');
  const tools=document.createElement('div'),views=document.createElement('div');tools.className='canvas-tools';views.className='canvas-views';tools.setAttribute('role','group');
  tools.append($('canvas-transform'),$('canvas-pivot'),$('grab-uv'),$('pan-preview'),$('canvas-snap'));
+ const stage=$('canvas-stage');stage.tabIndex=-1;
+ tools.addEventListener('click',event=>{if(event.detail>0&&event.target.closest('button'))stage.focus({preventScroll:true});});
  const zoom=$('zoom').closest('label');zoom.classList.add('canvas-zoom');zoom.firstElementChild.classList.add('canvas-visually-hidden');
  $('zoom').setAttribute('aria-label',uiText('editor.zoom'));
+ const reset=document.createElement('button');reset.id='reset-canvas-view';reset.type='button';reset.className='canvas-tool canvas-reset-view';reset.append(toolIcon('frame'));
+ reset.addEventListener('click',event=>{if(event.detail>0)stage.focus({preventScroll:true});});
+ const zoomControls=document.createElement('div');zoomControls.className='canvas-zoom-controls';zoomControls.append(zoom,reset);
  function menu(id,icon,key){const details=document.createElement('details'),summary=document.createElement('summary'),panel=document.createElement('div');details.id=id;details.className='canvas-dropdown';panel.className='canvas-dropdown-panel';canvasToolLabel(summary,icon,key);details.append(summary,panel);return {details,summary,panel};}
  const display=menu('canvas-display-menu','display','canvas.display');
  display.panel.append($('background').closest('label'),$('show-guides').closest('label'),$('show-pivot').closest('label'),$('guide-note'));
@@ -32,7 +37,7 @@ export function installCanvasToolbar({tiled,tileGrid}){
  const tileMenu=menu('canvas-tile-menu','tile','canvas.tileOptions');tileMenu.summary.replaceChildren(document.createTextNode('▾'));tileMenu.summary.classList.add('canvas-menu-arrow');
  const off=document.createElement('button');off.type='button';off.onclick=()=>{if(tiled())$('tile-preview').click();tileMenu.details.open=false;tileMenu.summary.focus();};
  tileMenu.panel.append($('tile-grid').closest('label'),off);tiles.append($('tile-preview'),tileMenu.details);
- views.append(zoom,display.details,tiles);toolbar.replaceChildren(tools,views);
+ views.append(zoomControls,display.details,tiles);toolbar.replaceChildren(tools,views);
  const menus=[display,tileMenu];
  for(const menu of menus)menu.summary.addEventListener('click',event=>{event.preventDefault();menu.details.open=!menu.details.open;if(menu.details.open){fitCanvasPopup(menu.panel);for(const other of menus)if(other!==menu)other.details.open=false;}});
  for(const menu of menus)menu.details.addEventListener('toggle',()=>{if(menu.details.open){fitCanvasPopup(menu.panel);for(const other of menus)if(other!==menu)other.details.open=false;}});
@@ -44,6 +49,7 @@ export function installCanvasToolbar({tiled,tileGrid}){
   if(event.key!=='Escape')return;for(const {details,summary}of menus)if(details.open){details.open=false;summary.focus();event.preventDefault();event.stopPropagation();}
  },true);
  function sync(){
+  reset.title=uiText('canvas.resetView');reset.setAttribute('aria-label',uiText('canvas.resetView'));
   canvasToolLabel($('grab-uv'),'uv','editor.editUV','canvas.uvShort');canvasToolLabel($('pan-preview'),'pan','editor.panCanvas','canvas.panShort');
   canvasToolLabel(display.summary,'display','canvas.display');canvasToolLabel($('tile-preview'),'tile','editor.tilePreview');
   $('tile-preview').querySelector('span').textContent=tiled()?uiFormat('canvas.tileSize',tileGrid()):uiText('canvas.tileShort');

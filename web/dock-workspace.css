@@ -23,7 +23,7 @@
 .dock-workspace .preview-heading{flex-wrap:wrap;gap:7px;margin-bottom:8px}
 .dock-workspace .preview-heading strong{font-size:15px}
 .dock-workspace #breadcrumbs{margin-bottom:6px}
-.dock-workspace .preview-actions{flex-wrap:wrap;justify-content:flex-start;min-width:0}
+.dock-workspace .preview-actions{flex-wrap:wrap;justify-content:flex-end;min-width:0}
 .dock-workspace .preview-actions button{padding:5px;font-size:11px}
 .dock-workspace #canvas-stage{min-height:70px}
 .dock-workspace .tree-toolbar{gap:6px;padding:7px 0}

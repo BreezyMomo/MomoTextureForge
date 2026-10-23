@@ -94,8 +94,9 @@ document.body.className='tree-editor';mountStartupContent(`
 localizeApplicationMarkup(document.head);localizeApplicationMarkup(document.body);
 let state=project();state.root.children=[];
 let quickAspect=null,canvasToolbar=null;
+let viewPan=[0,0];
 let selected=state.root.id,time=0,formulaSeconds=0,section='shape',solo=false,playing=false,tiled=false,tileGrid=2,busy=false,history=[],future=[],pending=false,globalPanel=null,formTarget='inspector',dragged=null,exportKind='png',componentPreview=null,cancelExport=false,contourThreshold=50,contourSmooth=true;
-const shelf=new GraphicShelf();let shelfStorageError=null,shelfRecoveryBackup=null;
+const shelf=new GraphicShelf();let shelfStorageError=null,shelfRecoveryBackup=null,shelfRecoveryRejected=[];
 const recentKey='momo-texture-tree:recent:v1';let recent=[];try{const saved=JSON.parse(localStorage.getItem(recentKey)||'[]');if(Array.isArray(saved))recent=[...new Set(saved.filter(id=>typeof id==='string'))].slice(0,24);}catch{}
 let selectedIds=new Set([selected]),selectionPrimary=selected,selectionAnchor=selected,canvasEditor=null,batchInspector=null,editPrimary=false,alignmentReference='selection';
 function reconcileSelection(){if(selectionPrimary!==selected){selectedIds=new Set(selected===state.root.id?[]:[selected]);selectionPrimary=selected;}selectedIds=new Set([...selectedIds].filter(id=>id!==state.root.id&&find(state.root,id)));}
@@ -103,11 +104,11 @@ function setSelection(ids,primary=ids.at(-1)){if(ids.length>1)solo=false;editPri
 function multiSelect(id,e={}){reconcileSelection();if(e.shiftKey){const order=[...$('node-tree').querySelectorAll('[data-node-id]')].map(x=>x.dataset.nodeId);setSelection([...new Set([...(e.ctrlKey||e.metaKey?selectedIds:[]),...rangeSelection(order,selectionAnchor,id)])],id);}else if(e.ctrlKey||e.metaKey){const ids=new Set(selectedIds);ids.has(id)?ids.delete(id):ids.add(id);setSelection([...ids],ids.has(id)?id:[...ids].at(-1));selectionAnchor=id;}else{selectionAnchor=id;setSelection([id],id);}}
 function selectedRoots(){reconcileSelection();return selectionRoots(state.root,selectedIds);}
 function remember(id){recent=[id,...recent.filter(x=>x!==id)].slice(0,24);try{localStorage.setItem(recentKey,JSON.stringify(recent));}catch{}}
-const previewSessions=new Map();let workSession=null,sessionScroll=null;
+const previewSessions=new Map();let workSession=null;
 const canvasAspectHistory=new WeakMap();
 function applyCanvasAspect(target,ratio){if(target.canvas.ratio===ratio)return;target.canvas.ratio=ratio;Object.assign(target.output,outputDimensions(ratio,target.output.width));}
-function captureSession(){return {state,selected,selection:[...selectedIds],time,section,solo,tiled,tileGrid,history,future,localAnimationPreview,zoom:$('zoom').value,background:$('background').value,scroll:[$('canvas-stage').scrollLeft,$('canvas-stage').scrollTop]};}
-function restoreSession(c){const ratio=state.canvas.ratio;({state,selected,time,section,solo,tiled,history,future,localAnimationPreview}=c);applyCanvasAspect(state,ratio);selectedIds=new Set((c.selection??[selected]).filter(id=>find(state.root,id)));if(selected!==state.root.id)selectedIds.add(selected);selectionPrimary=selected;tileGrid=c.tileGrid??2;$('tile-grid').value=String(tileGrid);state=shelf.bind(state);canvasEditor?.reset();$('zoom').value=c.zoom;$('background').value=c.background;$('canvas-stage').className=c.background;$('canvas-stage').classList.toggle('material-mode',materialMode());$('canvas-stage').classList.toggle('effect-mode',effectMode());$('tree-time').value=time;$('tile-preview').setAttribute('aria-pressed',String(tiled));sessionScroll=c.scroll;$('play').textContent=uiText(playing?"playback.pause":"playback.play");animationEditMode='normal';animationEditor.setScope(state.root.id);}
+function captureSession(){return {state,selected,selection:[...selectedIds],time,section,solo,tiled,tileGrid,history,future,localAnimationPreview,zoom:$('zoom').value,background:$('background').value,pan:[...viewPan]};}
+function restoreSession(c){const ratio=state.canvas.ratio;({state,selected,time,section,solo,tiled,history,future,localAnimationPreview}=c);applyCanvasAspect(state,ratio);selectedIds=new Set((c.selection??[selected]).filter(id=>find(state.root,id)));if(selected!==state.root.id)selectedIds.add(selected);selectionPrimary=selected;tileGrid=c.tileGrid??2;$('tile-grid').value=String(tileGrid);state=shelf.bind(state);canvasEditor?.reset();$('zoom').value=c.zoom;$('background').value=c.background;$('canvas-stage').className=c.background;$('canvas-stage').classList.toggle('material-mode',materialMode());$('canvas-stage').classList.toggle('effect-mode',effectMode());$('tree-time').value=time;$('tile-preview').setAttribute('aria-pressed',String(tiled));viewPan=[...(c.pan??[0,0])];positionPreview();$('play').textContent=uiText(playing?"playback.pause":"playback.play");animationEditMode='normal';animationEditor.setScope(state.root.id);}
 function cachePreview(){if(componentPreview)componentPreview.session=captureSession();}
 function projectOwner(){return workSession?.state??state;}
 function originalPreset(){return componentPreview&&projectOwner().projectResources.find(p=>'preset:'+p.id===componentPreview.id);}
@@ -132,8 +133,8 @@ function revealAncestors(id){let entry=find(state.root,id);while(entry?.parent){
 const storageKey='momo-texture-tree:draft:v1';
 const notify=createEditorNotifications($('tree-toast')),notifyError=text=>notify(text,{kind:'error'});
 try{const saved=localStorage.getItem(storageKey);if(saved){state=sanitizeTree(restoreLocalProject(JSON.parse(saved)));selected=state.root.id;}}catch(error){notifyError((uiText("editor.invalidDraftWasNotRestored") + error.message));}
-try{const saved=localStorage.getItem(GRAPHIC_LIST_KEY);if(saved===null)shelf.entries=state.projectResources;else{const recovered=recoverStoredGraphicList(localStorage,saved);shelf.entries=recovered.entries;shelfRecoveryBackup=recovered.backup;}
- if(shelfRecoveryBackup){const archive=JSON.parse(shelfRecoveryBackup),rejected=archive.snapshots.flatMap(snapshot=>snapshot.rejected);notify(()=>uiFormat('editor.graphicsListRecovered',rejected.length),{kind:'warning',details:()=>rejected.map(entry=>entry.name+'：'+uiError(restoreMessageError(entry))).join('\n'),action:{label:()=>uiText('editor.downloadGraphicsRecoveryBackup'),run:()=>download(new TextEncoder().encode(JSON.stringify({...archive,assets:[...resources]},null,2)),'MomoTextureForge-graphics-recovery.json','application/json')}});}
+try{const saved=localStorage.getItem(GRAPHIC_LIST_KEY);if(saved===null)shelf.entries=state.projectResources;else{const recovered=recoverStoredGraphicList(localStorage,saved);shelf.entries=recovered.entries;shelfRecoveryBackup=recovered.backup;shelfRecoveryRejected=recovered.rejected;}
+ if(shelfRecoveryRejected.length){const archive=JSON.parse(shelfRecoveryBackup),rejected=shelfRecoveryRejected;notify(()=>uiFormat('editor.graphicsListRecovered',rejected.length),{kind:'warning',details:()=>rejected.map(entry=>entry.name+'：'+uiError(restoreMessageError(entry))).join('\n'),action:{label:()=>uiText('editor.downloadGraphicsRecoveryBackup'),run:()=>download(new TextEncoder().encode(JSON.stringify({...archive,assets:[...resources]},null,2)),'MomoTextureForge-graphics-recovery.json','application/json')}});}
 }catch(e){shelfStorageError=uiError(e);shelf.entries=state.projectResources;notifyError(uiText('editor.couldNotRestoreSavedGraphics')+uiError(e));}state=shelf.bind(state);
 try{if(location.hash.startsWith('#tree=')){const data=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(location.hash.slice(6)),c=>c.charCodeAt(0))));const incoming=sanitizeTree(data);state=shelf.bind(incoming);selected=state.root.id;}}catch(e){notifyError((uiText("editor.invalidSharedConfiguration") + e.message));}
 $('preview-channel').value=state.output.mode;
@@ -253,7 +254,7 @@ function render(){try{
  $('preview-title').textContent=(componentPreview ? (uiText("preview.resourceEditingPrefix") + componentPreview.name) : (localAnimationPreview ? (uiText("editor.animationPreview") + (find(state.root,localAnimationPreview.id)?.node.name??uiText("editor.canvas"))) : (solo ? (uiText("preview.soloPrefix") + current().name) : uiText("editor.compositePreview"))));$('solo').classList.toggle('active',solo);$('solo').setAttribute('aria-pressed',String(solo));$('solo').textContent=(solo ? uiText("editor.returnToComposite") : uiText("editor.soloPreview"));
  updateActualCount();
  const c=nodeClock(preview.root,selected,time);$('local-time').textContent=uiFormat("editor.nodeTimeValueAnimationValueValue",c.local.toFixed(3),c.progress.toFixed(3),(c.visible ? '' : uiText("editor.hidden")));const scopeTime=animationClock(animationEditor.getScope()).progress;$('time-value').textContent=scopeTime.toFixed(3);$('tree-time').value=scopeTime;
- sizePreview();if(sessionScroll){[$('canvas-stage').scrollLeft,$('canvas-stage').scrollTop]=sessionScroll;sessionScroll=null;}drawGuides();syncAnimatedFields();updateAnimationEditor();
+ sizePreview();drawGuides();syncAnimatedFields();updateAnimationEditor();
  }catch(error){showRenderError(error.message);}}
 function refresh(){state=shelf.bind(state);reconcileSelection();if(localAnimationPreview&&!find(state.root,localAnimationPreview.id))localAnimationPreview=null;if(!find(state.root,selected))selected=state.root.id;library();previewButtons();quickAspect?.sync(state.canvas.ratio);canvasToolbar?.sync(); $('project-name').value=state.name;$('play-duration').value=state.output.seconds;const noNode=selected===state.root.id;if($('group-selected'))$('group-selected').disabled=noNode;for(const id of ['duplicate','delete','save-selected-component'])$(id).disabled=noNode;tree(false);inspector();if(globalPanel)renderGlobalPanel();renderPreviewSettings();requestRender();$('undo').disabled=!history.length;$('redo').disabled=!future.length;}
 function select(id,keepTimeline=false){selectionAnchor=id;setSelection(id===state.root.id?[]:[id],id);}
@@ -631,10 +632,11 @@ function validatePackGraphics(pack){let test;try{if(pack.prepared.length){test=n
 $('save-project').onclick=()=>exportPack(canvasProject(state),state.name);$('open-project').onclick=()=>$('project-file').click();$('project-file').onchange=async()=>{let pack;try{const file=$('project-file').files[0];if(!file)return;pack=await loadPackFile(file);pack.register();const p=sanitizeTree(pack.payload);validatePackGraphics(pack);await pack.persist();returnWork();edit(()=>{state=p;selected=p.root.id;animationEditMode='normal';localAnimationPreview=null;time=0;});library();}catch(e){pack?.rollback();notifyError(uiError(e));}finally{$('project-file').value='';}};
 $('save-selected-component').onclick=()=>graphicsLibrary.publish(current(),projectOwner().projectResources.find(r=>r.id===current().resourceRef)?.source);
 $('export-now').onclick=()=>openGlobal('export');$('project-settings').onclick=()=>openGlobal('project');$('close-global').onclick=()=>{globalPanel=null;$('global-panel').hidden=true;renderPreviewSettings();$('export-now').focus();};$('solo').onclick=()=>{solo=!solo;if(solo)select(selected);$('solo').textContent=(solo ? uiText("editor.returnToComposite") : uiText("editor.soloPreview"));requestRender();};$('shape-search').oninput=library;
-function sizePreview(){if(!canvasMode())return;const stage=$('canvas-stage'),surface=$('tree-preview-surface'),dims=previewDimensions(state.canvas.ratio,Math.max(64,(stage.clientWidth||512)-56),Math.max(64,(stage.clientHeight||512)-56),$('zoom').value==='fit'?1:Number($('zoom').value));surface.style.width=dims.displayWidth+'px';surface.style.height=dims.displayHeight+'px';surface.classList.toggle('tiled',tiled);}
+function positionPreview(){const surface=$('tree-preview-surface');surface.style.setProperty('--canvas-pan-x',viewPan[0]+'px');surface.style.setProperty('--canvas-pan-y',viewPan[1]+'px');}
+function sizePreview(){if(!canvasMode())return;const stage=$('canvas-stage'),surface=$('tree-preview-surface'),dims=previewDimensions(state.canvas.ratio,Math.max(64,(stage.clientWidth||512)-56),Math.max(64,(stage.clientHeight||512)-56),$('zoom').value==='fit'?1:Number($('zoom').value));surface.style.width=dims.displayWidth+'px';surface.style.height=dims.displayHeight+'px';surface.classList.toggle('tiled',tiled);positionPreview();}
 const PreviewObserver=globalThis.ResizeObserver??window.ResizeObserver;
 if(PreviewObserver)new PreviewObserver(()=>{sizePreview();requestRender();}).observe($('canvas-stage'));
-$('tree-time').oninput=()=>seekAnimationScope(animationEditor.getScope(),+$('tree-time').value);$('zoom').onchange=()=>{sizePreview();requestRender();};
+$('tree-time').oninput=()=>seekAnimationScope(animationEditor.getScope(),+$('tree-time').value);$('zoom').onchange=()=>{if($('zoom').value==='fit')viewPan=[0,0];sizePreview();requestRender();};
 // Viewing zoom never changes authored UVs or export dimensions.
 $('canvas-stage').addEventListener('wheel',e=>{
  if(!canvasMode())return;
@@ -642,7 +644,7 @@ $('canvas-stage').addEventListener('wheel',e=>{
  const stage=$('canvas-stage'),surface=$('tree-preview-surface'),select=$('zoom'),steps=[.25,.5,.75,1,1.25,1.5,2,3,4],zoom=select.value==='fit'?1:Number(select.value);
  const next=e.deltaY<0?steps.find(v=>v>zoom):[...steps].reverse().find(v=>v<zoom);if(next===undefined)return;
  const before=surface.getBoundingClientRect(),u=(e.clientX-before.left)/Math.max(1,before.width),v=(e.clientY-before.top)/Math.max(1,before.height);
- select.value=String(next);sizePreview();const after=surface.getBoundingClientRect();stage.scrollLeft+=after.left+u*after.width-e.clientX;stage.scrollTop+=after.top+v*after.height-e.clientY;requestRender();
+ select.value=String(next);sizePreview();const after=surface.getBoundingClientRect();viewPan[0]+=e.clientX-after.left-u*after.width;viewPan[1]+=e.clientY-after.top-v*after.height;positionPreview();requestRender();
 },{passive:false});
 $('show-guides').onchange=drawGuides;
 $('show-pivot').onchange=drawGuides;
@@ -850,10 +852,11 @@ $('tree-canvas').onpointercancel=()=>{if(uvDrag){state=uvDrag.before;uvDrag=null
 
 $('collapse-library').onclick=()=>{const groups=[...$('shape-library').children].filter(e=>e.tagName==='DETAILS'),open=!groups.some(e=>e.open);groups.forEach(d=>{d.open=open;rememberLibraryGroup(d);});syncLibraryToggle();};
 
-let panPreview=false,panStart=null;$('pan-preview').onclick=()=>{panPreview=!panPreview;if(panPreview&&grabUV)$('grab-uv').click();$('pan-preview').setAttribute('aria-pressed',String(panPreview));};
-$('canvas-stage').addEventListener('pointerdown',e=>{if(!canvasMode()||!panPreview||grabUV)return;const stage=$('canvas-stage');panStart={x:e.clientX,y:e.clientY,left:stage.scrollLeft,top:stage.scrollTop};stage.setPointerCapture(e.pointerId);});
-$('canvas-stage').addEventListener('pointermove',e=>{if(!panStart)return;const stage=$('canvas-stage');stage.scrollLeft=panStart.left+panStart.x-e.clientX;stage.scrollTop=panStart.top+panStart.y-e.clientY;});
-$('canvas-stage').addEventListener('pointerup',()=>panStart=null);$('canvas-stage').addEventListener('pointercancel',()=>panStart=null);
+let panPreview=false,panStart=null;$('pan-preview').onclick=()=>{panPreview=!panPreview;if(panPreview&&grabUV)$('grab-uv').click();if(!panPreview)finishViewPan();$('canvas-stage').dataset.pan=panPreview?'ready':'';$('pan-preview').setAttribute('aria-pressed',String(panPreview));};
+function finishViewPan(){const start=panStart;panStart=null;const stage=$('canvas-stage');if(start&&stage.hasPointerCapture?.(start.pointer))stage.releasePointerCapture(start.pointer);stage.dataset.pan=panPreview?'ready':'';}
+$('canvas-stage').addEventListener('pointerdown',e=>{if(e.button!==0||!canvasMode()||busy)return;$('canvas-stage').focus({preventScroll:true});if(!panPreview||grabUV)return;panStart={x:e.clientX,y:e.clientY,pan:[...viewPan],pointer:e.pointerId};$('canvas-stage').dataset.pan='dragging';$('canvas-stage').setPointerCapture(e.pointerId);e.preventDefault();});
+$('canvas-stage').addEventListener('pointermove',e=>{if(!panStart||e.pointerId!==panStart.pointer)return;viewPan=[panStart.pan[0]+e.clientX-panStart.x,panStart.pan[1]+e.clientY-panStart.y];positionPreview();});
+for(const type of ['pointerup','pointercancel','lostpointercapture'])$('canvas-stage').addEventListener(type,finishViewPan);window.addEventListener('blur',finishViewPan);
 
 // Batch operations share the same state transaction and undo entry as the inspector.
 const groupSelected=el('button',{id:'group-selected',text:uiText("editor.groupSelection"),title:uiText("editor.ctrlCmdGGroupSelectedSiblings"),onclick:()=>edit(()=>{selected=groupSelection(state.root,selectedIds);})});
@@ -878,7 +881,7 @@ canvasEditor=createCanvasEditor($('tree-preview-surface'),{
  project:animationPreviewProject,time:()=>time,solo:()=>solo,records:arrangementRecords,primary:()=>selected,ids:()=>[...selectedIds],nodes:selectedRoots,
  blocked:()=>!canvasMode()||busy||tiled||grabUV||panPreview,busy:()=>busy,leaveOtherTools:()=>{if(grabUV)$('grab-uv').click();if(panPreview)$('pan-preview').click();},
  select:setSelection,toggle:id=>multiSelect(id,{ctrlKey:true}),refresh,render:requestRender,notify,hit:canvasHit,
- pan:on=>{if(on){temporaryPan={pan:panPreview,uv:grabUV};if(!panPreview)$('pan-preview').click();}else{if(!temporaryPan?.pan&&panPreview)$('pan-preview').click();if(temporaryPan?.uv&&!grabUV)$('grab-uv').click();temporaryPan=null;panStart=null;}},
+ pan:on=>{if(on){temporaryPan={pan:panPreview,uv:grabUV};if(!panPreview)$('pan-preview').click();}else{if(!temporaryPan?.pan&&panPreview)$('pan-preview').click();if(temporaryPan?.uv&&!grabUV)$('grab-uv').click();temporaryPan=null;finishViewPan();}},
  check:(ids,paths)=>{for(const id of ids){const n=find(state.root,id).node;if(animationEditMode==='normal'&&n.animationEnabled!==false&&paths.some(key=>n.tracks['transform.'+key]&&!n.tracks['transform.'+key].muted))throw messageError("editor.selectedParametersAreAnimatedEnableRecordingOrEditBaseValues");}},
  begin:()=>{stopAnimation();canvasBefore=structuredClone(state);},
  apply:changes=>{
@@ -891,6 +894,7 @@ canvasEditor=createCanvasEditor($('tree-preview-surface'),{
 });
 for(const id of ['grab-uv','pan-preview'])$(id).addEventListener('click',()=>canvasEditor.deactivate());
 canvasToolbar=installCanvasToolbar({tiled:()=>tiled,tileGrid:()=>tileGrid});
+$('reset-canvas-view').onclick=()=>{finishViewPan();viewPan=[0,0];$('zoom').value='fit';sizePreview();requestRender();};
 quickAspect=createCanvasAspect({ratio:state.canvas.ratio,onChange:changeCanvasAspect,compact:true});quickAspect.element.id='quick-canvas-aspect';$('render-status').before(quickAspect.element);
 installSearchClear($('shape-search'),library);
 requestRender();

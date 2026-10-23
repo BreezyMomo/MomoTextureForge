@@ -205,7 +205,7 @@
 .material-controls button,.material-controls select{padding:5px}
 .preview-heading{gap:8px 12px}.preview-heading strong{flex:none;white-space:nowrap}
 .preview-heading #render-status{flex:1 1 170px;min-width:170px;line-height:1.5}
-.preview-actions{flex:1 1 420px}
+.preview-actions{flex:0 1 auto;min-width:0}
 
 .normal-preview-settings{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;padding:8px 10px;border:1px solid var(--ui-line);border-radius:var(--ui-control-radius);background:var(--ui-panel)}.normal-preview-settings .tree-field{margin:0;display:flex;align-items:center;gap:6px}.normal-preview-settings .tree-number-field{grid-template-columns:none}.normal-preview-settings input[type=range]{width:90px}.normal-preview-settings input[type=number]{width:62px}.normal-preview-settings .tree-check{margin:0}.normal-preview-settings .tree-note{flex-basis:100%;margin:0}
 
@@ -397,6 +397,12 @@
 @keyframes editor-fade-in{from{opacity:0}to{opacity:1}}
 @keyframes editor-thumbnail-in{from{opacity:.4}to{opacity:1}}
 /* Canvas tools and view options share compact groups, including docked panes. */
+.tree-editor #canvas-stage{position:relative}
+.tree-editor #canvas-stage:not(.material-mode):not(.effect-mode){overflow:clip;touch-action:none}
+#tree-preview-surface{position:absolute;left:50%;top:50%;margin:0;transform:translate(-50%,-50%) translate(var(--canvas-pan-x,0px),var(--canvas-pan-y,0px))}
+#canvas-stage:not(.material-mode):not(.effect-mode)[data-pan=ready],#canvas-stage:not(.material-mode):not(.effect-mode)[data-pan=ready] *{cursor:grab!important}
+#canvas-stage:not(.material-mode):not(.effect-mode)[data-pan=dragging],#canvas-stage:not(.material-mode):not(.effect-mode)[data-pan=dragging] *{cursor:grabbing!important}
+.canvas-zoom-controls{display:flex;align-items:center;gap:4px;min-width:0}
 .tree-preview{container-type:inline-size;container-name:canvas-pane}
 .tree-toolbar.canvas-toolbar{justify-content:space-between;gap:8px;padding:8px 0}
 .canvas-tools,.canvas-views,.canvas-tiles{display:flex;align-items:center;gap:4px;min-width:0;flex-wrap:wrap}
