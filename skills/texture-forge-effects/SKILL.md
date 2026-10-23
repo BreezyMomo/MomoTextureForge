@@ -33,7 +33,7 @@ description: Guide users to create visual effects in Momo Texture Forge and to s
 - [排列与合成](references/layout-compositing.md)：区域与UV、边框/透明轮廓/人字与编织/接口拼接、渐变/流场、随机/取模子节点混排、防堆叠、铺满区域、实例比例、展开编辑、无缝重复、颜色、通道曲线、可排序的节点后处理和遮罩。
 - [动画与导出](references/animation-export.md)：累计秒数与0～1进度、录制/关键帧/曲线、相位、按节点打包 RGBA、格式和尺寸预算。
 - [资源创建与图片处理](references/image-editor.md)：图片/JSON/公式入口、背景、居中、颜色、轮廓、SVG与图片转法线。
-- [效果配方与排错](references/recipes.md)：花型杂排、固定顺序排布、宽竖幅保持比例、呼吸光环、镂空、无缝纹理和常见问题。
+- [效果配方与排错](references/recipes.md)：完整技能预设的拆解与组件复用、可替换单元点阵、波形环纹、分层光帘、花型杂排、呼吸光环、镂空和常见问题。
 - [图库上下文](references/ai-context.md)：获取当前图库的可用图形和参数，推荐选图；不携带固定内置清单。
 - [排列参数范围](references/layout-parameters.md)：构建时生成的公共排列范围，结合排列与合成手册判断哪些选项当前可见。
 

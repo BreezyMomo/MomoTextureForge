@@ -100,6 +100,8 @@ Startup tests cover loading, successful entry, WebGL errors/details/retry and st
 
 Material preset regression: `node tests/vfx-presets-browser-check.mjs` covers transparency, serialization, two previews, edit links and transparent PNGs, with `test-results/presets/preview.png` for inspection.
 
+Ability and curtain presets live in `web/effect-samples.js`, included by `web/tree-samples.js`. Parameters resolve stable variables to slots. Effects retain ordinary nodes and local time tracks without extra canvas state. `node tests/effect-samples-browser-check.mjs` checks twelve presets through GPU rendering, transparent start/end, loop seams, serialization, component nesting, array-unit replacement preserving layout, and ring/curtain parameter extremes in every mode. It writes rendered artwork to `test-results/effect-samples/artwork.png` without capturing UI. `node tests/radial-streak-browser-check.mjs` checks angular seams for all three ring waveforms. New ring slots preserve a zero-value compatibility path. Aurora Veil defaults to its original flowing texture; presets explicitly select vertical light curtains. After formula changes, update the affected builtin thumbnails and build the static site.
+
 Arrangement regressions: `node tests/tree-arrangement-browser-check.mjs` checks examples, three aspect ratios, expand/export consistency, persistence and filters. Also run `node tests/examples-browser-check.mjs`, adding `--standalone` after building. Normal-strength interaction: `node tests/normal-strength-browser-check.mjs`.
 
 Node arrangements extend in `web/tree-arrangement.js`: `arrange[0]` values 13/14/15/16 mean border, alpha contour, herringbone/weave and rule tiling. `arrangeExtra` stores extension settings. Candidate `tileEdges` bitmasks use right 1, top 2, left 4, bottom 8. The scalar 59-value arrangement ABI and modes 0–12 remain compatible. Instance `opacity` and selected `childIndex` must be shared by GPU, selection and expansion.
@@ -154,7 +156,7 @@ node tools/capture-docs.mjs shortcuts ribbons appearance
 | Group | Content |
 | --- | --- |
 | examples | Four projects through the actual Open project UI |
-| combinations | 32 compositions/presets and new-arrangement category/entry |
+| combinations | 44 compositions/presets and fourteen new-arrangement examples/category/entry |
 | overflow | Three boundary modes, logical bounds and seamless halo |
 | puzzle | Connector styles, body corners, tabs and grid counts |
 | workspace | Overview, arrangements, composites and File |

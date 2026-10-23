@@ -1,7 +1,7 @@
 {
   "schema": "momo.texture-pattern/v1",
   "id": "RadialStreak",
-  "revision": 4,
+  "revision": 5,
   "abi": "momo-pattern/16-v1",
   "name": "扰动环纹",
   "category": "ornament",
@@ -63,6 +63,120 @@
         "zh-CN": "衰减",
         "en": "Falloff"
       }
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "waveform",
+      "label": "波形",
+      "aliases": {
+        "zh-CN": "波形",
+        "en": "Waveform"
+      },
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "default": 0,
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "variable": "noise",
+          "label": "噪声",
+          "aliases": {
+            "zh-CN": "噪声",
+            "en": "Noise"
+          }
+        },
+        {
+          "value": 1,
+          "variable": "flatWave",
+          "label": "平环",
+          "aliases": {
+            "zh-CN": "平环",
+            "en": "Flat"
+          }
+        },
+        {
+          "value": 2,
+          "variable": "sine",
+          "label": "正弦",
+          "aliases": {
+            "zh-CN": "正弦",
+            "en": "Sine"
+          }
+        }
+      ]
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "variable": "baseRadius",
+      "label": "基础半径",
+      "aliases": {
+        "zh-CN": "基础半径",
+        "en": "Base radius"
+      },
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "variable": "flowSpeed",
+      "label": "流速（圈/秒）",
+      "aliases": {
+        "zh-CN": "流速（圈/秒）",
+        "en": "Flow (cycles/sec)"
+      },
+      "min": -3,
+      "max": 3,
+      "step": 0.05,
+      "default": 0
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "variable": "waveCount",
+      "label": "波浪数量",
+      "aliases": {
+        "zh-CN": "波浪数量",
+        "en": "Angular waves"
+      },
+      "min": 1,
+      "max": 24,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "variable": "phase",
+      "label": "相位",
+      "aliases": {
+        "zh-CN": "相位",
+        "en": "Phase"
+      },
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "variable": "ringWidth",
+      "label": "环宽（周期占比）",
+      "aliases": {
+        "zh-CN": "环宽（周期占比）",
+        "en": "Ring width (cycle fraction)"
+      },
+      "min": 0,
+      "max": 0.9,
+      "step": 0.01,
+      "default": 0
     }
   ],
   "defaults": [
@@ -73,7 +187,7 @@
     0,
     0,
     0,
-    0,
+    6,
     0,
     0,
     0,

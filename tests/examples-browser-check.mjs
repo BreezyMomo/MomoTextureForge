@@ -5,7 +5,9 @@ import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {sanitizeTree} from '../web/tree-model.js';
 import {treeSamples} from '../web/tree-samples.js';
+import {effectSamples} from '../web/effect-samples.js';
 const sampleCount=treeSamples().length;
+const editableNames=process.argv.includes('--effects-only')?new Set(effectSamples().map(s=>s.name)):null;
 
 const standalone=process.argv.includes('--standalone'),root=resolve('web');
 const server=http.createServer(async(req,res)=>{
@@ -30,6 +32,7 @@ try{
  for(const href of links){
   const url=new URL(href);assert.equal(url.origin,origin);
   const project=sanitizeTree(JSON.parse(Buffer.from(url.hash.slice(6),'base64').toString('utf8')));
+  if(editableNames&&!editableNames.has(project.name))continue;
   const root=project.root.children[0];assert.ok(root.kind==='shape'?root.arrange[0]>0||Object.values(root.postEffects).some(effect=>effect.enabled===true):root.children.length>=2);names.add(project.name);
   if(['刀光拖尾','命中爆闪','破碎冲击环','溶解遮罩'].includes(project.name))assert.equal(project.output.loopExport,false,project.name);
   if(project.name==='溶解遮罩'){assert.equal(project.output.mode,'height');assert.equal(project.output.alpha,false);}
@@ -40,11 +43,12 @@ try{
    await editor.waitForFunction(()=>{const s=document.querySelector('#render-status');return s&&s.textContent.includes('预览')&&!s.textContent.includes('加载');});
    assert.equal(await editor.locator('#project-name').inputValue(),project.name);
    assert.equal(await editor.locator('#preview-error').isVisible(),false,project.name);
+   if(url.searchParams.has('preview-time'))assert.equal(Number(await editor.locator('#tree-time').inputValue()),Number(url.searchParams.get('preview-time')),project.name+' opens at its visible preview frame');
    if(project.name==='手绘心形'){assert.equal(root.type,'HeartLeafTeardrop');assert.equal(root.postEffects.sketch.enabled,true);assert.equal(root.postEffects.sketch.fillStyle,3);assert.equal(root.postEffects.sketch.fillColor,'#f42521');await editor.locator('.tree-node-name').filter({hasText:'手绘心形'}).click();await editor.locator('#inspector-tabs').getByRole('button',{name:'合成',exact:true}).click();const effects=editor.locator('#inspector [data-module="modules.imageFilters"]');if(await effects.getAttribute('open')===null)await effects.locator(':scope>summary .inspector-module-title').click();assert.equal(await effects.locator('[data-effect=sketch] [data-effect-enabled]').isChecked(),true);assert.equal(await effects.locator('[data-effect=sketch] select').first().inputValue(),'3');}
    assert.ok(await editor.locator('[role="treeitem"]').count()>=(root.kind==='shape'?1:2));
   }finally{await editor.close();}
  }
- assert.equal(names.size,sampleCount);assert.deepEqual(errors,[]);
+ assert.equal(names.size,editableNames?.size??sampleCount);assert.deepEqual(errors,[]);
  await page.locator('#samples img').evaluateAll(imgs=>Promise.all(imgs.map(img=>img.decode())));
  const shieldPixels=await page.locator('img[alt="蜂巢护盾"]').evaluate(img=>{
   const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;

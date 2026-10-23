@@ -21,16 +21,16 @@ try{
   const framebuffer=gl.createFramebuffer();gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffer);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,texture,0);
   if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw Error('Incomplete float target');
   const vao=gl.createVertexArray();gl.bindVertexArray(vao);gl.viewport(0,0,canvas.width,2);
-  const probe=(body,parameters,epsilon)=>{
+  const probe=(body,parameters,epsilon,extra=[0,0,0,6,0,0,0,0])=>{
    const fragment=compile(gl.FRAGMENT_SHADER,pruneGLSL(`#version 300 es
 precision highp float;precision highp int;
-uniform vec4 settings;uniform float epsilon;out vec4 outputValue;
+uniform vec4 settings,extrasB,extrasC;uniform float epsilon;out vec4 outputValue;
 ${BUILTIN.libraries['math-v1']}\n${BUILTIN.libraries['reference-v1']}
-float valueAt(vec2 q){vec2 u=q*.5+.5;vec4 a=settings,b=vec4(0),c=vec4(0),d=vec4(0);float time=0.;{${body}}}
+float valueAt(vec2 q){vec2 u=q*.5+.5;vec4 a=settings,b=extrasB,c=extrasC,d=vec4(0);float time=0.;{${body}}}
 void main(){float radius=gl_FragCoord.x/2048.*1.2;float side=gl_FragCoord.y<1.?-epsilon:epsilon;outputValue=vec4(valueAt(vec2(-radius,side)));}`));
    const program=gl.createProgram();gl.attachShader(program,vertex);gl.attachShader(program,fragment);gl.linkProgram(program);
    if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
-   gl.useProgram(program);gl.uniform4fv(gl.getUniformLocation(program,'settings'),parameters);gl.uniform1f(gl.getUniformLocation(program,'epsilon'),epsilon);gl.drawArrays(gl.TRIANGLES,0,3);
+   gl.useProgram(program);gl.uniform4fv(gl.getUniformLocation(program,'settings'),parameters);gl.uniform4fv(gl.getUniformLocation(program,'extrasB'),extra.slice(0,4));gl.uniform4fv(gl.getUniformLocation(program,'extrasC'),extra.slice(4,8));gl.uniform1f(gl.getUniformLocation(program,'epsilon'),epsilon);gl.drawArrays(gl.TRIANGLES,0,3);
    const pixels=new Float32Array(canvas.width*2*4);gl.readPixels(0,0,canvas.width,2,gl.RGBA,gl.FLOAT,pixels);
    if(gl.getError()!==gl.NO_ERROR||!pixels.every(Number.isFinite))throw Error('Invalid GPU readback');
    let difference=0,nonzero=0;
@@ -40,6 +40,10 @@ void main(){float radius=gl_FragCoord.x/2048.*1.2;float side=gl_FragCoord.y<1.?-
   };
   const parameters=[type.defaults.slice(0,4),[1,1,.01,1.4],[40,1,.01,1.4],[40,0,.5,.4]];
   const probes=parameters.map(parameters=>({parameters,wide:probe(formula,parameters,.001),near:probe(formula,parameters,.000001),...(before?{before:probe(before,parameters,.000001)}:{})}));
+  for(let waveform=0;waveform<3;waveform++){
+   const extra=[waveform,.1,.4,7,.2,.12,0,0],parameters=[14,.35,.06,.9];
+   probes.push({parameters,waveform,wide:probe(formula,parameters,.001,extra),near:probe(formula,parameters,.000001,extra)});
+  }
   gl.deleteVertexArray(vao);gl.deleteFramebuffer(framebuffer);gl.deleteTexture(texture);gl.deleteShader(vertex);
   const renderer=new TreeRenderer(document.createElement('canvas'));
   const render=async(type,size)=>{const p=project();p.root.children=[node('shape',type)];return encodePNG(renderer.draw(p,size,size,{read:true,quality:2}),size,size);};

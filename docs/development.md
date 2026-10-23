@@ -100,6 +100,8 @@ node tests/startup-browser-check.mjs
 
 素材预设回归：`node tests/vfx-presets-browser-check.mjs`，检查透明覆盖、序列化、两个预设的预览、编辑链接及透明 PNG 导出，并生成 `test-results/presets/preview.png` 供视觉审核。
 
+技能与光帘预设在 `web/effect-samples.js`，由 `web/tree-samples.js` 接入组合示例。图形参数按稳定 variable 查找槽位；每套效果保留普通节点和局部时间轨道，不增加专用画布状态。`node tests/effect-samples-browser-check.mjs` 检查十二个示例的实际GPU输出、透明起止、循环接缝、序列化与嵌套组件一致性、替换点阵单元后保留排列，以及环纹/光帘各模式的参数极值；只生成渲染结果 `test-results/effect-samples/artwork.png`，不截图界面。`node tests/radial-streak-browser-check.mjs` 检查三种环纹波形的圆周接缝。扰动环纹新增槽位保留零值兼容路径；极光帷幕默认仍为流动纹理，新增竖向光帘模式由预设显式选择。修改公式后按仓库规则更新对应内置缩略图，再构建静态网站。
+
 排列相关回归：`node tests/tree-arrangement-browser-check.mjs`（排列示例、三种画布比例、展开/导出一致性、界面保存与分类）和 `node tests/examples-browser-check.mjs`；单文件静态版再加 `--standalone` 运行后者。法线交互回归：`node tests/normal-strength-browser-check.mjs`。
 
 节点树排列在 `web/tree-arrangement.js` 扩展：`arrange[0]` 的 13/14/15/16 分别为边框、透明轮廓、人字/编织、接口拼接；`arrangeExtra` 保存扩展设置，候选子节点的 `tileEdges` 用右1、上2、左4、下8 的位组合声明接口。旧标量公式的 59 项排列 ABI 和 0～12 模式保持兼容。实例记录附带 `opacity` 与规则选择的 `childIndex`，GPU、选区与展开均需使用同一记录。
@@ -154,7 +156,7 @@ node tools/capture-docs.mjs shortcuts ribbons appearance
 | 组 | 画面 |
 | --- | --- |
 | examples | 通过真实“打开项目”入口检查四个示例 |
-| combinations | 32 种组合/素材预设总览、十三种新增排列的分类截图与编辑入口 |
+| combinations | 44 种组合/素材预设总览、十四种新增排列的分类截图与编辑入口 |
 | overflow | 三种边界处理、逻辑蓝框、超出内容和无缝光晕接续 |
 | puzzle | 拼图接口样式、独立四角、凸耳越界与网格行列数 |
 | workspace | 总览、排列、合成和文件菜单 |

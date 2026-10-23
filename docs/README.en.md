@@ -28,6 +28,7 @@ Start with Quick start, then consult individual chapters as needed. Screenshots 
 | Batch-edit colors/sizes, align and distribute | [Batch editing](05-canvas-and-compositing.en.md#batch-editing-alignment-and-even-distribution) |
 | Compare alpha/additive on light/dark backgrounds and check fading | [Effect preview](05-canvas-and-compositing.en.md#6-inspect-effect-blending-on-backgrounds) |
 | Record keys, edit curves, set timing and loops | [06 · Animation and timeline](06-animation.en.md) |
+| Complete abilities, replaceable arrays, flowing rings and aurora curtains | [13 · Ability, ring and curtain presets](13-effect-presets.en.md) |
 | Generate normals and inspect height and 3D materials | [07 · Normals and 3D preview](07-normal-and-material.en.md) |
 | Export PNG, EXR, frame sequences, atlases, PSD and SVG | [08 · Export and delivery](08-export.en.md) |
 | Subscribe to libraries and maintain/publish your own | [09 · Remote libraries and manager](09-remote-libraries.en.md) |

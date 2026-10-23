@@ -33,7 +33,7 @@ User-facing screenshots, steps and example projects are in the [online illustrat
 - [Arrangement and compositing](references/layout-compositing.en.md): regions/UV, border/contour/herringbone/weave/rules, gradients/flow, mixed children, overlap avoidance, fit, expansion, repeat, color, ordered node post-processing and masks.
 - [Animation and export](references/animation-export.en.md): seconds versus normalized progress, keys/curves/phases, formats and budgets.
 - [Resource and image editing](references/image-editor.en.md): image/JSON/formula/generator entries, backgrounds, center/color/contours/SVG and normals.
-- [Recipes and troubleshooting](references/recipes.en.md): mixed flowers, fixed order, aspect preservation, halos, holes, seamless textures and diagnostics.
+- [Recipes and troubleshooting](references/recipes.en.md): complete ability presets and component reuse, replaceable arrays, flowing rings, layered curtains, mixed flowers, halos, holes and diagnostics.
 - [Dynamic catalog context](references/ai-context.en.md): current graphics/parameters without a fixed built-in list.
 - [Arrangement ranges](references/layout-parameters.en.md): build-generated shared ranges; use the arrangement guide to determine visible options.
 

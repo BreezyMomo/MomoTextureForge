@@ -6,6 +6,24 @@
 
 These are suggested starting points, not renders verified against the user's canvas. Check current resources/controls and adjust from observations; do not claim exact reproduction.
 
+## Start from complete abilities and layered light presets
+
+Inspect the current **Examples** cards first. Examples are an entry point, not an assumed fixed catalog in every user's installation. **Edit on canvas** opens an independent project rather than merging into the current canvas. Ability layers typically separate the main body, contact highlight/core, expanding rings and residual particles/smoke. Select, hide or recolor layers to understand their roles before changing parameters.
+
+One-shots appear from transparency and fade out. Use the card's duration, disable loop export and inspect start, burst and end. Graphic time, opacity, size and layout radius may have absolute tracks that overwrite base edits; record changes to tracks or adjust the outer timing. To reuse a component, save its outer effect group to the graphics list, insert it in the target canvas and check local progress, outer timing and final transparency. Project files retain editable structure; exported PNGs do not.
+
+Inspect background/middle/foreground curtain bands separately, then the membrane, strands and dust. Curtain mode can expose band foot position, height and vertical ray density. Do not invent this mode for older versions; check current controls/catalog. Independent time curves can move nonperiodic noise smoothly back and forth to close a loop. Loop export alone does not ensure continuity. Check each layer's endpoint values and direction before changing colors/opacity.
+
+## Replaceable-unit dot arrays
+
+When available, open the replaceable array example and select its outer group. Rows, columns, instance size, position jitter, size variation and seed are under Transform/layout; pin frequently used modules to the node tree. Add a new image/component as a direct child, disabling/deleting unwanted candidates. The parent's layout remains intact. Sequential modulo alternates candidates, one random child mixes them and entire group layers all children into one repeated unit. Child groups can also be candidates. Save before expanding instances for individual editing.
+
+## Ring waveforms and independent glow
+
+Use parameters provided by the current catalog. Frequency sets radial cycles, base radius clears the center, ring width is a fraction of a cycle, speed sign determines outward/inward flow and phase staggers layers. Flat/sine/noise modes may be available; flat mode ignores distortion. Integer angular wave counts close the sine around the circle. Zero ring width can preserve a legacy rising profile rather than hiding the graphic. After changing speed, check that speed multiplied by the graphic-time span is an integer number of cycles, along with all other layer motion.
+
+Keep core and halo in separate nodes for independent range, color and opacity. Increasing one layer's brightness should not be the only way to enlarge its halo. Save the complete group as a component, retaining transparency and node-bound effects.
+
 ## Mixed flower scatter without crowding
 
 1. Put desired flowers as direct children of one group. Child groups can be candidates. First set each silhouette, color and relative size.

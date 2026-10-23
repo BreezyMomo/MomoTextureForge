@@ -82,7 +82,7 @@ Drafts are autosaved in browser storage, but other browsers, ports and origins d
 
 ## 5. Practice with composition examples
 
-Open **Examples** to generate 32 compositions and material presets: five VFX studies, four UI backgrounds, thirteen new-arrangement demonstrations, two material presets and eight composition exercises, including a hand-drawn heart and a comparison of all hand-drawn fill styles. Filter by category. Each card explains its construction; **Edit on canvas** opens an independent canvas whose tree can be explored layer by layer.
+Open **Examples** to generate 44 compositions and material presets: nine VFX studies, four UI backgrounds, fourteen new-arrangement demonstrations, two material presets and fifteen composition exercises, including a hand-drawn heart and a comparison of all hand-drawn fill styles. Filter by category. Each card explains its construction; **Edit on canvas** opens an independent canvas whose tree can be explored layer by layer. See [Ability, ring and curtain presets](13-effect-presets.en.md) for the four complete ability effects, replaceable-unit array, rings/glow and layered curtains.
 
 Puzzle examples show cell spacing, overflow tabs, flat outside borders and per-piece colors. Content-boundary and cross-cell examples demonstrate overflow handling.
 

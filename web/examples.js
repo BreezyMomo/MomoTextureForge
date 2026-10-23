@@ -17,12 +17,12 @@ button.onclick=async()=>{
   for(const sample of samples){
    status.textContent=((uiText("ui.generating") + uiText(sample.nameKey)) + '…');
    const p=project();p.name=sample.name;p.root.children=[cloneNode(sample.root)];Object.assign(p.output,sample.output);
-   const pixels=renderer.draw(p,384,384,{read:true,time:.3}),url=URL.createObjectURL(new Blob([await encodePNG(pixels,384,384)],{type:'image/png'}));urls.push(url);
+   const pixels=renderer.draw(p,384,384,{read:true,time:sample.previewTime??.3}),url=URL.createObjectURL(new Blob([await encodePNG(pixels,384,384)],{type:'image/png'}));urls.push(url);
    const article=document.createElement('article'),img=document.createElement('img'),heading=document.createElement('h2'),description=document.createElement('p'),tags=document.createElement('ul'),link=document.createElement('a');
    article.dataset.category=sample.category;article.hidden=filter.value!=='all'&&sample.category!==filter.value;img.src=url;img.alt=uiText(sample.nameKey);heading.textContent=uiText(sample.nameKey);description.textContent=uiText(sample.description);
    for(const tag of sample.tags){const item=document.createElement('li');item.textContent=uiText(tag);tags.append(item);}
    const bytes=new TextEncoder().encode(JSON.stringify(p));let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));
-   link.textContent=uiText("ui.editOnCanvas");link.href=pageHref('editor','#tree='+btoa(binary));link.target='_blank';link.rel='noopener';
+   link.textContent=uiText("ui.editOnCanvas");const editorURL=new URL(pageHref('editor','#tree='+btoa(binary)));if(Number.isFinite(sample.previewTime))editorURL.searchParams.set('preview-time',sample.previewTime);link.href=editorURL.href;link.target='_blank';link.rel='noopener';
    article.append(img,heading,description,tags,link);panel.append(article);
    await new Promise(resolve=>requestAnimationFrame(resolve));
   }
