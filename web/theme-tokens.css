@@ -6,7 +6,7 @@
  --ui-line:#454545;--ui-line-strong:#858585;--ui-text:#ededeb;--ui-muted:#bcbcb8;--ui-subtle:#a6a6a1;
  --ui-accent:#c5a36a;--ui-on-accent:#000000;--ui-accent-text:#c5a36a;--ui-selected:#433e33;--ui-accent-hover:#cbac79;
  --ui-info:#9bc9e7;--ui-info-bg:#253542;--ui-success:#a4d7be;--ui-success-bg:#263e34;--ui-danger:#ffb1b8;--ui-danger-bg:#442a31;
- --ui-motion:var(--ui-success);--ui-motion-bg:var(--ui-success-bg);--ui-time:#b4d9ff;--ui-time-bg:#243e59;--ui-time-line:#6595c7;--ui-time-handle:#477ba9;--ui-key:#f5c66f;--ui-key-selected:#ffe5a3;--ui-playhead:#f4f7fb;
+ --ui-motion:var(--ui-success);--ui-motion-bg:var(--ui-success-bg);--ui-artwork-motion:#a6efc1;--ui-artwork-icon:#eef4f1;--ui-artwork-favorite:#f5cf7b;--ui-time:#b4d9ff;--ui-time-bg:#243e59;--ui-time-line:#6595c7;--ui-time-handle:#477ba9;--ui-key:#f5c66f;--ui-key-selected:#ffe5a3;--ui-playhead:#f4f7fb;
  --ui-warning:#edc489;--ui-warning-bg:#403526;--ui-purple:#d0b9ed;--ui-purple-bg:#392f49;--ui-overlay:#0009;--ui-shadow:#0005;
 }
 :root[data-interface-style=minimal]{--ui-control-radius:2px;--ui-module-radius:0px;--ui-card-radius:2px;--ui-pane-radius:0px;--ui-window-radius:4px}

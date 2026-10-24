@@ -2,6 +2,13 @@ export const BEZIER_LIMIT=8,BEZIER_SEGMENTS=8;
 export const bezierCount=p=>Math.max(1,(p.length/2-1)/3);
 export function sanitizeBezierTail(raw){if(!Array.isArray(raw))return [];const count=Math.min((BEZIER_SEGMENTS-1)*6,Math.floor(raw.length/6)*6),out=[];for(let i=0;i<count;i++){if(!Number.isFinite(raw[i]))return [];out.push(Math.max(-BEZIER_LIMIT,Math.min(BEZIER_LIMIT,raw[i])));}return out;}
 export function bezierPoints(n,kind){return [...(kind==='shape'?n.params.slice(0,8):n.arrange.slice(20,28)),...(n.bezier?.[kind]??[])];}
+// Parameter slots retain the first span for project/animation compatibility.
+// An inspector's endpoint field follows the final anchor of an extended path.
+export function bezierEndpointPath(n,path){
+ const shape=n.type==='BezierRibbon'&&/^params\.[67]$/.test(path),layout=n.arrange?.[0]===6&&/^arrange\.2[67]$/.test(path);
+ const kind=shape?'shape':layout?'layout':null,tail=kind&&n.bezier?.[kind];
+ return tail?.length?'bezier.'+kind+'.'+(tail.length-2+Number(path.endsWith('7'))):path;
+}
 export function bezierPoint(p,t){const count=bezierCount(p),scaled=Math.max(0,Math.min(1,t))*count,index=Math.min(count-1,Math.floor(scaled)),u=scaled-index,v=1-u,at=index*6;return [0,1].map(k=>v*v*v*p[at+k]+3*v*v*u*p[at+2+k]+3*v*u*u*p[at+4+k]+u*u*u*p[at+6+k]);}
 export function splitBezier(p,segment,t=.5){if(bezierCount(p)>=BEZIER_SEGMENTS)return p.slice();const at=Math.max(0,Math.min(bezierCount(p)-1,segment))*6,points=Array.from({length:4},(_,i)=>p.slice(at+i*2,at+i*2+2)),mix=(a,b)=>a.map((v,i)=>v+(b[i]-v)*t),a=mix(points[0],points[1]),b=mix(points[1],points[2]),c=mix(points[2],points[3]),d=mix(a,b),e=mix(b,c),f=mix(d,e);return [...p.slice(0,at),...points[0],...a,...d,...f,...e,...c,...points[3],...p.slice(at+8)];}
 export function extendBezier(p){if(bezierCount(p)>=BEZIER_SEGMENTS)return p.slice();const end=p.slice(-2),previous=p.slice(-4,-2),delta=end.map((v,i)=>v-previous[i]);if(Math.hypot(...delta)<.01)delta[0]=.2;return [...p,...[1,2,3].flatMap(t=>end.map((v,i)=>Math.max(-BEZIER_LIMIT,Math.min(BEZIER_LIMIT,v+delta[i]*t))))];}

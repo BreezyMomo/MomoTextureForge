@@ -2,12 +2,13 @@ import {BY_ID} from './catalog.js';
 import {graphicCategory,graphicCategoryGroups,graphicCategorySearchText} from './graphic-categories.js';
 import {graphicSearchText} from './graphic-name.js';
 import {uiText,uiFormat} from './ui-language.js';
+import {effectsUseTime} from './post-effect-specs.js';
 
 export function graphicIsAnimated(entry){
  function animated(n){
   if(!n)return false;
   const tracks=n.animationEnabled!==false&&!n.timing?.frozen&&Object.values(n.tracks??{}).some(track=>!track.muted&&track.keys?.length>1);
-  return tracks||!!n.uv?.[4]||n.kind==='shape'&&n.shapeClock?.follow!==false&&(n.shapeClock?.speed??1)!==0&&BY_ID.get(n.type)?.usesTime||n.children?.some(animated)||!!n.mask&&animated(n.mask);
+  return tracks||!!n.uv?.[4]||effectsUseTime(n)||n.kind==='shape'&&n.shapeClock?.follow!==false&&(n.shapeClock?.speed??1)!==0&&BY_ID.get(n.type)?.usesTime||n.children?.some(animated)||!!n.mask&&animated(n.mask);
  }
  return !!animated(entry.root);
 }

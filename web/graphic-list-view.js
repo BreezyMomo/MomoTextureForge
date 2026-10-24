@@ -3,10 +3,10 @@ import {graphicIsAnimated} from './graphic-list-filters.js';
 import {interfaceLanguage} from './language.js';
 import {uiText,uiFormat} from './ui-language.js';
 import {animateUI} from './editor-motion.js';
+import {builtinThumbnail,thumbnailVisualKey} from './thumbnail-source.js';
 
 const text=(element,value)=>{if(element.textContent!==value)element.textContent=value;};
 const attr=(element,key,value)=>{if(element.getAttribute(key)!==String(value))element.setAttribute(key,value);};
-const visualKey=root=>JSON.stringify(root,(key,value)=>['name','id','resourceRef'].includes(key)?undefined:value);
 function actionIcon(path){
  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');
  const shape=document.createElementNS(svg.namespaceURI,'path');shape.setAttribute('d',path);svg.append(shape);return svg;
@@ -59,7 +59,7 @@ export function createGraphicListView({container,thumbnails,el,isFavorite,onBrow
   const record=cards.get(entry.id)??card(entry);record.entry=entry;
   const revision=JSON.stringify([entry.resourceId,entry.versionId,entry.personalRevision]);let renderChanged=false;
   if(revision!==record.revision){
-   const key=visualKey(entry.root);renderChanged=key!==record.renderKey;record.renderKey=key;record.revision=revision;record.animated=graphicIsAnimated(entry);
+   const key=thumbnailVisualKey(entry.root);renderChanged=key!==record.renderKey;record.renderKey=key;record.revision=revision;record.animated=graphicIsAnimated(entry);
   }
   const name=graphicLabel(entry),metadata=JSON.stringify([interfaceLanguage(),name,entry.versionId,entry.personalRevision,record.animated]);
   if(metadata!==record.metadata){
@@ -75,7 +75,7 @@ export function createGraphicListView({container,thumbnails,el,isFavorite,onBrow
   }
   const favorite=isFavorite(entry),label=uiFormat(favorite?'library.unfavoriteGraphic':'library.favoriteGraphic',name);
   attr(record.star,'aria-pressed',favorite);attr(record.star,'aria-label',label);attr(record.star,'title',label);
-  if(renderChanged){thumbnails.invalidate('preset:'+entry.id);thumbnails.observe(record.image,'preset:'+entry.id,entry.root);}
+  if(renderChanged){thumbnails.invalidate('preset:'+entry.id);thumbnails.observe(record.image,'preset:'+entry.id,entry.root,{source:builtinThumbnail(entry),visualKey:record.renderKey});}
   return record;
  }
  return {

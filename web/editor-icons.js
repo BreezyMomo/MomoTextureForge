@@ -4,6 +4,7 @@ const paths={
  reset:'M3 10a9 9 0 1 1 2 8M3 4v6h6',
  keyframe:'m12 3 9 9-9 9-9-9Z',
  drag:'M8 5h.01M16 5h.01M8 12h.01M16 12h.01M8 19h.01M16 19h.01',
+ more:'M5 12h.01M12 12h.01M19 12h.01',
  help:'M9.5 9a2.5 2.5 0 1 1 4 2c-1 .7-1.5 1-1.5 2M12 17h.01M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0',
  chevron:'m8 5 7 7-7 7',down:'m5 8 7 7 7-7',
  pin:'M9 3h6l-1 6 4 4v2H6v-2l4-4-1-6ZM12 15v6',
@@ -20,7 +21,7 @@ const paths={
 };
 export function editorIcon(name,doc=globalThis.document){
  const svg=doc.createElementNS('http://www.w3.org/2000/svg','svg');
- for(const [key,value]of Object.entries({viewBox:'0 0 24 24',class:'editor-icon','aria-hidden':'true',focusable:'false',fill:'none',stroke:'currentColor','stroke-width':name==='drag'?'3':'1.7','stroke-linecap':'round','stroke-linejoin':'round'}))svg.setAttribute(key,value);
+ for(const [key,value]of Object.entries({viewBox:'0 0 24 24',class:'editor-icon','aria-hidden':'true',focusable:'false',fill:'none',stroke:'currentColor','stroke-width':name==='drag'||name==='more'?'3':'1.7','stroke-linecap':'round','stroke-linejoin':'round'}))svg.setAttribute(key,value);
  const path=doc.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[name]);svg.append(path);
  if(name==='keyframe'){const dot=doc.createElementNS(svg.namespaceURI,'circle');for(const [key,value]of Object.entries({cx:12,cy:12,r:2,class:'keyframe-dot'}))dot.setAttribute(key,value);svg.append(dot);}
  return svg;

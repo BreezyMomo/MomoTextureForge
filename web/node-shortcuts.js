@@ -36,7 +36,7 @@ export function shortcutPin(document,{key,pinned,onToggle}){
 
 export function shortcutControls(document,{key,pinned,onToggle,global=false,onToggleAll}){
  const group=document.createElement('span');group.className='shortcut-pin-controls';group.append(shortcutPin(document,{key,pinned,onToggle}));
- const scope=document.createElement('button');scope.type='button';scope.className='shortcut-scope';scope.append(editorIcon('down',document));scope.title=uiFormat('shortcuts.scopeFor',uiText(key));scope.setAttribute('aria-label',scope.title);scope.setAttribute('aria-haspopup','dialog');scope.setAttribute('aria-expanded','false');scope.dataset.global=String(global);group.append(scope);
+ const scope=document.createElement('button');scope.type='button';scope.className='shortcut-scope';scope.append(editorIcon('more',document));scope.title=uiFormat('shortcuts.scopeFor',uiText(key));scope.setAttribute('aria-label',scope.title);scope.setAttribute('aria-haspopup','dialog');scope.setAttribute('aria-expanded','false');scope.dataset.global=String(global);group.append(scope);
  scope.onclick=event=>{
   event.preventDefault();event.stopPropagation();document.querySelector('.shortcut-scope-menu')?.remove();
   const popup=document.createElement('div');popup.className='shortcut-scope-menu';popup.setAttribute('popover','auto');popup.setAttribute('role','dialog');popup.setAttribute('aria-label',scope.title);

@@ -43,7 +43,7 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false,sh
    body.append(footer);
   }
   for(const heading of body.querySelectorAll(':scope>h3[data-inspector-section]'))if(heading.dataset.inspectorSection===key)heading.remove();
-  const help=make('span','tree-note inspector-module-description'),heading=make('span','inspector-module-heading'),button=make('button','inspector-module-help'),arrow=make('span','inspector-module-arrow');arrow.setAttribute('aria-hidden','true');
+  const help=make('span','tree-note inspector-module-description'),heading=make('span','inspector-module-heading'),button=make('button','inspector-module-help'),arrow=make('span','inspector-module-arrow');arrow.setAttribute('aria-hidden','true');arrow.append(editorIcon('chevron',doc));
   const notes=[...body.querySelectorAll(':scope>p[data-inspector-help]')];if(notes.length){help.textContent=notes.map(note=>note.textContent).join('\n');notes.forEach(note=>note.remove());}else help.textContent=uiText(descriptions[key]??'modules.sectionHelp');help.hidden=true;button.type='button';button.append(editorIcon('help',doc));button.setAttribute('aria-label',uiFormat('modules.helpTitle',title));hoverHelp(button,help.textContent);
   heading.append(label,button);if(shortcuts&&SHORTCUT_MODULES.includes(key))heading.append(shortcutControls(doc,{key,pinned:shortcuts.keys.includes(key),onToggle:shortcuts.toggle,global:shortcuts.global(key),onToggleAll:shortcuts.toggleAll}));heading.append(arrow);summary.replaceChildren(heading,help);summary.setAttribute('aria-label',title);details.append(body);details.open=state.open(id,defaultOpen);summary.setAttribute('aria-expanded',String(details.open));
   body.inert=!details.open;

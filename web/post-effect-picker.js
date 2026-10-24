@@ -58,10 +58,10 @@ export function openPostEffectPicker({document:doc,anchor,context,present,onAdd}
   entry.canvas.effectPreview=entry;if(cache.has(entry.id))paint(entry,cache.get(entry.id));observer.observe(entry.canvas);
  }
  function comparison(image,canvas,label,item,id){
-  const compare=el('input','post-effect-comparison');compare.type='range';compare.min='0';compare.max='100';compare.value='50';compare.disabled=true;compare.setAttribute('aria-label',uiFormat('fx.comparePreview',uiText('fx.effect.'+id)));
+  const compare=el('input','post-effect-comparison');compare.type='range';compare.min='0';compare.max='100';compare.value='25';compare.disabled=true;compare.setAttribute('aria-label',uiFormat('fx.comparePreview',uiText('fx.effect.'+id)));
   const before=el('span','post-effect-compare-label post-effect-compare-before',uiText('fx.previewBefore')),after=el('span','post-effect-compare-label post-effect-compare-after',uiText('fx.previewAfter')),divider=el('span','post-effect-compare-divider');divider.setAttribute('aria-hidden','true');
   const entry={id,canvas,label,image,item,compare,beforeLabel:before,afterLabel:after,demo:effectPreviewSpec(id),visible:false,hovered:false,focused:false};
-  image.dataset.transparency=String(entry.demo.transparency);image.dataset.animating='false';image.style.setProperty('--compare-position','50%');image.append(before,after,divider,compare);
+  image.dataset.transparency=String(entry.demo.transparency);image.dataset.animating='false';image.style.setProperty('--compare-position',compare.value+'%');image.append(before,after,divider,compare);
   if(entry.demo.motion){const badge=el('span','post-effect-motion-hint',uiText('fx.previewMotion'));badge.hidden=motionPreference.matches;image.append(badge);}
   compare.oninput=()=>{if(entry.data)paint(entry,entry.data);};
   image.onpointerenter=()=>{entry.hovered=true;startMotion(entry);};image.onpointerleave=()=>{entry.hovered=false;if(moving===entry&&!entry.focused)stopMotion();};

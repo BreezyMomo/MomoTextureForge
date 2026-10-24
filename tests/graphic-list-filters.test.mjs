@@ -28,3 +28,17 @@ test('animated graphics include intrinsic time, active keys, UV motion, group ch
  const group=node('group'),child=node();group.children=[child];assert.equal(graphicIsAnimated({root:group}),false);child.tracks.opacity={keys:[[0,0],[1,1]]};assert.equal(graphicIsAnimated({root:group}),true);child.tracks.opacity.muted=true;assert.equal(graphicIsAnimated({root:group}),false);child.tracks.opacity.muted=false;child.animationEnabled=false;assert.equal(graphicIsAnimated({root:group}),false);
  child.uv[4]=1;assert.equal(graphicIsAnimated({root:group}),true);child.uv[4]=0;group.mask=node('shape','Spiral');assert.equal(graphicIsAnimated({root:group}),true);
 });
+
+test('time-based post effects share animation detection with graphic and node badges',()=>{
+ const root=node(),before=JSON.stringify(root);
+ assert.equal(graphicIsAnimated({root}),false);assert.equal(JSON.stringify(root),before);
+ root.postEffects.glitch.enabled=true;root.effectPresence.glitch=true;
+ assert.equal(graphicIsAnimated({root}),true);
+ root.postEffects.glitch.rate=0;assert.equal(graphicIsAnimated({root}),false);
+ root.postEffects.glitch.rate=8;root.postEffects.glitch.enabled=false;assert.equal(graphicIsAnimated({root}),false);
+ root.postEffects.glitch.enabled=true;root.effectPresence.glitch=false;assert.equal(graphicIsAnimated({root}),false);
+ root.effectPresence.glitch=true;const group=node('group');group.children=[root];
+ assert.equal(graphicIsAnimated({root:group}),true);
+ root.postEffects.glitch.enabled=false;root.postEffects.bloom.enabled=true;root.effectPresence.bloom=true;
+ assert.equal(graphicIsAnimated({root:group}),false,'a static enabled effect does not create a motion badge');
+});
