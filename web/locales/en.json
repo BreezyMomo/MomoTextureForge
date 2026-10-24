@@ -2514,5 +2514,12 @@
   "appearance.preset.xuanheiDescription": "Neutral carbon-black workspace, dark-gray headers, graphite content cards and muted warm-gold primary actions.",
   "fx.param.smoothing": "Contour smoothing",
   "fx.param.strokeRoughness": "Outline roughness",
-  "fx.param.fillRoughness": "Fill roughness"
+  "fx.param.fillRoughness": "Fill roughness",
+  "canvas.background": "Canvas background",
+  "canvas.backgroundTransparent": "Transparent (checkerboard)",
+  "canvas.backgroundSolid": "Solid color",
+  "canvas.backgroundColor": "Color",
+  "canvas.backgroundPreset": "Use {0} canvas background",
+  "canvas.backgroundHint": "Saved with the project and used by color preview and export.",
+  "canvas.backgroundLocation": "Set the canvas background in View → Canvas background below the preview."
 }

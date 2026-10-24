@@ -29,7 +29,7 @@ export function installCanvasToolbar({tiled,tileGrid}){
  const zoomControls=document.createElement('div');zoomControls.className='canvas-zoom-controls';zoomControls.append(zoom,reset);
  function menu(id,icon,key){const details=document.createElement('details'),summary=document.createElement('summary'),panel=document.createElement('div');details.id=id;details.className='canvas-dropdown';panel.className='canvas-dropdown-panel';canvasToolLabel(summary,icon,key);details.append(summary,panel);return {details,summary,panel};}
  const display=menu('canvas-display-menu','display','canvas.display');
- display.panel.append($('background').closest('label'),$('show-guides').closest('label'),$('show-pivot').closest('label'),$('guide-note'));
+ display.panel.append($('canvas-background'),$('show-guides').closest('label'),$('show-pivot').closest('label'),$('guide-note'));
  const tiles=document.createElement('div');tiles.className='canvas-tiles';
  const tileMenu=menu('canvas-tile-menu','tile','canvas.tileOptions');tileMenu.summary.replaceChildren(document.createTextNode('▾'));tileMenu.summary.classList.add('canvas-menu-arrow');
  const off=document.createElement('button');off.type='button';off.onclick=()=>{if(tiled())$('tile-preview').click();tileMenu.details.open=false;tileMenu.summary.focus();};

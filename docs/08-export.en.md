@@ -15,7 +15,7 @@
 1. Open **Export…** and select **PNG · Current frame**.
 2. Set pixel dimensions, which follow canvas aspect ratio. Change the ratio in **Canvas settings**.
 3. Choose Color, Height, Normal or Custom RGBA under **Output content**.
-4. Set transparent background and PNG 8/16-bit as needed.
+4. Choose Transparent or Solid color in View → Canvas background below the preview, then select PNG 8/16-bit.
 5. Check the dimension summary, choose **Start export**, and wait for the download.
 
 Copy PNG8 always uses 8-bit output; download instead if the browser rejects clipboard access. 16-bit and EXR output require floating-point rendering support.
@@ -47,7 +47,7 @@ Omitting the endpoint avoids duplicate sampling; it does not repair a discontinu
 1. Choose **Export… → Export format → GIF animation**, set frame dimensions, FPS, animation cycle and export duration, and check the GIF summary for actual frame count and playback duration.
 2. Defaults are 256 colors and a shared palette. Shared palettes sample up to 12 evenly spaced frames to reduce color flicker; choose **Per-frame palette** for rich color changes or missed brief colors. Select 16/32/64/128/256 colors; ordered dithering can improve gradients.
 3. **Repeat GIF playback** controls repeating versus playing once. **Omit export endpoint frame** separately controls endpoint sampling. Including the endpoint adds a frame interval; the summary shows the actual playback duration.
-4. GIF supports binary transparency. Alpha threshold is 0–255: pixels below the threshold become transparent, and fully transparent pixels always remain transparent. Disable transparent background to composite soft glow or semitransparent edges onto the background color. Use PNG/EXR for continuous alpha or precise channel data.
+4. GIF supports binary transparency. Alpha threshold is 0–255: pixels below the threshold become transparent, and fully transparent pixels always remain transparent. Choose Solid color canvas background below the preview to composite soft glow or semitransparent edges onto the background color. Use PNG/EXR for continuous alpha or precise channel data.
 5. Choose **Start export**, wait for palette sampling, frame rendering and background encoding, and download `.gif`. Export can be canceled without changing the canvas or current animation progress. GIF settings persist with projects.
 
 GIF export caps FPS at 50 without changing other formats' FPS settings; frame delays use 10 ms steps with cumulative rounding to reduce timing drift. The selected Color/Height/Normal/Custom RGBA output includes node animation, groups and post-processing. Preview zoom, solo and guides are excluded. GIF palette/alpha quantization loses precision; Custom RGBA is suitable only for visual previews.
@@ -108,4 +108,4 @@ Different sources require additional compositing. Check complex, large outputs a
 - **Luminance / RGB × Alpha**: treat transparency as black, useful for masks. These are distinct from straight color components. Color luminance without alpha multiplication is also available. Preserved color means the current rendered color; hidden RGB in fully transparent original-file pixels cannot necessarily be recovered.
 - Constants are explicitly labeled **Constant 0 (black), Constant 1 (white), and Constant 0.5 (middle gray)**. Each fills its entire destination channel with that value. For example, A=1 makes the packed image fully opaque.
 
-RGBA packing does not bake the background. For an ordinary color image flattened onto the background, use Color output and disable transparent background.
+RGBA packing does not bake the background. For an ordinary color image flattened onto the background, use Color output and Solid color canvas background.

@@ -31,7 +31,7 @@ try{
  await page.locator('#undo').click();await ratio(4);assert.equal((await saved()).canvas.ratio,4);await page.locator('#redo').click();await ratio(2.5);assert.equal((await saved()).canvas.ratio,2.5);
  await browse(2);await ratio(2.5);await browse(0);await ratio(2.5);assert.equal(await page.locator('#project-name').inputValue(),'Edited trial');
  await page.locator('#undo').click();await ratio(2.5);assert.equal(await page.locator('#project-name').inputValue(),trialName);await page.locator('#redo').click();await ratio(2.5);
- await page.locator('#preview-reset').click();await ratio(2.5);await page.locator('#undo').click();await ratio(2.5);
+ await page.locator('#resource-actions-menu>summary').click();await page.locator('#preview-reset').click();await ratio(2.5);await page.locator('#undo').click();await ratio(2.5);
  await page.locator('#return-work').click();await ratio(2.5);assert.equal(await page.locator('#project-name').inputValue(),original.name);assert.deepEqual((await saved()).root,canvas.root);
  await page.locator('#undo').click();await ratio(2.5);await select.selectOption('2');await ratio(2);await page.locator('#undo').click();await ratio(2.5);await page.locator('#redo').click();await ratio(2);
  await browse(1);await ratio(2);await select.selectOption('0.5');await ratio(.5);await page.locator('#preview-add').click();await ratio(.5);assert.equal((await saved()).root.children.length,2);

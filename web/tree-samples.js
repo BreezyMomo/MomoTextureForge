@@ -156,8 +156,8 @@ export function treeSamples(){
  const flame=group('火焰法阵'),flames=node('shape','Bonfire');flames.name='中心火焰';flames.transform.width=flames.transform.height=.7;
  const fireStars=turn(shape('Star','旋转火星',1,'#ffc175'),-180);radial(fireStars,10,.4,.075);flame.children=[flames,halo(.91,'#ff9c52'),halo(.78,'#ffd385'),fireStars];
  return [...vfxSamples().map(s=>({...s,category:'vfx'})),...uiSamples().map(s=>({...s,category:'ui'})),...arrangementExamples(),...overflowExamples(),...vfxPresets(),...effectSamples(),...creativeEffectSamples(),...noiseWarpSamples(),...contentEffectSamples(),
-  {nameKey:"examples.sketchStyles.name",root:sketchStyles,description:"examples.sketchStyles.description",tags:["fx.effect.sketch","examples.staticPNG"],output:{mode:'color',alpha:false,background:'#ffffff'}},
-  {nameKey:"examples.sketchHeart.name",root:sketchHeart,description:"examples.sketchHeart.description",tags:["fx.effect.sketch","fx.option.crossHatch","examples.staticPNG"],output:{mode:'color',alpha:false,background:'#ffffff'}},
+  {nameKey:"examples.sketchStyles.name",root:sketchStyles,description:"examples.sketchStyles.description",tags:["fx.effect.sketch","examples.staticPNG"],output:{mode:'color',alpha:true},previewOutput:{alpha:false,background:'#ffffff'}},
+  {nameKey:"examples.sketchHeart.name",root:sketchHeart,description:"examples.sketchHeart.description",tags:["fx.effect.sketch","fx.option.crossHatch","examples.staticPNG"],output:{mode:'color',alpha:true},previewOutput:{alpha:false,background:'#ffffff'}},
   {nameKey:"examples.summoningEffect.name",root:summon,description:"examples.concentricPulsingRingsARotatingStarArrayAndAFadingShockwave",tags:["examples.nestedGroups","editor.keyframe"]},
   {nameKey:"examples.radarHalo.name",root:radar,description:"examples.threeConcentricRingsWithOrbitingTargetsInspectRadialPlacementAndRotation",tags:["examples.radialArrangement","examples.rotationAnimation"]},
   {nameKey:"examples.petalBadge.name",root:flower,description:"examples.ellipsePetalsPointOutwardAroundACircleLayeredWithACenter",tags:["examples.radialOrientation","examples.layeredColors"]},

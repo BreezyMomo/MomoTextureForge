@@ -123,7 +123,7 @@ Puzzle examples show cell spacing, overflow tabs, flat outside borders and per-p
 
 VFX thumbnails show roughly 30% progress; play the canvas to inspect the full motion. Slashes, flashes and shock rings use transparent one-shot exports. The vortex loops. The dissolve mask exports Height with an opaque background for material sampling; scrub to select an erosion state. Sequence duration and FPS determine its frames.
 
-UI backgrounds are static, tileable patterns with dark-background color PNG defaults. Select an arrangement group to change rows and columns, or its inner diamonds/lines/dots to edit colors and sizes. Disable transparency to retain the background, or enable it to export only the pattern for overlay. Check seams with **Tile preview** and use texture repetition in your project instead of stretching the whole image.
+UI backgrounds are static, tileable patterns with dark-background color PNG defaults. Select an arrangement group to change rows and columns, or its inner diamonds/lines/dots to edit colors and sizes. Choose Solid color canvas background to retain the background, or Transparent to export only the pattern for overlay. Check seams with **Tile preview** and use texture repetition in your project instead of stretching the whole image.
 
 The material-presets category contains acid splatter and curled celebration ribbons, both static and transparent by default. Edit droplets, bubbles, highlights, ribbon control points, widths and colors. Select the outer group and **Save selection to library** to reuse it.
 

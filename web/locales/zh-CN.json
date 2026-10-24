@@ -2514,5 +2514,12 @@
   "appearance.preset.xuanheiDescription": "中性炭黑工作区、深灰标题栏、石墨内容卡片与低饱和暖金主要操作。",
   "fx.param.smoothing": "轮廓平滑",
   "fx.param.strokeRoughness": "描边手绘幅度",
-  "fx.param.fillRoughness": "填充手绘幅度"
+  "fx.param.fillRoughness": "填充手绘幅度",
+  "canvas.background": "画布背景",
+  "canvas.backgroundTransparent": "透明（棋盘格）",
+  "canvas.backgroundSolid": "纯色",
+  "canvas.backgroundColor": "颜色",
+  "canvas.backgroundPreset": "使用{0}画布背景",
+  "canvas.backgroundHint": "随项目保存，用于颜色预览和导出。",
+  "canvas.backgroundLocation": "画布背景在预览下方的“显示 → 画布背景”中统一设置。"
 }
