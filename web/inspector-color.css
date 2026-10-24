@@ -27,7 +27,7 @@
 .tree-editor .color-control-inputs input[type=text]{flex:1;min-width:0;width:80px;font-family:Consolas,monospace;font-size:13px}
 .color-gradient-preview{height:35px;border:1px solid var(--ui-line-strong);border-radius:var(--ui-control-radius);margin:10px 0}
 .color-preset-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:8px 0 14px}
-.tree-editor .color-preset{display:flex;flex-direction:column;gap:5px;padding:5px;min-width:0;text-align:center;font-size:10px}
+.tree-editor .color-preset{display:flex;flex-direction:column;gap:5px;padding:5px;min-width:0;text-align:center;font-size:11px}
 .color-preset-strip{display:block;width:100%;height:16px;border-radius:3px;border:1px solid #ffffff26}
 .color-stop-card{padding:1px 9px 8px;border:1px solid var(--ui-line);border-radius:var(--ui-module-radius);margin:8px 0;background:var(--ui-panel)}
 .color-stop-card .tree-field{margin:5px 0}
