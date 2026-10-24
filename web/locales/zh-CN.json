@@ -2032,7 +2032,7 @@
   "fx.effect.normal": "转法线",
   "fx.help.normal": "根据当前高度生成法线颜色，保留节点透明度与高度。后续颜色滤镜仍会修改法线颜色；输出法线模式另行计算。",
   "fx.effect.sketch": "手绘风格",
-  "fx.help.sketch": "使用Rough.js重绘当前节点轮廓。支持纯色、排线、交叉排线、连续锯齿、圆点、虚线排线、锯齿线排线及放射线，也可保留原色或仅描边。按填充方式显示专用参数；固定种子可复现所有样式。",
+  "fx.help.sketch": "使用Rough.js重绘当前节点轮廓。支持纯色、排线、交叉排线、连续锯齿、圆点、虚线排线、锯齿线排线及放射线，也可保留原色或仅描边。按填充方式显示专用参数；固定种子可复现所有样式。轮廓平滑在描绘前把像素边缘拟合为连续曲线；0保留原路径。保留明显尖角与孔洞，手绘幅度控制后续的自然扰动。描边与填充手绘幅度独立：调低描边幅度可保持边框顺滑，调高填充幅度可增强排线的手绘感。",
   "fx.param.roughness": "手绘幅度",
   "fx.param.bowing": "笔画弯曲",
   "fx.param.strokeWidth": "描边宽度",
@@ -2511,5 +2511,8 @@
   "appearance.role.header": "标题栏",
   "appearance.role.panel": "内容卡片",
   "appearance.preset.xuanhei": "玄黑鎏金",
-  "appearance.preset.xuanheiDescription": "中性炭黑工作区、深灰标题栏、石墨内容卡片与低饱和暖金主要操作。"
+  "appearance.preset.xuanheiDescription": "中性炭黑工作区、深灰标题栏、石墨内容卡片与低饱和暖金主要操作。",
+  "fx.param.smoothing": "轮廓平滑",
+  "fx.param.strokeRoughness": "描边手绘幅度",
+  "fx.param.fillRoughness": "填充手绘幅度"
 }

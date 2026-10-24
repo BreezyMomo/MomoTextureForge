@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import rough from '../web/vendor/rough.js';
 import {sketchContours,simplifySketchLoop} from '../web/sketch-contours.js';
 import {project,node,sanitizeTree,evaluateNode,cloneNode} from '../web/tree-model.js';
-import {EFFECT_IDS,effectValues,effectParameterVisible,EFFECT_BY_ID} from '../web/post-effect-specs.js';
+import {EFFECT_IDS,EFFECT_PARAMETERS,effectValues,effectParameterVisible,EFFECT_BY_ID} from '../web/post-effect-specs.js';
 import {applySketchFx} from '../web/sketch-fx.js';
 
 const ring=(size=64)=>{const pixels=new Float32Array(size*size*4);for(let y=0;y<size;y++)for(let x=0;x<size;x++){const d=Math.hypot(x+.5-size/2,y+.5-size/2);pixels[(y*size+x)*4+3]=d<size*.4&&d>size*.2?1:0;}return pixels;};
@@ -53,4 +53,36 @@ test('arbitrary dash patterns roundtrip, animate discretely and reject invalid i
 test('dense dots, tiny dash and zigzag segments have bounded generation budgets',()=>{
  const v=effectValues(node(),'sketch');assert.ok(sketchWorkEstimate({...v,fillStyle:6,hatchGap:1},512,512)>200000);assert.ok(sketchWorkEstimate({...v,fillStyle:7,hatchGap:1,dashLength:.1,dashGap:.1},512,512)>200000);assert.ok(sketchWorkEstimate({...v,fillStyle:8,hatchGap:1,zigzagOffset:.1},512,512)>200000);
  for(const fillStyle of [6,7,8])assert.throws(()=>applySketchFx({gl:{}},{aspect:1,bounds:[0,0,1,1]}, {...v,fillStyle,hatchGap:1,dashLength:.1,dashGap:.1,zigzagOffset:.1}),e=>e.messageKey==='fx.sketchDensity');
+});
+
+test('outline and fill roughness generate independent seeded brush geometry',()=>{
+ const v=effectValues(node(),'sketch'),path='M0 40C0 -10 100 -10 100 40L50 100Z';
+ const outline=values=>rough.generator().path(path,{...sketchOptions(values,'stroke'),fill:undefined});
+ const fill=values=>rough.generator().path(path,{...sketchOptions(values),stroke:'none',fillStyle:'cross-hatch'});
+ const base={...v,strokeRoughness:.2,roughness:5};assert.equal(sketchOptions(base,'stroke').roughness,.2);assert.equal(sketchOptions(base).roughness,5);
+ assert.deepEqual(outline(base),outline({...base,roughness:9}));assert.notDeepEqual(outline(base),outline({...base,strokeRoughness:4}));
+ assert.deepEqual(fill(base),fill({...base,strokeRoughness:8}));assert.notDeepEqual(fill(base),fill({...base,roughness:.1}));
+ for(const fillStyle of [0,4])assert.equal(effectParameterVisible(EFFECT_BY_ID.get('sketch').parameters.find(p=>p.key==='roughness'),{fillStyle}),false);
+});
+
+test('legacy shared roughness and all animation modes migrate once into independently editable controls',()=>{
+ for(const mode of ['absolute','add','multiply']){
+  const p=project(),n=p.root.children[0];delete n.postEffects.sketch.strokeRoughness;n.postEffects.sketch.roughness=2.4;
+  n.tracks['postEffects.sketch.roughness']={mode,ease:'smooth',keys:[[0,.4],[1,2]],segments:{'0':{ease:'cubic',out:1},'1':{in:1}}};
+  const saved=sanitizeTree(p),s=saved.root.children[0];assert.equal(s.postEffects.sketch.strokeRoughness,2.4);assert.deepEqual(s.tracks['postEffects.sketch.strokeRoughness'],s.tracks['postEffects.sketch.roughness']);
+  assert.notEqual(s.tracks['postEffects.sketch.strokeRoughness'],s.tracks['postEffects.sketch.roughness']);
+  for(const time of [0,.25,.5,1]){const v=effectValues(evaluateNode(s,time).node,'sketch');assert.equal(v.roughness,v.strokeRoughness);}
+  assert.deepEqual(sanitizeTree(JSON.parse(JSON.stringify(saved))).root.children[0].tracks,s.tracks);
+  const copy=cloneNode(s);copy.tracks['postEffects.sketch.strokeRoughness'].keys[0][1]=.1;assert.equal(s.tracks['postEffects.sketch.roughness'].keys[0][1],.4);
+ }
+ const p=project(),n=p.root.children[0];n.postEffects.sketch.roughness=6;n.postEffects.sketch.strokeRoughness=.3;n.tracks['postEffects.sketch.roughness']={keys:[[0,1],[1,5]],ease:'linear'};
+ const s=sanitizeTree(p).root.children[0];assert.equal(s.postEffects.sketch.strokeRoughness,.3);assert.equal(s.tracks['postEffects.sketch.strokeRoughness'],undefined);assert.equal(evaluateNode(s,.5).node.postEffects.sketch.strokeRoughness,.3);
+});
+
+test('splitting a legacy amplitude track preserves a node already at its authored track limit',()=>{
+ const p=project(),n=p.root.children[0];delete n.postEffects.sketch.strokeRoughness;
+ const entries=[...EFFECT_PARAMETERS].filter(([path,s])=>path!=='postEffects.sketch.strokeRoughness'&&path!=='postEffects.sketch.roughness'&&typeof s.default==='number'&&!s.type&&!s.options).slice(0,63);
+ assert.equal(entries.length,63);n.tracks=Object.fromEntries(entries.map(([path,s])=>[path,{keys:[[0,s.default],[1,s.default]],ease:'linear'}]));n.tracks['postEffects.sketch.roughness']={keys:[[0,1],[1,3]],ease:'linear'};
+ const saved=sanitizeTree(p),tracks=saved.root.children[0].tracks;assert.equal(Object.keys(tracks).length,65);for(const path of Object.keys(n.tracks))assert.ok(tracks[path]);
+ assert.deepEqual(sanitizeTree(JSON.parse(JSON.stringify(saved))).root.children[0].tracks,tracks);
 });

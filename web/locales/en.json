@@ -2032,7 +2032,7 @@
   "fx.effect.normal": "Height to normal",
   "fx.help.normal": "Creates normal colors from current height, preserving alpha and height. Later color filters affect these colors; normal output is computed separately.",
   "fx.effect.sketch": "Hand-drawn style",
-  "fx.help.sketch": "Redraw this node with Rough.js. Choose solid, hachure, cross-hatch, zigzag, dots, dashed, zigzag-line or sunburst; preserve original colors or draw outlines only. Style-specific controls appear as needed. A fixed seed reproduces every style.",
+  "fx.help.sketch": "Redraw this node with Rough.js. Choose solid, hachure, cross-hatch, zigzag, dots, dashed, zigzag-line or sunburst; preserve original colors or draw outlines only. Style-specific controls appear as needed. A fixed seed reproduces every style. Contour smoothing fits continuous pixel-boundary curves before drawing; 0 keeps the original path. It preserves prominent corners and holes, while roughness controls the later hand-drawn variation. Outline and fill roughness are independent: keep the outline low and increase fill roughness for lively hatching.",
   "fx.param.roughness": "Roughness",
   "fx.param.bowing": "Bowing",
   "fx.param.strokeWidth": "Stroke width",
@@ -2511,5 +2511,8 @@
   "appearance.role.header": "Headers",
   "appearance.role.panel": "Content",
   "appearance.preset.xuanhei": "Carbon & Gold",
-  "appearance.preset.xuanheiDescription": "Neutral carbon-black workspace, dark-gray headers, graphite content cards and muted warm-gold primary actions."
+  "appearance.preset.xuanheiDescription": "Neutral carbon-black workspace, dark-gray headers, graphite content cards and muted warm-gold primary actions.",
+  "fx.param.smoothing": "Contour smoothing",
+  "fx.param.strokeRoughness": "Outline roughness",
+  "fx.param.fillRoughness": "Fill roughness"
 }

@@ -109,7 +109,10 @@ export function sanitizeTree(raw,{component=false}={}){
   n.timing.offset=num(r.timing?.offset,0,-1,1);n.timing.cycles=num(r.timing?.cycles,1,.01,64);for(const key of ['loop','pingpong','frozen'])n.timing[key]=!!r.timing?.[key];
   n.timing.ease=['linear','smooth','hold'].includes(r.timing?.ease)?r.timing.ease:'linear';n.timing.outside=r.timing?.outside==='hide'?'hide':'hold';
   for(const key of ['before','after'])if(r.timing?.[key]!==undefined)n.timing[key]=r.timing[key]==='hide'?'hide':'hold';
-  for(const [path,track] of Object.entries(r.tracks??{}).slice(0,LIMITS.tracks)){
+  // Reserve the newly split outline track so a full legacy node loses no tracks.
+  const outlinePath='postEffects.sketch.strokeRoughness',fillPath='postEffects.sketch.roughness',rawTracks=r.tracks??{},outlineTrack=rawTracks[outlinePath]??(r.postEffects?.sketch?.strokeRoughness===undefined?rawTracks[fillPath]:null);
+  const trackEntries=Object.entries(rawTracks).filter(([path])=>path!==outlinePath).slice(0,LIMITS.tracks);if(outlineTrack)trackEntries.push([outlinePath,outlineTrack]);
+  for(const [path,track] of trackEntries){
    const spec=fieldSpec(n,path);if(!spec||!track)continue;
    const type=animationType(n,path),mode=type==='number'&&['absolute','add','multiply'].includes(track.mode)?track.mode:'absolute';
    const bounds=mode==='absolute'?spec:mode==='multiply'?[-10,10]:[-10000,10000];

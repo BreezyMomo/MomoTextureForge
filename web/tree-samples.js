@@ -135,7 +135,7 @@ function arrangementExamples(){
 
 export function treeSamples(){
  const sketchHeart=shape('HeartLeafTeardrop','手绘心形',1,'#f42521');
- Object.assign(sketchHeart.postEffects.sketch,{enabled:true,roughness:.9,bowing:1,strokeWidth:1.8,doubleStroke:true,strokeColor:'#202020',fillStyle:3,fillColor:'#f42521',hatchAngle:-44,hatchGap:7.5,hatchWidth:.8,source:0,threshold:.71,simplify:.2,seed:1});
+ Object.assign(sketchHeart.postEffects.sketch,{enabled:true,roughness:.9,strokeRoughness:.9,bowing:1,strokeWidth:1.8,doubleStroke:true,strokeColor:'#202020',fillStyle:3,fillColor:'#f42521',hatchAngle:-44,hatchGap:7.5,hatchWidth:.8,source:0,threshold:.71,simplify:.2,seed:1});
  const sketchStyles=group('手绘样式对照');
  const sketchStylesNames=['原图','纯色','平行排线','交叉排线','连续锯齿','圆点','虚线排线','锯齿线排线','放射线'];
  for(const [i,fillStyle]of [0,1,2,3,5,6,7,8,9].entries()){

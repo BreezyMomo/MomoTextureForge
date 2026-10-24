@@ -1,12 +1,11 @@
 import rough from './vendor/rough.js';
-import {sketchContours} from './sketch-contours.js';
+import {createSketchContourTracer} from './sketch-contours.js';
 import {messageError} from './message-catalog.js';
 import {SKETCH_FILL_STYLES,sketchOptions,sketchWorkEstimate,sunburstPath} from './sketch-options.js';
 const traceCaches=new WeakMap();
 function trace(renderer,pixels,width,height,values,source){
- let cache=traceCaches.get(renderer);if(!cache){cache=[];traceCaches.set(renderer,cache);}const key=JSON.stringify([width,height,values.source,values.threshold,values.simplify,source.aspect,source.bounds]);
- const found=cache.find(entry=>entry.key===key&&entry.pixels.length===pixels.length&&entry.pixels.every((v,i)=>v===pixels[i]));if(found)return found.outline;
- const outline=sketchContours(pixels,width,height,{...values,aspect:source.aspect,bounds:source.bounds});cache.push({key,pixels,outline});if(cache.length>2)cache.shift();return outline;
+ let tracer=traceCaches.get(renderer);if(!tracer){tracer=createSketchContourTracer();traceCaches.set(renderer,tracer);}
+ return tracer(pixels,width,height,values,{aspect:source.aspect,bounds:source.bounds});
 }
 
 export function applySketchFx(renderer,source,values){
@@ -31,7 +30,7 @@ export function applySketchFx(renderer,source,values){
     else rc.path(outline.path,{...options,stroke:'none',fillStyle:SKETCH_FILL_STYLES[values.fillStyle]});
     ctx.restore();
    }
-   if(values.strokeWidth>0)rc.path(outline.path,{...options,fill:undefined});
+   if(values.strokeWidth>0)rc.path(outline.path,{...sketchOptions(values,'stroke'),fill:undefined});
   }
   texture=gl.createTexture();gl.activeTexture(gl.TEXTURE5);gl.bindTexture(gl.TEXTURE_2D,texture);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,canvas);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
   result=renderer.target(source.w,source.h,false,source.aspect);renderer.pass(result,{source,op:31,table:texture,fxData:[values.fillStyle]});return result;

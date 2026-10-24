@@ -1,5 +1,20 @@
+import {smoothSketchPath} from './sketch-smoothing.js';
 import {coverageContours} from './coverage-contours.js';
 import {messageError} from './message-catalog.js';
+
+const coverage=(pixels,i,source)=>{const at=i*4,value=source===1?pixels[at]*.2126+pixels[at+1]*.7152+pixels[at+2]*.0722:pixels[at+3];return Number.isFinite(value)?Math.max(0,Math.min(1,value)):0;};
+// Only the selected contour channel invalidates a trace; paint and seed do not.
+export function createSketchContourTracer(){
+ const cache=[];
+ return (pixels,width,height,values={},geometry={})=>{
+  const key=JSON.stringify([width,height,values.source??0,values.threshold??.5,values.simplify??2,values.smoothing??.5,geometry.aspect??1,geometry.bounds??[0,0,1,1]]);
+  const index=cache.findIndex(entry=>entry.key===key&&entry.samples.length===pixels.length/4&&entry.samples.every((v,i)=>v===coverage(pixels,i,values.source)));
+  if(index>=0){const entry=cache.splice(index,1)[0];cache.push(entry);return entry.outline;}
+  const outline=sketchContours(pixels,width,height,{...values,...geometry}),samples=new Float64Array(pixels.length/4);
+  for(let i=0;i<samples.length;i++)samples[i]=coverage(pixels,i,values.source);
+  cache.push({key,samples,outline});if(cache.length>2)cache.shift();return outline;
+ };
+}
 
 const distanceSquared=(p,a,b)=>{const dx=b[0]-a[0],dy=b[1]-a[1],length=dx*dx+dy*dy,t=length?Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/length)):0;return (p[0]-a[0]-t*dx)**2+(p[1]-a[1]-t*dy)**2;};
 // Iterative RDP and a farthest-point split preserve closed-loop corners and holes.
@@ -17,8 +32,8 @@ function loopPath(points){
  const smooth=i=>{const a=at(i-1),p=at(i),b=at(i+1),u=[p[0]-a[0],p[1]-a[1]],v=[b[0]-p[0],b[1]-p[1]],length=Math.hypot(...u)*Math.hypot(...v);return length>0&&(u[0]*v[0]+u[1]*v[1])/length>.86;};
  let path='M'+point(points[0]);for(let i=0;i<points.length;i++){const p=at(i),q=at(i+1);if(!smooth(i)&&!smooth(i+1)){path+='L'+point(q);continue;}const prev=at(i-1),next=at(i+2),a=p.map((v,k)=>v+(smooth(i)?(q[k]-prev[k])/6:(q[k]-v)/3)),b=q.map((v,k)=>v-(smooth(i+1)?(next[k]-p[k])/6:(v-p[k])/3));path+='C'+point(a)+' '+point(b)+' '+point(q);}return path+'Z';
 }
-export function sketchContours(pixels,width,height,{threshold=.5,simplify=2,source=0,aspect=1,bounds=[0,0,1,1]}={}){
- const samples=new Float32Array(width*height*4);for(let i=0;i<width*height;i++){const at=i*4,alpha=pixels[at+3];samples[at+3]=source===1?Math.max(0,Math.min(1,pixels[at]*.2126+pixels[at+1]*.7152+pixels[at+2]*.0722)):alpha;}
+export function sketchContours(pixels,width,height,{threshold=.5,simplify=2,smoothing=.5,source=0,aspect=1,bounds=[0,0,1,1]}={}){
+ const samples=new Float32Array(width*height*4);for(let i=0;i<width*height;i++)samples[i*4+3]=coverage(pixels,i,source);
  let contours;try{contours=coverageContours(samples,width,height,threshold);}catch{throw messageError('fx.sketchComplexity');}
  const short=Math.min(aspect,1),baseWidth=512*aspect/short,baseHeight=512/short,[left,bottom,right,top]=bounds;let vertices=0;
  const loops=contours.paths.map(path=>{
@@ -27,6 +42,6 @@ export function sketchContours(pixels,width,height,{threshold=.5,simplify=2,sour
  });
  if(vertices>12000||loops.length>512)throw messageError('fx.sketchComplexity');
  // Rounding only serializes subpixel coordinates; sampling/seed never depend on output dimensions.
- const path=loops.map(loopPath).join('');
+ const path=loops.map(points=>smoothing>0?(smoothSketchPath(points,smoothing)??loopPath(points)):loopPath(points)).join('');
  return {path,loops,vertices,baseWidth,baseHeight};
 }

@@ -9,8 +9,8 @@ export function normalizeDashPattern(value){
 }
 export const dashArray=value=>{const text=normalizeDashPattern(value);return text?text.split(' ').map(Number):[];};
 export const sketchColor=(hex,opacity=1)=>opacity===1?hex:`rgba(${[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)).join(',')},${opacity})`;
-export function sketchOptions(v){
- return {seed:v.seed,roughness:v.roughness,bowing:v.bowing,maxRandomnessOffset:v.maxRandomnessOffset,
+export function sketchOptions(v,part='fill'){
+ return {seed:v.seed,roughness:part==='stroke'?(v.strokeRoughness??v.roughness):v.roughness,bowing:v.bowing,maxRandomnessOffset:v.maxRandomnessOffset,
   stroke:sketchColor(v.strokeColor,v.strokeOpacity),strokeWidth:v.strokeWidth,disableMultiStroke:!v.doubleStroke,
   disableMultiStrokeFill:v.fillMultiStroke===0?!v.doubleStroke:v.fillMultiStroke===1,
   preserveVertices:v.preserveVertices,fill:sketchColor(v.fillColor,v.fillOpacity),fillWeight:v.hatchWidth,

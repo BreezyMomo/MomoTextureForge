@@ -31,9 +31,9 @@ export const POST_EFFECTS=[
  {id:'unblack',parameters:[number('strength',0,1,1)]},
  {id:'normal',parameters:[number('strength',0,20,3,.1),number('sampleStep',1,8,1,1),toggle('flipY')]},
  {id:'sketch',parameters:[
-  number('roughness',0,10,1.3,.1),number('bowing',0,20,1,.1),number('strokeWidth',0,12,1.8,.1),toggle('doubleStroke',true),color('strokeColor','#202020'),
-  {...number('fillStyle',0,9,2,1),options:['originalFill','solidFill','hachure','crossHatch','noFill','zigzag','dots','dashed','zigzagLine','sunburst']},color('fillColor','#e9b35f'),number('hatchAngle',-180,180,-41,1),number('hatchGap',1,100,8,.5),number('hatchWidth',.1,40,.8,.1),
-  {...number('source',0,1,0,1),options:['alphaContour','luminanceContour']},{...number('threshold',.01,.99,.5),label:'fx.param.contourThreshold'},number('simplify',.2,8,2,.1),number('seed',1,2147483646,1,1),
+  number('strokeRoughness',0,10,1.3,.1),number('bowing',0,20,1,.1),number('strokeWidth',0,12,1.8,.1),toggle('doubleStroke',true),color('strokeColor','#202020'),
+  {...number('fillStyle',0,9,2,1),options:['originalFill','solidFill','hachure','crossHatch','noFill','zigzag','dots','dashed','zigzagLine','sunburst']},{...number('roughness',0,10,1.3,.1),label:'fx.param.fillRoughness'},color('fillColor','#e9b35f'),number('hatchAngle',-180,180,-41,1),number('hatchGap',1,100,8,.5),number('hatchWidth',.1,40,.8,.1),
+  {...number('source',0,1,0,1),options:['alphaContour','luminanceContour']},{...number('threshold',.01,.99,.5),label:'fx.param.contourThreshold'},number('smoothing',0,1,.5,.01),number('simplify',.2,8,2,.1),number('seed',1,2147483646,1,1),
   number('strokeOpacity',0,1,1,.01),number('fillOpacity',0,1,1,.01),number('maxRandomnessOffset',0,20,2,.1),toggle('preserveVertices'),
   {...number('fillMultiStroke',0,2,0,1),options:['followStroke','singleStroke','doubleStroke']},number('fillShapeRoughnessGain',0,10,.8,.1),
   {key:'strokeDashPattern',label:'fx.param.strokeDashPattern',type:'dash',default:''},number('strokeDashOffset',-512,512,0,.5),
@@ -67,7 +67,7 @@ export function effectAddValues(n,id){
  return {...(restoring?{}:effectEnableValues(n,id,true)),['effectPresence.'+id]:true,effectOrder:reorderEffects(n,stack)};
 }
 export const effectRemoveValues=id=>({['effectPresence.'+id]:false});
-export function sanitizeEffects(raw){const result=effectDefaults();for(const s of POST_EFFECTS){const value=raw?.[s.id];if(typeof value?.enabled==='boolean')result[s.id].enabled=value.enabled;for(const p of s.parameters){if(p.path.startsWith('postFx.'))continue;const v=value?.[p.key];result[s.id][p.key]=p.type==='dash'?normalizeDashPattern(v)??p.default:p.type==='boolean'?typeof v==='boolean'?v:p.default:p.type==='color'?/^#[0-9a-f]{6}$/i.test(v)?v:p.default:Number.isFinite(v)?Math.max(p.min,Math.min(p.max,p.step===1?Math.round(v):v)):p.default;}}return result;}
+export function sanitizeEffects(raw){const result=effectDefaults();for(const s of POST_EFFECTS){const value=raw?.[s.id];if(typeof value?.enabled==='boolean')result[s.id].enabled=value.enabled;for(const p of s.parameters){if(p.path.startsWith('postFx.'))continue;const v=s.id==='sketch'&&p.key==='strokeRoughness'&&value?.strokeRoughness===undefined?value?.roughness:value?.[p.key];result[s.id][p.key]=p.type==='dash'?normalizeDashPattern(v)??p.default:p.type==='boolean'?typeof v==='boolean'?v:p.default:p.type==='color'?/^#[0-9a-f]{6}$/i.test(v)?v:p.default:Number.isFinite(v)?Math.max(p.min,Math.min(p.max,p.step===1?Math.round(v):v)):p.default;}}return result;}
 export function effectValues(n,id){const spec=EFFECT_BY_ID.get(id);return Object.fromEntries(spec.parameters.map(p=>[p.key,p.path.startsWith('postFx.')?n.postFx?.[+p.path.split('.')[1]]??p.default:n.postEffects?.[id]?.[p.key]??p.default]));}
 export function effectEnableValues(n,id,enabled){const s=EFFECT_BY_ID.get(id),values={['effectPresence.'+id]:true,['postEffects.'+id+'.enabled']:enabled};if(enabled&&s.legacy!==undefined&&!(n.postFx?.[s.legacy]>0))values['postFx.'+s.legacy]=s.start;return values;}
 export function effectResetValues(id){const s=EFFECT_BY_ID.get(id);return Object.fromEntries(s.parameters.map(p=>[p.path,p.path==='postFx.'+s.legacy?s.start:p.default]));}
@@ -85,6 +85,6 @@ export function effectParameterVisible(p,values){
  if(p.path.startsWith('postEffects.kuwahara.')&&p.key==='anisotropy')return values.paintMode===1;
  if(p.path.startsWith('postEffects.ascii.')){if(p.key==='inkColor')return !values.colored;if(p.key==='paperColor')return values.paperOpacity>0;}
  if(!p.path.startsWith('postEffects.sketch.'))return true;const style=values.fillStyle;
- const only={fillOpacity:[1,2,3,5,6,7,8,9],fillColor:[1,2,3,5,6,7,8,9],hatchAngle:[2,3,5,7,8,9],hatchGap:[2,3,5,6,7,8],hatchWidth:[2,3,5,6,7,8,9],fillMultiStroke:[2,3,5,6,7,8,9],fillShapeRoughnessGain:[1],fillDashPattern:[2,3,5,6,7,8,9],fillDashOffset:[2,3,5,6,7,8,9],dashLength:[7],dashGap:[7],zigzagOffset:[8],curveStepCount:[6],curveFitting:[6],curveTightness:[6],sunburstCenterX:[9],sunburstCenterY:[9],sunburstRays:[9]};
+ const only={roughness:[1,2,3,5,6,7,8,9],fillOpacity:[1,2,3,5,6,7,8,9],fillColor:[1,2,3,5,6,7,8,9],hatchAngle:[2,3,5,7,8,9],hatchGap:[2,3,5,6,7,8],hatchWidth:[2,3,5,6,7,8,9],fillMultiStroke:[2,3,5,6,7,8,9],fillShapeRoughnessGain:[1],fillDashPattern:[2,3,5,6,7,8,9],fillDashOffset:[2,3,5,6,7,8,9],dashLength:[7],dashGap:[7],zigzagOffset:[8],curveStepCount:[6],curveFitting:[6],curveTightness:[6],sunburstCenterX:[9],sunburstCenterY:[9],sunburstRays:[9]};
  return !only[p.key]||only[p.key].includes(style);
 }
