@@ -13,7 +13,7 @@ export function installWorkspaceWorkflow({resetModules,getScope}){
  $('add-shape').classList.add('ui-action-primary');$('add-group').classList.add('ui-action-secondary');
  for(const id of ['wrap-top-level','group-selected','duplicate','delete','solo'])$(id).classList.add('ui-action-quiet');
  $('delete').classList.add('ui-action-destructive');
- for(const button of document.querySelectorAll('.selection-tools>button'))button.classList.add('ui-action-quiet');
+ for(const button of document.querySelectorAll('.selection-tools>button'))button.classList.add('ui-action-secondary');
  function menu(key){
   const details=make('details','workspace-menu'),summary=make('summary','',key),panel=make('div','workspace-menu-panel');
   panel.setAttribute('popover','auto');details.append(summary,panel);

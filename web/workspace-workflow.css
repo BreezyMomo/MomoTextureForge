@@ -18,7 +18,9 @@
 .node-edit-actions{border-top:1px solid var(--ui-line-soft,var(--ui-line));padding-top:6px}
 .node-edit-actions .tree-node-count{margin-left:auto}
 .node-action-toolbar button,.tree-editor .selection-tools>button{min-height:28px}
-.tree-editor .selection-tools{gap:4px}
+.tree-editor .selection-tools{align-items:center;gap:8px}
+.tree-editor .selection-tools>button{display:inline-flex;align-items:center;justify-content:center;min-height:28px;max-width:100%;padding:4px 10px;line-height:1.5}
+.tree-editor .selection-tools>.tree-note{flex:0 0 100%;min-width:0;margin:0;line-height:1.6;overflow-wrap:anywhere}
 .tree-editor .canvas-tools{border-right:0;padding-right:0;gap:7px}
 .tree-editor .canvas-views .canvas-dropdown>summary{background:transparent;border-color:transparent;color:var(--ui-muted)}
 .tree-editor .canvas-views .canvas-dropdown[open]>summary,.tree-editor .canvas-views .canvas-dropdown>summary:hover{background:var(--ui-hover);color:var(--ui-text)}
@@ -174,7 +176,7 @@
 .tree-editor #node-tree .tree-node-animation{display:inline-flex;align-items:center;justify-content:center;align-self:center;flex:none;width:18px;height:18px;background:transparent;color:var(--ui-motion)}
 .tree-editor #node-tree .tree-node-animation svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;pointer-events:none}
 .tree-editor #node-tree .tree-node-animation svg path{fill:currentColor;stroke:none}
-.tree-editor #node-tree .tree-root-drop{min-height:36px;margin:12px 0 0;padding:8px;border:1px dashed transparent;border-radius:var(--ui-control-radius);background:transparent;color:var(--ui-subtle)}
+.tree-editor #node-tree .tree-root-drop{display:flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:36px;margin:12px 0 0;padding:8px;border:1px dashed transparent;border-radius:var(--ui-control-radius);background:transparent;color:var(--ui-subtle)}
 .tree-editor #node-tree.node-sort-active .tree-root-drop{border-color:var(--ui-line-strong);color:var(--ui-muted)}
 .tree-editor #node-tree .tree-root-drop.active{border-color:var(--ui-selection);background:var(--ui-selection-surface);color:var(--ui-text)}
 .tree-editor #node-tree+.selection-tools{margin-top:12px;gap:8px}
