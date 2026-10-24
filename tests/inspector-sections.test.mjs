@@ -6,7 +6,7 @@ test('section expansion persists by semantic ID with independent graphic paramet
  const storage=memory(),state=inspectorSectionState(storage);assert.equal(state.open('editor.nodeRegion',true),true);assert.equal(state.open('editor.advancedTimeControls',false),false);
  state.remember('editor.nodeRegion',false);state.remember('modules.shapeParameters:Circle',false);state.remember('modules.shapeParameters:Star',true);
  const restored=inspectorSectionState(storage);assert.equal(restored.open('editor.nodeRegion',true),false);assert.equal(restored.open('modules.shapeParameters:Circle',true),false);assert.equal(restored.open('modules.shapeParameters:Star',false),true);
- state.help.add('editor.nodeRegion');assert.equal(inspectorSectionState(storage).help.size,0);assert.deepEqual(Object.keys(JSON.parse(storage.getItem(INSPECTOR_SECTIONS_KEY))).sort(),['editor.nodeRegion','modules.shapeParameters:Circle','modules.shapeParameters:Star']);
+ assert.deepEqual(Object.keys(JSON.parse(storage.getItem(INSPECTOR_SECTIONS_KEY))).sort(),['editor.nodeRegion','modules.shapeParameters:Circle','modules.shapeParameters:Star']);
 });
 test('invalid section preferences and unavailable storage leave the inspector usable',()=>{
  const storage=memory();for(const text of ['null','[]','broken']){storage.setItem(INSPECTOR_SECTIONS_KEY,text);assert.equal(inspectorSectionState(storage).open('editor.nodeRegion',true),true);}

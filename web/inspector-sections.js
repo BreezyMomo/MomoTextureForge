@@ -1,5 +1,6 @@
 import {editorIcon} from './editor-icons.js';
 import {uiText,uiFormat} from './ui-language.js';
+import {hoverHelp} from './hover-help.js';
 import {SHORTCUT_MODULES,shortcutControls} from './node-shortcuts.js';
 import {animateUI,animateLayout,layoutRects,createReorderPreview,dragAutoScroll} from './editor-motion.js';
 
@@ -8,13 +9,12 @@ export const INSPECTOR_ORDER_KEY='momo-texture-tree:inspector-module-order:v1';
 export function inspectorSectionState(storage){
  let expanded={};try{const saved=JSON.parse(storage?.getItem(INSPECTOR_SECTIONS_KEY)||'{}');if(saved&&typeof saved==='object'&&!Array.isArray(saved))expanded=Object.fromEntries(Object.entries(saved).filter(([key,value])=>key.length<200&&typeof value==='boolean'));}catch{}
  let orders={};try{const saved=JSON.parse(storage?.getItem(INSPECTOR_ORDER_KEY)||'{}');for(const tab of ['shape','layout','animation','composite'])if(Array.isArray(saved?.[tab]))orders[tab]=[...new Set(saved[tab].filter(key=>typeof key==='string'&&key.length<200))];}catch{}
- const help=new Set();return {
+ return {
   open:(id,fallback)=>Object.hasOwn(expanded,id)?expanded[id]:fallback,
   remember(id,open){expanded[id]=open;try{storage?.setItem(INSPECTOR_SECTIONS_KEY,JSON.stringify(expanded));}catch{}},
   order(tab,keys){const saved=orders[tab]??[];return [...saved.filter(key=>keys.includes(key)),...keys.filter(key=>!saved.includes(key))];},
   rememberOrder(tab,keys){const remaining=[...keys],visible=new Set(keys);orders[tab]=(orders[tab]??[]).map(key=>visible.has(key)?remaining.shift():key).concat(remaining);try{storage?.setItem(INSPECTOR_ORDER_KEY,JSON.stringify(orders));}catch{}},
-  resetOrder(tab){delete orders[tab];try{storage?.setItem(INSPECTOR_ORDER_KEY,JSON.stringify(orders));}catch{}},
-  help
+  resetOrder(tab){delete orders[tab];try{storage?.setItem(INSPECTOR_ORDER_KEY,JSON.stringify(orders));}catch{}}
  };
 }
 const descriptions={
@@ -44,14 +44,13 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false,sh
   }
   for(const heading of body.querySelectorAll(':scope>h3[data-inspector-section]'))if(heading.dataset.inspectorSection===key)heading.remove();
   const help=make('span','tree-note inspector-module-description'),heading=make('span','inspector-module-heading'),button=make('button','inspector-module-help'),arrow=make('span','inspector-module-arrow');arrow.setAttribute('aria-hidden','true');
-  const notes=[...body.querySelectorAll(':scope>p[data-inspector-help]')];if(notes.length){help.textContent=notes.map(note=>note.textContent).join('\n');notes.forEach(note=>note.remove());}else help.textContent=uiText(descriptions[key]??'modules.sectionHelp');help.hidden=!state.help.has(id);button.type='button';button.append(editorIcon('help',doc));button.title=uiFormat('modules.helpTitle',title);button.setAttribute('aria-label',button.title);button.setAttribute('aria-expanded',String(!help.hidden));
+  const notes=[...body.querySelectorAll(':scope>p[data-inspector-help]')];if(notes.length){help.textContent=notes.map(note=>note.textContent).join('\n');notes.forEach(note=>note.remove());}else help.textContent=uiText(descriptions[key]??'modules.sectionHelp');help.hidden=true;button.type='button';button.append(editorIcon('help',doc));button.setAttribute('aria-label',uiFormat('modules.helpTitle',title));hoverHelp(button,help.textContent);
   heading.append(label,button);if(shortcuts&&SHORTCUT_MODULES.includes(key))heading.append(shortcutControls(doc,{key,pinned:shortcuts.keys.includes(key),onToggle:shortcuts.toggle,global:shortcuts.global(key),onToggleAll:shortcuts.toggleAll}));heading.append(arrow);summary.replaceChildren(heading,help);summary.setAttribute('aria-label',title);details.append(body);details.open=state.open(id,defaultOpen);summary.setAttribute('aria-expanded',String(details.open));
   body.inert=!details.open;
   const remember=()=>{state.remember(id,details.open);summary.setAttribute('aria-expanded',String(details.open));body.inert=!details.open;};
   const previous=details.ontoggle;details.ontoggle=()=>{if(details.isConnected){summary.setAttribute('aria-expanded',String(details.open));body.inert=!details.open;previous?.();}};
   summary.onkeydown=event=>{if(event.key===' '||event.key==='Enter')event.stopPropagation();};
   summary.onclick=event=>{event.preventDefault();if(event.target.closest('.inspector-module-description'))return;details.open=!details.open;remember();};
-  button.onclick=event=>{event.preventDefault();event.stopPropagation();help.hidden=!help.hidden;help.hidden?state.help.delete(id):state.help.add(id);button.setAttribute('aria-expanded',String(!help.hidden));};
   // The nested disclosure bodies were built before this wrapper was added.
   for(const nested of body.querySelectorAll('details[data-inspector-section]'))if(!nested.classList.contains('inspector-module'))decorate(nested,nested.dataset.inspectorSection,nested.firstElementChild.textContent,nested.open);
   return details;

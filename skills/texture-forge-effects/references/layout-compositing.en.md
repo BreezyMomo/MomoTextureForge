@@ -111,6 +111,8 @@ The first span stays in `params[0…7]` for ribbon shape or `arrange[40…47]` f
 
 ## Compositing, color and masks
 
+Hover over or focus the **?** beside a module title for floating help without expanding parameters or shifting the layout. Move into the tip to keep reading; move away or press **Esc** to dismiss it. Touch users can tap to show or hide help.
+
 Shape contains Opacity (0–1, multiplied through parents, with keys) and Node colors. Color source is a dropdown for inherited/custom palettes; groups can preserve child colors or remap together. Visit the inheritance source or copy its evaluated palette independently. Levels, Invert and Channel curves are in Shape. Composite contains blends, masks, contours and post-processing.
 
 Solid fill preserves color while edges affect alpha. Value gradients map pattern intensity, not horizontal location. Two-to-eight stops have positions 0–1, palettes and reset to endpoints. Use a gradient graphic for spatial coloring.

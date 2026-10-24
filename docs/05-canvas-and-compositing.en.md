@@ -38,9 +38,9 @@ The inspector has four tabs: **Shape**, **Transform / Layout**, **Animation**, a
 
 ![Collapsible graphic parameter modules](images/en/inspector-modules.png)
 
-> Callouts: 1 Graphic-specific parameters share one module; 2 Click the question mark for help; 3 Click the header to expand or collapse UV; 4 Drag the handle to reorder modules.
+> Callouts: 1 Graphic-specific parameters share one module; 2 Hover over the question mark for help; 3 Click the header to expand or collapse UV; 4 Drag the handle to reorder modules.
 
-Click a module header to expand or collapse it, or **?** to show or hide help. These controls are independent: help does not expand parameters, and help remains available while parameters are collapsed. Collapsing changes only panel visibility; parameters and animation remain active. Common modules retain expansion across nodes; graphic-specific parameter modules remember each graphic type separately. Preferences stay in this browser across language changes and reloads, outside project files and undo history.
+Click a module header to expand or collapse it. Hover over **?** to show a floating explanation without shifting parameters. Move into the explanation to keep reading or select text; move away to dismiss it. Keyboard focus also shows help, **Esc** dismisses it, and touch users can tap the question mark to show or hide it. Help does not expand parameters and remains available while parameters are collapsed. Collapsing changes only panel visibility; parameters and animation remain active. Common modules retain expansion across nodes; graphic-specific parameter modules remember each graphic type separately. Preferences stay in this browser across language changes and reloads, outside project files and undo history.
 
 ![Separate region and arrangement modules](images/en/inspector-layout-modules.png)
 
