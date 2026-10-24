@@ -43,6 +43,7 @@ The catalog contains resource names, categories, parameters and capabilities. It
 - For authoring JSON, use **Create resource → Import files**, select or paste and parse it, inspect the preview, and import.
 - Generator JSON can also be entered directly in **Create resource → Generator** to validate code, steps and parameters.
 - Use the Image tab for bitmap/SVG background, aspect and contour checks.
+- For a complete project ZIP, use **File → Open project**. Nodes, groups, masks, effect order, tracks and dependencies remain editable. Save the project to return revisions to AI.
 
 Successful compilation does not establish visual correctness. Inspect defaults, parameter extremes and multiple times before saving. A retained last-successful frame does not mean the new code compiled.
 
@@ -51,3 +52,5 @@ Successful compilation does not establish visual correctness. Inspect defaults, 
 Open GitHub from Help and describe the steps, expected versus actual results and browser information, with relevant screenshots. Attach a minimal project or resource pack when possible. Check the files for material you do not intend to publish before submitting.
 
 CLI validation and output examples: [AI authoring CLI](../AI_AUTHORING_CLI.en.md).
+
+The Authoring Skill bundles offline node-authoring tools. After initial runtime setup, AI can query the actual catalog, create or revise native projects and render multiple verification times without opening the website. See the [offline project workflow](../skills/texture-forge-author/references/offline-projects.en.md).

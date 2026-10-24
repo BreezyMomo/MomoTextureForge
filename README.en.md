@@ -103,6 +103,8 @@ See [development documentation](docs/development.en.md) for tests, Skill regener
 
 The **Help** menu offers two downloadable Skills. The Authoring Skill helps create importable resources; the Effects Skill explains editor workflows. To let an AI recommend graphics, provide the current resources and parameter ranges with **Graphics library → Export AI graphics catalog**.
 
+The Authoring Skill also bundles offline project tools. AI can build node trees, groups, masks, arrangement, effects and animation without opening the website, then deliver a native ZIP with all dependencies. Users continue editing through **File → Open project** and can return saved revisions to AI. See the [offline project workflow](skills/texture-forge-author/references/offline-projects.en.md).
+
 [Workflow](docs/10-ai-and-help.en.md) · [CLI authoring and validation](AI_AUTHORING_CLI.en.md) · [Generator format](skills/texture-forge-author/references/generator-guide.en.md)
 
 ## Technical references and feedback

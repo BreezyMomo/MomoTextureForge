@@ -1,0 +1,17 @@
+{
+  "schema": "momo.project-authoring/v1",
+  "name": "Editable energy badge",
+  "canvas": {"ratio": 1},
+  "output": {"seconds": 2, "exportSeconds": 2, "width": 512, "height": 512},
+  "resources": [
+    {"id": "glow", "file": "example.generator.json"},
+    {"id": "bolt", "file": "example-bolt.svg"}
+  ],
+  "operations": [
+    {"op": "add-node", "id": "badge", "kind": "group", "name": "Energy badge"},
+    {"op": "add-node", "id": "ring", "parent": "badge", "graphic": "glow", "name": "Animated light ring", "parameters": {"radius": 0.65, "softness": 0.025}, "values": {"color": {"mode": "preserve"}}},
+    {"op": "set-track", "node": "ring", "parameter": "radius", "track": {"keys": [[0, 0.6], [0.5, 0.75], [1, 0.6]], "ease": "smooth"}},
+    {"op": "add-node", "id": "lightning", "parent": "badge", "graphic": "bolt", "name": "Editable vector lightning", "values": {"transform": {"width": 0.3, "height": 0.5}, "color": {"mode": "preserve"}}},
+    {"op": "set-effect", "node": "badge", "effect": "bloom", "parameters": {"strength": 0.45, "radius": 12, "threshold": 0.5}}
+  ]
+}

@@ -23,6 +23,8 @@
 
 创建使用 `MomoTextureForge/HanddrawnFill` 的材质，把遮罩赋给 `_MaskTex`。按JSON设置下列属性；颜色选择器和 `Material.SetColor` 都使用 `parameters` 中的sRGB颜色。这两个属性在ShaderLab中声明为 `Color`，Unity在线性项目中会自动转换，勿再传入 `.linear`。JSON的 `colors.inkLinear` / `paperLinear` 供直接调用HLSL核心或设置普通向量uniform时使用；参考Shader会在Gamma项目中显式转换。参见 [Unity材质颜色属性约定](https://docs.unity3d.com/6000.0/Documentation/Manual/SL-PropertiesInPrograms.html)。
 
+可选：把包内 `MomoHanddrawnImporter.cs` 放进目标项目的Editor目录，将其他文件解压到独立Assets子目录。通过 **Assets → Momo Texture Forge → Import handdrawn reference** 选择parameters.json，或在授权的编辑器脚本中调用其 `Import` 方法。它设置线性红通道遮罩并创建新材质，保留当前参数、设计尺寸和显式参考时间；不覆盖旧材质，不配置粒子/UI/动画系统。项目必须已有激活的URP资源。
+
 参数对应：`style→_Style`、`gap→_Gap`、`width→_Width`、`angle→_Angle`、`roughness→_Roughness`、`seed→_Seed`、`dashLength→_DashLength`、`dashGap→_DashGap`、`inkOpacity→_InkOpacity`、`paperOpacity→_PaperOpacity`、`inkColor→_InkColor`、`paperColor→_PaperColor`。`scrollX/Y→_Scroll.xy`，`designSize→_DesignSize.xy`。
 
 样式索引固定为0纯色、1平行、2交叉、3圆点、4虚线、5锯齿。间距/笔宽/虚线长度使用设计像素：遮罩短边固定对应512，长边按比例增加；改变显示大小不会改变同一UV内的纹理次数。圆点模式的width是半径，其余模式是笔宽。正角度使排线从左下向右上倾斜。正scroll沿参数坐标推进纹理采样，因此图案在屏幕上向相反方向移动。随机种子不随帧变化。

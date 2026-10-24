@@ -20,7 +20,7 @@
 
 多公式交付优先提供独立JSON；附加普通合集ZIP时，下载链接和导入说明都要标注“先解压”。需要可直接导入的ZIP时，使用编辑器图形库“导出资源”，或在具备源码环境时调用其正式资源打包/图形库导出API，并用“导入文件”复验条目数量、预览与保存。不要手工拼清单、资源ID或哈希，也不要把仅有JSON的压缩包改名冒充资源ZIP。无法使用正式导出能力时，保留独立JSON交付，不承诺直接ZIP导入。
 
-出现“缺少资源文件：manifest.json”时，先核对交付包类型：普通合集应解压后选择JSON；正式资源包应重新通过导出流程生成并复验。不能补一个空manifest.json，也不能用单个JSON的validate/render成功冒充整个ZIP导入成功。随附CLI支持公式和生成器JSON的validate/render/check，不提供资源包导出命令。下载的AI Skill ZIP用于加载技能，也不是图形资源包。
+出现“缺少资源文件：manifest.json”时，先核对交付包类型：普通合集应解压后选择JSON；正式资源包应重新通过导出流程生成并复验。不能补一个空manifest.json，也不能用单个JSON的validate/render成功冒充整个ZIP导入成功。随附CLI支持公式和生成器JSON的validate/render/check；完整可编辑作品用project create/edit/pack正式打包，并通过编辑器“文件→打开项目”验证。下载的AI Skill ZIP用于加载技能，也不是图形资源包。
 
 字段：name（默认名称，1～80字）、顶层aliases（可选的图形名称多语言映射，例如 {"zh-CN":"冰霜护盾","en":"Frost Shield"}，每个名称最多80字，随资源保存；未配置时显示默认name）、category（默认我的图形）、description（最多2000字）；formula={kind:expression或body,source:GLSL源码}；parameters数组（最多16项），每项variable、aliases、min、max、step、default；aliases为可选的语言标签到别名的映射，例如 {"zh-CN":"半径","en":"Radius"}，可以省略或为空；旧label作为中文别名读取。下拉参数可用type:select及options，每个选项保留value，可设置variable和aliases；无匹配别名时显示变量名；helpers为可选全局GLSL辅助函数文本。所有参数绑定float，整数用途在公式里显式转换；variable必填，使用字母或下划线开头、后续为字母数字下划线的不保留ASCII标识符（最多80字符，排除gl_前缀及双下划线），互不重复，不与函数重名。范围必须min<max，step>0，默认值在范围内。
 

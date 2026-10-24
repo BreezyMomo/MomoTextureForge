@@ -101,6 +101,8 @@ npm run build:pages       # 同步生成可部署的 site/index.html
 
 **帮助**菜单提供两个可下载的 Skill：创作 Skill 辅助制作可导入资源，效果指导 Skill 讲解如何在编辑器中完成效果。需要 AI 推荐图形时，从 **图形库 → 导出 AI 图形目录**提供当前可用资源与参数。
 
+创作 Skill 还包含离线项目工具。AI无需打开网站即可搭建节点树、组合、遮罩、排列、后处理与动画，并打包全部依赖交付原生项目ZIP；用户通过 **文件 → 打开项目**继续编辑，保存后也能交回AI继续修改。详见[离线项目流程](skills/texture-forge-author/references/offline-projects.md)。
+
 [操作教程](docs/10-ai-and-help.md) · [命令行创作与验证](AI_AUTHORING_CLI.md) · [生成器格式](skills/texture-forge-author/references/generator-guide.md)
 
 ## 深入资料与反馈

@@ -1,4 +1,5 @@
 import {TreeRenderer} from './tree-renderer.js';
+import './project-render.js';
 import {node,project} from './tree-model.js';
 import {assetFromCreationAuthoring} from './creation-authoring.js';
 import {registerAsset,unregisterAsset} from './resource-assets.js';

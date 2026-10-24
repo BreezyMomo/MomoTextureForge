@@ -20,7 +20,7 @@ Deliver a UTF-8 JSON with `schema: momo.graphic-authoring/v1`. Select/paste it i
 
 Prefer independent JSON for multiple formulas. Label ordinary bundles “extract first” in links/instructions. For direct ZIP import use official resource/graphics-library export APIs and verify item counts, previews and saving through Import files. Never hand-build identity/hash manifests or disguise a JSON-only ZIP. Without official export capability, deliver JSON and do not promise direct ZIP import.
 
-For missing `manifest.json`, inspect the archive type. Extract ordinary collections or regenerate official packs. Do not add empty manifests or equate individual JSON validate/render success with ZIP-import success. The CLI validates/renders/checks formulas/generators; it does not export resource packs. Skill ZIPs are not graphic resources.
+For missing `manifest.json`, inspect the archive type. Extract ordinary collections or regenerate official packs. Do not add empty manifests or equate individual JSON validate/render success with ZIP-import success. The CLI validates/renders/checks formulas/generators; complete editable works use project create/edit/pack with the canonical packer and File → Open project. Skill ZIPs are not graphic resources.
 
 Fields:
 

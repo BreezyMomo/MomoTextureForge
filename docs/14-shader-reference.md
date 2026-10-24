@@ -31,3 +31,13 @@
 `handdrawn-fill.hlsl` 是核心函数，`HanddrawnFillURP.shader` 是Unity 6 / URP 17参考封装；内部GLSL参考图使用同源核心数学。**浏览器参考图通过不代表目标引擎已编译通过**，JSON记录 `engineCompilation: not-run`。Skill指导AI读取实际源码、参数和目标环境，完成引擎适配；制作配套纹理仍用现有创作流程。
 
 下载不会修改项目、节点和撤销记录。此包不是图库资源ZIP，请勿导入图形库。
+
+## 从完整作品交给 AI 实现
+
+先用 **文件 → 保存项目** 下载作品ZIP，将它与最新创作Skill交给AI，说明目标为Unity URP、使用位置和性能要求。无需重新截图或逐个抄参数。项目文件包含节点、关键帧、实际图形公式及图片依赖；原有“AI图形目录”仍只用于了解图库。
+
+创作Skill现在提供 `project inspect/render/check/handoff/shader` 工具。AI可以读取完整作品结构与参数身份，按秒渲染参考帧，提取指定节点或某个效果之前的输入内容，再用公式/生成器工具制作新的辅助纹理。`handoff` 保存源作品副本、效果说明JSON、多个时间点的图片、联系表与接入任务说明；没有自动把全部效果转换为Shader。命令与数据约定见[AI命令行渲染](../AI_AUTHORING_CLI.md)。
+
+首个接入流程沿用手绘填充参考：AI读取实际节点ID，使用 `project shader` 导出当前参数、遮罩、源码和对比图。将参考包解压到目标项目的独立Assets目录，把随包的 `MomoHanddrawnImporter.cs` 放到Editor目录，可通过 **Assets → Momo Texture Forge → Import handdrawn reference** 选择parameters.json并创建新材质。脚本自动设置遮罩的线性红通道、Clamp、无压缩及参考时间，不覆盖旧材质；需要目标项目已启用URP。
+
+作品说明保留原始动画数据供AI实现；手绘参考遮罩仍是当前帧快照。描边、复杂组合、粒子/UI接入与动画驱动须根据实际项目处理。导出报告与Unity编译/视觉验收分别记录，不把贴图预览成功当作游戏中已复现。

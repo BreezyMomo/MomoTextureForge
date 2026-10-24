@@ -25,6 +25,8 @@ Create a material using `MomoTextureForge/HanddrawnFill` and assign `_MaskTex`. 
 
 Mappings: `style→_Style`, `gap→_Gap`, `width→_Width`, `angle→_Angle`, `roughness→_Roughness`, `seed→_Seed`, `dashLength→_DashLength`, `dashGap→_DashGap`, `inkOpacity→_InkOpacity`, `paperOpacity→_PaperOpacity`, `inkColor→_InkColor`, `paperColor→_PaperColor`. Map `scrollX/Y→_Scroll.xy` and `designSize→_DesignSize.xy`.
 
+Optional: put the supplied MomoHanddrawnImporter.cs in an Editor folder and extract the other files into a dedicated Assets subfolder. Use **Assets → Momo Texture Forge → Import handdrawn reference** to select parameters.json, or call its Import method from an authorized editor script. It configures the linear red-channel mask and creates a new material with current parameters, design size and explicit reference time. It does not overwrite materials or configure particles/UI/animation. An active URP asset is required.
+
 Stable style indices: 0 solid, 1 hachure, 2 cross-hatch, 3 dots, 4 dashed, 5 zigzag. Gap, width and dash sizes use design pixels: the mask's short side corresponds to 512, with proportional long-side size. Display scaling does not change pattern count within the same UVs. Width is the dot radius in dots mode and stroke width otherwise. Positive angles tilt strokes from bottom-left toward top-right. Positive scroll advances sampling coordinates, moving the visible pattern in the opposite direction. Seeds remain stable across frames.
 
 The wrapper uses engine time by default. For exact-time visual comparisons, enable `_UseCustomTime` and set `_TimeSeconds=previewTimeSeconds`. This is not an animation-controller system; drive ordinary material properties as needed in the target project.
