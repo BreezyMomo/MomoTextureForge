@@ -43,7 +43,7 @@ import {createMaterialPreview} from './material-preview.js';
 import {FX_SPECS,fxDefaults} from './post-fx.js';
 import {openUserHelp} from './user-help.js';
 import {openSupportDialog} from './support-dialog.js';
-import {downloadSkill} from './skill-downloads.js';
+import {installAITools} from './ai-tools.js';
 import {exportSketchShaderReference} from './shader-effect-export.js';
 import {runExportWorker} from './export-job.js';
 import {signalExportComplete} from './export-events.js';
@@ -597,8 +597,9 @@ const graphicsLibrary=createGraphicsLibrary({notify,onInsert:async(root,meta)=>{
  if(!edit(()=>state.projectResources.push(...entries)))throw messageError('library.batchSaveFailed');
  await resourcePersist;
 },onLoad:async(root,meta,update=false)=>{returnWork();const matches=state.projectResources.filter(r=>r.resourceId===meta.resourceId);if(matches.some(r=>r.versionId===meta.versionId))return;const old=update?matches.filter(r=>r.versionId<meta.versionId).sort((a,b)=>b.versionId-a.versionId)[0]:null;const entry=createProjectResource(root,meta);if(old){entry.id=old.id;entry.root.resourceRef=old.id;previewSessions.delete('preset:'+old.id);}edit(()=>{if(old)state.projectResources=state.projectResources.map(r=>r.id===old.id?entry:r);else state.projectResources.push(entry);});await resourcePersist;library();},onPublished:async(root,meta,update)=>{if(!update||!root.resourceRef)return;const owner=projectOwner();owner.projectResources=owner.projectResources.map(r=>r.id===root.resourceRef?resourceWithShortcuts(root,publishedProjectResource(r,meta,root)):r);persistSharedResources();localStorage.setItem(storageKey,serializeLocalProject(canvasProject(owner)));library();},onComposition:meta=>{const p=state.projectResources.find(r=>r.resourceId===meta.resourceId&&r.versionId===meta.versionId);if(p)browse({id:'preset:'+p.id,name:graphicLabel(p),kind:'preset',preset:p});}});
-$('download-author-skill').onclick=()=>downloadSkill('author');
-$('download-effects-skill').onclick=()=>downloadSkill('effects');
+const oldSkillButton=$('download-author-skill');if(oldSkillButton.previousElementSibling?.tagName==='HR')oldSkillButton.previousElementSibling.remove();oldSkillButton.remove();$('download-effects-skill').remove();
+const aiToolsButton=el('button',{id:'ai-tools',type:'button'});$('support-project').before(aiToolsButton);
+installAITools({button:aiToolsButton,getProject:()=>{if(componentPreview)throw messageError('editorBridge.returnToCanvas');return canvasProject(state);},onCatalog:()=>graphicsLibrary.open({aiCatalog:true})});
 let shaderExportBusy=false;
 document.addEventListener('momo-download-shader-reference',async event=>{
  if(shaderExportBusy||!find(state.root,event.detail?.nodeId))return;shaderExportBusy=true;

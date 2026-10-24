@@ -14,7 +14,7 @@ export async function buildAuthoringKit(){
  const shaderReferences=await buildShaderReferences();
  await buildEffectsKit(registry);
  const plugin={name:'embedded-definitions',setup(b){b.onLoad({filter:/definition-runtime\.js$/},()=>({contents:`export const BUILTIN=${JSON.stringify(registry)};export const formulaText=spec=>spec.inline??BUILTIN.sources[spec.file];`,loader:'js'}));}};
- const bundle=async(file,platform)=>{const r=await build({absWorkingDir:root,entryPoints:[file],bundle:true,write:false,format:'esm',platform,target:'es2022',minify:true,external:platform==='node'?['playwright']:[],plugins:[plugin]});return r.outputFiles[0].text;};
+ const bundle=async(file,platform)=>{const r=await build({absWorkingDir:root,entryPoints:[file],bundle:true,write:false,format:'esm',platform,target:'es2022',minify:true,external:platform==='node'?['playwright','@modelcontextprotocol/sdk','zod']:[],plugins:[plugin]});return r.outputFiles[0].text;};
  const pkg=JSON.parse(await readFile(resolve(root,'package.json'),'utf8'));
  const runtime={
   'scripts/texforge.mjs':await bundle('portable-authoring-cli.mjs','node'),
@@ -23,8 +23,8 @@ export async function buildAuthoringKit(){
   'scripts/web/project-render.html':await readFile(resolve(root,'web/project-render.html'),'utf8'),
   'references/project-tools.md':await readFile(resolve(root,'skills/texture-forge-author/references/project-tools.md'),'utf8'),
   'references/project-tools.en.md':await readFile(resolve(root,'skills/texture-forge-author/references/project-tools.en.md'),'utf8'),
-  ...Object.fromEntries(await Promise.all(['offline-projects.md','offline-projects.en.md','example.project.json','example-bolt.svg'].map(async name=>['references/'+name,await readFile(resolve(root,'skills/texture-forge-author/references',name),'utf8')]))),
-  'package.json':JSON.stringify({name:'texture-forge-author',private:true,type:'module',engines:{node:'>=22'},dependencies:{playwright:pkg.devDependencies.playwright.replace(/^[~^]/,'')}},null,2),
+  ...Object.fromEntries(await Promise.all(['installation.md','installation.en.md','live-editor.md','live-editor.en.md','offline-projects.md','offline-projects.en.md','example.project.json','example-bolt.svg'].map(async name=>['references/'+name,await readFile(resolve(root,'skills/texture-forge-author/references',name),'utf8')]))),
+  'package.json':JSON.stringify({name:'texture-forge-author',private:true,type:'module',engines:{node:'>=22'},dependencies:Object.fromEntries(['playwright','@modelcontextprotocol/sdk','zod'].map(name=>[name,pkg.devDependencies[name].replace(/^[~^]/,'')]))},null,2),
   'references/generator-guide.md':await readFile(resolve(root,'skills/texture-forge-author/references/generator-guide.md'),'utf8'),
   'references/example.generator.json':JSON.stringify(GENERATOR_EXAMPLE,null,2)+'\n',
   'references/shader-reference.md':await readFile(resolve(root,'skills/texture-forge-author/references/shader-reference.md'),'utf8'),

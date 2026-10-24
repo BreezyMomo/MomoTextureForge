@@ -81,6 +81,6 @@ const instructions="Momo Texture Forge 离线版\r\n\r\n双击 MomoTextureForge.
 await writeFile(join(output,name),html);
 await writeFile(join(output,"使用说明.txt"),instructions);
 await writeFile(join(output,"MomoTextureForge-offline.zip"),encodeZIP([{name,data:new TextEncoder().encode(html)},{name:"使用说明.txt",data:new TextEncoder().encode(instructions)},{name:'PSD-LICENSES.txt',data:new TextEncoder().encode(psdLicenses)}]));
-const report={schema:"momo-texture-standalone-build/v1",patterns:registry.catalog.length,configurationFiles:registry.configFiles.length,sourceFiles:Object.keys(registry.sources).length,bytes:Buffer.byteLength(html),sha256:createHash("sha256").update(html).digest("hex"),externalImports:0,network:"HTTP(S) remote subscriptions only; offline without subscriptions",views:["editor","examples","validate"]};
+const report={schema:"momo-texture-standalone-build/v1",patterns:registry.catalog.length,configurationFiles:registry.configFiles.length,sourceFiles:Object.keys(registry.sources).length,bytes:Buffer.byteLength(html),sha256:createHash("sha256").update(html).digest("hex"),externalImports:0,network:"HTTP(S) subscriptions and opt-in localhost MCP; offline without either",views:["editor","examples","validate"]};
 await writeFile(join(output,"build-report.json"),JSON.stringify(report,null,2));
 console.log(JSON.stringify({...report,file:join(output,name)},null,2));

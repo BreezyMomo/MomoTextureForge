@@ -63,7 +63,7 @@ export const annotations={
  'export-vector':[field(label('editor.exportFormat'),'选择矢量轮廓格式'),css('#confirm-export','导出前检查轮廓设置')],
  'remote-libraries':[field(label('subscription.newLibraryName'),'填写订阅名称'),field(label('subscription.remoteCatalogURL'),'填写 index.json 地址'),role('button',label('subscription.addSubscription'),'添加图库订阅')],
  'ai-catalog':[field(label('library.exportScope'),'选择目录范围'),role('button',label('library.generateCatalog'),'生成可提供给 AI 的目录'),field(label('library.aiGraphicsCatalogJSON'),'复制目录内容')],
- 'help-menu':[css('#tool-help','内置使用说明'),css('#detailed-help','README 与图文教程'),css('#download-author-skill','下载创作 Skill'),css('#gitee-repository','国内仓库与文档'),css('#support-project','微信扫码赞赏')].map(spec=>({...spec,...(spec.selector==='#support-project'?{numberOnly:true,corner:true}:{side:'left'})})),
+ 'help-menu':[css('#tool-help','内置使用说明'),css('#detailed-help','README 与图文教程'),css('#ai-tools','AI 工具与 Skill 安装'),css('#gitee-repository','国内仓库与文档'),css('#support-project','微信扫码赞赏')].map(spec=>({...spec,...(spec.selector==='#support-project'?{numberOnly:true,corner:true}:{side:'left'})})),
  'library-manager':[css('.toolbar .file-button','导入已有资源'),role('button',inLanguage('编辑信息','Edit metadata'),'编辑资源目录信息')],
  'library-manager-edit':[css('#edit-dialog input','修改资源名称'),role('button',inLanguage('保存信息','Save metadata'),'保存目录信息')],
  'vfx-presets':[field(label('ui.exampleCategory'),'选择素材预设分类'),role('link',label('ui.editOnCanvas'),'在画布中编辑素材预设')],

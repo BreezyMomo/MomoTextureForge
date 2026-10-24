@@ -101,11 +101,15 @@ See [development documentation](docs/development.en.md) for tests, Skill regener
 
 ## Working with AI
 
-The **Help** menu offers two downloadable Skills. The Authoring Skill helps create importable resources; the Effects Skill explains editor workflows. To let an AI recommend graphics, provide the current resources and parameter ranges with **Graphics library → Export AI graphics catalog**.
+The toolbar's **AI tools** panel brings together the Authoring/Effects Skills, MCP connection and project handoff. Select an agent and Skills, then **Choose directory and install…** to select and authorize a location. The panel recommends the agent's directory and completes its Skill path. ZIP downloads are available next to each Skill. See [Skill installation](skills/texture-forge-author/references/installation.en.md). Export the current library catalog here when asking AI to recommend graphics.
 
 The Authoring Skill also bundles offline project tools. AI can build node trees, groups, masks, arrangement, effects and animation without opening the website, then deliver a native ZIP with all dependencies. Users continue editing through **File → Open project** and can return saved revisions to AI. See the [offline project workflow](skills/texture-forge-author/references/offline-projects.en.md).
 
+Alternatively, configure the Skill's local MCP and use the existing read-only connection through **AI tools → MCP → Connection settings**. Shared access without per-agent pairing will be revised in a later step. AI reads the main canvas, dependency sources/images and renders versioned reference frames. See [Live editor and MCP connection](skills/texture-forge-author/references/live-editor.en.md).
+
 [Workflow](docs/10-ai-and-help.en.md) · [CLI authoring and validation](AI_AUTHORING_CLI.en.md) · [Generator format](skills/texture-forge-author/references/generator-guide.en.md)
+
+Before continuing AI tools development, read the [development handoff](docs/ai-handoff.en.md) for current capabilities, confirmed interactions and the next MCP direction.
 
 ## Technical references and feedback
 

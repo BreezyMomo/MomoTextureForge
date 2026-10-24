@@ -15,7 +15,7 @@ This repository maintains the Momo Texture Forge browser graphics/texture editor
 - Workbench entry: `web/tree-app.js`. Built-in graphics: `web/definitions`.
 - Parameters require stable, graphic-local unique `variable` identifiers. Display aliases follow configured language fallback; otherwise show the variable. Use `role` for behavior, never translated labels. Language changes must not alter projects, keys or hashes. See [language metadata](docs/12-language-and-aliases.en.md).
 - Skill sources live in `skills/`; regenerate with `node build-authoring-kit.mjs` after changes.
-- Export AI context from the library only; do not restore selected-node context or fixed graphic catalogs.
+- Export graphic-recommendation context from the library only; do not restore selected-node context or fixed graphic catalogs. An explicitly user-paired read-only MCP may read the complete main-canvas work. Use one snapshotId for structure, resources and rendering, capture again after edits, and never automatically read other tabs or the user's entire library.
 - Install with `npm ci`. Validate using `npm test` and `npm run validate:definitions`. Build with `npm run build:standalone`.
 - Put test artifacts in ignored `test-results/` and offline output in `dist/`. `npm run build:pages` updates tracked `site/`. Do not commit dependencies/browser profiles.
 - Commit, push and publish according to user instructions.

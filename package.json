@@ -19,12 +19,14 @@
     "node": ">=22"
   },
   "devDependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
     "acorn": "^8.15.0",
     "ag-psd": "31.0.3",
     "esbuild": "0.28.2",
     "gifenc": "1.0.3",
     "omggif": "1.0.10",
     "playwright": "^1.64.1",
-    "roughjs": "4.6.6"
+    "roughjs": "4.6.6",
+    "zod": "4.6.7"
   }
 }

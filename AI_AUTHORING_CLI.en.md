@@ -15,6 +15,12 @@ On Linux, follow Playwright's instructions for missing system libraries. This br
 
 After setup, commands work offline without an open website. Complete works use the editor's node model, resource packer and WebGL renderer; users can continue editing the native project ZIP delivered by AI.
 
+## Connect directly to the current web work
+
+Local stdio MCP is available through `node portable-authoring-cli.mjs mcp`, or `node /absolute/path/scripts/texforge.mjs mcp` in the download. Let the AI client launch it, call `forge_connect`, and open the pairing panel through **AI tools → MCP → Connection settings**. AI can then capture/inspect/resource/render without manual project transfer. Snapshots, images and actual sources are saved on the MCP machine.
+
+Options: `--port`, `--output-dir`, repeatable HTTPS `--origin`. The bridge only listens on127.0.0.1, default8798, sharing the main canvas read-only. Standard output is reserved for MCP protocol messages. See [Live editor and MCP connection](skills/texture-forge-author/references/live-editor.en.md) for setup, permissions, revision pinning and tools.
+
 ## Create and revise editable projects
 
 ```sh
@@ -69,4 +75,4 @@ Time values are elapsed seconds. Nodes use seconds/cycle plus their timing; form
 
 Successful reports have ok:true; failure exits 1 and writes a failure report. Never use old images as new success. Inputs are read-only and the browser accesses only a temporary local service without uploading projects. Run node tests/project-tools-browser-check.mjs for the portable workflow. The optional actual-Unity probe is node tests/project-tools-unity-check.mjs --unity <Unity6 executable>, creating only an isolated test-results project. Browser success does not establish engine compilation or visual parity.
 
-End users should download the **Authoring Skill** from Help. Its ZIP includes `SKILL.md`, specifications, examples, `scripts/texforge.mjs` and a standalone renderer, without requiring this repository. Extract it and let the AI read the Skill entry. Install dependencies in the Skill folder, then run `node scripts/texforge.mjs render/check`. Browser binaries are installed on first setup, not bundled in the ZIP. Developers can rebuild with `node authoring-tool.mjs build-kit`; static builds regenerate the kit automatically.
+Open **AI tools → Install and configure**, select an agent and Skills, then **Choose directory and install…** to authorize your chosen location. The panel recommends paths; see [Install and update Skills](skills/texture-forge-author/references/installation.en.md). **Download ZIP** next to each Skill provides archives with SKILL.md, specifications, examples, scripts/texforge.mjs and a standalone renderer, without requiring this repository. Ask AI to read SKILL.md and set up runtime dependencies in the Skill directory, then run node scripts/texforge.mjs render/check. Browser binaries are installed during runtime setup, not bundled in the ZIP. Developers can rebuild with node authoring-tool.mjs build-kit; static builds regenerate the kit automatically.

@@ -99,11 +99,15 @@ npm run build:pages       # 同步生成可部署的 site/index.html
 
 ## 与 AI 协作
 
-**帮助**菜单提供两个可下载的 Skill：创作 Skill 辅助制作可导入资源，效果指导 Skill 讲解如何在编辑器中完成效果。需要 AI 推荐图形时，从 **图形库 → 导出 AI 图形目录**提供当前可用资源与参数。
+顶部 **AI 工具** 集中管理创作 Skill、效果指导 Skill、MCP 连接和作品交接。选择目标 Agent 与需要的 Skill，点 **选择目录并安装…** 后在系统窗口中选择位置并授权。界面提供对应Agent的推荐路径，自动补齐Skill子目录；每个Skill右侧提供ZIP下载。详见[Skill 安装说明](skills/texture-forge-author/references/installation.md)。需要 AI 推荐图形时，在这里导出图库当前可用资源与参数。
 
 创作 Skill 还包含离线项目工具。AI无需打开网站即可搭建节点树、组合、遮罩、排列、后处理与动画，并打包全部依赖交付原生项目ZIP；用户通过 **文件 → 打开项目**继续编辑，保存后也能交回AI继续修改。详见[离线项目流程](skills/texture-forge-author/references/offline-projects.md)。
 
+也可在AI客户端配置Skill附带的本地MCP，通过 **AI 工具 → MCP → 连接设置** 使用已有的只读网页交接。无需逐个AI配对的统一接入将随后调整。AI能读取当前主画布、依赖源码与图片，按版本渲染参考图；详见[网页作品与MCP连接](skills/texture-forge-author/references/live-editor.md)。
+
 [操作教程](docs/10-ai-and-help.md) · [命令行创作与验证](AI_AUTHORING_CLI.md) · [生成器格式](skills/texture-forge-author/references/generator-guide.md)
+
+后续继续 AI 工具开发，请先阅读[开发交接](docs/ai-handoff.md)，了解当前实现、用户已确认的交互和 MCP 后续方向。
 
 ## 深入资料与反馈
 

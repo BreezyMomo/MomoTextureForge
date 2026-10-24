@@ -6,8 +6,9 @@ import {runProjectTool} from './project-cli.mjs';
 import {AUTHORING_ACTIONS,runAuthoringTool} from './project-authoring-cli.mjs';
 try{
  const [command,file,...args]=process.argv.slice(2);
- if(!file)throw Error('Usage: node scripts/texforge.mjs validate|render|check <file.graphic.json>, or project <action> <project.zip> [options]');
- if(command==='project'){
+ if(command==='mcp')await (await import('./editor-mcp.mjs')).serveEditorMCP([file,...args].filter(v=>v!==undefined));
+ else if(!file)throw Error('Usage: node scripts/texforge.mjs mcp [options], validate|render|check <file.graphic.json>, or project <action> <project.zip> [options]');
+ else if(command==='project'){
   if(AUTHORING_ACTIONS.includes(file))await runAuthoringTool(file,args);
   else{const [projectFile,...options]=args;if(!projectFile)throw Error('project requires an action and saved project ZIP');await runProjectTool(file,projectFile,options);}
  }else if(command==='validate'){

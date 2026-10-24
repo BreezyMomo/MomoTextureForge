@@ -15,6 +15,12 @@ Linux 若缺系统库，可按 Playwright 的安装提示安装依赖。浏览�
 
 安装后可完全离线使用，不需要先打开网站。完整作品和编辑器共享节点模型、资源打包器及WebGL渲染器；用户可接着编辑AI交付的原生项目ZIP。
 
+## 与当前网页作品直接连接
+
+工具同时支持本地 stdio MCP：`node portable-authoring-cli.mjs mcp`，下载包入口为 `node /绝对路径/scripts/texforge.mjs mcp`。由AI客户端启动该命令，调用 `forge_connect` 生成一次性代码，用户从网页 **AI 工具 → MCP → 连接设置** 打开配对面板。此后AI直接capture/inspect/resource/render，不需用户手工传项目；快照、贴图和实际源码保存在MCP机器的输出目录。
+
+支持 `--port`、`--output-dir`、可重复的HTTPS `--origin`；连接仅监听127.0.0.1，默认8798，完整主画布只读共享。标准输出仅用于MCP协议。配置、权限、版本固定与工具参数见[网页作品与MCP连接](skills/texture-forge-author/references/live-editor.md)。
+
 ## 创建与修改可编辑项目
 
 ```sh
@@ -69,4 +75,4 @@ node portable-authoring-cli.mjs project shader effect.zip --node NODE_ID --time 
 
 成功报告 `ok:true`，失败退出1且写入失败报告，不使用旧图片冒充本次结果。所有操作只读输入，浏览器仅访问临时本机服务，不上传作品。源码工具可运行 `node tests/project-tools-browser-check.mjs` 验证完整CLI与资源依赖；可选的真实Unity探针为 `node tests/project-tools-unity-check.mjs --unity <Unity6路径>`，仅在test-results创建独立工程，不修改用户游戏项目。引擎编译和视觉验收不由浏览器成功替代。
 
-用户优先使用编辑器“下载AI创作Skill”。ZIP已包含SKILL.md、规范、示例、scripts/texforge.mjs及独立渲染页面，无需项目源码。解压后让AI读取SKILL.md；AI在Skill目录安装依赖，执行 node scripts/texforge.mjs render/check。浏览器二进制首次运行时安装，不随ZIP捆绑。开发者可运行 node authoring-tool.mjs build-kit 重建下载包；静态构建自动重建。
+用户从编辑器 **AI 工具 → 安装与配置** 选择Agent与Skill，点 **选择目录并安装…** 后自行选择位置并授权写入。页面显示推荐路径；详见[安装与更新 Skill](skills/texture-forge-author/references/installation.md)。各Skill右侧的 **下载 ZIP** 提供完整压缩包，包含SKILL.md、规范、示例、scripts/texforge.mjs及独立渲染页面，无需项目源码。让AI读取SKILL.md，在Skill目录配置运行依赖，执行 node scripts/texforge.mjs render/check。浏览器二进制在运行环境设置时安装，不随ZIP捆绑。开发者可运行 node authoring-tool.mjs build-kit 重建下载包；静态构建自动重建。

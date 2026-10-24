@@ -6,6 +6,8 @@
 
 [手册目录](README.md) · [返回项目首页](../README.md)
 
+继续 AI 工具、Skill 安装或 MCP 开发前，先读 [AI 工具开发交接](ai-handoff.md)，了解当前实现和用户已确认的产品取舍。
+
 后处理卡片的演示素材和参数在 `web/post-effect-specimens.js`，使用独立渲染器和真实 `applyPostFx`，不注册图库资源、不读取节点设置。缩略图为384×240的原图/效果对照，懒加载且只播放当前悬停/聚焦卡片，遵循减少动态偏好并在关闭时释放上下文。`node tests/post-effect-previews-browser-check.mjs`（静态版加 `--built`）检查全部31项的像素差异、运动、对照拖动、项目隔离、保留设置和窄屏；测试仅导出演示素材联系表供检查，不拍界面截图。
 
 ## 本地启动

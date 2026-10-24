@@ -5,6 +5,8 @@ import {createProjectBrief} from './project-brief.js';
 import {effectOrder,effectPresent,EFFECT_BY_ID} from './post-effect-specs.js';
 import {exportSketchShaderReference} from './shader-effect-export.js';
 import {runProjectAuthoring} from './project-authoring-runtime.js';
+import {assetFor} from './resource-assets.js';
+import {projectDependencyIds} from './project-dependencies.js';
 
 const decode64=text=>Uint8Array.from(atob(text),c=>c.charCodeAt(0));
 const encode64=bytes=>{let text='';for(let i=0;i<bytes.length;i+=8192)text+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(text);};
@@ -13,6 +15,10 @@ window.runProjectTool=async({action,input,options})=>{
  try{
   let raw;if(input.zip){pack=await readResourcePack(decode64(input.zip));pack.register();raw=pack.payload;}else raw=input.project;
   const project=sanitizeTree(raw),selected=options.node?find(project.root,options.node)?.node:null;
+  if(action==='resource'){
+   if(!projectDependencyIds(project).has(options.resourceId))throw Error('Resource is not a dependency of this snapshot');
+   return {ok:true,asset:structuredClone(assetFor(options.resourceId))};
+  }
   if(options.node&&!selected)throw Error('Unknown node: '+options.node);
   const brief=createProjectBrief(project,{times:options.times,nodeId:options.node});
   if(action==='inspect')return {ok:true,brief};
