@@ -4,6 +4,8 @@
 [简体中文](animation-export.md) · [English](animation-export.en.md)
 <!-- /doc-language -->
 
+Editable parameters, colors, transforms, UV and batch changes keep playback running; a continuous slider drag forms one undo operation. Recording writes keys at the live cursor. Explicit seeks, key dragging and switching recording/base modes still pause; tracked parameters remain controlled in ordinary mode.
+
 ## Two time systems
 
 - Playback/restart, animation cycle 0.05–600 seconds and scope progress remain outside the collapsed timeline. Switching graphics is not a playback-stop instruction.

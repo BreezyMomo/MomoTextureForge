@@ -18,6 +18,20 @@ Select a shape or group in the node tree. No parameters are shown without a sele
 
 An animation track may control it. Use **Base values** for the underlying state or enable recording to edit a time. Also check whether an export is running.
 
+Playback itself does not lock ordinary parameters or pause when adjusting sliders, colors or transforms. Explicit timeline seeking or switching recording/base modes still pauses. See [Animation](06-animation.en.md).
+
+## Why does a static website still need a local MCP service?
+
+The page edits/renders, while both it and the AI client connect to one local service. Browser WebSocket connections are clients and cannot listen as a local MCP server. Install the Authoring Skill and send its startup instructions to AI, which prepares and starts the service; users need not manually install prerequisites. See [Three-step connection](10-ai-and-help.en.md).
+
+## Why does AI see only read tools or lack the new export route?
+
+Check that the updated Authoring Skill is loaded, the new service is running, the client refreshed its MCP tool list and the intended page is enabled. Installed files do not update old processes or client caches. Use forge_pages/forge_schema before requested edits; an old tool list does not authorize unrelated page automation. See [Connection and updates](../skills/texture-forge-author/references/live-editor.en.md).
+
+## Why can the webpage display an effect that Unity Shader export rejects?
+
+The editor has a complete native rendering flow; Unity export covers implemented graphic adapters and handdrawn postprocessing only. Inspect the support report's nodes, parameter paths and reasons. Unsupported content is not silently omitted, substituted or frozen. Native image/animation export remains available. See [Shader categories and export](14-shader-reference.en.md).
+
 ## Why did node shortcut bindings or appearance not follow me to another device?
 
 Pins, module expansion/order, panel layouts and appearance are preferences for the current browser and site, outside project and resource files. Choose **All nodes, including new nodes** in a pin's scope menu for a common shortcut. Preview insertion retains bindings within the same browser; set them again on another device. See [Node shortcuts](05-canvas-and-compositing.en.md#pin-common-settings-to-the-node-tree).

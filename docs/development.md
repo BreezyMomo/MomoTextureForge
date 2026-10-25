@@ -10,10 +10,6 @@
 
 ## 本地启动
 
-新增Shader、生成器或后处理前，先阅读[职责与扩展规范](../skills/texture-forge-author/references/shader-architecture.md)，区分图形生成、图像后处理与组合流程；输入输出契约和网页/引擎交付分别验证。
-
-统一手绘后处理从效果面板或导出面板下载。`web/shaders/handdrawn/` 是图像、实时RT与可选图形生成器共用的规范核心；`build-handdrawn.mjs` 嵌入源码和双语说明，`build-authoring-kit.mjs` 同步到创作Skill。`node tests/handdrawn-postprocess-browser-check.mjs` 检查真实效果输入、参数、包完整性与旧入口拒绝，添加 `--fxc <fxc.exe路径>` 检查HLSL编译；`node tests/handdrawn-postprocess-portable-check.mjs` 从独立解压的Skill导出，`node tests/project-shader-ui-browser-check.mjs`（静态版加 `--built`）检查网页入口。另需独立Unity/URP消费验证和源码/静态版双语界面回归。旧填充、冻结描边与dynamic-handdrawn路径已停用；历史测试和产物不代表当前交付方式。
-
 需要 Node.js 22+ 和支持 WebGL2 的桌面浏览器。在仓库根目录执行：
 
 ```sh
@@ -31,6 +27,21 @@ npm start -- --port 8799
 
 启动页的布局与首屏样式在 `web/index.html`，无需等待脚本下载即可显示。`web/startup.js` 负责真实阶段提示、界面切换与失败重试；源码入口和单文件构建共用这套逻辑，不显示虚构百分比，也不设置最短等待时间。初始化失败时保留错误详情与重新加载入口，不清除本地草稿或资源。
 
+## 代码与文档入口
+
+| 修改内容 | 实现与维护源 | 规范与操作说明 |
+| --- | --- | --- |
+| 编辑器节点与渲染 | `web/tree-app.js`、`web/tree-model.js`、`web/tree-renderer.js` | [画布与合成](05-canvas-and-compositing.md)、[动画](06-animation.md) |
+| 内置图形与生成器 | `web/definitions/builtin.json`及对应定义 | [图形定义](../PATTERN_DEFINITIONS.md)、[公式与生成器](04-formulas-and-generators.md) |
+| 后处理 | `web/post-effect-specs.js`、`web/post-fx.js`及对应效果模块 | [节点后处理](05-canvas-and-compositing.md#节点后处理与执行顺序) |
+| Shader适配与交付 | `web/project-shader-compiler.js`、`web/project-shader-package.js`、`web/handdrawn-postprocess.js`、`web/shaders/handdrawn/` | [Shader职责规范](../skills/texture-forge-author/references/shader-architecture.md)、[导出范围](14-shader-reference.md) |
+| MCP与离线创作 | `editor-mcp.mjs`、`portable-authoring-cli.mjs`、`web/editor-live-authoring.js` | [MCP能力](mcp-capabilities.md)、[CLI](../AI_AUTHORING_CLI.md) |
+| 外观与控件 | `web/appearance.js`、`web/theme-tokens.css`和组件样式 | [界面设计规则](ui-design-guidelines.md) |
+| Skill | 中文创作入口在`web/ai-authoring.js`，英文入口与参考资料在`skills/texture-forge-author/`；效果指导源在`skills/texture-forge-effects/` | 修改后生成下载包，勿只改`*-runtime.js`或`site/index.html` |
+| 教程与截图 | `docs/`、`tools/capture-docs.mjs`、`tools/docs-annotations.mjs`、`tools/docs-callouts.en.json` | 中英文配对维护；截图使用独立演示页面 |
+
+新增Shader先区分生成图形与处理图像，再明确输入输出。通用后处理独立复用，网页支持与引擎适配分别验收。统一手绘核心由`build-handdrawn.mjs`嵌入，`build-authoring-kit.mjs`同步到Skill；旧轻量填充、冻结描边和dynamic-handdrawn不再是交付路径。详细契约在上述规范中维护，不在每个文档重复一份。
+
 ## 界面主题
 
 `web/appearance.js` 管理浏览器偏好 `momo-texture-appearance:v1`。规范化后包含 `theme`、`style`、`tabs`、`density` 与 `colors:{action,selection,navigation,control}`；颜色接受六位 HEX 或 null（跟随当前方案）。背景与文字由方案提供，交互颜色派生可读对比度。实时预览、取消、保存均覆盖全部设置，不进入项目、撤销或资源哈希。
@@ -39,7 +50,7 @@ npm start -- --port 8799
 
 `appearancePalette` 解析完整主题并派生可读交互色。`--ui-bg` 用于工作区，`--ui-header` 用于全部同级标题栏，`--ui-panel` 用于内容卡片，`--ui-section` 用于分组标题。标题栏具有独立的文字与当前标签对比色。`data-appearance-theme` 记录实际主题，`data-theme` 仅是功能状态样式使用的内部深浅对比环境。外观预览复用真实组件规则，见[界面设计规则](ui-design-guidelines.md)。
 
-偏好中的 `style`（`standard`、`refined`、`airy`、`minimal`、`soft`、`aurora`、`pulse`、`cinema`、`candy`）和 `density`（`compact`、`comfortable`）独立于配色。`standard` 始终对应“标准”，保留标准控件规则；旧配色偏好缺少风格时补为标准与紧凑，新浏览器默认使用独立的 `refined`（精致）。根元素的 `data-interface-style`、`data-density` 驱动共享圆角与间距变量，简洁风格仅弱化内容模块边框，保留输入框、键盘焦点和停靠分隔条。密度调整触发现有预览尺寸观察器，不写入画布模型。
+偏好中的 `style`（`standard`、`refined`、`airy`、`minimal`、`soft`、`aurora`、`pulse`、`cinema`、`candy`）和 `density`（`compact`、`comfortable`）独立于配色。`standard` 始终对应“标准”，保留标准控件规则；缺少或无效风格时使用`refined`（精致），缺少密度时使用紧凑。根元素的 `data-interface-style`、`data-density` 驱动共享圆角与间距变量，简洁风格仅弱化内容模块边框，保留输入框、键盘焦点和停靠分隔条。密度调整触发现有预览尺寸观察器，不写入画布模型。
 
 `web/editor-surfaces.css` 为精致与四个创作风格提供公共表面层级，`web/creative-skins.css` 分别定义其页签、圆角与面板结构，均以风格 ID 限定，避免覆盖标准、简洁或柔和；源码和静态包均在其他编辑器样式之后加载。背景、边框、选中态与阴影通过 `web/theme-tokens.css` 的语义变量组合，避免改动作品色板、透明棋盘和画布辅助线。视觉参考为 [Linear 的分层表面](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/linear.app/DESIGN.md) 与 [Raycast 的浮层](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/raycast/DESIGN.md)，按编辑器的紧凑布局调整，不使用官网的大字号与宣传区留白。
 
@@ -108,6 +119,7 @@ npm run build:pages
 ```sh
 npm test
 npm run validate:definitions
+node tools/check-docs.mjs
 node build-authoring-kit.mjs
 npm run build:pages
 node tests/pages-browser-check.mjs
@@ -117,6 +129,20 @@ node tests/startup-browser-check.mjs
 启动页检查覆盖加载阶段、正常进入编辑器、WebGL 初始化失败后的错误详情与重试，以及单文件版的编辑器、示例和验证视图。
 
 `skills/texture-forge-effects/` 是效果指导 Skill 的维护源。创作 Skill 的一部分文本和随附 CLI 由构建脚本生成，修改相应源文件后运行 `build-authoring-kit.mjs`。生成文件不要只手改嵌入内容。
+
+按改动选择验证，不把编译通过等同于视觉验收：
+
+| 改动 | 浏览器/交付检查 | 静态版与附加范围 |
+| --- | --- | --- |
+| 界面文案与语言 | `node tests/ui-language-browser-check.mjs` | 加`--built`；单位检查`tests/ui-language.test.mjs` |
+| 播放中参数编辑 | `node tests/playback-parameter-browser-check.mjs` | 加`--built`；覆盖撤销、录制与局部播放 |
+| MCP | `node tests/editor-mcp-browser-check.mjs` | 加`--built-only`验证静态版与HTTPS；使用隔离服务，勿占用用户连接 |
+| Shader网页入口 | `node tests/project-shader-ui-browser-check.mjs` | 加`--built`；检查不支持项阻断与项目不变 |
+| 解析Shader | `node tests/project-shader-browser-check.mjs` | 支持`--fxc <路径>`；仍需目标引擎检查 |
+| 手绘输入与共享核心 | `node tests/handdrawn-postprocess-browser-check.mjs` | 支持`--fxc <路径>`；检查真实效果前输入与参数 |
+| 可下载Skill | `node tests/handdrawn-postprocess-portable-check.mjs` | 从实际ZIP独立解压并导出；不依赖源码工程 |
+
+目标Unity的导入、图像/RT/生成器、透明度、播放、缓存、持久化和资源释放另行验证；未测Player/移动平台如实保留。导出器不替消费方写“已验证”。旧退役路径的历史脚本不用于验收当前包。截图与导出结果放在`test-results/`，不提交浏览器资料或依赖目录。
 
 素材预设回归：`node tests/vfx-presets-browser-check.mjs`，检查透明覆盖、序列化、两个预设的预览、编辑链接及透明 PNG 导出，并生成 `test-results/presets/preview.png` 供视觉审核。
 

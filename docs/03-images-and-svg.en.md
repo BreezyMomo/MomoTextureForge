@@ -12,7 +12,7 @@
 
 > Callouts: 1 Enter the resource name; 2 Select an image file; 3 Inspect the preview.
 
-1. Open **Graphics library → Create resource → Image**.
+1. Open **Graphics library → Manage resources → Create resource → Image**.
 2. Enter a resource name, category and description.
 3. Choose a PNG/JPG/WebP or static SVG under **Image file**, or paste an image with Ctrl+V / Cmd+V.
 4. Wait for a successful preview and check the image and display mode.

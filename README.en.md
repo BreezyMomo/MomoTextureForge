@@ -46,15 +46,13 @@ Source and documentation: [GitHub primary repository](https://github.com/BreezyM
 
 The library is the resource source, the graphics list holds reusable copies, and canvas nodes are editable instances. Editing an instance does not automatically update the library.
 
-**Examples** provides 54 editable compositions and material presets with category filters. VFX includes slash trails, hit flashes, fractured shock rings, energy vortices, dissolve masks, and complete lightning strike, frost nova, fire explosion and holographic shield impact effects. New studies include a replaceable-unit dot array, three flowing ring waveforms, independent core/halo, aurora and holy light curtains, and an energy barrier. See [Ability, ring and curtain presets](docs/13-effect-presets.en.md). Seamless UI backgrounds, geometric compositions, hand-drawn hearts and style comparisons, material presets, puzzle/arrangement and boundary studies remain available. Choose **Edit on canvas** to inspect each layer; animated examples include one-shot or loop export settings.
+**Examples** groups editable effects and studies by category. Choose **Edit on canvas** to inspect their layers; animated examples include playback and export settings:
 
-The 31 node effects include print halftones, palette dithering, glitch slices, zoom blur, Kuwahara painting, bevel relief, pencil line art, retro CRT, ASCII art and pixel sorting. Four new exercises demonstrate Creative effect comparison, Comic print, Retro handheld and Hologram glitch. See [Creative style effects](docs/05-canvas-and-compositing.en.md#creative-style-effects).
+- Abilities and light: starcore, slash trails, hits, shock rings, vortices, lightning, frost nova, fire explosions, shields, arrays, flowing rings and curtains. See [Ability, ring and curtain presets](docs/13-effect-presets.en.md).
+- Composition and arrangement: summoning circles, petals/stars, honeycombs, handdrawn styles, border lights, contour dots, herringbone/basket weave, flow fields, connected tiles and boundary handling.
+- Backgrounds and materials: tileable grids, diamond bricks, hatching and dots, plus acid splashes and celebration ribbons.
 
-Noise distortion adds heat-haze, water-refraction and energy-turbulence comparison examples, with continuous flow and closed trajectory motion. See [Noise distortion](docs/05-canvas-and-compositing.en.md#noise-distortion).
-
-Dissolve / burn, Shockwave refraction and Liquid fusion add three editable comparisons with progress keyframes, image and group processing. See [Dissolve, shockwave and liquid fusion](docs/05-canvas-and-compositing.en.md#dissolve-shockwave-and-liquid-fusion). Post-processing uses a current stack plus a searchable, categorized picker with shared specimen previews. Bypass, removal and restoration preserve authored settings and keyframes.
-
-The new-arrangement category includes rounded border lights, star-contour dots, herringbone tiles, basket weave, fading dots, wave flow fields and connected pipes. Puzzle examples demonstrate cell spacing, four connector styles, per-corner rounding and tabs extending outside their cells. Content-boundary comparisons, cross-cell dots and a seamless halo demonstrate **Transform / Layout → Boundary handling**: Clip, Allow overflow or Seamless repeat. Children can extend outwards and parents can wrap them; the final canvas boundary stays fixed. Choose **Edit on canvas** to inspect the node structure. Animated examples include one-shot/loop playback and export settings.
+Node postprocessing uses a **current stack plus a searchable category picker**. Compare before/after, reorder, bypass or remove effects while retaining settings and keys. It includes [creative styles](docs/05-canvas-and-compositing.en.md#creative-style-effects), [noise distortion](docs/05-canvas-and-compositing.en.md#noise-distortion) and [dissolve, shockwave and liquid fusion](docs/05-canvas-and-compositing.en.md#dissolve-shockwave-and-liquid-fusion). Web effects and Unity export have separate coverage; a playable example does not establish engine support.
 
 To try a ready-made canvas, download the [summoning-circle project](docs/examples/summoning-circle.json) and open it with **File → Open project**. See [Quick start](docs/01-quick-start.en.md) for the walkthrough and more examples.
 
@@ -76,6 +74,7 @@ Each chapter includes real interface screenshots with numbered callouts, entry p
 | Download Skills, provide a catalog, import AI output | [AI collaboration and help](docs/10-ai-and-help.en.md) |
 | Dock, split, float and save your workspace | [Custom panel layouts](docs/11-workspace-layout.en.md) |
 | Switch language; configure resource names and parameter aliases | [Language and aliases](docs/12-language-and-aliases.en.md) |
+| Distinguish graphic generation/postprocessing and deliver Unity Shaders | [Shader categories and Unity export](docs/14-shader-reference.en.md) |
 
 More: [Manual contents](docs/README.en.md) · [FAQ](docs/faq.en.md) · [Development and deployment](docs/development.en.md).
 
@@ -101,17 +100,17 @@ See [development documentation](docs/development.en.md) for tests, Skill regener
 
 ## Working with AI
 
-The toolbar's **AI tools** panel brings together the Authoring/Effects Skills, MCP connection and project handoff. Select an agent and Skills, then **Choose directory and install…** to select and authorize a location. The panel recommends the agent's directory and completes its Skill path. ZIP downloads are available next to each Skill. See [Skill installation](skills/texture-forge-author/references/installation.en.md). Export the current library catalog here when asking AI to recommend graphics.
+The toolbar's **AI tools** panel presents Skill installation, startup instructions and MCP configuration in order. The Authoring Skill handles creation/live access; the Effects Skill provides operation guidance. Select an agent and Skills, then **Choose directory and install…** to authorize a directory, or download each ZIP. Reinstalling into the same directory updates changed files with backups; reload the Skill in the client afterward. See [Installation and updates](skills/texture-forge-author/references/installation.en.md).
 
 The Authoring Skill also bundles offline project tools. AI can build node trees, groups, masks, arrangement, effects and animation without opening the website, then deliver a native ZIP with all dependencies. Users continue editing through **File → Open project** and can return saved revisions to AI. See the [offline project workflow](skills/texture-forge-author/references/offline-projects.en.md).
 
-First use follows **Install Skill → Ask AI to start MCP → Configure MCP**. After installing the Authoring Skill, send AI the startup instructions provided by the page. AI prepares and verifies the runtime, dependencies and local service. Then connect this page and copy its MCP configuration into the client. AI can read works/resources and render references; see [Live editor and MCP connection](skills/texture-forge-author/references/live-editor.en.md).
+First use follows **Install Skill → Ask AI to start MCP → Configure MCP**. AI prepares and verifies the runtime, dependencies and local service before users connect the page and configure the client. Both the webpage and AI connect to the service, including with static websites. Requested reads and atomic edits use version checks and undo, followed by recapture and rendering. See [Connection and tool parameters](skills/texture-forge-author/references/live-editor.en.md) and [Current MCP capabilities](docs/mcp-capabilities.en.md). For recommendations alone, export a catalog under **More tools: export the graphics catalog** without sharing the canvas.
 
 [Workflow](docs/10-ai-and-help.en.md) · [CLI authoring and validation](AI_AUTHORING_CLI.en.md) · [Generator format](skills/texture-forge-author/references/generator-guide.en.md)
 
 ## Technical references and feedback
 
-[Pattern definitions](PATTERN_DEFINITIONS.en.md) · [Local graphics library](LOCAL_GRAPHICS_LIBRARY.en.md) · [Resource-pack format](RESOURCE-PACK.en.md) · [Remote-library implementation](REMOTE_LIBRARIES.en.md)
+[Development entry points and checks](docs/development.en.md) · [Shader extension rules](skills/texture-forge-author/references/shader-architecture.en.md) · [Pattern definitions](PATTERN_DEFINITIONS.en.md) · [Local graphics library](LOCAL_GRAPHICS_LIBRARY.en.md) · [Resource-pack format](RESOURCE-PACK.en.md) · [Remote-library implementation](REMOTE_LIBRARIES.en.md)
 
 Use **Help → GitHub repository ↗** for source and issue reports. **Gitee repository ↗** opens the mainland mirror for documentation and downloads. Include reproduction steps, browser version, screenshots and a minimal shareable project when reporting an issue.
 

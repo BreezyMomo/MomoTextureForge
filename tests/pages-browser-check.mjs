@@ -30,18 +30,22 @@ try{
  await page.locator('#open-graphics-library').click();
  await page.waitForFunction(count=>document.querySelectorAll('.graphics-card[data-origin="builtin"]').length===count,BUILTIN.catalog.length,{timeout:30000});
  assert.equal(await page.locator('.graphics-card[data-origin="builtin"]').count(),BUILTIN.catalog.length);
+ const editGraphic=async name=>{
+  const card=page.locator('.graphics-card').filter({has:page.locator('strong').getByText(name,{exact:true})});
+  await card.locator('.graphics-card-details>summary').click();await card.getByRole('button',{name:'编辑 '+name,exact:true}).click();
+ };
  await page.getByPlaceholder('搜索名称、分类或标签').fill('湍流火焰');
- await page.getByRole('button',{name:'编辑 湍流火焰',exact:true}).click();
+ await editGraphic('湍流火焰');
  const generatorDialog=page.locator('dialog.graphic-editor-dialog');await generatorDialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
  const generatorColors=await generatorDialog.locator('canvas').evaluate(canvas=>{const data=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;let colors=0;for(let i=0;i<data.length;i+=4)if(data[i+3]>8&&data[i]>data[i+2]+20)colors++;return colors;});assert.ok(generatorColors>0,'embedded generator retains fire colors');
  await generatorDialog.locator('header .graphics-close').click();
- await page.getByPlaceholder('搜索名称、分类或标签').fill('跃动篝火');await page.getByRole('button',{name:'编辑 跃动篝火',exact:true}).click();
+ await page.getByPlaceholder('搜索名称、分类或标签').fill('跃动篝火');await editGraphic('跃动篝火');
  const dynamicDialog=page.locator('dialog.graphic-editor-dialog');await dynamicDialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
  const beforeMotion=await dynamicDialog.locator('canvas').evaluate(c=>c.toDataURL());await dynamicDialog.getByRole('slider',{name:'预览时间（秒）',exact:true}).press('End');
  await page.waitForFunction(before=>document.querySelector('dialog.graphic-editor-dialog canvas')?.toDataURL()!==before,beforeMotion);
  await dynamicDialog.locator('header .graphics-close').click();
  await page.getByPlaceholder('搜索名称、分类或标签').fill('');
- await page.getByRole('button',{name:'创建资源',exact:true}).click();const customDialog=page.locator('dialog.resource-create-dialog');await customDialog.getByRole('tab',{name:'生成器',exact:true}).click();
+ await page.locator('.graphics-management>summary').click();await page.getByRole('button',{name:'创建资源',exact:true}).click();const customDialog=page.locator('dialog.resource-create-dialog');await customDialog.getByRole('tab',{name:'生成器',exact:true}).click();
  await customDialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();await customDialog.getByRole('textbox',{name:'生成器JSON',exact:true}).fill(JSON.stringify(GENERATOR_EXAMPLE));
  await customDialog.getByRole('button',{name:'验证并预览',exact:true}).click();await customDialog.getByRole('slider',{name:'半径滑动条'}).waitFor();await customDialog.getByRole('status').filter({hasText:'预览成功'}).waitFor();
  const customPixels=await customDialog.locator('section:not([hidden]) .graphic-preview-panel canvas').evaluate(c=>c.getContext('2d').getImageData(0,0,c.width,c.height).data.filter((v,i)=>i%4===3&&v>5).length);assert.ok(customPixels>100,'custom pipeline works inside standalone HTML');
@@ -70,8 +74,9 @@ try{
  // Examples generate on navigation; wait for that work instead of clicking a disabled button.
  await page.waitForFunction(count=>!document.querySelector('#generate')?.disabled&&document.querySelectorAll('#samples article').length===count,treeSamples().length,{timeout:180000});
  const exampleLink=await page.locator('#samples article a').first().getAttribute('href');
- assert.ok(exampleLink.startsWith(address+'#tree='));
+ const exampleURL=new URL(exampleLink);assert.equal(exampleURL.origin+exampleURL.pathname,address);assert.ok(exampleURL.hash.startsWith('#tree='));
  await page.goto(exampleLink);await ready();
+ if(exampleURL.searchParams.has('preview-time'))assert.equal(Number(await page.locator('#tree-time').inputValue()),Number(exampleURL.searchParams.get('preview-time')),'example opens at its authored preview time');
  const exampleNodes=await page.locator('[role="treeitem"]').count();assert.ok(exampleNodes>2);
  await page.locator('details.header-dropdown > summary').filter({hasText:'文件'}).click();
  await page.locator('#new-project').click();

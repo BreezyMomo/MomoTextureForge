@@ -10,10 +10,6 @@ Post-effect specimen art and curated settings live in `web/post-effect-specimens
 
 ## Run locally
 
-Before adding Shaders, generators or postprocesses, read [responsibilities and extension rules](../skills/texture-forge-author/references/shader-architecture.en.md). Separate graphic generation, image postprocessing and composition; validate input/output contracts and web/engine delivery separately.
-
-Download the unified handdrawn postprocess from the effect or export panel. `web/shaders/handdrawn/` is the canonical shared core for images, live RTs and optional graphic producers; `build-handdrawn.mjs` embeds sources and bilingual instructions, and `build-authoring-kit.mjs` includes them in the Skill. `node tests/handdrawn-postprocess-browser-check.mjs` checks actual effect inputs, parameters, package integrity and retired-entry refusal; add `--fxc <fxc.exe>` to compile HLSL. `node tests/handdrawn-postprocess-portable-check.mjs` exports from an independently extracted Skill; `node tests/project-shader-ui-browser-check.mjs` (add `--built`) checks web entry points. Independent Unity/URP consumption and source/static UI-language regression are also required. Fill-only, frozen-stroke and dynamic-handdrawn routes are retired; historical tests and artifacts do not describe current delivery.
-
 Use Node.js 22+ and a desktop WebGL2 browser. At the repository root:
 
 ```sh
@@ -30,6 +26,21 @@ npm start -- --port 8799
 Browser storage is not automatically shared between online/offline origins, ports or browsers. Use project/resource ZIPs for backup and transfer.
 
 Startup markup/styles in `web/index.html` display before scripts finish downloading. `web/startup.js` drives real loading stages, transition and retry for source and standalone builds. There are no invented percentages or artificial minimum waits. Failures retain details and reload controls without clearing drafts/resources.
+
+## Code and documentation entry points
+
+| Change | Implementation and maintained source | Rules and usage |
+| --- | --- | --- |
+| Editor nodes/rendering | `web/tree-app.js`, `web/tree-model.js`, `web/tree-renderer.js` | [Canvas/compositing](05-canvas-and-compositing.en.md), [animation](06-animation.en.md) |
+| Builtin graphics/generators | `web/definitions/builtin.json` and referenced definitions | [Graphic definitions](../PATTERN_DEFINITIONS.en.md), [formulas/generators](04-formulas-and-generators.en.md) |
+| Postprocessing | `web/post-effect-specs.js`, `web/post-fx.js` and effect modules | [Node postprocessing](05-canvas-and-compositing.en.md#node-post-processing-and-execution-order) |
+| Shader adaptation/delivery | `web/project-shader-compiler.js`, `web/project-shader-package.js`, `web/handdrawn-postprocess.js`, `web/shaders/handdrawn/` | [Shader responsibilities](../skills/texture-forge-author/references/shader-architecture.en.md), [export scope](14-shader-reference.en.md) |
+| MCP/offline authoring | `editor-mcp.mjs`, `portable-authoring-cli.mjs`, `web/editor-live-authoring.js` | [MCP capabilities](mcp-capabilities.en.md), [CLI](../AI_AUTHORING_CLI.en.md) |
+| Appearance/controls | `web/appearance.js`, `web/theme-tokens.css` and component styles | [Interface design rules](ui-design-guidelines.en.md) |
+| Skills | Chinese authoring entry in `web/ai-authoring.js`; English entry/references in `skills/texture-forge-author/`; Effects source in `skills/texture-forge-effects/` | Regenerate downloads; do not edit only `*-runtime.js` or `site/index.html` |
+| Tutorials/screenshots | `docs/`, `tools/capture-docs.mjs`, `tools/docs-annotations.mjs`, `tools/docs-callouts.en.json` | Maintain paired languages and isolated demonstration pages |
+
+Separate graphic generation from image processing before extending Shaders and declare input/output contracts. Reuse generic postprocesses and validate web/engine support separately. `build-handdrawn.mjs` embeds the shared handdrawn core and `build-authoring-kit.mjs` includes it in Skills. Light fill, frozen-stroke and dynamic-handdrawn routes are retired. Maintain detailed contracts in the linked rules rather than duplicating them across documents.
 
 ## Interface themes
 
@@ -91,7 +102,7 @@ This builds offline HTML, then updates tracked `site/index.html` and retains `.n
 
 `build:pages` embeds `web/site-analytics.js` and permits `https://hm.baidu.com` for analytics scripts. Offline HTML/ZIP does not contain it. An HTTPS host/path allowlist selects separate Baidu sites for GitHub Pages (23623715) and WorkBuddy (23623719). Local/other domains, other GitHub projects and validation views do not collect traffic.
 
-One manual pageview is sent per page load using fixed editor/example paths. Query strings, `sharecode` and canvas `#tree` are excluded; referrers are reduced to origin. Automatic PV/click capture is disabled and script requests use `referrerPolicy=origin` to send only the site origin, excluding paths, query strings and canvas data. Do not use `no-referrer`: Baidu responds with an empty HTTP 200 script, preventing pageview reporting. Only completed file generation followed by download initiation, or a successful clipboard image write, emits an explicit event. Parameter edits, canvas names, filenames and image/node content are not actively reported. Baidu still processes network/browser data and visitor identifiers needed for analytics; do not describe this as no data collection.
+One manual pageview is sent per page load using fixed editor/example paths. Query strings, `sharecode` and canvas `#tree` are excluded; referrers are reduced to origin. Automatic PV/click capture is disabled and script requests use `referrerPolicy=origin ` to send only the site origin, excluding paths, query strings and canvas data. Do not use `no-referrer`: Baidu responds with an empty HTTP 200 script, preventing pageview reporting. Only completed file generation followed by download initiation, or a successful clipboard image write, emits an explicit event. Parameter edits, canvas names, filenames and image/node content are not actively reported. Baidu still processes network/browser data and visitor identifiers needed for analytics; do not describe this as no data collection.
 
 `web/export-events.js` emits a local completion signal; only the official-site analytics entry subscribes and calls `_trackEvent`. In Baidu **Reports → Visit analysis → Event tracking/Event analysis**, select category `export`: action `download` means a download was initiated and `clipboard` means a clipboard write succeeded. Labels are fixed `format/channel` pairs such as `png/normal` and `frames/color`. Reports provide event counts and unique event visitors; repeated exports by one visitor increase the count. Formats are `png`, `exr`, `svg`, `psd`, `psd-vector`, `frames`, `atlas`, `atlas-exr`, `batch` and `batch-atlas`; channels reflect the selected export setting: `color`, `height`, `normal` or `rgba`. Vector contours still use transparency; the channel label does not change their extraction algorithm.
 
@@ -99,7 +110,7 @@ A frame ZIP or three-size ZIP counts once. Cancellation, failure, atlas-only pre
 
 Analytics failures do not block startup. Visit each official site and inspect its Baidu installation check and reports. New script/report data can lag; inserting a script alone does not prove receipt. After changes run `node --test tests/site-analytics.test.mjs` and `node tests/site-analytics-browser-check.mjs` for allowlists, CSP, request origins, bounded event fields and offline isolation. Add `--real-sdk` to use the actual Baidu SDK with all analytics beacons intercepted locally, without sending test traffic/events. Run `node tests/export-analytics-browser-check.mjs` for all ten actual formats, all four channels, clipboard/fallback and cancellation/failure/preview exclusions.
 
-`.github/workflows/pages.yml` validates, builds and deploys on pushes to `main`, with manual dispatch available. Initially select **Settings → Pages → Build and deployment → Source → GitHub Actions**. Actions results determine actual deployment status.
+`.github/workflows/pages.yml` validates, builds and deploys on pushes to `main `, with manual dispatch available. Initially select **Settings → Pages → Build and deployment → Source → GitHub Actions**. Actions results determine actual deployment status.
 
 See [GitHub's Pages overview](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages) for service conditions. Visitors can access code/assets embedded in a deployed page. Personal libraries/drafts remain in each visitor's browser; remote libraries require separate deployment and CORS.
 
@@ -108,6 +119,7 @@ See [GitHub's Pages overview](https://docs.github.com/en/pages/getting-started-w
 ```sh
 npm test
 npm run validate:definitions
+node tools/check-docs.mjs
 node build-authoring-kit.mjs
 npm run build:pages
 node tests/pages-browser-check.mjs
@@ -117,6 +129,20 @@ node tests/startup-browser-check.mjs
 Startup tests cover loading, successful entry, WebGL errors/details/retry and standalone editor/examples/validation views.
 
 `skills/texture-forge-effects/` contains maintained guidance. Some authoring text and the portable CLI are generated; edit their sources and rebuild. Do not edit only embedded output.
+
+Choose checks for the changed scope; compilation alone is not visual acceptance:
+
+| Change | Browser/delivery check | Static/additional scope |
+| --- | --- | --- |
+| UI text/language | `node tests/ui-language-browser-check.mjs` | Add `--built`; unit check `tests/ui-language.test.mjs` |
+| Live parameter editing | `node tests/playback-parameter-browser-check.mjs` | Add `--built`; undo, recording and local playback |
+| MCP | `node tests/editor-mcp-browser-check.mjs` | Add `--built-only ` for static/HTTPS; isolated service, preserving user connections |
+| Shader web entry | `node tests/project-shader-ui-browser-check.mjs` | Add `--built`; unsupported blocking and unchanged project |
+| Analytic Shaders | `node tests/project-shader-browser-check.mjs` | Optional `--fxc <path>`; target engine still required |
+| Handdrawn input/shared core | `node tests/handdrawn-postprocess-browser-check.mjs` | Optional `--fxc <path>`; actual pre-effect input and parameters |
+| Downloadable Skill | `node tests/handdrawn-postprocess-portable-check.mjs` | Extracts/exports the real ZIP independently of the source checkout |
+
+Separately verify target-Unity import, image/RT/producer inputs, alpha, playback, caching, persistence and release. Identify untested Player/mobile scope. Exporters do not mark engine checks as passed for consumers. Historical scripts for retired routes do not validate current packages. Keep screenshots/exports in `test-results/` and do not commit browser data or dependencies.
 
 Material preset regression: `node tests/vfx-presets-browser-check.mjs` covers transparency, serialization, two previews, edit links and transparent PNGs, with `test-results/presets/preview.png` for inspection.
 
@@ -223,7 +249,7 @@ Capture honors reduced motion and waits for real controls and previews before an
 
 - Git sync includes code, docs, screenshots, `site/`, branches and tags, not issues, PRs or release attachments.
 - Avoid independent commits to Gitee's main branch; mirror updates overwrite destination data.
-- Inspect Gitee mirror management request/completion times and retry updates as needed. Compare full `main` SHAs.
+- Inspect Gitee mirror management request/completion times and retry updates as needed. Compare full `main ` SHAs.
 - The dedicated fine-grained GitHub token selects only this repository, with read-only Contents/Metadata and read/write Webhooks. Keep credentials out of code/logs/docs.
 - The current token expires **2027-01-19**. Renew before then and inspect Webhook delivery/mirror status. Revocation/expiry stops synchronization.
 

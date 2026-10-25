@@ -23,7 +23,7 @@ You can enter your own formula or generator definition without choosing a templa
 
 > Callouts: 1 Choose the formula type; 2 Enter GLSL code.
 
-1. Open **Graphics library → Create resource → Formula** and enter a name.
+1. Open **Graphics library → Manage resources → Create resource → Formula** and enter a name.
 2. Choose `expression` or `body`, then enter GLSL.
 3. Define display aliases, formula variables, ranges, steps and defaults. Use the same variables in the formula; up to 16 parameters are supported.
 4. Choose **Validate & preview**. Check defaults, endpoints and intermediate values.

@@ -70,6 +70,8 @@ Adapt to the panel's available width, not only the browser viewport. Narrow insp
 
 Keep the floating-window move handle separate from tabs and its resize handle below the content area. Preserve saved layouts, parameter section order, appearance and density. Visual updates must not reset these preferences.
 
+Long dialogs keep their title and bottom actions outside the scrolling content so close/cancel/confirm remain reachable. Do not scroll the entire dialog header out of view. Selected color swatches use a border/outline without painting over their original color.
+
 Check both languages in the actual interface. Long English labels, narrow headers, dialog footer actions and graphic names must remain usable without overlap.
 
 ## 5. Appearance and implementation

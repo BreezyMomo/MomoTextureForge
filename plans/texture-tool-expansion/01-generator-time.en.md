@@ -18,6 +18,6 @@ Connect time detection, GPU uniforms and cache keys. Add preview time to resourc
 
 Dynamic generators change across times and remain identical when frozen; static cache hits and existing generators remain valid.
 
-## Results
+## Current implementation
 
-Time detection, GPU input, caching and preview time are connected. GPU checks passed: average cross-time pixel difference 0.0746, identical frozen output and cache hits for the original static flame.
+Time detection, GPU input, caching and preview time are connected. Generators reading time redraw dynamically, static inputs cache, and formula clocks support speed, offset and freezing. See [Animation](../../docs/06-animation.en.md) for current semantics and [Development](../../docs/development.en.md) for checks rather than treating a historical pixel difference as an acceptance threshold.

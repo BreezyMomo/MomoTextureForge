@@ -62,6 +62,7 @@ export const annotations={
  'atlas-preview':[{...role('img',label('editor.fullCanvasAtlasPreview'),'首帧'),portion:[0,0,.25,.25]},{...role('img',label('editor.fullCanvasAtlasPreview'),'末帧'),portion:[.75,.75,.25,.25]}],
  'export-vector':[field(label('editor.exportFormat'),'选择矢量轮廓格式'),css('#confirm-export','导出前检查轮廓设置')],
  'remote-libraries':[field(label('subscription.newLibraryName'),'填写订阅名称'),field(label('subscription.remoteCatalogURL'),'填写 index.json 地址'),role('button',label('subscription.addSubscription'),'添加图库订阅')],
+ 'ai-tools':[css('.ai-tools-dialog [data-install]','选择目录安装或更新 Skill'),css('.ai-tools-dialog [data-start-copy]','复制说明让 AI 启动服务'),css('.ai-tools-dialog [data-connection-open]','连接页面并配置 MCP')].map(spec=>({...spec,numberOnly:true})),
  'ai-catalog':[field(label('library.exportScope'),'选择目录范围'),role('button',label('library.generateCatalog'),'生成可提供给 AI 的目录'),field(label('library.aiGraphicsCatalogJSON'),'复制目录内容')],
  'help-menu':[css('#tool-help','内置使用说明'),css('#detailed-help','README 与图文教程'),css('#ai-tools','AI 工具与 Skill 安装'),css('#gitee-repository','国内仓库与文档'),css('#support-project','微信扫码赞赏')].map(spec=>({...spec,...(spec.selector==='#support-project'?{numberOnly:true,corner:true}:{side:'left'})})),
  'library-manager':[css('.toolbar .file-button','导入已有资源'),role('button',inLanguage('编辑信息','Edit metadata'),'编辑资源目录信息')],

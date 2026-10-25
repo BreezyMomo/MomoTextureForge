@@ -12,6 +12,17 @@ Shaders have two responsibilities: **graphic generation** produces images from a
 
 Before adding a Shader, read [responsibilities and extension rules](../skills/texture-forge-author/references/shader-architecture.en.md) for module boundaries, input/output contracts, color/alpha/time/size, resource lifecycle and verification. Both repository `AGENTS.md` and the authoring Skill route to these rules. Check web and Unity export coverage separately: analytic export covers adapted graphics, and formal generic postprocess export currently covers handdrawn, not every web effect.
 
+## Choose a delivery route
+
+| Need | Entry | Output |
+| --- | --- | --- |
+| Continue editing or ask AI to revise work | File → Save project | Native project ZIP with nodes/dependencies, not a Unity material |
+| Deliver rendered images/animation | Export → PNG, GIF, EXR, frames or atlas | Pixels; see [Export guide](08-export.en.md) |
+| Generate graphics algorithmically in Unity | Export → Unity realtime Shader ZIP | Code, parameters, importer and references for reviewed graphics and supported composition |
+| Apply handdrawn processing to an image/RT | Export → Unity handdrawn postprocess (ZIP) | Shared effect core, input adaptation, parameters, runtime and importer; optional reviewed graphic producer |
+
+Query support before Shader export, inspect specific nodes/parameters and approximations, then follow the package README and unityImporter in the target Unity project. Verify actual color, alpha, animation and persistence. Baked pixels, realtime generation and postprocessing are distinct delivery routes.
+
 ## One handdrawn pipeline
 
 Use **Export → Unity handdrawn postprocess (ZIP)** or **Composite → Handdrawn → Download handdrawn postprocess**. RGBA input goes through automatic contour extraction and fill, then composition. Images, runtime RT and reviewed generators share the same GPU core and component. There is no light fill or frozen-outline rendering alternative.

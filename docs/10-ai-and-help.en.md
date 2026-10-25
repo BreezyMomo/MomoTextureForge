@@ -10,18 +10,26 @@
 
 - **Quick guide:** searchable text help inside the editor.
 - **Detailed guide ↗:** opens the README and its illustrated tutorial index. Chinese opens Chinese documentation; other interface languages open English documentation.
-- **AI tools:** a separate toolbar entry for Skill installation, ZIP downloads, MCP settings, catalog export and project handoff.
+- **AI tools:** one panel containing Skill installation, service startup instructions and MCP configuration in order, plus catalog export.
 - **GitHub repository ↗:** opens source and issue reporting in a new tab.
 - **Gitee repository ↗:** opens the mainland source mirror for documentation and downloads; it follows GitHub synchronization.
 - **Support:** an independent toolbar entry opens the WeChat appreciation code for voluntary donations toward maintenance and development.
 
-The hand-drawn effect panel offers **Download handdrawn postprocess**, including current parameters, actual RGBA input, shared Shader/Compute, a Unity component, importer and comparison images. Images, live RTs and supported graphic inputs share automatic contour and fill processing; frozen strokes and separate fill reference packages are retired. Use the authoring Skill for game integration. See [Handdrawn postprocess and Shader delivery](14-shader-reference.en.md).
+First use follows three steps in the same panel, without separate Install Skill / MCP tabs:
 
-In **AI tools → Install Skills**, select an agent and Skills, then **Choose directory and install…** to select and authorize a location in the system dialog. For personal use, follow the recommended path to an existing Skill directory. For a project, choose its root and the tool completes the agent subdirectories. Every installation asks for a directory; canceling does not write files.
+| Step | Action and result |
+| --- | --- |
+| 1. Install Skill | Select an agent. Use the Authoring Skill for creation or live access, and the Effects Skill for operation guidance. **Choose directory and install…** authorizes an existing Skill directory or project root; the tool completes the path. Each row also provides **Download ZIP** for manual installation. |
+| 2. Ask AI to start MCP | Send the startup instructions to AI with the Authoring Skill loaded. AI prepares missing runtime/dependencies, starts or reuses the service and verifies it; users do not install prerequisites themselves. |
+| 3. Configure MCP | Once the service is ready, choose **Connect page and configure MCP**, connect this page, copy the generated configuration into the AI client and refresh its tool list. Allow local network access when asked. |
 
-After installation, copy the next step’s startup instructions to AI. AI prepares the runtime and starts the service following the Skill; users do not install dependencies themselves. Successful file installation does not prove agent activation. See [installation instructions](../skills/texture-forge-author/references/installation.en.md).
+File installation, Skill loading, service startup, page connection and client configuration are separate states. Installing a Skill does not authorize access to the canvas. A Skill ZIP is not a graphic resource pack and must not be imported into the library.
 
-**Download ZIP** on the right of each Skill row provides its complete archive for manual extraction and installation. Skills are not graphic resources and should not be imported into the library.
+![Installation, startup and configuration in AI tools](images/en/ai-tools.png)
+
+> Callouts: 1 Choose a directory to install or update Skills; 2 Copy instructions for AI to start the service; 3 Connect the page and configure MCP.
+
+To update, select the same directory again: unchanged files are skipped and changed files are backed up before replacement. Reload the Skill as required by the client. New tool definitions require restarting the updated MCP service and refreshing the client's tool list; refreshing the editor requires reconnecting that page. See [Installation and updates](../skills/texture-forge-author/references/installation.en.md).
 
 ## 2. Give the AI your current graphics catalog
 
@@ -29,7 +37,7 @@ After installation, copy the next step’s startup instructions to AI. AI prepar
 
 > Callouts: 1 Select catalog scope; 2 Generate the catalog; 3 Copy its contents.
 
-1. Open catalog export through **AI tools → MCP → Export AI graphics catalog**, or search/filter resources in **Graphics library**.
+1. Expand **AI tools → More tools: export the graphics catalog** and choose **Export AI graphics catalog**. Alternatively, search/filter in **Graphics library**, then expand **Manage resources → Export AI graphics catalog**.
 2. Select items, or use the export dialog's scope options for the current results.
 3. Choose **Export AI graphics catalog**, then copy the result or download JSON.
 4. Provide it together with your goal and relevant reference screenshots.
@@ -56,8 +64,10 @@ The Authoring Skill bundles offline node-authoring tools. After initial runtime 
 
 ## 5. Give AI direct access to the current web work
 
-First use follows **Install Skill → Ask AI to start MCP → Configure MCP**. Install the Authoring Skill in AI tools, continue and copy the startup instructions to AI. AI checks the runtime, installs missing dependencies and starts and verifies the service. Only then return to step 3 to connect the page and copy the MCP configuration into the client. Users do not run installation or startup commands themselves. Allow local network access when asked.
+The editor page, local MCP service and AI client are separate components. Both the page and client connect to the same service, which forwards structured requests to the page. Static websites and offline HTML can run the editor; a browser does not thereby become an MCP server listening on a local port. The Authoring Skill includes the service tools and AI starts them; the Effects Skill has no server.
 
-AI calls `forge_pages` to identify the intended work by name and page ID, then `forge_capture({pageId})` to pin its complete main canvas and read nodes, effects, tracks, sources and images or render previews. Capture again after edits; one snapshotId always retains one version. For requested creation/editing, AI queries forge_schema / forge_catalog and submits a recipe with forge_edit. Changes support undo; stale revisions are rejected. Capture and render again after editing. Closing the panel keeps it active; **Disconnect this page** revokes only that page. Refreshing or closing requires enabling again. Exit graphic preview before capturing.
+AI calls `forge_pages` to identify the intended work by name and page ID, then `forge_capture({pageId})` to pin its complete main canvas and read nodes, effects, tracks, sources and images or render previews. Capture again after edits; one snapshotId always retains one version. For requested creation/editing, AI queries forge_schema / forge_catalog and submits a recipe with forge_edit. Changes support undo; stale revisions are rejected. Capture and render again after editing. Preserve existing work by default; create mode requires a request for a new work. Closing the panel keeps it active; **Disconnect this page** revokes only that page. Refreshing or closing requires enabling again. Component trials require explicit component context; those snapshots cannot authorize main-canvas writes.
 
-See [Live editor and MCP connection](../skills/texture-forge-author/references/live-editor.en.md) for configuration, origins and tools. The page, helper and MCP client must reach the same computer; cloud-only clients cannot directly reach a local loopback address.
+See [Live editor and MCP connection](../skills/texture-forge-author/references/live-editor.en.md) for configuration, origins and tools, and [MCP capabilities](mcp-capabilities.en.md) for coverage and limits. The page, service and client must reach the same computer; cloud-only clients cannot directly reach local loopback addresses. AI may query loaded libraries when requested. Without a connected page, use supplied project ZIPs or catalogs rather than automatically reading an entire personal library.
+
+For game Shader delivery, query actual support and choose [graphic generation or image postprocessing export](14-shader-reference.en.md). Realtime analytic adaptation and handdrawn postprocessing are separate routes; visible web effects are not automatically exportable Unity Shaders.

@@ -4,7 +4,7 @@
 [简体中文](README.md) · [English](README.en.md)
 <!-- /doc-language -->
 
-Execute in order. Each file records scope, acceptance and results.
+These foundational extensions are implemented; each file describes scope and acceptance methods rather than a pending execution queue. See [Current scope](../../ROADMAP.en.md), the [manual](../../docs/README.en.md) and [development guide](../../docs/development.en.md) for current workflows.
 
 | Order | Plan | Status |
 | --- | --- | --- |
@@ -18,4 +18,4 @@ Entries: Graphics library → effects; node → Composite → postprocessing; pr
 
 Delivery includes source, help, AI Skills and a static website. Commits/pushes follow separate user instructions.
 
-Validation at completion: 267 unit tests, 298 definitions, static build, and expansion/GPU/control/generator/fire-smoke/custom-generator/release/pages browser regressions passed. Artifacts are in ignored `test-results/`. These figures describe that implementation stage, not the current total.
+During maintenance, run `npm test`, `npm run validate:definitions` and `npm run build:pages`, then choose relevant [browser checks](../../docs/development.en.md#checks-and-skill-generation). Current output determines test/graphic totals. Artifacts belong in ignored `test-results/`.

@@ -58,3 +58,11 @@ Layouts store panel positions, proportions, tabs and visibility. Nodes, graphics
 - Wide inspectors align labels, sliders, values and action buttons on one row. Narrower inspectors wrap the controls; very narrow inspectors place sliders on their own row, with values, reset and keyframe buttons below.
 - **Save as resource** groups graphics-list and graphics-library actions and identifies the current selection. Project saving remains in **File**. Trial editing explains how updates affect existing instances.
 - Play and scrubbing stay beneath the canvas; cycle duration, restart and node time are under **Playback settings**.
+
+## 5. Themes, controls and density
+
+Toolbar **Appearance** offers seven complete themes: Carbon & Gold, Ink & Cinnabar, Moon White, Celadon & Gold, Porcelain Moon, Dunhuang Minerals and Lotus & Lavender. The default Carbon & Gold uses neutral black/gray surfaces and warm gold. Themes define their own brightness without separate light/dark or system-following modes.
+
+Control style, tab shape and Compact/Comfortable density are independent. Four custom interaction colors cover actions, selection, navigation and parameter controls. Selecting a theme restores its recommended colors; changing control style retains the theme. Preview changes, then **Save appearance** to retain them; Cancel or Esc restores all opening settings. Appearance does not change artwork colors, project data or exports and is separate for each device/origin.
+
+Long dialogs scroll their middle content while titles, close controls and bottom actions remain reachable. Floating-panel titles and resize handles also stay separate from scrolling content. See [Interface design rules](ui-design-guidelines.en.md).

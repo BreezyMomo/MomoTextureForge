@@ -18,6 +18,6 @@ Append algorithms/parameters using the definition format, retain attribution and
 
 All four are visible and evolve with time; parameters, transparency and resource round-trips work.
 
-## Results
+## Current implementation
 
-All four are integrated. GPU checks passed for time changes, every parameter's minimum/maximum and pack equivalence. Caustics retain pixy.js MIT attribution.
+All four are integrated with time and graphic-specific parameters. Caustics retain pixy.js MIT attribution. Actual library definitions are authoritative; see [Formulas and generators](../../docs/04-formulas-and-generators.en.md). Maintenance checks time, parameter boundaries, alpha and resource-pack round trips.

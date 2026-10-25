@@ -6,7 +6,7 @@ export function starcoreSample(){return {
  description:'examples.starcoreCollapse.description',
  category:'composition',
  tags:['examples.generatorCompositing','examples.loopingAnimation'],
- previewTime:1.5,
+ previewTime:.25,
  output:{
   "width": 512,
   "height": 512,

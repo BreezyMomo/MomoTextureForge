@@ -8,6 +8,8 @@
 
 ## 1. Find and add a resource
 
+Search, category and source filters stay at the top. Expand **Manage resources** for creation, remote subscriptions, resource export and AI catalogs. Card editing/version actions are in details or More menus.
+
 The graphics list automatically receives all built-in graphics on first initialization. Existing browsers receive missing built-ins once on upgrade, preserving existing resources, versions and personal edits. Built-ins are deduplicated by resource identity. Later intentional removals, including an empty list, stay removed after refresh. New/open canvases continue sharing this list; initialization does not draw every built-in on the canvas.
 
 Thumbnail grids automatically add or remove columns based on available panel width, with a minimum card width of about 120px. Widen the panel for three, four or more columns; narrow panels fall back to one. View → List remains a single column.

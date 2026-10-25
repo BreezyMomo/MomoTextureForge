@@ -10,6 +10,12 @@
 
 从“快速上手”做出第一张贴图，再按需要查阅具体操作。截图来自当前编辑器的实际界面，演示数据独立于用户草稿；不同窗口大小会使按钮换行或参数区出现滚动条。
 
+| 使用方式 | 先读这里 |
+| --- | --- |
+| 在网页中创作 | [快速上手](01-quick-start.md)，再按下表查参数与工作流程 |
+| 让AI创作或读取作品 | [AI三步连接](10-ai-and-help.md)；已有项目ZIP可走[离线工具](../AI_AUTHORING_CLI.md) |
+| 修改工具或扩展Shader | [开发入口](development.md)、[Shader职责规范](../skills/texture-forge-author/references/shader-architecture.md)、[MCP能力](mcp-capabilities.md) |
+
 ![编辑器总览](images/workspace.png)
 
 > 图中标记：1 打开图形库；2 选择节点；3 切换贴图类型；4 编辑选中节点。
@@ -34,8 +40,8 @@
 | 图片转法线、查看高度、检查三维材质 | [07 · 法线与三维预览](07-normal-and-material.md) |
 | 导出 PNG、EXR、序列帧、图集、PSD、SVG | [08 · 导出与交付](08-export.md) |
 | 订阅远程图形库、维护与发布自己的图库 | [09 · 远程图库与管理器](09-remote-libraries.md) |
-| 下载 Skill、向 AI 提供图库目录、导入结果 | [10 · AI 协作与帮助](10-ai-and-help.md) |
-| 拖动停靠、拆分、合并标签、悬浮与保存布局 | [11 · 自定义面板布局](11-workspace-layout.md) |
+| 安装/更新Skill、连接MCP、提供目录或离线作品 | [10 · AI 协作与帮助](10-ai-and-help.md) |
+| 拖动停靠、悬浮与保存布局、设置主题和密度 | [11 · 自定义面板布局](11-workspace-layout.md) |
 | 设置语言优先级、为参数和选项配置多语言别名 | [12 · 语言与参数别名](12-language-and-aliases.md) |
 | 本地运行、离线构建、静态部署、维护截图 | [开发与部署](development.md) |
 | 找不到图形、预览/导出不一致、存储与恢复问题 | [常见问题](faq.md) |

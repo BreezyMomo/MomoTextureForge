@@ -10,6 +10,12 @@ Gold numbered boxes mark operation targets. The caption below each screenshot ex
 
 Start with Quick start, then consult individual chapters as needed. Screenshots come from the real editor using demonstration data isolated from user drafts. Window size may cause controls to wrap or inspector panels to scroll.
 
+| Workflow | Start here |
+| --- | --- |
+| Create in the editor | [Quick start](01-quick-start.en.md), then find controls/workflows below |
+| Ask AI to create or read work | [Three-step AI connection](10-ai-and-help.en.md); supplied project ZIPs can use [offline tools](../AI_AUTHORING_CLI.en.md) |
+| Develop the tool or extend Shaders | [Development entry points](development.en.md), [Shader responsibilities](../skills/texture-forge-author/references/shader-architecture.en.md) and [MCP capabilities](mcp-capabilities.en.md) |
+
 ![Editor overview](images/en/workspace.png)
 
 > Callouts: 1 Open the graphics library; 2 Select a node; 3 Switch texture channel; 4 Edit the selected node.
@@ -34,8 +40,8 @@ Start with Quick start, then consult individual chapters as needed. Screenshots 
 | Generate normals and inspect height and 3D materials | [07 · Normals and 3D preview](07-normal-and-material.en.md) |
 | Export PNG, EXR, frame sequences, atlases, PSD and SVG | [08 · Export and delivery](08-export.en.md) |
 | Subscribe to libraries and maintain/publish your own | [09 · Remote libraries and manager](09-remote-libraries.en.md) |
-| Download Skills, supply a catalog and import AI results | [10 · AI collaboration and help](10-ai-and-help.en.md) |
-| Dock, split, merge, float and save layouts | [11 · Custom panel layouts](11-workspace-layout.en.md) |
+| Install/update Skills, connect MCP, supply catalogs or offline work | [10 · AI collaboration and help](10-ai-and-help.en.md) |
+| Dock, float and save layouts; set themes and density | [11 · Custom panel layouts](11-workspace-layout.en.md) |
 | Set language and edit resource/parameter/option aliases | [12 · Language and aliases](12-language-and-aliases.en.md) |
 | Run locally, build offline, deploy and maintain screenshots | [Development and deployment](development.en.md) |
 | Missing graphics, preview/export differences and storage recovery | [FAQ](faq.en.md) |

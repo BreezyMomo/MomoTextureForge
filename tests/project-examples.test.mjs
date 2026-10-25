@@ -3,6 +3,13 @@ import assert from 'node:assert/strict';
 import {exampleCatalog,exampleProject,projectShareLink} from '../web/project-examples.js';
 import {project,node} from '../web/tree-model.js';
 import {createLiveAuthoring,editorRevision} from '../web/editor-live-authoring.js';
+import {treeSamples} from '../web/tree-samples.js';
+
+test('example preview frames fit the normalized editor timeline',()=>{
+ for(const sample of treeSamples())if(sample.previewTime!==undefined){
+  assert.ok(Number.isFinite(sample.previewTime)&&sample.previewTime>=0&&sample.previewTime<=1,sample.name+' previewTime must be normalized progress');
+ }
+});
 
 test('native examples have stable unique IDs and editable independent project trees',()=>{
  const catalog=exampleCatalog();assert.ok(catalog.length>10);assert.equal(new Set(catalog.map(e=>e.id)).size,catalog.length);

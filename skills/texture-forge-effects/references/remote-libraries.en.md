@@ -20,7 +20,7 @@ Download locally does not mean writing a Git checkout or saving a new original. 
 
 ## Subscribe and use
 
-1. Open Graphics library → Remote libraries.
+1. Open Graphics library → Manage resources → Remote libraries.
 2. Enter a name and direct `index.json` URL, such as `https://example.com/library/index.json` (format example only). Trailing slash appends the index. Repository homepages, ZIP links and `library.json` are not subscription indexes.
 3. After connection, close the dialog and filter by source. Multiple sources can be enabled, disabled, renamed, refreshed or removed.
 4. Download locally caches only. Add to graphics list downloads as needed, then use + Add for an instance. Add directly to canvas is also available.

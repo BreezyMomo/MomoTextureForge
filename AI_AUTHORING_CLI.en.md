@@ -4,7 +4,7 @@
 [简体中文](AI_AUTHORING_CLI.md) · [English](AI_AUTHORING_CLI.en.md)
 <!-- /doc-language -->
 
-Run from the MomoTextureForge repository. Node.js 22+ is required. First install:
+This page is for maintainers and AI running authoring tools, with commands from the MomoTextureForge repository root. Ordinary web users follow the [three-step AI setup](docs/10-ai-and-help.en.md): install the Skill and ask AI to prepare the service, without manually running dependency commands below. Repository development requires Node.js 22+. First install:
 
 ```bash
 npm ci
@@ -77,6 +77,16 @@ Time values are elapsed seconds. Nodes use seconds/cycle plus their timing; form
 
 Successful reports have ok:true; failure exits 1 and writes a failure report. Never use old images as new success. Inputs are read-only and the browser accesses only a temporary local service without uploading projects. Run node tests/project-tools-browser-check.mjs for the portable workflow. The optional actual-Unity probe is node tests/project-tools-unity-check.mjs --unity <Unity6 executable>, creating only an isolated test-results project. Browser success does not establish engine compilation or visual parity.
 
-Open **AI tools → Install and configure**, select an agent and Skills, then **Choose directory and install…** to authorize your chosen location. The panel recommends paths; see [Install and update Skills](skills/texture-forge-author/references/installation.en.md). **Download ZIP** next to each Skill provides archives with SKILL.md, specifications, examples, scripts/texforge.mjs and a standalone renderer, without requiring this repository. Ask AI to read SKILL.md and set up runtime dependencies in the Skill directory, then run node scripts/texforge.mjs render/check. Browser binaries are installed during runtime setup, not bundled in the ZIP. Developers can rebuild with node authoring-tool.mjs build-kit; static builds regenerate the kit automatically.
+Under **AI tools → 1. Install Skill**, select an agent/Skills and authorize a directory or download ZIPs. In the same panel, send step 2's instructions to AI for runtime setup; step 3 connects the page and configures the client. Reinstall into the same directory and reload the Skill to update. See [Installation and updates](skills/texture-forge-author/references/installation.en.md). The Authoring Skill includes specifications, examples, `scripts/texforge.mjs` and independent render pages without this checkout; the Effects Skill contains operation guidance only. Browser binaries are installed during setup, not bundled. Maintainers generate packages with `node build-authoring-kit.mjs`; static builds also regenerate them.
 
-Unified handdrawn uses [RGBA postprocess](skills/texture-forge-author/references/handdrawn-postprocess.en.md). Query modes.postprocess/inputAdapters, then export --shader-mode postprocess --handdrawn-input auto|texture|generator|external. No retired renderer fallback.
+## Shader categories and export
+
+Distinguish graphic generation from image processing using [responsibility rules](skills/texture-forge-author/references/shader-architecture.en.md). Query support first rather than omitting unsupported nodes:
+
+```sh
+node portable-authoring-cli.mjs project shader-support effect.zip --output test-results/support.json
+node portable-authoring-cli.mjs project shader effect.zip --shader-mode realtime --times 0,.75,1.5 --output test-results/realtime.zip
+node portable-authoring-cli.mjs project shader effect.zip --shader-mode postprocess --handdrawn-input auto --times 0,.75,1.5 --output test-results/handdrawn.zip
+```
+
+Choose one export route based on the work; do not try both blindly until an unsupported work appears to export. See [analytic adaptation](skills/texture-forge-author/references/realtime-shaders.en.md) for realtime scope. Postprocess currently means [unified handdrawn](skills/texture-forge-author/references/handdrawn-postprocess.en.md), with auto/texture/generator/external inputs. Handdrawn never falls back to light fills or frozen strokes; explicit static input capture is not source-animation compilation. Export reports and real target-Unity verification remain separate.

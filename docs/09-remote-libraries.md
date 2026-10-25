@@ -12,7 +12,7 @@
 
 > 图中标记：1 填写订阅名称；2 填写 index.json 地址；3 添加图库订阅。
 
-1. **图形库 → 远程图库**，填订阅名称和 `index.json` 目录地址。
+1. **图形库 → 资源管理 → 远程图库**，填订阅名称和 `index.json` 目录地址。
 2. 刷新目录，查看可用资源。远程服务必须允许跨域访问。
 3. 按需下载，再添加到图形列表和画布。
 4. 下载过的资源可离线使用；刷新和下载新资源需要网络。
@@ -59,7 +59,7 @@ GitHub Free 账号使用公开仓库即可按此方式发布。界面与发布�
 | 编辑器订阅地址 | `https://your-name.github.io/my-texture-library/index.json` |
 | 在线打开管理器 | `https://your-name.github.io/my-texture-library/manager/index.html` |
 
-将 `your-name` 和仓库名替换成自己的实际值，**最终以 Pages 页面显示的站点地址为准**。在 Momo Texture Forge 的 **图形库 → 远程图库**中填写名称和自己的 `index.json` 地址，添加订阅、刷新目录，并下载一个资源确认可用。不要填写 GitHub 的仓库页面地址或 `blob/main/index.json` 页面地址。
+将 `your-name` 和仓库名替换成自己的实际值，**最终以 Pages 页面显示的站点地址为准**。在 Momo Texture Forge 的 **图形库 → 资源管理 → 远程图库**中填写名称和自己的 `index.json` 地址，添加订阅、刷新目录，并下载一个资源确认可用。不要填写 GitHub 的仓库页面地址或 `blob/main/index.json` 页面地址。
 
 在线管理器仍需选择电脑上的图库文件夹，它不会直接修改线上文件。之后每次用管理器整理资源，再提交推送到 `main`，GitHub Pages 就会重新部署；发布完成后，让使用者刷新远程目录获取更新。若打开站点或资源提示 404，先确认部署成功、分支/根目录选择正确，并检查地址中的仓库名和文件路径大小写。
 

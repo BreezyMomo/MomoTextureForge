@@ -23,6 +23,8 @@ Download the [breathing-star starting project](examples/animation-star.json), op
 
 The screenshot changes only width, stretching the star horizontally. To scale proportionally, also record height or use the breathing-scale template. The first recorded change preserves the starting base state. You can also add keys explicitly with the button beside a parameter.
 
+During playback, editable graphic parameters, colors, transforms, UV and batch parameters update without stopping the preview. Continuous slider changes preview live and commit as one undo operation; Record mode writes keys at the advancing cursor. Explicit timeline seeks, key dragging or switching recording/base-value modes pause for precise editing. Parameters controlled by existing tracks remain locked in ordinary mode; use recording or base-value controls.
+
 ## 2. Edit keys and curves
 
 ![Width animation curve](images/en/animation-curves.png)

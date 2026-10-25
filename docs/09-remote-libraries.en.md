@@ -12,7 +12,7 @@
 
 > Callouts: 1 Subscription name; 2 index.json URL; 3 Add subscription.
 
-1. Open **Graphics library → Remote libraries** and enter a name and directory URL.
+1. Open **Graphics library → Manage resources → Remote libraries** and enter a name and directory URL.
 2. Refresh the directory to browse resources. The server must allow cross-origin access.
 3. Download as needed, then add to the graphics list and canvas.
 4. Downloaded resources work offline; refreshing or acquiring new resources needs a network connection.
@@ -59,7 +59,7 @@ For username `your-name` and repository `my-texture-library`:
 | Subscribe in the editor | `https://your-name.github.io/my-texture-library/index.json` |
 | Open manager online | `https://your-name.github.io/my-texture-library/manager/index.html` |
 
-Substitute your real values and **use the address shown by Pages as the authority**. In **Graphics library → Remote libraries**, add the name and `index.json` URL, refresh and download one resource to verify. Do not use the GitHub repository page or `blob/main/index.json` page.
+Substitute your real values and **use the address shown by Pages as the authority**. In **Graphics library → Manage resources → Remote libraries**, add the name and `index.json` URL, refresh and download one resource to verify. Do not use the GitHub repository page or `blob/main/index.json` page.
 
 The online manager still selects a folder on your computer; it does not edit hosted files directly. After maintenance, commit/push to `main`, wait for Pages deployment and ask users to refresh the directory. For 404 errors, check deployment status, branch/root settings, repository name and path capitalization.
 

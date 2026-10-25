@@ -46,13 +46,13 @@
 
 图库是资源来源，图形列表是常用副本，画布节点是编辑实例。修改实例不会自动修改图库。
 
-顶栏 **组合示例** 提供 54 种可编辑组合与素材预设，并可按分类筛选。特效包括刀光拖尾、命中爆闪、破碎冲击环、能量旋涡、溶解遮罩，以及完整的雷电打击、冰霜新星、火焰爆炸、全息护盾受击；另有可替换子图形的点阵、三种波形流动环纹、独立亮核与外晕、极光帘、圣光幕和能量屏障，详见[技能、环纹与光帘预设](docs/13-effect-presets.md)。UI 底纹包含菱形格纹、交错菱砖、斜纹底纹与点阵底纹，可无缝平铺。组合练习保留召唤特效、雷达光环、花瓣徽章、星光螺旋、蜂巢护盾、火焰法阵，以及手绘心形和九种手绘样式对照。素材预设包含酸液飞溅和卷曲庆典彩带。新增排列包含边框灯带、轮廓光点、人字/篮式编织、渐隐点阵、流场、接口管线、拼图和边界处理示例。点 **在画布中编辑** 即可逐层拆解；动态示例已配置单次／循环动画及导出设置。
+顶栏 **组合示例** 按分类提供可编辑的完整效果与练习。点 **在画布中编辑** 后可逐层拆解，动态示例带有动画和导出设置：
 
-节点后处理共31项，新增印刷网点、抖动限色、故障撕裂、缩放模糊、油画笔触、浮雕斜面、铅笔线稿、复古显像管、字符画和像素排序。组合练习新增“后处理风格对照”“漫画印刷”“复古掌机”“全息故障”四个示例，详见[创意风格后处理](docs/05-canvas-and-compositing.md#创意风格后处理)。
+- 技能与光效：星核、刀光拖尾、命中爆闪、冲击环、能量旋涡、雷电、冰霜新星、火焰爆炸、护盾、点阵、流动环纹与光帘。详见[技能、环纹与光帘预设](docs/13-effect-presets.md)。
+- 组合与排列：召唤法阵、花瓣与星光、蜂巢、手绘样式、边框灯带、轮廓光点、人字/篮式编织、流场、接口拼接与边界处理。
+- 底纹与素材：可平铺的格纹、菱砖、斜纹和点阵，以及酸液飞溅、庆典彩带等素材。
 
-新增“噪声扭曲”节点后处理及“热浪扭曲”“水波折射”“能量扰动”三个可编辑对照示例，支持连续流动与闭合轨迹循环；详见[噪声扭曲](docs/05-canvas-and-compositing.md#噪声扭曲)。
-
-新增“溶解／燃烧消散”“冲击波折射”“液态融合”及三个可编辑对照示例，支持进度关键帧、图片与组合。详见[溶解、冲击波与液态融合](docs/05-canvas-and-compositing.md#溶解冲击波与液态融合)。 后处理采用“当前效果栈 + 搜索分类添加”，支持统一示例预览；停用、移出和恢复分别处理，保留设置与关键帧。
+节点后处理通过 **当前效果栈 + 搜索分类添加** 组织，可预览原图/效果、拖动排序、停用或移出并保留设置与关键帧。包括[创意风格](docs/05-canvas-and-compositing.md#创意风格后处理)、[噪声扭曲](docs/05-canvas-and-compositing.md#噪声扭曲)以及[溶解、冲击波与液态融合](docs/05-canvas-and-compositing.md#溶解冲击波与液态融合)。网页后处理与Unity导出范围分别说明，不将示例可播放视为引擎已支持。
 
 想先体验效果，可下载[召唤法阵演示画布](docs/examples/summoning-circle.json)，在 **文件 → 打开项目** 中打开。详细步骤与更多示例见[快速上手](docs/01-quick-start.md)。
 
@@ -74,6 +74,7 @@
 | 下载 Skill、提供图库目录、导入 AI 结果 | [AI 协作与帮助](docs/10-ai-and-help.md) |
 | 拖动、拆分、悬浮面板，保存自己的工作布局 | [自定义面板布局](docs/11-workspace-layout.md) |
 | 切换界面语言、参数变量与多语言别名 | [语言与参数别名](docs/12-language-and-aliases.md) |
+| 区分图形生成与后处理，交付Unity Shader | [Shader分类与Unity导出](docs/14-shader-reference.md) |
 
 更多：[手册总目录](docs/README.md) · [常见问题](docs/faq.md) · [开发与部署](docs/development.md)。
 
@@ -99,17 +100,17 @@ npm run build:pages       # 同步生成可部署的 site/index.html
 
 ## 与 AI 协作
 
-顶部 **AI 工具** 集中管理创作 Skill、效果指导 Skill、MCP 连接和作品交接。选择目标 Agent 与需要的 Skill，点 **选择目录并安装…** 后在系统窗口中选择位置并授权。界面提供对应Agent的推荐路径，自动补齐Skill子目录；每个Skill右侧提供ZIP下载。详见[Skill 安装说明](skills/texture-forge-author/references/installation.md)。需要 AI 推荐图形时，在这里导出图库当前可用资源与参数。
+顶部 **AI 工具** 在同一面板依次提供Skill安装、服务启动说明和MCP配置。创作Skill用于实际创作与连接，效果指导Skill用于操作讲解。选择目标Agent与Skill后，点 **选择目录并安装…** 授权目录；每行也可下载ZIP。再次选原目录安装会按内容更新并备份变化文件，之后需让客户端重新加载Skill。详见[安装与更新](skills/texture-forge-author/references/installation.md)。
 
 创作 Skill 还包含离线项目工具。AI无需打开网站即可搭建节点树、组合、遮罩、排列、后处理与动画，并打包全部依赖交付原生项目ZIP；用户通过 **文件 → 打开项目**继续编辑，保存后也能交回AI继续修改。详见[离线项目流程](skills/texture-forge-author/references/offline-projects.md)。
 
-首次连接按 **安装 Skill → 让 AI 启动 MCP → 配置 MCP** 完成。安装创作 Skill 后，将网页提供的启动说明发给 AI；运行环境、依赖与本机服务由 AI 准备并验证。之后连接当前页面、复制 MCP 配置到客户端。AI 可读取作品与资源并渲染参考图；详见[网页作品与 MCP 连接](skills/texture-forge-author/references/live-editor.md)。
+首次连接按 **安装 Skill → 让 AI 启动 MCP → 配置 MCP** 完成。将启动说明发给AI，由AI准备环境、依赖与本机服务并验证，再连接当前页面、配置客户端。网页和AI都连接本机服务，静态网页也使用这一路径。AI按用户请求读取或原子编辑作品，支持版本校验和撤销，完成后重新捕获与渲染验证；详见[连接与工具参数](skills/texture-forge-author/references/live-editor.md)和[当前MCP能力](docs/mcp-capabilities.md)。仅需推荐图形时，在 **其他工具：导出图形目录** 导出图库目录，不必共享画布。
 
 [操作教程](docs/10-ai-and-help.md) · [命令行创作与验证](AI_AUTHORING_CLI.md) · [生成器格式](skills/texture-forge-author/references/generator-guide.md)
 
 ## 深入资料与反馈
 
-[图形定义](PATTERN_DEFINITIONS.md) · [本地图形库](LOCAL_GRAPHICS_LIBRARY.md) · [资源包格式](RESOURCE-PACK.md) · [远程图库技术说明](REMOTE_LIBRARIES.md)
+[开发入口与验证](docs/development.md) · [Shader扩展规范](skills/texture-forge-author/references/shader-architecture.md) · [图形定义](PATTERN_DEFINITIONS.md) · [本地图形库](LOCAL_GRAPHICS_LIBRARY.md) · [资源包格式](RESOURCE-PACK.md) · [远程图库技术说明](REMOTE_LIBRARIES.md)
 
 **帮助 → GitHub 仓库 ↗**可查看源码与反馈问题；访问不便时，可通过 **Gitee 仓库 ↗**打开国内镜像阅读文档与下载仓库。提交问题时提供复现步骤、浏览器、截图以及可分享的最小项目。
 

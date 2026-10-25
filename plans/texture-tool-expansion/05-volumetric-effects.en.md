@@ -18,6 +18,6 @@ Implement bounded volume sampling and alpha composition, register resources, val
 
 All three evolve with time, expose effective parameters and produce finite pixels. Unit, GPU and static-build checks pass.
 
-## Results
+## Current implementation
 
-All three are integrated with adjustable 24–96 bounded samples. Seven added effects passed GPU time/range/finite-pixel/import-equivalence checks. At completion, 267 unit tests and 298 definitions passed, alongside original generators, fire/smoke, custom creation, controls, export and static-site regressions. Offline checks confirmed no extra network assets.
+All three are integrated with adjustable 24–96 bounded samples. Maintenance checks time, parameter boundaries, finite pixels, alpha and pack round trips, then rebuilds static output and verifies offline dependencies. See [Development](../../docs/development.en.md) for current commands and verification levels; use current tool output for graphic/test totals.

@@ -4,7 +4,7 @@
 [简体中文](AI_AUTHORING_CLI.md) · [English](AI_AUTHORING_CLI.en.md)
 <!-- /doc-language -->
 
-在 MomoTextureForge 工具目录执行，要求 Node.js >=22。首次安装：
+本页面向维护者与执行创作工具的AI，命令从MomoTextureForge仓库根目录执行。普通网页用户按[AI三步连接](docs/10-ai-and-help.md)安装Skill、让AI准备服务，无需手动执行下面的依赖命令。仓库开发要求Node.js >=22，首次安装：
 
 ```bash
 npm ci
@@ -77,6 +77,16 @@ node portable-authoring-cli.mjs project shader effect.zip --shader-mode postproc
 
 成功报告 `ok:true`，失败退出1且写入失败报告，不使用旧图片冒充本次结果。所有操作只读输入，浏览器仅访问临时本机服务，不上传作品。源码工具可运行 `node tests/project-tools-browser-check.mjs` 验证完整CLI与资源依赖；可选的真实Unity探针为 `node tests/project-tools-unity-check.mjs --unity <Unity6路径>`，仅在test-results创建独立工程，不修改用户游戏项目。引擎编译和视觉验收不由浏览器成功替代。
 
-用户从编辑器 **AI 工具 → 安装与配置** 选择Agent与Skill，点 **选择目录并安装…** 后自行选择位置并授权写入。页面显示推荐路径；详见[安装与更新 Skill](skills/texture-forge-author/references/installation.md)。各Skill右侧的 **下载 ZIP** 提供完整压缩包，包含SKILL.md、规范、示例、scripts/texforge.mjs及独立渲染页面，无需项目源码。让AI读取SKILL.md，在Skill目录配置运行依赖，执行 node scripts/texforge.mjs render/check。浏览器二进制在运行环境设置时安装，不随ZIP捆绑。开发者可运行 node authoring-tool.mjs build-kit 重建下载包；静态构建自动重建。
+用户从 **AI 工具 → 1. 安装 Skill** 选择Agent与Skill，授权目录或下载对应ZIP；随后在同一面板把第2步说明发给AI，由AI准备运行环境，第3步再连接页面和配置客户端。更新时重新选择原目录安装并让客户端重新加载Skill；详见[安装与更新](skills/texture-forge-author/references/installation.md)。创作Skill包含规范、示例、`scripts/texforge.mjs`及独立渲染页面，无需源码；效果指导Skill仅含操作说明。浏览器二进制在环境准备时安装，不随ZIP捆绑。维护者通过`node build-authoring-kit.mjs`生成下载包，静态构建也会重建。
 
-手绘统一使用[RGBA 后处理](skills/texture-forge-author/references/handdrawn-postprocess.md)，查询 modes.postprocess/inputAdapters 后，以 --shader-mode postprocess 和明确的输入适配导出；不回退到旧轻量或冻结渲染器。
+## Shader分类与导出
+
+按[职责规范](skills/texture-forge-author/references/shader-architecture.md)区分生成图形与处理图像。先查询支持，不跳过未覆盖节点：
+
+```sh
+node portable-authoring-cli.mjs project shader-support effect.zip --output test-results/support.json
+node portable-authoring-cli.mjs project shader effect.zip --shader-mode realtime --times 0,.75,1.5 --output test-results/realtime.zip
+node portable-authoring-cli.mjs project shader effect.zip --shader-mode postprocess --handdrawn-input auto --times 0,.75,1.5 --output test-results/handdrawn.zip
+```
+
+两条导出命令是按作品选择的替代路径，不应对不支持的作品连续试出一个看似成功的包。realtime范围见[解析适配](skills/texture-forge-author/references/realtime-shaders.md)；postprocess目前为[统一手绘](skills/texture-forge-author/references/handdrawn-postprocess.md)，输入适配可选auto/texture/generator/external。手绘不回退到轻量或冻结描边；显式静态输入抓取不等于编译源动画。导出报告和目标Unity实际验证分别记录。

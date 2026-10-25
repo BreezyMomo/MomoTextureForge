@@ -181,9 +181,12 @@ try{
   await page.locator('#generate-export-preview').click();await page.locator('.export-preview-overview').waitFor();await page.locator('.export-preview-overview summary').click();await page.getByRole('img',{name:label('editor.fullCanvasAtlasPreview')}).waitFor({state:'visible'});await shot('atlas-preview',page.getByRole('img',{name:label('editor.fullCanvasAtlasPreview')}));await page.locator('#close-global').click();
   await load(spell);await page.locator('#export-now').click();await page.getByRole('combobox',{name:label('editor.exportFormat'),exact:true}).selectOption('svg');await shot('export-vector');await page.locator('#close-global').click();
  });
+ await run('ai-tools',async()=>{
+  await page.setViewportSize({width:1200,height:1400});await load(spell);await page.locator('#ai-tools').click();await page.locator('.ai-tools-dialog').waitFor();await shot('ai-tools');await page.locator('.ai-tools-dialog [data-close]').click();await page.setViewportSize({width:1600,height:1050});
+ });
  await run('remote-ai',async()=>{
-  await load(spell);await library();await page.getByRole('button',{name:label('library.remoteLibraries'),exact:true}).click();await shot('remote-libraries');
-  await page.locator('dialog').last().locator('header .graphics-close').click();await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).fill(inLanguage('星形','Star'));await page.getByRole('button',{name:label('library.exportAIGraphicsCatalog'),exact:true}).click();await page.getByRole('button',{name:label('library.generateCatalog'),exact:true}).click();await page.waitForFunction(()=>[...document.querySelectorAll('dialog textarea')].some(e=>e.value.includes('schema')));await shot('ai-catalog');
+  await load(spell);await library();await page.locator('.graphics-management>summary').click();await page.getByRole('button',{name:label('library.remoteLibraries'),exact:true}).click();await shot('remote-libraries');
+  await page.locator('dialog').last().locator('header .graphics-close').click();await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).fill(inLanguage('星形','Star'));if(!await page.locator('.graphics-management').evaluate(e=>e.open))await page.locator('.graphics-management>summary').click();await page.getByRole('button',{name:label('library.exportAIGraphicsCatalog'),exact:true}).click();await page.getByRole('button',{name:label('library.generateCatalog'),exact:true}).click();await page.waitForFunction(()=>[...document.querySelectorAll('dialog textarea')].some(e=>e.value.includes('schema')));await shot('ai-catalog');
  });
  await run('help',async()=>{
   await load(spell);await page.locator('#startup-screen').waitFor({state:'detached'});

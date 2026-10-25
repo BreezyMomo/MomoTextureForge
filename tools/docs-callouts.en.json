@@ -229,6 +229,11 @@
     "Mainland source mirror and documentation",
     "WeChat donation code"
   ],
+  "ai-tools": [
+    "Choose a directory to install or update Skills",
+    "Copy instructions for AI to start the service",
+    "Connect the page and configure MCP"
+  ],
   "ai-catalog": [
     "Select catalog scope",
     "Generate the catalog",
