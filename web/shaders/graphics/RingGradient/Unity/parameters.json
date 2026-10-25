@@ -1,0 +1,161 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TFf0765b1c9288",
+  "shaderName": "MomoTextureForge/Generated/TFf0765b1c9288",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_centerRadius",
+      "type": "Float",
+      "floatValue": 0.62,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_gradientWidth",
+      "type": "Float",
+      "floatValue": 0.12,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "中心半径",
+      "min": 0.02,
+      "max": 1.5,
+      "step": 0.01,
+      "default": 0.62,
+      "variable": "centerRadius",
+      "aliases": {
+        "zh-CN": "中心半径",
+        "en": "Center radius"
+      },
+      "property": "_MF_1_centerRadius"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "渐变宽度",
+      "min": 0.001,
+      "max": 0.5,
+      "step": 0.001,
+      "default": 0.12,
+      "variable": "gradientWidth",
+      "aliases": {
+        "zh-CN": "渐变宽度",
+        "en": "Gradient width"
+      },
+      "property": "_MF_1_gradientWidth"
+    }
+  ]
+}

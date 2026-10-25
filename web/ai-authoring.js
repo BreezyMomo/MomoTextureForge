@@ -4,6 +4,7 @@ import {normalizeParameter} from './parameter-metadata.js';
 import {builtinAsset,validateAsset} from './resource-assets.js';
 import {bindFormulaParameters} from './formula-parameters.js';
 import {SLOT_KEYS} from './definition-schema.js';
+import {graphicShaderSignature,rebindGraphicModule} from './engine-shader-contract.js';
 export const AUTHORING_SCHEMA='momo.graphic-authoring/v1';
 export const AUTHORING_LIMIT=2*1024*1024;
 export const AUTHORING_EXAMPLE={schema:AUTHORING_SCHEMA,name:'呼吸圆环',category:'我的图形',description:'速度控制每秒呼吸次数；time 持续累加。',formula:{kind:'body',source:'float radius = baseRadius + sin(time * TAU * speed) * amplitude;\nreturn line(length(q)-radius, thickness, softness);'},parameters:[{variable:'baseRadius',label:'半径',min:.1,max:.85,step:.01,default:.5},{variable:'thickness',label:'线宽',min:.005,max:.2,step:.005,default:.04},{variable:'softness',label:'柔化',min:.001,max:.1,step:.001,default:.01},{variable:'speed',label:'速度',min:0,max:3,step:.1,default:1},{variable:'amplitude',label:'幅度',min:0,max:.1,step:.005,default:.05}],helpers:''};
@@ -14,6 +15,7 @@ export function parseAuthoring(input){
  if(typeof input==='string'){if(input.length>AUTHORING_LIMIT||new TextEncoder().encode(input).length>AUTHORING_LIMIT)throw messageError("library.authoringFileExceedsMB");let source=input.trim().replace(/^\uFEFF/,'');const fence=source.match(/^```(?:json)?\s*\n([\s\S]*?)\n```$/i);if(fence)source=fence[1];try{input=JSON.parse(source);}catch{throw Error('创作文件不是有效JSON，请粘贴完整JSON对象');}}
  if(!object(input)||input.schema!==AUTHORING_SCHEMA)throw Error('不支持的创作文件版本');
  const draft={schema:AUTHORING_SCHEMA,...graphicAliasesField(input.aliases),name:text(input.name,'图形名称',80),category:text(input.category??'我的图形','分类',80),description:text(input.description??'','说明',2000,true),formula:input.formula,parameters:input.parameters,helpers:text(input.helpers??'','辅助函数',1048576,true)};
+ if(input.engineShaders)draft.engineShaders=structuredClone(input.engineShaders);
  if(!object(draft.formula)||!['body','expression'].includes(draft.formula.kind))throw Error('公式类型必须是body或expression');
  draft.formula={kind:draft.formula.kind,source:text(draft.formula.source,'公式',60000)};
  if(!Array.isArray(draft.parameters)||draft.parameters.length>16)throw Error('参数必须是数组，最多16个');
@@ -25,10 +27,12 @@ export function parseAuthoring(input){
 }
 export function assetFromAuthoring(draft){
  const asset=builtinAsset('Circle'),def=asset.definition;
+ delete asset.engineShaders;if(draft.engineShaders)asset.engineShaders=structuredClone(draft.engineShaders);
  const parameters=draft.parameters.map((p,slot)=>({...p,slot,key:SLOT_KEYS[slot]})),binding=bindFormulaParameters(draft.formula.source,parameters,draft.formula.kind);
  asset.libraries={'math-v1':asset.libraries['math-v1']};if(draft.helpers)asset.libraries['author-helpers']=draft.helpers;
  def.id='AuthoredGraphic';def.revision=1;def.name=draft.name;delete def.aliases;Object.assign(def,graphicAliasesField(draft.aliases));def.parameters=parameters;def.defaults=Array(16).fill(0);for(const p of parameters)def.defaults[p.slot]=p.default;
  def.authoring={formula:draft.formula.source,kind:draft.formula.kind,portable:true};def.editor={kind:'parameters'};def.seamless={kind:'blend'};def.outputs={scalar:{kind:'body',inline:binding.compiled,libraries:Object.keys(asset.libraries)}};
+ if(asset.engineShaders?.unity&&!asset.engineShaders.unity.sourceSignature)asset.engineShaders.unity.sourceSignature=graphicShaderSignature(asset);
  validateAsset(asset);return asset;
 }
 export function scalarHelpers(asset){return [...new Set(asset.definition.outputs.scalar.libraries)].filter(n=>!['math-v1','vector-v1','periodic-v1'].includes(n)).map(n=>asset.libraries[n]).join('\n');}
@@ -42,7 +46,9 @@ export function authoringFromEditor(asset,meta,source,kind,specs,helpers){
   const vectors=['a','b','c','d'].map((v,i)=>'vec4 '+v+'=vec4('+values.slice(i*4,i*4+4).join(',')+');').join('\n');
   formula={kind:'body',source:vectors+'\n{float R=a.x,W=a.y,N=a.z,S=a.w,D=b.x,K=b.y,H=b.z,T=time*b.w;\n{\n'+(kind==='expression'?'return ('+source+');':source)+'\n}}'};
  }
- return {schema:AUTHORING_SCHEMA,...meta,...graphicAliasesField(Object.hasOwn(meta,'aliases')?meta.aliases:asset.definition.aliases),formula,parameters:specs.map(({slot,key,...spec})=>spec),helpers};
+ const draft={schema:AUTHORING_SCHEMA,...meta,...graphicAliasesField(Object.hasOwn(meta,'aliases')?meta.aliases:asset.definition.aliases),formula,parameters:specs.map(({slot,key,...spec})=>spec),helpers};
+ const original=asset.definition.authoring;if(source===(original?.formula??asset.definition.outputs.scalar.inline)&&kind===(original?.kind??asset.definition.outputs.scalar.kind)&&helpers===scalarHelpers(asset)){const modules=rebindGraphicModule(asset,assetFromAuthoring(draft));if(modules)draft.engineShaders=modules;}
+ return draft;
 }
 export const AUTHORING_GUIDE=`# Momo Texture Forge 图形创作规范
 
@@ -105,6 +111,8 @@ description: Create and edit Momo Texture Forge textures and native projects, st
 用户要求把编辑器效果接入任何游戏引擎时，必须先读[游戏引擎接入通用规则](references/engine-integration.md)。写代码前先检查实际模块支持，优先直接复用已提供且适用的 Shader、运行组件、导入器和参数映射；需要适配时以现有实现和输入输出契约为基础，仅对缺失或确实不适用的部分另行实现并说明原因。此优先级适用于所有图形、后处理、动画和组合，不是手绘专用规则。复杂作品按原生顺序组合模块、映射实际参数并在目标工程验证，不承诺任意画布一键转换。已连接 MCP 可用 forge_guide 的 shader 主题读取同一通用规则。
 
 当前 Unity 查询与交付范围见[已适配图形](references/realtime-shaders.md)，后处理使用各自技术文档。现有模块只是当前覆盖范围，不限制通用规则适用的效果或引擎；网页显示、GLSL 源码、可导出模块和目标引擎验证分别确认，不静默遗漏节点或把静态帧说成完整动态还原。
+
+Unity 实现优先读取[随资源交付的标准模块](references/unity-modules.md)。图形/项目 ZIP 携带正式 Shader、完整自身参数映射和依赖；离线运行 modules 命令提取，MCP forge_resource 返回 shaderModules 文件路径。复用包内源码，不为已提供实现重新翻译 GLSL；只补缺口。自定义图形可携带 engineShaders.unity，无需修改框架名单。
 
 用户需要手绘转换时，阅读[统一RGBA手绘后处理](references/handdrawn-postprocess.md)，查询 modes.postprocess、inputAdapters 与 unsupportedParameters，显式使用 postprocess。图像、生成器和RT共用自动轮廓与填充；旧轻量/冻结模式已退役，不推荐、不回退。原生参数、颜色/预乘与短边512契约随包保存；非覆盖样式或参数明确拒绝。
 

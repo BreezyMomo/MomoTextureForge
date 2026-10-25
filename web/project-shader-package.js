@@ -4,7 +4,7 @@ import {encodeZIP,encodePNG} from './encoders.js';
 import {encodeResourcePack} from './resource-pack.js';
 
 const VERTEX=`#version 300 es\nout vec2 uv;void main(){vec2 p=vec2(float((gl_VertexID<<1)&2),float(gl_VertexID&2));uv=p;gl_Position=vec4(p*2.-1.,0,1);}`;
-function shaderSource(c){return `Shader "MomoTextureForge/Generated/${c.prefix}" {
+export function shaderSource(c){return `Shader "MomoTextureForge/Generated/${c.prefix}" {
  Properties {
   [Toggle] _MF_UseExplicitTime ("Use explicit seconds", Float) = 0
   _MF_Seconds ("Explicit elapsed seconds", Float) = 0
@@ -37,7 +37,7 @@ function shaderSource(c){return `Shader "MomoTextureForge/Generated/${c.prefix}"
  ENDHLSL
  }}
 }`;}
-function importer(c){return `#if UNITY_EDITOR
+export function importer(c){return `#if UNITY_EDITOR
 using System;using System.IO;using UnityEditor;using UnityEngine;
 namespace MomoTextureForge.Exported.${c.prefix} {
 public static class MaterialImporter {
@@ -88,10 +88,10 @@ export async function exportProjectShader(project,{nodeId=null,times=[0,.75,1.5,
  const c=await compileProjectShader(project,{nodeId}),entries=[],utf8=new TextEncoder(),text=(name,value)=>entries.push({name,data:utf8.encode(value)});
  const shader=shaderSource(c),hlsl='#ifndef '+c.prefix.toUpperCase()+'_INCLUDED\n#define '+c.prefix.toUpperCase()+'_INCLUDED\n// Generated only from this project and its reviewed source dependencies.\n'+c.hlsl+'\n#endif\n';
  text('Unity/'+c.prefix+'.shader',shader);text('Unity/'+c.prefix+'.hlsl',hlsl);text('Unity/Editor/'+c.prefix+'Importer.cs',importer(c));text('README.md',README);text('README.en.md',README);
- const packed=sourceZIP??await encodeResourcePack(project);entries.push({name:'source-project.zip',data:packed});
- text('sources/graph.json',JSON.stringify(project,null,2));
+ const archiveProject={...project,projectResources:[]},packed=await encodeResourcePack(archiveProject);entries.push({name:'source-project.zip',data:packed});
+ text('sources/graph.json',JSON.stringify(archiveProject,null,2));
  for(const [id,a]of Object.entries(c.assets)){text('sources/'+id.replace(/[^A-Za-z0-9_-]/g,'_')+'.json',JSON.stringify(a,null,2));}
- const manifest={schema:REALTIME_SHADER_SCHEMA,version:1,compilerVersion:1,packageId:c.prefix,shaderName:'MomoTextureForge/Generated/'+c.prefix,source:{snapshotId,revision:sourceRevision,projectHash:c.sourceHash,archiveSHA256:await sha256(packed)},target:c.support.target,
+ const manifest={schema:REALTIME_SHADER_SCHEMA,version:1,compilerVersion:1,packageId:c.prefix,shaderName:'MomoTextureForge/Generated/'+c.prefix,source:{snapshotId,revision:sourceRevision,projectHash:c.sourceHash,archiveSHA256:await sha256(sourceZIP??packed),packagedArchiveSHA256:await sha256(packed),archiveScope:'canvas-without-graphic-list'},target:c.support.target,
   materialProperties:[{name:'_MF_UseExplicitTime',type:'Float',floatValue:0},{name:'_MF_Seconds',type:'Float',floatValue:times[0]},...c.properties.map(p=>({name:p.name,type:p.type,...(p.type==='Vector'?{vectorValue:Object.fromEntries(['x','y','z','w'].map((k,i)=>[k,p.value[i]]))}:{floatValue:p.value})}))],nodes:c.mapping,parameters:c.properties,
   inputTextures:[],output:{sourceMode:project.output.mode,sourceAlpha:project.output.alpha,sourceBackground:project.output.background,shaderMode:'color',shaderAlpha:'transparent coverage; canvas background excluded'},color:{core:'premultiplied numeric sRGB RGB + coverage alpha',wrapper:'final straight RGB converted to linear in Linear projects and premultiplied',blend:'One / OneMinusSrcAlpha',paletteEncoding:'sRGB Vector; use SetVector without Color.linear'},uv:{channel:0,origin:'bottom-left',range:[0,1],designAspect:project.canvas.ratio,designSize:[project.output.width,project.output.height]},time:{unit:'elapsed seconds',property:'_MF_Seconds',explicitToggle:'_MF_UseExplicitTime',automatic:'Unity _Time.y',references:times,exportDuration:project.output.exportSeconds,seamlessLoop:false},support:c.support,verification:{browserCompilation:'not-run',engineCompilation:'not-run',engineVisualReview:'not-run'},limitations:c.support.limitations};
  const native=new TreeRenderer(document.createElement('canvas')),canvas=document.createElement('canvas'),gl=canvas.getContext('webgl2',{premultipliedAlpha:false,antialias:false,preserveDrawingBuffer:true});if(!gl){native.destroy();throw Error('WebGL2 required for generated shader verification');}

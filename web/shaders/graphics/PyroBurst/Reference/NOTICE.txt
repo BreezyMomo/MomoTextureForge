@@ -1,0 +1,15 @@
+=== math-v1 ===
+// Tooth width is a fraction of one pitch; top ratio zero forms a point, one a square tooth.
+// Continuous union of the root disk and a folded trapezoid. Differentiating
+// r-gearRadius across a square tooth's angular boundary creates false inner edges.
+// Extend the tooth into the disk within its angular wedge. A bottom chord
+// leaves a shallow internal distance ridge that antialiasing exposes as a seam.
+// Exact contour distance: upper circular lobes join lower diagonal segments.
+// Unlike a polynomial threshold, the distance has uniform feathering at the tip.
+
+=== reference-v1 ===
+// 列主序：此写法为逆时针旋转
+// 带状描边：|d| < w 内为 1，向外按 soft 羽化（旧实现误作向内填充，
+// 会导致 HUD 框线内部残留 0.5 灰底、Truchet 线条发灰）
+// Dave Hoskins hash12 —— 旧版在小整数格点上 (0,0)(1,0)(0,1)(1,1) 全部 < 0.5，
+// 会让「数量=2~4」的格子类图案整片空白

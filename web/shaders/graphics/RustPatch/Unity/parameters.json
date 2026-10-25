@@ -1,0 +1,213 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TFfda0c6c23179",
+  "shaderName": "MomoTextureForge/Generated/TFfda0c6c23179",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_rustAmount",
+      "type": "Float",
+      "floatValue": 0.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_grain",
+      "type": "Float",
+      "floatValue": 52,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_pitDepth",
+      "type": "Float",
+      "floatValue": 0.45,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_flow",
+      "type": "Float",
+      "floatValue": 0.3,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "锈蚀量",
+      "min": 0,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.5,
+      "variable": "rustAmount",
+      "aliases": {
+        "zh-CN": "锈蚀量",
+        "en": "Rust amount"
+      },
+      "property": "_MF_1_rustAmount"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "颗粒",
+      "min": 10,
+      "max": 160,
+      "step": 2,
+      "default": 52,
+      "variable": "grain",
+      "aliases": {
+        "zh-CN": "颗粒",
+        "en": "Grain"
+      },
+      "property": "_MF_1_grain"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "蚀坑深度",
+      "min": 0,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.45,
+      "variable": "pitDepth",
+      "aliases": {
+        "zh-CN": "蚀坑深度",
+        "en": "Pit depth"
+      },
+      "property": "_MF_1_pitDepth"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "流动",
+      "min": 0,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.3,
+      "variable": "flow",
+      "aliases": {
+        "zh-CN": "流动",
+        "en": "Flow"
+      },
+      "property": "_MF_1_flow"
+    }
+  ]
+}

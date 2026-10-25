@@ -25,6 +25,8 @@ description: Create and edit Momo Texture Forge textures and native projects, st
 
 当前 Unity 查询与交付范围见[已适配图形](references/realtime-shaders.md)，后处理使用各自技术文档。现有模块只是当前覆盖范围，不限制通用规则适用的效果或引擎；网页显示、GLSL 源码、可导出模块和目标引擎验证分别确认，不静默遗漏节点或把静态帧说成完整动态还原。
 
+Unity 实现优先读取[随资源交付的标准模块](references/unity-modules.md)。图形/项目 ZIP 携带正式 Shader、完整自身参数映射和依赖；离线运行 modules 命令提取，MCP forge_resource 返回 shaderModules 文件路径。复用包内源码，不为已提供实现重新翻译 GLSL；只补缺口。自定义图形可携带 engineShaders.unity，无需修改框架名单。
+
 用户需要手绘转换时，阅读[统一RGBA手绘后处理](references/handdrawn-postprocess.md)，查询 modes.postprocess、inputAdapters 与 unsupportedParameters，显式使用 postprocess。图像、生成器和RT共用自动轮廓与填充；旧轻量/冻结模式已退役，不推荐、不回退。原生参数、颜色/预乘与短边512契约随包保存；非覆盖样式或参数明确拒绝。
 
 用户提供“保存项目”的ZIP，希望AI理解调好的作品、提取贴图或接入游戏时，读取[作品交付与项目工具](references/project-tools.md)。使用随附CLI读取节点、关键帧与实际资源，渲染指定时间/节点并制作辅助贴图；导出Shader前查询支持报告。手绘统一使用[RGBA后处理](references/handdrawn-postprocess.md)：输入图像或实时RT，自动处理轮廓和填充；不提供轻量填充或冻结描边分支。图形目录导出入口不变，不自动连接或操作用户的编辑器。

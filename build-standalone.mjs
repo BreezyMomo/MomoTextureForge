@@ -1,6 +1,7 @@
 import {validateUICatalogs} from './tools/i18n-audit.mjs';
 import {buildAuthoringKit} from './build-authoring-kit.mjs';
-import {readFile,writeFile,mkdir} from "node:fs/promises";
+import {readFile,mkdir} from "node:fs/promises";
+import {writeGenerated as writeFile} from './tools/write-generated.mjs';
 import {resolve,dirname,join} from "node:path";
 import {fileURLToPath} from "node:url";
 import {createHash} from "node:crypto";

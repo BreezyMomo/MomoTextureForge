@@ -1,0 +1,123 @@
+{
+  "schema": "momo.postprocess-material/v1",
+  "componentType": "MomoTextureForge.Modules.MomoRadialMask",
+  "shaderName": "Hidden/MomoTextureForge/Postprocess/radialMask",
+  "settings": "{\"centerX\":0.5,\"centerY\":0.5,\"radius\":0.5,\"feather\":0.2,\"invert\":false}",
+  "values": [
+    {
+      "variable": "centerX",
+      "type": "number",
+      "number": 0.5,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "centerY",
+      "type": "number",
+      "number": 0.5,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "radius",
+      "type": "number",
+      "number": 0.5,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "feather",
+      "type": "number",
+      "number": 0.2,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "invert",
+      "type": "boolean",
+      "number": 0,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "centerX",
+      "label": "fx.param.centerX",
+      "min": 0,
+      "max": 1,
+      "default": 0.5,
+      "step": 0.01,
+      "path": "postEffects.radialMask.centerX",
+      "variable": "centerX",
+      "property": "_MF_centerX"
+    },
+    {
+      "key": "centerY",
+      "label": "fx.param.centerY",
+      "min": 0,
+      "max": 1,
+      "default": 0.5,
+      "step": 0.01,
+      "path": "postEffects.radialMask.centerY",
+      "variable": "centerY",
+      "property": "_MF_centerY"
+    },
+    {
+      "key": "radius",
+      "label": "fx.param.radius",
+      "min": 0.01,
+      "max": 2,
+      "default": 0.5,
+      "step": 0.01,
+      "path": "postEffects.radialMask.radius",
+      "variable": "radius",
+      "property": "_MF_radius"
+    },
+    {
+      "key": "feather",
+      "label": "fx.param.feather",
+      "min": 0,
+      "max": 1,
+      "default": 0.2,
+      "step": 0.01,
+      "path": "postEffects.radialMask.feather",
+      "variable": "feather",
+      "property": "_MF_feather"
+    },
+    {
+      "key": "invert",
+      "label": "fx.param.invert",
+      "type": "boolean",
+      "default": false,
+      "path": "postEffects.radialMask.invert",
+      "variable": "invert",
+      "property": "_MF_invert"
+    }
+  ]
+}

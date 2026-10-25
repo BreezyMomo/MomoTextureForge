@@ -1,0 +1,313 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF5f0526c3a4ee",
+  "shaderName": "MomoTextureForge/Generated/TF5f0526c3a4ee",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_startX",
+      "type": "Float",
+      "floatValue": -0.6,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_startY",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_endX",
+      "type": "Float",
+      "floatValue": 0.6,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_endY",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_lineWidth",
+      "type": "Float",
+      "floatValue": 0.08,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_roundCaps",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_feather",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "起点 X",
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "default": -0.6,
+      "variable": "startX",
+      "aliases": {
+        "zh-CN": "起点 X",
+        "en": "Start X"
+      },
+      "property": "_MF_1_startX"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "起点 Y",
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0,
+      "variable": "startY",
+      "aliases": {
+        "zh-CN": "起点 Y",
+        "en": "Start Y"
+      },
+      "property": "_MF_1_startY"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "终点 X",
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.6,
+      "variable": "endX",
+      "aliases": {
+        "zh-CN": "终点 X",
+        "en": "End X"
+      },
+      "property": "_MF_1_endX"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "终点 Y",
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0,
+      "variable": "endY",
+      "aliases": {
+        "zh-CN": "终点 Y",
+        "en": "End Y"
+      },
+      "property": "_MF_1_endY"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "线宽",
+      "min": 0.001,
+      "max": 1,
+      "step": 0.001,
+      "default": 0.08,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      },
+      "property": "_MF_1_lineWidth"
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "label": "圆头",
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "default": 1,
+      "variable": "roundCaps",
+      "aliases": {
+        "zh-CN": "圆头",
+        "en": "Round caps"
+      },
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "variable": "value0",
+          "label": "平头",
+          "aliases": {
+            "zh-CN": "平头",
+            "en": "Flat caps"
+          }
+        },
+        {
+          "value": 1,
+          "variable": "value1",
+          "label": "圆头",
+          "aliases": {
+            "zh-CN": "圆头",
+            "en": "Round caps"
+          }
+        }
+      ],
+      "property": "_MF_1_roundCaps"
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "label": "羽化",
+      "min": 0,
+      "max": 0.1,
+      "step": 0.001,
+      "default": 0.003,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather",
+      "property": "_MF_1_feather"
+    }
+  ]
+}

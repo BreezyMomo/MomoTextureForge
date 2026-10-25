@@ -1,0 +1,213 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TFafbfbe563e8e",
+  "shaderName": "MomoTextureForge/Generated/TFafbfbe563e8e",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_coreWidth",
+      "type": "Float",
+      "floatValue": 0.09,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_glowWidth",
+      "type": "Float",
+      "floatValue": 0.36,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_tailLengthFalloff",
+      "type": "Float",
+      "floatValue": 1.4,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_headHold",
+      "type": "Float",
+      "floatValue": 0.2,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "核心宽度",
+      "min": 0.02,
+      "max": 0.35,
+      "step": 0.005,
+      "default": 0.09,
+      "variable": "coreWidth",
+      "aliases": {
+        "zh-CN": "核心宽度",
+        "en": "Core width"
+      },
+      "property": "_MF_1_coreWidth"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "辉光宽度",
+      "min": 0.08,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.36,
+      "variable": "glowWidth",
+      "aliases": {
+        "zh-CN": "辉光宽度",
+        "en": "Glow width"
+      },
+      "property": "_MF_1_glowWidth"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "尾长衰减",
+      "min": 0.3,
+      "max": 4,
+      "step": 0.05,
+      "default": 1.4,
+      "variable": "tailLengthFalloff",
+      "aliases": {
+        "zh-CN": "尾长衰减",
+        "en": "Tail length falloff"
+      },
+      "property": "_MF_1_tailLengthFalloff"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "头部保持",
+      "min": 0,
+      "max": 0.85,
+      "step": 0.01,
+      "default": 0.2,
+      "variable": "headHold",
+      "aliases": {
+        "zh-CN": "头部保持",
+        "en": "Head hold"
+      },
+      "property": "_MF_1_headHold"
+    }
+  ]
+}

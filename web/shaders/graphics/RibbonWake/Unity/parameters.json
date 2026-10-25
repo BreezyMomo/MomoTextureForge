@@ -1,0 +1,213 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TFb76fc3e1a00b",
+  "shaderName": "MomoTextureForge/Generated/TFb76fc3e1a00b",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_spreadAngle",
+      "type": "Float",
+      "floatValue": 0.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_rippleDensity",
+      "type": "Float",
+      "floatValue": 9,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_rippleWidth",
+      "type": "Float",
+      "floatValue": 0.1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_lengthFalloff",
+      "type": "Float",
+      "floatValue": 1.1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "张角",
+      "min": 0.15,
+      "max": 1.2,
+      "step": 0.02,
+      "default": 0.5,
+      "variable": "spreadAngle",
+      "aliases": {
+        "zh-CN": "张角",
+        "en": "Spread angle"
+      },
+      "property": "_MF_1_spreadAngle"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "波纹密度",
+      "min": 2,
+      "max": 26,
+      "step": 1,
+      "default": 9,
+      "variable": "rippleDensity",
+      "aliases": {
+        "zh-CN": "波纹密度",
+        "en": "Ripple density"
+      },
+      "property": "_MF_1_rippleDensity"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "波纹宽度",
+      "min": 0.02,
+      "max": 0.3,
+      "step": 0.005,
+      "default": 0.1,
+      "variable": "rippleWidth",
+      "aliases": {
+        "zh-CN": "波纹宽度",
+        "en": "Ripple width"
+      },
+      "property": "_MF_1_rippleWidth"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "长度衰减",
+      "min": 0.3,
+      "max": 4,
+      "step": 0.05,
+      "default": 1.1,
+      "variable": "lengthFalloff",
+      "aliases": {
+        "zh-CN": "长度衰减",
+        "en": "Length falloff"
+      },
+      "property": "_MF_1_lengthFalloff"
+    }
+  ]
+}

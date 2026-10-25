@@ -1,0 +1,213 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF347640fcf770",
+  "shaderName": "MomoTextureForge/Generated/TF347640fcf770",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_rows",
+      "type": "Float",
+      "floatValue": 20,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_tearAmount",
+      "type": "Float",
+      "floatValue": 0.45,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_speed",
+      "type": "Float",
+      "floatValue": 1.2,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_blockDispersion",
+      "type": "Float",
+      "floatValue": 0.4,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "行数",
+      "min": 6,
+      "max": 60,
+      "step": 1,
+      "default": 20,
+      "variable": "rows",
+      "aliases": {
+        "zh-CN": "行数",
+        "en": "Rows"
+      },
+      "property": "_MF_1_rows"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "撕裂量",
+      "min": 0,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.45,
+      "variable": "tearAmount",
+      "aliases": {
+        "zh-CN": "撕裂量",
+        "en": "Tear amount"
+      },
+      "property": "_MF_1_tearAmount"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "速度",
+      "min": 0,
+      "max": 4,
+      "step": 0.05,
+      "default": 1.2,
+      "variable": "speed",
+      "aliases": {
+        "zh-CN": "速度",
+        "en": "Speed"
+      },
+      "property": "_MF_1_speed"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "块离散",
+      "min": 0,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.4,
+      "variable": "blockDispersion",
+      "aliases": {
+        "zh-CN": "块离散",
+        "en": "Block dispersion"
+      },
+      "property": "_MF_1_blockDispersion"
+    }
+  ]
+}

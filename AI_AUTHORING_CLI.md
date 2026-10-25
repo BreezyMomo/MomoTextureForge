@@ -81,6 +81,14 @@ node portable-authoring-cli.mjs project shader effect.zip --shader-mode postproc
 
 ## Shader分类与导出
 
+接入 Unity 时，先提取并阅读[资源自带的正式模块](skills/texture-forge-author/references/unity-modules.md)，无需浏览器，也不重新翻译 GLSL：
+
+```sh
+node portable-authoring-cli.mjs modules effect.zip --output engine-modules
+```
+
+
+
 按[职责规范](skills/texture-forge-author/references/shader-architecture.md)区分生成图形与处理图像。先查询支持，不跳过未覆盖节点：
 
 ```sh

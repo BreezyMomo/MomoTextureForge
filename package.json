@@ -23,6 +23,7 @@
     "acorn": "^8.15.0",
     "ag-psd": "31.0.3",
     "esbuild": "0.28.2",
+    "fflate": "^0.8.3",
     "gifenc": "1.0.3",
     "omggif": "1.0.10",
     "playwright": "^1.64.1",

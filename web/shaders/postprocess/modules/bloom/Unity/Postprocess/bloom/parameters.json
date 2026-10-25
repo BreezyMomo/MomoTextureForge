@@ -1,0 +1,79 @@
+{
+  "schema": "momo.postprocess-material/v1",
+  "componentType": "MomoTextureForge.Modules.MomoBloom",
+  "shaderName": "Hidden/MomoTextureForge/Postprocess/bloom",
+  "settings": "{\"strength\":0,\"radius\":16,\"threshold\":0.6}",
+  "values": [
+    {
+      "variable": "strength",
+      "type": "number",
+      "number": 0,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "radius",
+      "type": "number",
+      "number": 16,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "threshold",
+      "type": "number",
+      "number": 0.6,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "strength",
+      "label": "fx.param.strength",
+      "min": 0,
+      "max": 3,
+      "default": 0,
+      "step": 0.01,
+      "path": "postFx.1",
+      "variable": "strength",
+      "property": "_MF_strength"
+    },
+    {
+      "key": "radius",
+      "label": "fx.param.radius",
+      "min": 1,
+      "max": 64,
+      "default": 16,
+      "step": 1,
+      "path": "postFx.2",
+      "variable": "radius",
+      "property": "_MF_radius"
+    },
+    {
+      "key": "threshold",
+      "label": "fx.param.threshold",
+      "min": 0,
+      "max": 1,
+      "default": 0.6,
+      "step": 0.01,
+      "path": "postFx.3",
+      "variable": "threshold",
+      "property": "_MF_threshold"
+    }
+  ]
+}

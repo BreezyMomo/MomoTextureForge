@@ -1,24 +1,25 @@
-import {assetFor,builtinAsset,contentHash} from './resource-assets.js';
+import {assetFor,contentHash} from './resource-assets.js';
 import {canvasRoot,find,walk} from './tree-model.js';
 import {effectEnabled} from './post-effect-specs.js';
 import {POST_EFFECTS} from './post-effect-specs.js';
+import {graphicUnityModule} from './engine-shader-contract.js';
+import engineShaders from './engine-shader-runtime.js';
 
 export const REALTIME_SHADER_SCHEMA='momo.realtime-shader/v1';
-export const SHADER_GRAPHICS=['Circle','Ring','RoundedRect','LinearGradient','RadialGradient','LedBar','FlowingWater','TurbulentFlame'];
+export const SHADER_GRAPHICS=Object.keys(engineShaders.graphics);
 const identityPost=[0,1,1,0,1,0,1],blendModes=['over','add','max','multiply','subtract','screen','difference','overlay','softlight','dodge','mask','inverseMask'];
-const stable=v=>JSON.stringify(v,(_,x)=>x&&typeof x==='object'&&!Array.isArray(x)?Object.fromEntries(Object.keys(x).sort().map(k=>[k,x[k]])):x);
-const sourceKey=a=>stable({kind:a.kind,scalar:a.definition.outputs.scalar,generator:a.definition.generator,parameters:a.definition.parameters.map(p=>[p.variable,p.slot,p.type??'number']),libraries:a.libraries});
-export function graphicAssetShaderProfile(asset){if(asset.kind!=='formula')return null;return SHADER_GRAPHICS.find(id=>sourceKey(builtinAsset(id))===sourceKey(asset))??null;}
+export function graphicAssetShaderProfile(asset){const module=graphicUnityModule(asset);return module?.graphicId??module?.id??null;}
 function graphicProfile(id){return graphicAssetShaderProfile(assetFor(id));}
 export function hasGraphicShader(id){try{return !!graphicProfile(id);}catch{return false;}}
 function rootFor(project,nodeId){return nodeId?find(project.root,nodeId)?.node:canvasRoot(project.root);}
-export function projectShaderSupport(project,{nodeId=null}={}){
+export function projectShaderSupport(project,{nodeId=null,buildModules=false}={}){
  const root=rootFor(project,nodeId),issues=[],nodes=[];
  const issue=(n,capability,reason,route='Bake the affected subtree to textures, or implement and validate a dedicated shader module before exporting it live.')=>issues.push({nodeId:n.id,name:n.name,capability,reason,route});
  if(!root)return {supported:false,issues:[{nodeId,capability:'node',reason:'Unknown node',route:'Choose an existing node or export the whole canvas.'}],nodes:[]};
  walk(root,n=>{
-  let graphic=null;try{if(n.kind==='shape')graphic=graphicProfile(n.type);}catch(error){issue(n,'resource',error.message);}
+  let graphic=null;try{if(n.kind==='shape')graphic=buildModules?n.type:graphicProfile(n.type);}catch(error){issue(n,'resource',error.message);}
   if(n.kind==='shape'&&!graphic)issue(n,'graphic','This exact graphic implementation has no reviewed realtime HLSL adapter. GLSL source availability alone does not imply support.');
+  if(n.kind==='shape'&&graphic&&!buildModules&&graphicUnityModule(assetFor(n.type))?.compositionContract!=='momo.analytic-module/v1')issue(n,'graphic-composition','This resource supplies an independent Unity module. Reuse its supplied implementation; the bounded analytic graph compiler has no compatible source contract for it.');
   nodes.push({nodeId:n.id,name:n.name,kind:n.kind,resourceId:n.kind==='shape'?n.type:null,graphic,enabled:n.enabled});
   if(Object.keys(n.tracks??{}).length)issue(n,'keyframes','Keyframe tracks are not compiled by the first realtime exporter.');
   if(n.arrange?.[0])issue(n,'arrangement','Instanced arrangement requires an arrangement compiler.');
@@ -33,15 +34,19 @@ export function projectShaderSupport(project,{nodeId=null}={}){
  });
  return {schema:'momo.shader-support/v1',supported:!issues.length,scope:nodeId?'solo-node':'canvas',nodeId,graphics:SHADER_GRAPHICS,nodes,issues,
   target:{engine:'Unity',version:'2022.3',pipeline:'URP',pipelineVersion:'14',shaderModel:'3.5',passCount:1},
-  categories:{formulas:'reviewed exact source implementations only',generators:'FlowingWater and TurbulentFlame native RGBA, continuous seconds',transforms:'static placement, pivot, rotation, mirror, contain/stretch, static UV',colors:'inherited, preserved, solid or two-stop sRGB',blending:blendModes,masks:'sibling alpha mask/inverseMask and attached height mask',timing:'formula clock speed, offset or frozen seconds; no keyframe/timing compilation',effects:'not compiled by analytic mode; supported handdrawn uses the unified postprocess',externalResources:'no external textures in this subset; unknown/custom implementations rejected'},
+  categories:{formulas:'resource-owned exact source implementations with the analytic composition contract',generators:'resource-owned native RGBA functions, continuous seconds',transforms:'static placement, pivot, rotation, mirror, contain/stretch, static UV',colors:'inherited, preserved, solid or two-stop sRGB',blending:blendModes,masks:'sibling alpha mask/inverseMask and attached height mask',timing:'formula clock speed, offset or frozen seconds; no keyframe/timing compilation',effects:'not compiled by analytic mode; reuse supplied postprocess modules separately',externalResources:'independent custom Unity modules are reusable directly; analytic composition additionally requires its source contract'},
   limitations:['Analytic composition samples functions directly; native per-node raster filtering can produce boundary differences.','High-frequency details can alias at low target resolutions because native intermediate supersampling is not exported. Match design resolution or adapt target antialiasing/density explicitly.','Export duration is not a seamless-loop promise.','No Unity compilation is performed by the browser exporter.']};
 }
 
 const clean=s=>s.replace(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g,c=>c.replace(/[^\n]/g,' '));
-function functions(source){const code=clean(source),result=[],re=/\b(?:float|int|bool|vec[234])\s+(\w+)\s*\([^;{}]*\)\s*\{/g;let m;while((m=re.exec(code))){let depth=1,end=re.lastIndex;while(depth&&end<code.length){const c=code[end++];if(c==='{')depth++;if(c==='}')depth--;}result.push({name:m[1],text:source.slice(m.index,end),signature:source.slice(m.index,re.lastIndex-1)});re.lastIndex=end;}return result;}
+function functions(source){const code=clean(source),result=[],re=/\b(?:float|int|bool|void|mat[234]|[biu]?vec[234])\s+(\w+)\s*\([^;{}]*\)\s*\{/g;let m;while((m=re.exec(code))){let depth=1,end=re.lastIndex;while(depth&&end<code.length){const c=code[end++];if(c==='{')depth++;if(c==='}')depth--;}result.push({name:m[1],text:source.slice(m.index,end),signature:source.slice(m.index,re.lastIndex-1)});re.lastIndex=end;}return result;}
 // Retain only functions reachable from the graphic; never ship the full catalog.
 function dependencies(source,entry){const all=functions(source),byName=new Map();for(const fn of all){if(!byName.has(fn.name))byName.set(fn.name,[]);byName.get(fn.name).push(fn);}const needed=new Set();function visit(name){if(needed.has(name))return;needed.add(name);for(const fn of byName.get(name)??[])for(const call of fn.text.matchAll(/\b(\w+)\s*\(/g))if(byName.has(call[1]))visit(call[1]);}visit(entry);return all.filter(fn=>needed.has(fn.name));}
 function replaceWords(text,mapping){return text.replace(/\b[A-Za-z_]\w*\b/g,word=>mapping[word]??word);}
+function nativeGraphicFunctions(source,prefix){
+ const code=clean(source),rows=[],re=/\b(?:precise\s+)?(?:float(?:[234](?:x[234])?)?|int|bool|void)\s+(MF_graphic\d+(?:_\w+)?)\s*\([^;{}]*\)\s*\{/g;let m;
+ while((m=re.exec(code))){let depth=1,end=re.lastIndex;while(depth&&end<code.length){if(code[end]==='{')depth++;if(code[end]==='}')depth--;end++;}if(m[1]===prefix||m[1].startsWith(prefix+'_'))rows.push({name:m[1],text:source.slice(m.index,end)});re.lastIndex=end;}return rows;
+}
 // A deliberately bounded GLSL dialect adapter, only entered after exact-source checks.
 export function shaderHLSL(source){
  // GLSL matrix constructors are column-major; the reviewed noise helper uses
@@ -49,11 +54,18 @@ export function shaderHLSL(source){
  const matrices=[];
  let text=source.replace(/\bmat2\s+(\w+)\s*=\s*mat2\(([^()]*)\)/g,(_,name,args)=>{const v=args.split(',');if(v.length!==4)throw Error('Unsupported matrix constructor');matrices.push(name);return 'float2x2 '+name+'=float2x2('+[v[0],v[2],v[1],v[3]].join(',')+')';});
  for(const name of matrices)text=text.replace(new RegExp('\\b'+name+'\\s*\\*\\s*(\\w+)','g'),(_,v)=>'mul('+name+','+v+')');
+ const matrixFunctions=new Set([...source.matchAll(/\bmat2\s+(\w+)\s*\(/g)].map(m=>m[1]));matrixFunctions.add('MF_mat2');
+ const matrixVariables=new Set([...matrices,...[...source.matchAll(/\bmat2\s+(\w+)\s*(?=[=;,])/g)].map(m=>m[1])]);
+ text=text.replace(/\bmat2\s*\(/g,'MF_mat2(').replace(/\bmat2\b/g,'float2x2');
+ // Matrix products use mul; GLSL constructor arguments describe columns.
+ const atomEnd=(s,start)=>{let at=start;while(/\s/.test(s[at]??'')&&at<s.length)at++;if(s[at]==='+'||s[at]==='-')at++;if(s[at]==='('){let depth=1;for(at++;at<s.length&&depth;at++){if(s[at]==='(')depth++;if(s[at]===')')depth--;}return at;}const name=/^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)?/.exec(s.slice(at));if(!name)return start;at+=name[0].length;if(s[at]==='('){let depth=1;for(at++;at<s.length&&depth;at++){if(s[at]==='(')depth++;if(s[at]===')')depth--;}}return at;};
+ for(let at=0;at<text.length;at++){const match=/^(\w+)\b/.exec(text.slice(at));if(!match||at>0&&/\w/.test(text[at-1]))continue;const name=match[1];if(!matrixVariables.has(name)&&!matrixFunctions.has(name))continue;const end=atomEnd(text,at);let operator=end;while(/\s/.test(text[operator]??'')&&operator<text.length)operator++;if(text[operator]!=='*')continue;const right=atomEnd(text,operator+1);if(right<=operator+1)continue;const product='mul('+text.slice(at,end)+','+text.slice(operator+1,right).trim()+')';text=text.slice(0,at)+product+text.slice(right);at+=product.length-1;}
  text=text.replace(/\bvec([234])\s*\(/g,(_,n)=>'MF_vec'+n+'(');
  // Expand scalar vector constructors; HLSL does not universally accept GLSL splats.
  function constructors(s){let out='';for(let i=0;i<s.length;){const m=/^MF_vec([234])\(/.exec(s.slice(i));if(!m){out+=s[i++];continue;}const start=i+m[0].length;let end=start,depth=1;for(;end<s.length&&depth;end++){if(s[end]==='(')depth++;if(s[end]===')')depth--;}const inner=constructors(s.slice(start,end-1));let nesting=0,commas=0;for(const c of inner){if(c==='(')nesting++;if(c===')')nesting--;if(c===','&&!nesting)commas++;}const swizzle=/\.([xyzwrgba]+)$/.exec(inner.trim());out+='float'+m[1]+'('+(commas||swizzle?.[1].length===Number(m[1])?inner:Array(Number(m[1])).fill(inner).join(','))+')';i=end;}return out;}
  text=constructors(text);
- return text.replace(/\bvec([234])\b/g,'float$1').replace(/\bmix\b/g,'lerp').replace(/\bfract\b/g,'frac').replace(/\batan\(/g,'atan2(').replace(/\bpoint\b/g,'mfPoint').replace(/\buniform\s+/g,'').replace(/\bconst float MF_(PI|TAU)=/g,'static const float MF_$1=').replace(/\bfloat (MF_graphic\d+_\w*[Hh]ash\w*)\(/g,'precise float $1(');
+ text=text.replace(/\bvec([234])\b/g,'float$1').replace(/\bmix\b/g,'lerp').replace(/\bfract\b/g,'frac').replace(/\batan\(/g,'atan2(').replace(/\bpoint\b/g,'mfPoint').replace(/\buniform\s+/g,'').replace(/\bconst float MF_(PI|TAU)=/g,'static const float MF_$1=').replace(/\bfloat (MF_graphic\d+_\w*[Hh]ash\w*)\(/g,'precise float $1(');
+ return '#ifndef MF_GLSL_MOD\n#define MF_GLSL_MOD\n#define mod(x,y) ((x)-(y)*floor((x)/(y)))\n#define lessThan(x,y) ((x)<(y))\n#define greaterThan(x,y) ((x)>(y))\n#define lessThanEqual(x,y) ((x)<=(y))\n#define greaterThanEqual(x,y) ((x)>=(y))\n#define equal(x,y) ((x)==(y))\n#define notEqual(x,y) ((x)!=(y))\nfloat2x2 MF_mat2(float a,float b,float c,float d){return float2x2(a,c,b,d);}\nfloat2x2 MF_mat2(float2 a,float2 b){return float2x2(a.x,b.x,a.y,b.y);}\nfloat2x2 MF_mat2(float s){return float2x2(s,0.,0.,s);}\n#endif\n'+text;
 }
 
 const COMMON=`
@@ -65,9 +77,9 @@ vec2 MF_place(vec2 p,vec4 box,vec4 axis,float aspect){p-=box.xy;p=MF_rot(p*vec2(
 vec4 MF_blend(vec4 dst,vec4 src,int mode){float a=src.a+dst.a*(1.-src.a);if(mode==0)return vec4(src.rgb+dst.rgb*(1.-src.a),a);vec3 d=dst.a>0.?dst.rgb/dst.a:vec3(0.),s=src.a>0.?src.rgb/src.a:vec3(0.);if(mode==10)return dst*src.a;if(mode==11)return dst*(1.-src.a);vec3 b=mode==6?abs(d-s):mode==7?mix(2.*d*s,1.-2.*(1.-d)*(1.-s),step(vec3(.5),d)):mode==8?(1.-2.*s)*d*d+2.*s*d:mode==9?min(vec3(1.),d/max(vec3(.00001),1.-s)):mode==1?d+s:mode==2?max(d,s):mode==3?d*s:mode==4?max(d-s,0.):1.-(1.-d)*(1.-s);return vec4((1.-src.a)*dst.rgb+(1.-dst.a)*src.rgb+src.a*dst.a*b,a);}
 float MF_height(float d,float s,float a,int mode){if(mode==0)return s+d*(1.-a);if(mode==1)return d+s;if(mode==2)return max(d,s);if(mode==3)return mix(d,d*(a>0.?s/a:0.),a);if(mode==4)return max(d-s,0.);if(mode==6)return abs(d-s);if(mode==7)return d<.5?2.*d*s:1.-2.*(1.-d)*(1.-s);if(mode==8)return (1.-2.*s)*d*d+2.*s*d;if(mode==9)return min(1.,d/max(.00001,1.-s));if(mode==10)return d*a;if(mode==11)return d*(1.-a);return 1.-(1.-d)*(1.-s);}
 `;
-export async function compileProjectShader(project,{nodeId=null}={}){
- const support=projectShaderSupport(project,{nodeId});if(!support.supported){const error=Error(support.issues.map(i=>i.nodeId+' ['+i.capability+']: '+i.reason).join('\n'));error.support=support;throw error;}
- const source=structuredClone(project),root=rootFor(source,nodeId),assets={};walk(root,n=>{if(n.kind==='shape')assets[n.type]=assetFor(n.type);});const hash=await contentHash({project:source,assets,nodeId,compiler:1}),prefix='TF'+hash.slice(0,12),properties=[],mapping=[],modules=[],code=[];let index=0;
+export async function compileProjectShader(project,{nodeId=null,buildModules=false}={}){
+ const support=projectShaderSupport(project,{nodeId,buildModules});if(!support.supported){const error=Error(support.issues.map(i=>i.nodeId+' ['+i.capability+']: '+i.reason).join('\n'));error.support=support;throw error;}
+ const source=structuredClone({...project,projectResources:[]}),root=rootFor(source,nodeId),assets={},implementations={};walk(root,n=>{if(n.kind==='shape'){const {engineShaders,...asset}=assetFor(n.type);assets[n.type]=asset;if(!buildModules){const module=graphicUnityModule(assetFor(n.type));implementations[n.type]=module?.files[module.hlslFile];}}});const hash=await contentHash({project:source,assets,implementations,nodeId,compiler:3}),prefix='TF'+hash.slice(0,12),properties=[],mapping=[],modules=[],code=[],nativeOverrides=[];let index=0;
  const add=(name,type,value,label,path,node)=>{properties.push({name,type,value,label,nodeId:node.id,path});return name;};
  const prop=(n,i,key,type,value,path)=>add('_MF_'+i+'_'+key,type,value,n.name+' / '+key,path,n);
  function build(n,parentPalette={low:[0,0,0,1],high:[1,1,1,1]}){
@@ -79,12 +91,13 @@ export async function compileProjectShader(project,{nodeId=null}={}){
   const children=n.children.map(child=>({node:child,fn:build(child,palette)})),mask=n.mask?build(n.mask,palette):null;
   let body='MF_Value result=MF_zero();\n';
   if(n.kind==='shape'){
-   const asset=assetFor(n.type),d=asset.definition,profile=graphicProfile(n.type),uniforms={};
+   const asset=assetFor(n.type),d=asset.definition,profile=buildModules?n.type:graphicProfile(n.type),uniforms={};
    for(const p of d.parameters){uniforms[p.variable]=scalar(p.variable,n.params[p.slot],'params.'+p.slot);Object.assign(properties.at(-1),{variable:p.variable,slot:p.slot,min:p.min,max:p.max,step:p.step,unit:p.unit??'native parameter units',role:p.role??null,aliases:p.aliases});}
-   const values=Array(16).fill('0.');for(const p of d.parameters)values[p.slot]=uniforms[p.variable];
+   const values=Array.from({length:16},(_,i)=>number(d.defaults[i]??0));for(const p of d.parameters)values[p.slot]=uniforms[p.variable];
    const uv=vector('uv',[n.uv[0],n.uv[1],n.uv[2],n.uv[3]],'uv.0..3'),twist=scalar('uvTwist',n.uv[6],'uv.6'),clock=vector('clock',[n.shapeClock.speed,n.shapeClock.offset,n.shapeClock.value,n.shapeClock.follow?1:0],'shapeClock');
    body+=`float time=${clock}.w>.5?seconds*${clock}.x+${clock}.y:${clock}.z;vec2 graphicUV=p-.5;graphicUV=MF_rot(graphicUV/max(${uv}.x,.1),${uv}.y+length(graphicUV)*${twist});graphicUV+=${uv}.zw+.5;\n`;
    const fn='MF_graphic'+i;
+   if(!buildModules){const module=graphicUnityModule(asset);if(module?.compositionContract==='momo.analytic-module/v1'){const replacements=Object.fromEntries(module.parameters.map(p=>[p.property,uniforms[p.variable]]));const original=nativeGraphicFunctions(module.files[module.hlslFile],'MF_graphic1');if(!original.length)throw Error('Missing canonical graphic entry: '+module.id);const text=original.map(f=>replaceWords(f.text,replacements).replace(/\bMF_graphic1(?=\b|_)/g,fn)).join('\n');nativeOverrides.push({prefix:fn,text});}}
    if(d.generator){
     const full=Object.values(asset.libraries).join('\n').replace('vec2 rot(vec2 q,float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c)*q;}','vec2 rot(vec2 q,float a){return MF_rot(q,a);}'),needed=dependencies(full,'generate'),rename=Object.fromEntries(needed.map(f=>[f.name,fn+'_'+f.name]));Object.assign(rename,uniforms,{generatorSeed:uniforms.seed});
     // Explicit arguments avoid global shared clocks and same-type node collisions.
@@ -95,7 +108,7 @@ export async function compileProjectShader(project,{nodeId=null}={}){
     const adapted=declarations.map(callTimes).join('\n');modules.push(adapted);body+=`vec4 raw=${fn}_generate(graphicUV,time);if(graphicUV.x<0.||graphicUV.y<0.||graphicUV.x>1.||graphicUV.y>1.)raw=vec4(0.);float h=clamp(dot(raw.rgb,vec3(.2126,.7152,.0722))*raw.a,0.,1.);result.color=vec4(${n.color.mode==='own'?`mix(${colorExpr(palette.low)},${colorExpr(palette.high)},h)`:'raw.rgb'}*raw.a,raw.a);result.height=h;\n`;
    }else{
     const spec=d.outputs.scalar,formula=spec.kind==='expression'?'return clamp('+spec.inline+',0.,1.);':spec.inline;
-    const wrapper=`float ${fn}(vec2 u,vec4 a,vec4 b,vec4 mfC,vec4 mfD,float time){vec2 q=u*2.-1.;float r=length(q),angle=atan(q.y,q.x);float R=a.x,W=a.y,N=a.z,S=a.w,D=b.x,K=b.y,H=b.z,T=time*b.w;${formula}}`;
+    const wrapper=`float ${fn}(vec2 u,vec4 a,vec4 b,vec4 c,vec4 d,float time){vec2 q=u*2.-1.;float r=length(q),angle=atan(q.y,q.x);float R=a.x,W=a.y,N=a.z,S=a.w,D=b.x,K=b.y,H=b.z,T=time*b.w;{${formula}}}`;
     let all=Object.values(asset.libraries).join('\n')+'\n'+wrapper;
     // Use the exact editor antialiasing variant, rather than a second shape formula.
     all=all.replace('float fill(float d,float s){return 1.-smoothstep(0.,max(s,.0001),d);}','float fill(float d,float s){float aa=max(fwidth(d),.00001);return 1.-smoothstep(-aa*.5,max(s,0.)+aa*.5,d);}')
@@ -112,7 +125,8 @@ export async function compileProjectShader(project,{nodeId=null}={}){
   return id;
  }
  const rootFn=build(root),declarations=properties.map(p=>'uniform '+(p.type==='Vector'?'vec4':'float')+' '+p.name+';').join('\n'),glslCore=replaceWords(declarations+'\n'+COMMON+'\n'+modules.join('\n')+'\n'+code.join('\n')+`\nvec4 MF_Evaluate(vec2 uv,float seconds){return ${rootFn}(uv,${number(project.canvas.ratio)},seconds).color;}\n`,{PI:'MF_PI',TAU:'MF_TAU'});
- const uniformHLSL=properties.map(p=>(p.type==='Vector'?'float4':'float')+' '+p.name+';').join('\n'),hlsl=shaderHLSL(glslCore.replace(declarations,''));
+ const uniformHLSL=properties.map(p=>(p.type==='Vector'?'float4':'float')+' '+p.name+';').join('\n');let hlsl=shaderHLSL(glslCore.replace(declarations,''));
+ for(const override of nativeOverrides){const generated=nativeGraphicFunctions(hlsl,override.prefix);if(!generated.length)throw Error('Missing graphic composition entry');for(const [i,fn]of generated.entries())hlsl=hlsl.replace(fn.text,i===0?override.text:'');}
  mapping.forEach(m=>m.properties=properties.filter(p=>p.nodeId===m.nodeId).map(({name,path,type,value})=>({name,path,type,value,encoding:name.endsWith('SRGB')?'sRGB numeric vector':undefined})));
  return {prefix,sourceHash:hash,support,properties,mapping,glslCore,hlsl,uniformHLSL,source,assets};
 }

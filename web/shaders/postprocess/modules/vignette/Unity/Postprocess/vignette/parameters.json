@@ -1,0 +1,161 @@
+{
+  "schema": "momo.postprocess-material/v1",
+  "componentType": "MomoTextureForge.Modules.MomoVignette",
+  "shaderName": "Hidden/MomoTextureForge/Postprocess/vignette",
+  "settings": "{\"strength\":0.6,\"range\":1,\"top\":true,\"bottom\":true,\"left\":true,\"right\":true,\"color\":{\"x\":0,\"y\":0,\"z\":0,\"w\":1}}",
+  "values": [
+    {
+      "variable": "strength",
+      "type": "number",
+      "number": 0.6,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "range",
+      "type": "number",
+      "number": 1,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "top",
+      "type": "boolean",
+      "number": 0,
+      "boolean": true,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "bottom",
+      "type": "boolean",
+      "number": 0,
+      "boolean": true,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "left",
+      "type": "boolean",
+      "number": 0,
+      "boolean": true,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "right",
+      "type": "boolean",
+      "number": 0,
+      "boolean": true,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "color",
+      "type": "vector",
+      "number": 0,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "strength",
+      "label": "fx.param.strength",
+      "min": 0,
+      "max": 2,
+      "default": 0.6,
+      "step": 0.01,
+      "path": "postEffects.vignette.strength",
+      "variable": "strength",
+      "property": "_MF_strength"
+    },
+    {
+      "key": "range",
+      "label": "fx.param.range",
+      "min": 0,
+      "max": 2,
+      "default": 1,
+      "step": 0.01,
+      "path": "postEffects.vignette.range",
+      "variable": "range",
+      "property": "_MF_range"
+    },
+    {
+      "key": "top",
+      "label": "fx.param.top",
+      "type": "boolean",
+      "default": true,
+      "path": "postEffects.vignette.top",
+      "variable": "top",
+      "property": "_MF_top"
+    },
+    {
+      "key": "bottom",
+      "label": "fx.param.bottom",
+      "type": "boolean",
+      "default": true,
+      "path": "postEffects.vignette.bottom",
+      "variable": "bottom",
+      "property": "_MF_bottom"
+    },
+    {
+      "key": "left",
+      "label": "fx.param.left",
+      "type": "boolean",
+      "default": true,
+      "path": "postEffects.vignette.left",
+      "variable": "left",
+      "property": "_MF_left"
+    },
+    {
+      "key": "right",
+      "label": "fx.param.right",
+      "type": "boolean",
+      "default": true,
+      "path": "postEffects.vignette.right",
+      "variable": "right",
+      "property": "_MF_right"
+    },
+    {
+      "key": "color",
+      "label": "fx.param.color",
+      "type": "color",
+      "default": "#000000",
+      "path": "postEffects.vignette.color",
+      "variable": "color",
+      "property": "_MF_color"
+    }
+  ]
+}

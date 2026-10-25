@@ -1,0 +1,213 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF5bd25ffa20f4",
+  "shaderName": "MomoTextureForge/Generated/TF5bd25ffa20f4",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_columns",
+      "type": "Float",
+      "floatValue": 6,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_arrowDensity",
+      "type": "Float",
+      "floatValue": 3,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_speed",
+      "type": "Float",
+      "floatValue": 0.3,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_arrowWidth",
+      "type": "Float",
+      "floatValue": 0.55,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "列数",
+      "min": 3,
+      "max": 20,
+      "step": 1,
+      "default": 6,
+      "variable": "columns",
+      "aliases": {
+        "zh-CN": "列数",
+        "en": "Columns"
+      },
+      "property": "_MF_1_columns"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "箭头密度",
+      "min": 1,
+      "max": 10,
+      "step": 0.5,
+      "default": 3,
+      "variable": "arrowDensity",
+      "aliases": {
+        "zh-CN": "箭头密度",
+        "en": "Arrow density"
+      },
+      "property": "_MF_1_arrowDensity"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "速度",
+      "min": 0,
+      "max": 3,
+      "step": 0.05,
+      "default": 0.3,
+      "variable": "speed",
+      "aliases": {
+        "zh-CN": "速度",
+        "en": "Speed"
+      },
+      "property": "_MF_1_speed"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "箭头宽",
+      "min": 0.1,
+      "max": 0.9,
+      "step": 0.02,
+      "default": 0.55,
+      "variable": "arrowWidth",
+      "aliases": {
+        "zh-CN": "箭头宽",
+        "en": "Arrow width"
+      },
+      "property": "_MF_1_arrowWidth"
+    }
+  ]
+}

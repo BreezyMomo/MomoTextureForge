@@ -469,7 +469,7 @@
 .post-effect{border:1px solid var(--ui-line);border-radius:5px;background:var(--ui-panel);min-width:0}
 :is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary{display:flex;align-items:center;gap:5px;cursor:pointer;padding:6px;list-style:none;min-width:0}
 :is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary::-webkit-details-marker{display:none}:is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary::after{content:'›';margin-left:3px;color:var(--ui-muted)}.post-effect>details[open]>summary::after{transform:rotate(90deg)}
-.post-effect-title{flex:1;min-width:0;overflow-wrap:anywhere}:is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary button{padding:1px 4px;min-width:21px;border:0;background:transparent;box-shadow:none;color:var(--ui-muted)}
+.post-effect-title{flex:1;min-width:0;overflow-wrap:anywhere}.post-effect-name-row{display:flex;align-items:center;gap:5px;min-width:0}.post-effect-name-row .post-effect-title{flex:0 1 auto}.post-effect-name-row .post-effect-shader{flex:none}:is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary button{padding:1px 4px;min-width:21px;border:0;background:transparent;box-shadow:none;color:var(--ui-muted)}
 :is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary button:hover{color:var(--ui-text);background:var(--ui-hover)}.post-effect-grip{cursor:grab}:is(.post-effect>details,.post-effect-placeholder,.post-effect-drag-ghost)>summary input{margin:0;flex:none}
 .post-effect-body{padding:0 8px 8px;min-width:0}.post-effect-help{padding:0 8px;margin:0 0 8px}.post-effect.module-dragging{opacity:0}
 
@@ -619,10 +619,10 @@
 }
 @media(max-height:500px){.tree-editor dialog.scrollable-dialog[open],.tree-editor :is(.bezier-editor-dialog,.node-curves-dialog)[open]{max-height:calc(100dvh - 16px)}.scrollable-dialog>header{margin-bottom:8px}.appearance-dialog>header,.appearance-dialog>footer{padding-block:8px}.appearance-dialog>footer>p{flex-basis:auto}}
 
-:is(#shape-library,.post-effect-picker,.graphics-card) .shader-badge{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;width:24px;height:24px;min-width:24px;min-height:24px;padding:3px;margin:0;border:0;border-radius:var(--ui-control-radius);background:transparent;color:var(--ui-accent-text)}
-:is(#shape-library,.post-effect-picker,.graphics-card) .shader-badge svg{width:16px;height:16px;pointer-events:none}
-:is(#shape-library,.post-effect-picker,.graphics-card) .shader-badge:hover{background:var(--ui-hover)}
-:is(#shape-library,.post-effect-picker,.graphics-card) .shader-badge:focus-visible{outline:2px solid var(--ui-focus-ring);outline-offset:1px}
+:is(#shape-library,.post-effect-picker,.graphics-card,.post-effects-editor) .shader-badge{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;width:24px;height:24px;min-width:24px;min-height:24px;padding:3px;margin:0;border:0;border-radius:var(--ui-control-radius);background:transparent;color:var(--ui-accent-text)}
+:is(#shape-library,.post-effect-picker,.graphics-card,.post-effects-editor) .shader-badge svg{width:16px;height:16px;pointer-events:none}
+:is(#shape-library,.post-effect-picker,.graphics-card,.post-effects-editor) .shader-badge:hover{background:var(--ui-hover)}
+:is(#shape-library,.post-effect-picker,.graphics-card,.post-effects-editor) .shader-badge:focus-visible{outline:2px solid var(--ui-focus-ring);outline-offset:1px}
 
 .post-effect-choice-heading{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}.post-effect-choice-heading strong{min-width:0}.post-effect-choice-heading .shader-badge{flex:none}
 .post-effect-choice-actions{display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:6px}.post-effect-choice-actions button{min-width:0;max-width:100%;margin:0;font-size:12px;white-space:normal}.post-effect-choice-actions [data-download-effect-shader]{border-color:transparent;background:transparent;color:var(--ui-accent-text)}.post-effect-shader-scope{font-size:11px;line-height:1.5;color:var(--ui-muted)}

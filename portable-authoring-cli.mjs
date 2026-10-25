@@ -7,6 +7,7 @@ import {AUTHORING_ACTIONS,runAuthoringTool} from './project-authoring-cli.mjs';
 try{
  const [command,file,...args]=process.argv.slice(2);
  if(command==='mcp')await (await import('./editor-mcp.mjs')).serveEditorMCP([file,...args].filter(v=>v!==undefined));
+ else if(command==='modules'){if(!file||args[0]!=='--output'||!args[1]||args.length!==2)throw Error('Usage: texforge modules project.zip --output directory');console.log(JSON.stringify(await (await import('./engine-shader-cli.mjs')).extractEngineShaders(file,args[1]),null,2));}
  else if(!file)throw Error('Usage: node scripts/texforge.mjs mcp [options], validate|render|check <file.graphic.json>, or project <action> <project.zip> [options]');
  else if(command==='project'){
   if(AUTHORING_ACTIONS.includes(file))await runAuthoringTool(file,args);

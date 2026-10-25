@@ -1,0 +1,239 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TFe74560df2590",
+  "shaderName": "MomoTextureForge/Generated/TFe74560df2590",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_beamCount",
+      "type": "Float",
+      "floatValue": 11,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_spreadAngle",
+      "type": "Float",
+      "floatValue": 0.52,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_falloffLength",
+      "type": "Float",
+      "floatValue": 0.95,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_beamSoftness",
+      "type": "Float",
+      "floatValue": 0.55,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_noiseStrength",
+      "type": "Float",
+      "floatValue": 0.45,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "光柱数",
+      "min": 4,
+      "max": 24,
+      "step": 1,
+      "default": 11,
+      "variable": "beamCount",
+      "aliases": {
+        "zh-CN": "光柱数",
+        "en": "Beam count"
+      },
+      "property": "_MF_1_beamCount"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "张角",
+      "min": 0.15,
+      "max": 0.95,
+      "step": 0.01,
+      "default": 0.52,
+      "variable": "spreadAngle",
+      "aliases": {
+        "zh-CN": "张角",
+        "en": "Spread angle"
+      },
+      "property": "_MF_1_spreadAngle"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "衰减长度",
+      "min": 0.3,
+      "max": 1.6,
+      "step": 0.02,
+      "default": 0.95,
+      "variable": "falloffLength",
+      "aliases": {
+        "zh-CN": "衰减长度",
+        "en": "Falloff length"
+      },
+      "property": "_MF_1_falloffLength"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "光柱柔化",
+      "min": 0.2,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.55,
+      "variable": "beamSoftness",
+      "aliases": {
+        "zh-CN": "光柱柔化",
+        "en": "Beam softness"
+      },
+      "property": "_MF_1_beamSoftness"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "噪声强度",
+      "min": 0,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.45,
+      "variable": "noiseStrength",
+      "aliases": {
+        "zh-CN": "噪声强度",
+        "en": "Noise strength"
+      },
+      "property": "_MF_1_noiseStrength"
+    }
+  ]
+}

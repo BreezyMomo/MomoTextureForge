@@ -1,4 +1,5 @@
 import {graphicAliasesField} from './graphic-name.js';
+import {graphicShaderSignature,rebindGraphicModule} from './engine-shader-contract.js';
 import {messageError} from './message-catalog.js';
 import {normalizeParameter,validateVariable} from './parameter-metadata.js';
 import {builtinAsset,validateAsset} from './resource-assets.js';
@@ -18,6 +19,7 @@ export function parseGeneratorAuthoring(input){
  }
  if(!object(input)||input.schema!==GENERATOR_AUTHORING_SCHEMA)throw Error('不支持的生成器创作文件版本');
  const draft={schema:GENERATOR_AUTHORING_SCHEMA,...graphicAliasesField(input.aliases),name:text(input.name??'新生成器','图形名称',80),category:text(input.category??'我的图形','分类',80),description:text(input.description??'','说明',2000,true),scalar:input.scalar??'alpha',parameters:input.parameters,helpers:text(input.helpers??'','辅助函数',1048576,true),passes:input.passes};
+ if(input.engineShaders)draft.engineShaders=structuredClone(input.engineShaders);
  if(!Array.isArray(draft.parameters)||draft.parameters.length>GENERATOR_LIMIT)throw Error('生成器参数必须是数组，最多64个');
  draft.parameters=draft.parameters.map(p=>{
   if(!object(p))throw Error('生成器参数无效');
@@ -31,6 +33,7 @@ export function parseGeneratorAuthoring(input){
 }
 export function assetFromGeneratorAuthoring(draft){
  const asset=builtinAsset('Circle'),def=asset.definition;
+ delete asset.engineShaders;if(draft.engineShaders)asset.engineShaders=structuredClone(draft.engineShaders);
  asset.libraries={'math-v1':asset.libraries['math-v1']};
  const helpers=[];if(draft.helpers){asset.libraries['generator-helpers']=draft.helpers;helpers.push('generator-helpers');}
  const passes=draft.passes.map((p,i)=>{const program='generator-pass-'+i;asset.libraries[program]=p.source;return {id:p.id,inputs:p.inputs,scale:p.scale,program};});
@@ -38,9 +41,11 @@ export function assetFromGeneratorAuthoring(draft){
  def.defaults=Array(Math.max(16,def.parameters.length)).fill(0);for(const p of def.parameters)def.defaults[p.slot]=p.default;
  def.outputs={scalar:{kind:'body',inline:'return 0.;',libraries:['math-v1']}};def.seamless={kind:'blend'};def.editor={kind:'parameters'};
  def.generator={schema:GENERATOR_SCHEMA,revision:1,effect:'pipeline',scalar:draft.scalar,libraries:Object.keys(asset.libraries).filter(n=>n!=='math-v1'),helpers,passes};
+ if(asset.engineShaders?.unity&&!asset.engineShaders.unity.sourceSignature)asset.engineShaders.unity.sourceSignature=graphicShaderSignature(asset);
  validateAsset(asset);return asset;
 }
 export function generatorAuthoringFromAsset(asset,meta={}){
  const def=asset.definition,spec=def.generator;if(spec?.effect!=='pipeline')throw Error('内置生成器请编辑参数或导出完整资源包');
- return parseGeneratorAuthoring({schema:GENERATOR_AUTHORING_SCHEMA,name:meta.name??def.name,...graphicAliasesField(Object.hasOwn(meta,'aliases')?meta.aliases:def.aliases),category:meta.category??'我的图形',description:meta.description??'',scalar:spec.scalar,parameters:def.parameters.map(({slot,key,...p})=>p),helpers:(spec.helpers??[]).map(id=>asset.libraries[id]).join('\n'),passes:spec.passes.map(p=>({id:p.id,inputs:p.inputs,scale:p.scale??1,source:asset.libraries[p.program]}))});
+ const draft=parseGeneratorAuthoring({schema:GENERATOR_AUTHORING_SCHEMA,name:meta.name??def.name,...graphicAliasesField(Object.hasOwn(meta,'aliases')?meta.aliases:def.aliases),category:meta.category??'我的图形',description:meta.description??'',scalar:spec.scalar,parameters:def.parameters.map(({slot,key,...p})=>p),helpers:(spec.helpers??[]).map(id=>asset.libraries[id]).join('\n'),passes:spec.passes.map(p=>({id:p.id,inputs:p.inputs,scale:p.scale??1,source:asset.libraries[p.program]}))});
+ const modules=rebindGraphicModule(asset,assetFromGeneratorAuthoring(draft));if(modules)draft.engineShaders=modules;return draft;
 }

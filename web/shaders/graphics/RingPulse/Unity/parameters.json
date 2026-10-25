@@ -1,0 +1,260 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF3fb92bf37835",
+  "shaderName": "MomoTextureForge/Generated/TF3fb92bf37835",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_ringCount",
+      "type": "Float",
+      "floatValue": 4,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_speed",
+      "type": "Float",
+      "floatValue": 0.6,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_sharpness",
+      "type": "Float",
+      "floatValue": 2,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_falloff",
+      "type": "Float",
+      "floatValue": 0.9,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_falloffMode",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "环数",
+      "min": 0.5,
+      "max": 12,
+      "step": 0.5,
+      "default": 4,
+      "variable": "ringCount",
+      "aliases": {
+        "zh-CN": "环数",
+        "en": "Ring count"
+      },
+      "property": "_MF_1_ringCount"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "速度",
+      "min": -3,
+      "max": 3,
+      "step": 0.05,
+      "default": 0.6,
+      "variable": "speed",
+      "aliases": {
+        "zh-CN": "速度",
+        "en": "Speed"
+      },
+      "property": "_MF_1_speed"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "锐度",
+      "min": 0.3,
+      "max": 6,
+      "step": 0.1,
+      "default": 2,
+      "variable": "sharpness",
+      "aliases": {
+        "zh-CN": "锐度",
+        "en": "Sharpness"
+      },
+      "property": "_MF_1_sharpness"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "衰减",
+      "min": 0.2,
+      "max": 1.5,
+      "step": 0.01,
+      "default": 0.9,
+      "variable": "falloff",
+      "aliases": {
+        "zh-CN": "衰减",
+        "en": "Falloff"
+      },
+      "property": "_MF_1_falloff"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "衰减模式（平滑/指数）",
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "default": 0,
+      "variable": "falloffMode",
+      "aliases": {
+        "zh-CN": "衰减模式（平滑/指数）",
+        "en": "Falloff mode"
+      },
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "variable": "value0",
+          "label": "平滑",
+          "aliases": {
+            "zh-CN": "平滑",
+            "en": "Smooth"
+          }
+        },
+        {
+          "value": 1,
+          "variable": "value1",
+          "label": "指数",
+          "aliases": {
+            "zh-CN": "指数",
+            "en": "Exponential"
+          }
+        }
+      ],
+      "property": "_MF_1_falloffMode"
+    }
+  ]
+}

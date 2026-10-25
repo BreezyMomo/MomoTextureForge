@@ -1,0 +1,61 @@
+{
+  "schema": "momo.postprocess-material/v1",
+  "componentType": "MomoTextureForge.Modules.MomoChromatic",
+  "shaderName": "Hidden/MomoTextureForge/Postprocess/chromatic",
+  "settings": "{\"distance\":0,\"direction\":0}",
+  "values": [
+    {
+      "variable": "distance",
+      "type": "number",
+      "number": 0,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "direction",
+      "type": "number",
+      "number": 0,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "distance",
+      "label": "fx.param.distance",
+      "min": 0,
+      "max": 24,
+      "default": 0,
+      "step": 0.1,
+      "path": "postFx.5",
+      "variable": "distance",
+      "property": "_MF_distance"
+    },
+    {
+      "key": "direction",
+      "label": "fx.param.direction",
+      "min": 0,
+      "max": 2,
+      "default": 0,
+      "step": 1,
+      "options": [
+        "horizontal",
+        "vertical",
+        "radial"
+      ],
+      "path": "postEffects.chromatic.direction",
+      "variable": "direction",
+      "property": "_MF_direction"
+    }
+  ]
+}

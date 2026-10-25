@@ -14,6 +14,8 @@ Establish the engine, version, rendering pipeline, usage surface and performance
 
 ## 2. Check existing modules before writing code
 
+Unity currently uses [standard Shader modules carried by resources](unity-modules.en.md). Extract them from native resource ZIPs or read the shaderModules files returned by MCP forge_resource. Modules preserve all their own parameters and dependencies for user learning/use and AI composition. Read and reuse supplied Unity implementations without translating their GLSL again. Port only missing or unsuitable modules.
+
 Query actual Shader support for the relevant graphics and postprocesses, then read available Shaders, runtime components, parameter mappings, dependencies and integration instructions. See [adapted graphics](realtime-shaders.en.md) for current Unity queries and delivery. Individual postprocess documents specify their contracts; [handdrawn postprocessing](handdrawn-postprocess.en.md) is one current implementation.
 
 When whole-work export is unsupported, inspect individual nodes and stages for reusable modules instead of concluding that the work has no Shaders. MCP support and delivery use one fresh `snapshotId`; CLI queries the source project. Do not substitute display names, badges or a fixed list for capability checks, or recreate an effect from screenshots without checking existing code.

@@ -3,6 +3,8 @@ import {uiText,uiFormat} from './ui-language.js';
 import {EFFECT_BY_ID,effectOrder,effectEnabled,effectPresent} from './post-effect-specs.js';
 import {compactEffectSummary} from './post-effect-catalog.js';
 import {openPostEffectPicker} from './post-effect-picker.js';
+import {hasPostEffectShader} from './post-effect-shader.js';
+import {createShaderBadge} from './shader-badge.js';
 import {dragAutoScroll,createReorderPreview,animateUI,animateLayout,layoutRects} from './editor-motion.js';
 const expanded=new Map(),helpOpen=new Set(),pendingMotion=new Map(),pendingFocus=new Map();let closeActions=null;
 // One shared editor is used by the inspector, multi-selection and pinned node controls.
@@ -35,6 +37,7 @@ export function createPostEffectsEditor({document:doc,host,node,scope=node.id,co
    menu.append(explain,restore,remove);doc.body.append(menu);menu.onkeydown=e=>e.stopPropagation();menu.addEventListener('toggle',event=>{if(event.newState==='closed')close();});menu.showPopover();const a=more.getBoundingClientRect(),r=menu.getBoundingClientRect();Object.assign(menu.style,{position:'fixed',inset:'auto',margin:'0',left:Math.max(8,Math.min(a.right-r.width,doc.defaultView.innerWidth-r.width-8))+'px',top:Math.max(8,Math.min(a.bottom+4,doc.defaultView.innerHeight-r.height-8))+'px'});
   });more.className='post-effect-more';
   summary.append(grip,input,heading,more);details.append(summary,body);item.append(details,help);list.append(item);details.open=expanded.get(key)??state===true;
+  if(hasPostEffectShader(id)){const nameRow=el('span',{class:'post-effect-name-row'});title.replaceWith(nameRow);nameRow.append(title,createShaderBadge(doc,{className:'post-effect-shader',label:uiText('fx.shaderBadge'),hint:uiText('fx.shaderHint')}));if(id!=='sketch'&&allowShaderExport)body.append(button(uiText('fx.downloadShader'),uiText('fx.downloadShader'),()=>doc.dispatchEvent(new doc.defaultView.CustomEvent('momo-download-postprocess-module',{detail:{nodeId:node.id,effectId:id}}))));}
   details.ontoggle=()=>{if(details.isConnected)expanded.set(key,details.open);};
   if(id!=='sketch')buildParameters(body,spec);else{
    const groups={outline:['maxRandomnessOffset','preserveVertices','strokeDashPattern','strokeDashOffset'],fill:['fillMultiStroke','fillShapeRoughnessGain','fillDashPattern','fillDashOffset','curveStepCount','curveFitting','curveTightness'],path:['source','threshold','simplify','pathSimplification','fixedDecimalPlaceDigits']},advanced=new Set(Object.values(groups).flat());

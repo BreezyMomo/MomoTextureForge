@@ -6,22 +6,22 @@
 
 First follow [Game-engine integration rules](engine-integration.en.md). This page describes current Unity graphic modules and bounded composition delivery; current coverage does not limit the common reuse priority.
 
-The tool provides a few adapted graphic generation Shaders and postprocess modules, not one-click conversion of arbitrary canvases. For complex work, AI must read the native project, reuse, combine and modify modules for the target engine, then validate the result. Query actual support before Unity delivery; handdrawn uses the [unified postprocess](handdrawn-postprocess.en.md). Having GLSL source is not proof of Unity support.
+For graphics and postprocessing, first use [standard Unity modules carried by resources](unity-modules.en.md): read formal sources and complete native parameter mappings without asking AI to translate them again. The analytic composition route below is an additional bounded capability, not one-click conversion of arbitrary canvases. AI connects modules, implements gaps and validates complex work in the target project. Handdrawn uses the [unified postprocess](handdrawn-postprocess.en.md).
 
 For animated handdrawn effects without baked outline inputs, read [Live contours and individual strokes](handdrawn-postprocess.en.md) and select the reported live mode. The analytic single-pass route below is for graphs without post effects; old light/frozen renderers are retired.
 
-## First supported subset
+## Bounded composition exporter
 
 | Category | Scope |
 | --- | --- |
-| Graphics | Current reviewed sources of Circle, Ring, RoundedRect, LinearGradient, RadialGradient, LedBar, FlowingWater and TurbulentFlame |
+| Graphics | Current sources with compatible standard modules; query each node. Custom resources may carry their own Unity implementation |
 | Transforms | Static placement, size, pivot, rotation, mirror, contain/stretch; static UV scale, rotation, offset and twist |
 | Color | Inherited, preserved or own solid/two-color gradients; opacity |
 | Compositing | Native over/add/max/multiply/subtract/screen/difference/overlay/softlight/dodge, sibling mask/inverseMask, attached masks using height |
 | Time | Continuous formula seconds and per-node clock speed/offset/frozen seconds; export duration is not a seamless-loop promise |
 | Not supported yet | Keyframes/time remapping, arrangement, repeating/overflow boundaries, scrolling/polar UV, multi-stop/remapped color, effects/curves/contours, images and unreviewed formulas |
 
-The query returns each affected nodeId, capability, reason and adaptation route. Any unsupported feature blocks the complete realtime export: no nodes are omitted, no implicit bake is substituted, and the project is not edited. Blur/bloom need a future validated multi-pass adapter or an explicit bake. Handdrawn uses the unified postprocess instead of skipping its stage in this analytic exporter.
+The query returns each affected nodeId, capability, reason and adaptation route. Any unsupported feature blocks the complete realtime export: no nodes are omitted, no implicit bake is substituted, and the project is not edited. Blur/bloom use their separate postprocess modules rather than being omitted by this analytic route. Handdrawn uses the unified postprocess instead of skipping its stage in this analytic exporter.
 
 ## Offline CLI
 
@@ -58,7 +58,7 @@ Activate a URP asset, then choose **Assets → Momo Texture Forge → Import <pa
 
 `parameters.json` uses schema `momo.realtime-shader/v1`: actual properties and nodeId mappings, source/archive hashes, optional snapshot identity, engine/pipeline target, time/UV/design aspect, input textures (empty in this subset), support and verification. `source-project.zip` retains the complete source dependencies; `sources/` includes the current graph and algorithm sources.
 
-Core math blends **premultiplied numeric sRGB RGB + coverage alpha**. In Linear projects the URP wrapper converts final straight color to linear and premultiplies again, using `Blend One OneMinusSrcAlpha`. Palette properties are numeric sRGB **Vectors**: use SetVector without Color.linear or multiplying alpha twice. Scalar formulas provide coverage; FlowingWater keeps native RGBA and separate scalar height. Attached masks read height; sibling mask reads alpha.
+Core math blends **premultiplied numeric sRGB RGB + coverage alpha**. In Linear projects the URP wrapper converts final straight color to linear and premultiplies again, using `Blend One OneMinusSrcAlpha`. Palette properties are numeric sRGB **Vectors**: use SetVector without Color.linear or multiplying alpha twice. Scalar formulas provide coverage; supplied RGBA generator modules keep native colors and separate scalar height. Attached masks read height; sibling mask reads alpha.
 
 Automatic time is `_Time.y` seconds. Exact-time comparisons use `_MF_UseExplicitTime=1` and `_MF_Seconds=0.75`. Per-node clocks have independent mappings. Drive properties through material instances or MaterialPropertyBlock. UV0 runs from bottom-left to top-right over 0–1; mesh aspect should match `uv.designAspect`. Material output is transparent color coverage, without baking the canvas background or height/normal output selection; original settings are recorded separately.
 

@@ -1,0 +1,351 @@
+{
+  "schema": "momo.engine-shader/v1",
+  "id": "unity-graphic-TurbulentFlame",
+  "kind": "graphic",
+  "graphicId": "TurbulentFlame",
+  "sourceSignature": "{\"generator\":{\"effect\":\"fire\",\"libraries\":[\"generator-common-v1\",\"generator-fire-v1\"],\"programs\":{\"color\":\"generator-fire-v1\"},\"revision\":1,\"scalar\":\"luminance\",\"schema\":\"momo.generator/v1\",\"usesTime\":true},\"hiddenDefaults\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"kind\":\"formula\",\"libraries\":{\"generator-common-v1\":\"// Generator noise is assembled from the host math library and MIT simplex noise.\\nfloat gSigned(vec2 p){return perlin(p+vec2(generatorSeed*.137+3.7,generatorSeed*.293+1.4));}\\nfloat gFbm(vec2 p,int count){float sum=0.,amplitude=.5;mat2 turn=mat2(.8,.6,-.6,.8);for(int octave=0;octave<8;octave++){if(octave>=count)break;sum+=amplitude*gSigned(p);p=turn*p*2.+100.;amplitude*=.5;}return sum;}\\nfloat gTurb(vec2 p,int count){float sum=0.,amplitude=.5;for(int octave=0;octave<8;octave++){if(octave>=count)break;sum+=amplitude*abs(gSigned(p));p=rot(p,.64)*2.+71.;amplitude*=.5;}return sum;}\\nfloat gRidged(vec2 p,int count){float value=0.,weight=.5;for(int i=0;i<8;i++){if(i>=count)break;float ridge=1.-abs(gSigned(p));value+=ridge*ridge*weight;p=rot(p,.64)*2.+100.;weight*=.5;}return value;}\\nvec2 gWarp(vec2 p,int count){vec2 first=vec2(gFbm(p,count),gFbm(p+vec2(5.2,1.3),count));return vec2(gFbm(p+first*2.+vec2(1.7,9.2),count),gFbm(p+first*2.+vec2(8.3,2.8),count));}\\nvec3 gColor(float packed){return vec3(floor(packed/65536.),mod(floor(packed/256.),256.),mod(packed,256.))/255.;}\\nfloat gWorley(vec2 p,float offset){vec2 cell=floor(p),f=fract(p);float nearest=4.;for(int y=-1;y<=1;y++)for(int x=-1;x<=1;x++){vec2 d=vec2(x,y),key=cell+d+offset;vec2 jitter=vec2(hash21(key),hash21(key+71.));nearest=min(nearest,length(d+jitter-f));}return nearest;}\\n\",\"generator-fire-v1\":\"vec3 fireRamp(float temperature){\\n vec3 red=vec3(.3,.015,0),orange=vec3(1.,.28,0),yellow=vec3(1.,.8,.14),hot=vec3(1.,.93,.47);\\n vec3 low=mix(vec3(.015,0,0),red,smoothstep(0.,.08,temperature));\\n low=mix(low,orange,smoothstep(.08,.32,temperature));low=mix(low,yellow,smoothstep(.32,.72,temperature));return mix(low,hot,smoothstep(.72,1.,temperature));\\n}\\nvec4 generate(vec2 uv){\\n float motion=time*motionSpeed;float height=max(flameHeight,.01);float h=(uv.y-baseY)/height;vec2 p=vec2(uv.x-.5,uv.y-baseY);\\n float normalizedX=abs(p.x)/max(width*(1.-clamp(h,0.,1.)*taper*.8),.01);\\n vec2 stretched=p*warpScale*vec2(3.,1.)-vec2(0.,h*7.)+vec2(motion*.13,-motion*1.8);\\n vec2 first=vec2(gFbm(stretched*.7,int(octaves)),gFbm(stretched*.7+vec2(5.2,1.3),int(octaves)))*warp*1.5;\\n vec2 second=vec2(gFbm(stretched+first*4.+vec2(1.7,9.2),int(octaves)),gFbm(stretched+first*4.+vec2(8.3,2.8),int(octaves)))*warp*.85;\\n vec2 fine=vec2(gSigned((stretched+first+second)*3.5+vec2(13.1,7.4)),gSigned((stretched+first+second)*3.5+vec2(3.7,11.2)))*warp*.4*(1.+smoothstep(.3,.9,normalizedX)*2.);\\n vec2 warped=stretched+first+second+fine;\\n float turbulence=gRidged(warped,int(octaves))*1.6+gTurb(warped*2.+vec2(30,70),max(2,int(octaves)-1))*.5+gTurb(warped*5.+vec2(50,20),max(2,int(octaves)-2))*.15+abs(gSigned(warped*10.+vec2(77,33)))*.06;\\n float channels=.35+.65*(gRidged(vec2(p.x*warpScale*3.6+seed*.3,h*.4-motion*.15),3)+gRidged(vec2(p.x*warpScale*7.5+50.+seed*.7,h*.6-motion*.2),2)*.4);\\n float tongueHeight=gRidged(vec2(p.x*6.+seed*.5,motion*.3),2)*disparity;\\n float tips=1.-smoothstep(tongueHeight,tongueHeight+.3,h);\\n float fuel=.2+fillAmount*.8-h*(1.2+max(h,0.)*.5)+turbulence*(.8+fillAmount*.2);\\n float silhouette=1.-smoothstep(.3,1.05,normalizedX);\\n silhouette=clamp(silhouette+gFbm(warped*2.5,max(2,int(octaves)-1))*.45*(1.-normalizedX*.4),0.,1.);\\n float density=pow(clamp(fuel*channels*tips*silhouette,0.,1.5),1.9-fillAmount*.6);\\n density*=1.-flicker*(gFbm(p*3.+seed*10.,2)*.3+gSigned(vec2(p.x*10.,seed*5.))*.15);\\n density*=smoothstep(-.03,.02,h);density=clamp(density,0.,1.);\\n float core=pow(max(0.,1.-normalizedX),1.2);\\n float heat=clamp(density*mix(edgeTemp*.4,coreTemp,core)*(1.-h*.4),0.,1.);\\n float textureValue=.45+gTurb(warped*2.+vec2(17.3,53.1),max(3,int(octaves)-1))*1.1;\\n vec3 emitted=fireRamp(heat)*mix(1.,textureValue,density*(1.-smoothstep(.25,.85,normalizedX))*(1.-h*.55)*.72)*intensity;\\n float alpha=smoothstep(0.,.04,density);\\n emitted*=alpha;\\n float bed=(1.-smoothstep(-.03,.08,h))*(1.-smoothstep(0.,width*1.6,abs(p.x)))*width*3.5;\\n bed*=1.+abs(gFbm(vec2(p.x*18.,seed*3.),3))*.5;emitted+=vec3(1,.5,.1)*bed*intensity*.6;alpha=max(alpha,bed*.6);\\n float fogField=fbm(vec2(p.x*warpScale*1.3,p.y*warpScale*.55)+first*.45+seed*.03);\\n float mist=fogField*(1.-smoothstep(-.05,1.1,h))*(1.-smoothstep(0.,1.6,normalizedX*(1.+max(h,0.)*.6)))*fogBase;\\n emitted+=mix(vec3(.5,.1,0),vec3(.9,.38,.04),fogField)*mist*intensity*.7;alpha=max(alpha,mist*.6);\\n float sparkZone=smoothstep(.1,.5,h)*(1.-smoothstep(.6,1.4,h))*(1.-smoothstep(0.,width*2.5,abs(p.x)));\\n float specks=smoothstep(.7,.95,gSigned(p*vec2(55,60)+seed+first*4.))*sparkZone;\\n emitted+=vec3(1,.6,.15)*specks*intensity;alpha=max(alpha,specks*.9);\\n // Smoke has its own rising, widening volume behind the emissive flame.\\n // Height and spread change the plume silhouette rather than multiplying opacity.\\n float smokeStart=baseY+height*.28;\\n float smokeHeight=max((1.-smokeStart)*mix(.2,1.,clamp(smokeRise,0.,1.)),.01);\\n float smokeT=(uv.y-smokeStart)/smokeHeight;\\n vec2 smokeCoord=vec2(p.x*warpScale*1.6,smokeT*2.8-motion*.5);\\n vec2 smokeWarp=gWarp(smokeCoord, int(octaves));\\n float drift=smokeWarp.x*(.04+.12*clamp(smokeT,0.,1.));\\n float smokeWidth=.035+width*.1+smokeSpread*.23+clamp(smokeT,0.,1.)*(.04+smokeSpread*.25);\\n float smokeX=abs(p.x-drift)/max(smokeWidth,.01);\\n float plume=1.-smoothstep(.25,1.,smokeX);\\n plume*=smoothstep(0.,.12,smokeT)*(1.-smoothstep(.55,1.,smokeT));\\n float billows=clamp(.6+gFbm(smokeCoord+smokeWarp*3.,int(octaves))*1.3,.12,1.);\\n float smoke=clamp(smokeMix,0.,1.)*(1.-exp(-max(smokeDensity,0.)*plume*billows*3.));\\n alpha=clamp(alpha,0.,1.);\\n float smokeBehind=smoke*(1.-alpha);\\n emitted+=mix(vec3(.22,.20,.18),vec3(.42,.39,.35),billows)*smokeBehind;\\n alpha+=smokeBehind;\\n return vec4(alpha>.00001?emitted/alpha:vec3(0),alpha);\\n}\\n\",\"math-v1\":\"\\nconst float PI=3.14159265359;const float TAU=6.28318530718;\\nfloat sat(float x){return clamp(x,0.,1.);}vec2 rot(vec2 q,float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c)*q;}\\nfloat fill(float d,float s){return 1.-smoothstep(0.,max(s,.0001),d);}float line(float d,float w,float s){return 1.-smoothstep(w,w+max(s,.0001),abs(d));}\\nfloat hash21(vec2 p){p=fract(p*vec2(.1031,.11369));p+=dot(p,p.yx+19.19);return fract(p.x*p.y*(p.x+p.y));}\\nfloat noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash21(i),hash21(i+vec2(1.,0.)),f.x),mix(hash21(i+vec2(0.,1.)),hash21(i+1.),f.x),f.y);}\\nvec2 grad(vec2 p){float a=hash21(p)*TAU;return vec2(cos(a),sin(a));}\\nfloat perlin(vec2 p){vec2 i=floor(p),f=fract(p),w=f*f*f*(f*(f*6.-15.)+10.);return mix(mix(dot(grad(i),f),dot(grad(i+vec2(1,0)),f-vec2(1,0)),w.x),mix(dot(grad(i+vec2(0,1)),f-vec2(0,1)),dot(grad(i+1.),f-1.),w.x),w.y)*1.7;}\\nfloat simplex(vec2 p){float f=(sqrt(3.)-1.)*.5,g=(3.-sqrt(3.))/6.;vec2 i=floor(p+dot(p,vec2(f)));vec2 a=p-i+dot(i,vec2(g));vec2 j=a.x>a.y?vec2(1,0):vec2(0,1);vec2 b=a-j+g,c=a-1.+2.*g;vec3 w=max(vec3(.5-dot(a,a),.5-dot(b,b),.5-dot(c,c)),vec3(0));w*=w;w*=w;return 70.*dot(w,vec3(dot(grad(i),a),dot(grad(i+j),b),dot(grad(i+1.),c)));}\\nfloat fbm(vec2 p){float v=0.,w=.5;for(int i=0;i<5;i++){v+=w*noise(p);p=rot(p,.47)*2.03+13.7;w*=.5;}return v/ .96875;}\\nfloat fractalValue(vec2 p,int octaves,float gain){float v=0.,w=1.,sum=0.;for(int i=0;i<8;i++){if(i>=octaves)break;v+=w*noise(p);sum+=w;p=rot(p,.47)*2.03+13.7;w*=gain;}return v/max(sum,.00001);}\\nfloat checker(vec2 u,float count,float soft){vec2 p=u*count,f=fract(p);float c=mod(floor(p.x)+floor(p.y),2.);float edge=min(min(f.x,1.-f.x),min(f.y,1.-f.y));return mix(.5,c,smoothstep(0.,max(soft,.00001),edge));}\\nfloat brick(vec2 u,float columns,float rows,float mortar,float offset,float soft){vec2 p=u*vec2(columns,rows);float row=floor(p.y);p.x+=mod(row,2.)*offset;vec2 f=fract(p),distance=min(f,1.-f);float edge=min(distance.x,distance.y);return smoothstep(mortar*.5,mortar*.5+max(soft,.00001),edge);}\\nfloat turb(vec2 p){float v=0.,w=.5;for(int i=0;i<5;i++){v+=w*abs(perlin(p));p=rot(p,.31)*2.1+11.;w*=.5;}return sat(v*1.5);}\\nvec3 voronoi(vec2 p,float seed){vec2 i=floor(p),f=fract(p);float a=10.,b=10.,id=0.;for(int y=-1;y<=1;y++)for(int x=-1;x<=1;x++){vec2 o=vec2(x,y),h=vec2(hash21(i+o+seed),hash21(i+o+seed+9.));float d=length(o+h-f);if(d<a){b=a;a=d;id=hash21(i+o+seed);}else b=min(b,d);}return vec3(a,b-a,id);}\\nvec2 curl(vec2 q){float e=.04;return vec2(fbm(q+vec2(0,e))-fbm(q-vec2(0,e)),-fbm(q+vec2(e,0))+fbm(q-vec2(e,0)))/(2.*e);}\\nfloat box(vec2 p,vec2 b,float r){vec2 d=abs(p)-b+r;return length(max(d,0.))+min(max(d.x,d.y),0.)-r;}\\nfloat poly(vec2 q,float n,float r){n=max(3.,floor(n));float a=atan(q.y,q.x),sector=TAU/n;return cos(floor(.5+a/sector)*sector-a)*length(q)-r;}\\nfloat segment(vec2 p,vec2 a,vec2 b){vec2 q=p-a,v=b-a;return length(q-v*clamp(dot(q,v)/max(dot(v,v),.00001),0.,1.));}\\nfloat starDistance(vec2 p,float count,float radius,float ratio,float rounding){float corner=min(rounding,radius*.45),r=radius-corner,halfAngle=PI/count;float angle=abs(mod(atan(p.x,p.y)+halfAngle,2.*halfAngle)-halfAngle);vec2 q=length(p)*vec2(sin(angle),cos(angle));vec2 a=vec2(0,r),b=r*ratio*vec2(sin(halfAngle),cos(halfAngle)),edge=b-a;float side=dot(q-a,vec2(-edge.y,edge.x));return segment(q,a,b)*(side>0.?1.:-1.)-corner;}\\nvec2 profilePoint(float t,float side,float r,float w,float power,float bend,float skew,int leaf){float y=-cos(PI*t);float width=leaf==1?pow(max(cos(PI*y*.5),0.),power):sqrt(max(1.-y*y,0.))*pow(max(1.-y,0.),power)/pow(1.4,power);return vec2(bend*r*(1.-y*y)+side*w*width*(1.+skew*y),r*y);}\\nfloat profileShape(vec2 p,float r,float w,float power,float bend,float skew,int leaf){float distance=10.;vec2 left=profilePoint(0.,-1.,r,w,power,bend,skew,leaf),right=profilePoint(0.,1.,r,w,power,bend,skew,leaf);for(int j=1;j<=32;j++){float t=float(j)/32.;vec2 l=profilePoint(t,-1.,r,w,power,bend,skew,leaf),h=profilePoint(t,1.,r,w,power,bend,skew,leaf);distance=min(distance,min(segment(p,left,l),segment(p,right,h)));left=l;right=h;}float phase=acos(clamp(-p.y/r,-1.,1.))/PI*32.;float cell=min(floor(phase),31.);float y0=profilePoint(cell/32.,-1.,r,w,power,bend,skew,leaf).y,y1=profilePoint((cell+1.)/32.,-1.,r,w,power,bend,skew,leaf).y;float f=clamp((p.y-y0)/max(y1-y0,.0000001),0.,1.);float lo=mix(profilePoint(cell/32.,-1.,r,w,power,bend,skew,leaf).x,profilePoint((cell+1.)/32.,-1.,r,w,power,bend,skew,leaf).x,f),hi=mix(profilePoint(cell/32.,1.,r,w,power,bend,skew,leaf).x,profilePoint((cell+1.)/32.,1.,r,w,power,bend,skew,leaf).x,f);return abs(p.y)<=r&&p.x>=lo&&p.x<=hi?-distance:distance;}\\nvec2 cubicPoint(vec4 a,vec4 b,float t){float s=1.-t;return s*s*s*a.xy+3.*s*s*t*a.zw+3.*s*t*t*b.xy+t*t*t*b.zw;}\\nvec2 cubicTangent(vec4 a,vec4 b,float t){float s=1.-t;return 3.*s*s*(a.zw-a.xy)+6.*s*t*(b.xy-a.zw)+3.*t*t*(b.zw-b.xy);}\\nfloat ribbonShape(vec2 p,vec4 a,vec4 b,vec4 c,vec4 d){if(c.w<=0.)return 0.;float distance=10.,nearest=0.;vec2 start=a.xy,previous=start;float before=0.;for(int j=1;j<=48;j++){float t=float(j)/48.*c.w;vec2 next=cubicPoint(a,b,t),v=next-previous;float h=clamp(dot(p-previous,v)/max(dot(v,v),.0000001),0.,1.);float at=mix(before,t,h),candidate=length(p-previous-v*h)-mix(c.x,c.y,at)*.5;if(candidate<distance){distance=candidate;nearest=at;}previous=next;before=t;}if(d.x>.5){vec2 first=cubicTangent(a,b,0.),last=cubicTangent(a,b,c.w);if(nearest<.000001)distance=max(distance,-dot(p-start,normalize(first+vec2(.000001,0))));if(nearest>c.w-.000001)distance=max(distance,dot(p-previous,normalize(last+vec2(.000001,0))));}return fill(distance,c.z);}\\n// Tooth width is a fraction of one pitch; top ratio zero forms a point, one a square tooth.\\n// Continuous union of the root disk and a folded trapezoid. Differentiating\\n// r-gearRadius across a square tooth's angular boundary creates false inner edges.\\nfloat gearDistance(vec2 p,float n,float radius,float depth,float width,float top){\\n float sector=TAU/n,angle=abs(mod(atan(p.y,p.x),sector)-sector*.5);\\n float halfAngle=PI*width/n,root=max(radius-depth,.001),topAngle=halfAngle*top;\\n vec2 q=length(p)*vec2(sin(angle),cos(angle));\\n vec2 base=root*vec2(sin(halfAngle),cos(halfAngle));\\n vec2 tip=radius*vec2(sin(topAngle),cos(topAngle)),edge=tip-base;\\n float side=(edge.y*(q.x-base.x)-edge.x*(q.y-base.y))/max(length(edge),.0000001);\\n // Extend the tooth into the disk within its angular wedge. A bottom chord\\n // leaves a shallow internal distance ridge that antialiasing exposes as a seam.\\n float wedge=q.x*cos(halfAngle)-q.y*sin(halfAngle);\\n float tooth=max(max(wedge,q.y-tip.y),side);\\n return min(length(p)-root,tooth);\\n}\\nfloat gearRadius(float a,float n,float radius,float depth,float width,float top){float sector=TAU/n;float beta=abs(mod(a,sector)-sector*.5);float halfAngle=PI*width/n;float root=max(radius-depth,.001);if(beta>=halfAngle)return root;float topAngle=halfAngle*top;vec2 base=root*vec2(sin(halfAngle),cos(halfAngle));vec2 tip=radius*vec2(sin(topAngle),cos(topAngle));if(beta<=topAngle)return max(root,tip.y/cos(beta));vec2 edge=tip-base;vec2 ray=vec2(sin(beta),cos(beta));return max(root,(base.x*edge.y-base.y*edge.x)/max(ray.x*edge.y-ray.y*edge.x,.000001));}\\n// Exact contour distance: upper circular lobes join lower diagonal segments.\\n// Unlike a polynomial threshold, the distance has uniform feathering at the tip.\\nfloat heart(vec2 q,float r){float scale=max(r,.02)*1.75;vec2 p=vec2(abs(q.x),q.y)/scale+vec2(0.,.55);if(p.x+p.y>1.)return (length(p-vec2(.25,.75))-sqrt(.125))*scale;vec2 notch=p-vec2(0.,1.);vec2 edge=p-vec2(.5*max(p.x+p.y,0.));float d=sqrt(min(dot(notch,notch),dot(edge,edge)));return d*sign(p.x-p.y)*scale;}\\nfloat grid(vec2 p,float w,float s){vec2 d=abs(fract(p)-.5);return line(max(d.x,d.y)-.5,w,s);}\\nvec2 hexcell(vec2 p){p*=vec2(1.,1.7320508);vec2 a=mod(p,vec2(1.,1.7320508))-.5*vec2(1.,1.7320508),b=mod(p-.5*vec2(1.,1.7320508),vec2(1.,1.7320508))-.5*vec2(1.,1.7320508);vec2 q=dot(a,a)<dot(b,b)?a:b;return vec2(abs(max(abs(q.x),abs(q.x)*.5+abs(q.y)*.8660254)-.5),length(q));}\\nfloat spots(vec2 p,float radius,float soft){vec2 i=floor(p),f=fract(p);float v=0.;for(int y=-1;y<=1;y++)for(int x=-1;x<=1;x++){vec2 o=vec2(x,y);vec2 c=vec2(hash21(i+o),hash21(i+o+37.));v=max(v,fill(length(f-o-c)-radius*(.3+.7*hash21(i+o+4.)),soft));}return v;}\\nfloat metaball(vec2 q,float r,float t){float sum=0.;for(int i=0;i<5;i++){float a=float(i)*TAU/5.+t;vec2 c=vec2(cos(a),sin(a*1.3))*r*.5;sum+=r*r*.04/max(dot(q-c,q-c),.003);}return smoothstep(.9,1.1,sum);}\\nfloat truchet(vec2 p,float w,float s,float h){vec2 i=floor(p),q=fract(p);if(hash21(i+h)>.5)q.x=1.-q.x;return max(line(length(q)-.5,w,s),line(length(q-1.)-.5,w,s));}\\nfloat circuit(vec2 p,float w,float s,float h){vec2 i=floor(p),q=fract(p)-.5;float v=line(q.x,w,s)*fill(q.y,s);if(hash21(i+h)>.5)v=max(v,line(q.y,w,s));return max(v,line(length(q)-.14,w,s));}\\nfloat fibonacci(vec2 q,int count,float r,float w,float s){float v=0.;for(int i=0;i<256;i++){if(i>=count)break;float n=float(i);vec2 c=r*sqrt((n+.5)/float(count))*vec2(cos(n*2.39996323),sin(n*2.39996323));v=max(v,fill(length(q-c)-w,s));}return v;}\\nfloat sierpinski(vec2 p,int n){float v=1.;p*=float(n);for(int i=0;i<6;i++){if(mod(floor(p.x)+floor(p.y),2.)>0.5)v=0.;p*=.5;}return v;}\\nfloat maze(vec2 p,float w,float s,float h){vec2 i=floor(p),q=fract(p)-.5;return hash21(i+h)>.5?line(q.x,w,s):line(q.y,w,s);}\\nfloat reaction(vec2 q,float h,float t,float k){vec2 uv=q;for(int i=0;i<4;i++)uv+=curl(uv+h+float(i))*.08*k;float v=fbm(uv+t*.1);return .5+.5*sin(v*25.+h);}\\nfloat flame(vec2 q,float r,float n,float k,float t,float h){float height=sat((q.y+r)/(2.*r));float warp=(fbm(q*n+vec2(0.,-t*2.)+h)-.5)*k;return pow(sat(1.-abs(q.x+warp)/(r*max(.03,1.-height))),1.5)*sat(height*4.)*pow(1.-height,.5)*(.5+.5*fbm(q*n+vec2(0.,-t)+h));}\\nfloat caustic(vec2 p,float h,float w){float v=1.;for(int i=0;i<3;i++){p=rot(p,.71)+vec2(sin(p.y),cos(p.x));v=min(v,abs(sin(p.x+sin(p.y+h))));p*=1.3;}return pow(1.-sat(v),8.)+line(v,w,.01)*.3;}\\nfloat fern(vec2 q,float r,float n,float w,float s){float v=line(q.x,w,s)*fill(abs(q.y)-r,s);for(int i=0;i<16;i++){if(float(i)>=n)break;float y=(float(i)/n*2.-1.)*r;float len=(1.-abs(y)/r)*r*.5;v=max(v,line(segment(q,vec2(0,y),vec2(len,y+.2)),w*.4,s));v=max(v,line(segment(q,vec2(0,y),vec2(-len,y+.2)),w*.4,s));}return v;}\\nfloat snowflake(vec2 q,float r,float n,float w,float s){float a=atan(q.y,q.x);a=abs(mod(a+PI/6.,PI/3.)-PI/6.);vec2 p=vec2(cos(a),sin(a))*length(q);float v=line(p.y,w,s)*fill(p.x-r,s);for(int i=1;i<8;i++){float x=float(i)*r/8.;v=max(v,line(segment(p,vec2(x,0),vec2(x-r*.13,r*.13)),w*.5,s));}return v;}\\nfloat droplets(vec2 p,float h,float w,float s){vec2 i=floor(p),q=fract(p)-vec2(hash21(i+h),hash21(i+h+9.));return line(length(q)-.18,w,s)*exp(-length(q)*2.)+line(q.x,w*.25,s)*fill(abs(q.y)-.4,s)*.3;}\\nfloat matrix(vec2 p,float h,float t){vec2 i=floor(p),q=fract(p)-.5;float v=step(.5,hash21(i+h))*max(line(q.x,.05,.02),line(q.y,.04,.02));float head=fract(i.x*.137+t*.3);return v*sat(1.-fract(p.y*.08-head)*2.);}\\nfloat qr(vec2 p,float h){vec2 q=fract(p/8.);float v=step(.5,hash21(floor(p)+h));for(int i=0;i<3;i++){vec2 c=i==0?vec2(.2):i==1?vec2(.8,.2):vec2(.2,.8);float d=max(abs(q.x-c.x),abs(q.y-c.y));if(d<.15)v=step(.10,d)+1.-step(.055,d);}return v;}\\nfloat bolt(vec2 q,float w,float n,float k,float t,float h){float x=(noise(vec2(q.y*n,floor(t*8.)+h))-.5)*k;return exp(-abs(q.x-x)/max(w,.001))+exp(-abs(q.x-x)/(w*4.))*.25;}\\nfloat pyro(vec2 q,float r,float n,float w,float s,float t,float h){float age=fract(t);float a=atan(q.y,q.x),rad=length(q);float ray=pow(sat(cos(a*n)),24.);return ray*exp(-pow((rad-r*age)/(w*4.+.01),2.))*(1.-age)+spots(q*n+h,r*.05,s)*exp(-rad/r)*(1.-age)*.2;}\\nfloat ribbon(vec2 q,float r,float w,float n,float d,float k,float t,float h,int mode){float y=sat((q.y+1.)*.5),x=q.x;float width=r*.4;float base=exp(-abs(x)/(width+.001))*pow(y,.5+d*3.);if(mode==1)return fill(abs(x)-width*y,.02)*y;\\nif(mode==2)return base+exp(-abs(x)/w)*y;if(mode==3)return base*pow(.5+.5*sin(x*n*TAU+k*fbm(q*n+t)*8.),3.);\\nif(mode==4)return base*line(sin(x*n*PI+fbm(q*n+t)*k*8.),w*4.,.01);\\nif(mode==5)return base*pow(y,4.)+spots(q*n+h,r*.05,.01)*y;\\nif(mode==6)return exp(-abs(x)/w)*y+exp(-abs(x)/(w*5.))*y*.3;\\nif(mode==7)return base*flame(vec2(x,q.y),r,n,k,t,h);\\nif(mode==8)return base*pow(fbm(q*n+vec2(0,-t)+h),2.);\\nif(mode==9)return spots(q*vec2(n,n*.5)+vec2(0,-t)+h,r*.06,.01)*y*exp(-abs(x)/width);\\nif(mode==10)return line(length(q-vec2(-r,0))-r,w,.02)*fill(abs(q.y)-r,.02)*y;\\nif(mode==11)return max(max(exp(-abs(x-width*.5)/w),exp(-abs(x)/w)),exp(-abs(x+width*.5)/w))*pow(y,2.);\\nif(mode==12)return exp(-abs(x-k*.2*sin(q.y*n-t))/max(w*4.,.01))*y;\\nif(mode==13)return base*(.5+.5*sin(q.y*n*TAU+abs(x)*n-t))*y;\\nif(mode==14)return base*pow(noise(q*vec2(n*2.,n*.2)+t),5.);\\nif(mode==15)return base*spots(q*n+vec2(0,-t)+h,r*.08,.01);return base;}\\nfloat sigil(vec2 q,float r,float n,float w,float s,float mode,float t,float h){q=rot(q,t*.15);float rad=length(q),a=atan(q.y,q.x),outer=line(rad-r,w,s);float ticks=line(sin(a*n),w*4.,s)*fill(abs(rad-r*.9)-r*.07,s);float polygon=line(poly(q,max(3.,n),r*.65),w,s);float glyph=line(sin(a*n*2.+floor(rad*n)*h),w*3.,s)*fill(abs(rad-r*.78)-r*.06,s);\\nif(mode<.5)return outer+line(rad-r*.75,w*.5,s)+line(rad-r*.5,w,s);\\nif(mode<1.5)return outer+ticks;if(mode<2.5)return outer+line(sin(a*n),w*3.,s)*fill(rad-r,s);\\nif(mode<3.5)return outer+pow(sat(cos(a*n)),16.)*fill(rad-r,s);\\nif(mode<4.5)return outer+polygon+line(poly(rot(q,PI/max(3.,n)),max(3.,n),r*.65),w,s);\\nif(mode<5.5)return outer+line(poly(q,3.,r*.7),w,s)+line(poly(-q,3.,r*.7),w,s);\\nif(mode<6.5)return outer+line(box(q,vec2(r*.5),0.),w,s)+line(box(rot(q,PI/4.),vec2(r*.5),0.),w,s);\\nif(mode<7.5)return line(sin(rad*n*PI),w*2.,s)*fill(rad-r,s)+ticks;\\nif(mode<8.5)return outer+glyph;if(mode<9.5)return glyph+line(rad-r*.84,w,s)+line(rad-r*.72,w,s);\\nif(mode<10.5)return outer+glyph*step(.4,hash21(vec2(floor(a*n),h)))+polygon;\\nif(mode<11.5)return outer*fbm(q*n+t)*2.+glyph+flame(q,r,n,.3,t,h)*.3;\\nif(mode<12.5)return outer+snowflake(q,r*.7,n,w*.7,s)+ticks;\\nif(mode<13.5)return outer+polygon+line(hexcell(q*n).x,w,s)*fill(rad-r*.65,s)*.4;\\nif(mode<14.5)return outer+ticks+glyph+polygon+line(rad-r*.4,w,s);\\nreturn outer+line(sin(a+rad*n-t),w*3.,s)*fill(rad-r,s);}\\n\"},\"parameters\":[[\"seed\",0,\"number\",0,99999,1,null,null],[\"width\",1,\"number\",0.1,1,0.01,null,null],[\"flameHeight\",2,\"number\",0.1,1,0.01,null,null],[\"disparity\",3,\"number\",0,1,0.01,null,null],[\"taper\",4,\"number\",0,1,0.01,null,null],[\"baseY\",5,\"number\",-0.2,0.5,0.01,null,null],[\"warp\",6,\"number\",0,1,0.01,null,null],[\"warpScale\",7,\"number\",1,12,0.1,null,null],[\"octaves\",8,\"number\",1,8,1,null,null],[\"flicker\",9,\"number\",0,1,0.01,null,null],[\"fillAmount\",10,\"number\",0,1,0.01,null,null],[\"coreTemp\",11,\"number\",0,1,0.01,null,null],[\"edgeTemp\",12,\"number\",0,0.7,0.01,null,null],[\"smokeMix\",13,\"number\",0,1,0.01,null,null],[\"intensity\",14,\"number\",0.5,4,0.05,null,null],[\"smokeDensity\",15,\"number\",0,1,0.01,null,null],[\"smokeRise\",16,\"number\",0,1,0.01,null,null],[\"smokeSpread\",17,\"number\",0,1,0.01,null,null],[\"fogBase\",18,\"number\",0,1.5,0.01,null,null],[\"motionSpeed\",19,\"number\",0,3,0.01,null,null]],\"scalar\":{\"inline\":\"// The scalar is sampled from this definition's generator output texture.\\nreturn 0.;\\n\",\"kind\":\"body\",\"libraries\":[\"math-v1\"]}}",
+  "target": {
+    "engine": "Unity",
+    "version": "2022.3",
+    "pipeline": "URP",
+    "pipelineVersion": "14",
+    "shaderModel": "3.5",
+    "passCount": 1
+  },
+  "shaderFile": "Unity/TF51ab6c4d9dc4.shader",
+  "hlslFile": "Unity/TF51ab6c4d9dc4.hlsl",
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 7872,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      },
+      "property": "_MF_1_seed"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "variable": "width",
+      "label": "火焰宽度",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "火焰宽度",
+        "en": "Flame width"
+      },
+      "property": "_MF_1_width"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "variable": "flameHeight",
+      "label": "火焰高度",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.8,
+      "aliases": {
+        "zh-CN": "火焰高度",
+        "en": "Flame height"
+      },
+      "property": "_MF_1_flameHeight"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "variable": "disparity",
+      "label": "焰尖高低差",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.7,
+      "aliases": {
+        "zh-CN": "焰尖高低差",
+        "en": "Flame tip variation"
+      },
+      "property": "_MF_1_disparity"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "taper",
+      "label": "收尖",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.55,
+      "aliases": {
+        "zh-CN": "收尖",
+        "en": "Taper"
+      },
+      "property": "_MF_1_taper"
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "variable": "baseY",
+      "label": "底部位置",
+      "min": -0.2,
+      "max": 0.5,
+      "step": 0.01,
+      "default": 0.1,
+      "aliases": {
+        "zh-CN": "底部位置",
+        "en": "Base position"
+      },
+      "property": "_MF_1_baseY"
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "variable": "warp",
+      "label": "湍流强度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.65,
+      "aliases": {
+        "zh-CN": "湍流强度",
+        "en": "Turbulence strength"
+      },
+      "property": "_MF_1_warp"
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "variable": "warpScale",
+      "label": "湍流尺度",
+      "min": 1,
+      "max": 12,
+      "step": 0.1,
+      "default": 5.5,
+      "aliases": {
+        "zh-CN": "湍流尺度",
+        "en": "Turbulence scale"
+      },
+      "property": "_MF_1_warpScale"
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "variable": "octaves",
+      "label": "细节层数",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 7,
+      "aliases": {
+        "zh-CN": "细节层数",
+        "en": "Detail layers"
+      },
+      "property": "_MF_1_octaves"
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "variable": "flicker",
+      "label": "明暗变化",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.35,
+      "aliases": {
+        "zh-CN": "明暗变化",
+        "en": "Brightness variation"
+      },
+      "property": "_MF_1_flicker"
+    },
+    {
+      "slot": 10,
+      "key": "C",
+      "variable": "fillAmount",
+      "label": "填充",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "填充",
+        "en": "Fill"
+      },
+      "property": "_MF_1_fillAmount"
+    },
+    {
+      "slot": 11,
+      "key": "E",
+      "variable": "coreTemp",
+      "label": "焰芯温度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.82,
+      "aliases": {
+        "zh-CN": "焰芯温度",
+        "en": "Core temperature"
+      },
+      "property": "_MF_1_coreTemp"
+    },
+    {
+      "slot": 12,
+      "key": "F",
+      "variable": "edgeTemp",
+      "label": "边缘温度",
+      "min": 0,
+      "max": 0.7,
+      "step": 0.01,
+      "default": 0.35,
+      "aliases": {
+        "zh-CN": "边缘温度",
+        "en": "Edge temperature"
+      },
+      "property": "_MF_1_edgeTemp"
+    },
+    {
+      "slot": 13,
+      "key": "G",
+      "variable": "smokeMix",
+      "label": "烟气混合",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.35,
+      "aliases": {
+        "zh-CN": "烟气混合",
+        "en": "Smoke blend"
+      },
+      "property": "_MF_1_smokeMix"
+    },
+    {
+      "slot": 14,
+      "key": "I",
+      "variable": "intensity",
+      "label": "火焰强度",
+      "min": 0.5,
+      "max": 4,
+      "step": 0.05,
+      "default": 1.65,
+      "aliases": {
+        "zh-CN": "火焰强度",
+        "en": "Flame strength"
+      },
+      "property": "_MF_1_intensity"
+    },
+    {
+      "slot": 15,
+      "key": "J",
+      "variable": "smokeDensity",
+      "label": "烟气密度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "烟气密度",
+        "en": "Smoke density"
+      },
+      "property": "_MF_1_smokeDensity"
+    },
+    {
+      "slot": 16,
+      "key": "P16",
+      "variable": "smokeRise",
+      "label": "烟气上升",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.6,
+      "aliases": {
+        "zh-CN": "烟气上升",
+        "en": "Smoke rise"
+      },
+      "property": "_MF_1_smokeRise"
+    },
+    {
+      "slot": 17,
+      "key": "P17",
+      "variable": "smokeSpread",
+      "label": "烟气扩散",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4,
+      "aliases": {
+        "zh-CN": "烟气扩散",
+        "en": "Smoke spread"
+      },
+      "property": "_MF_1_smokeSpread"
+    },
+    {
+      "slot": 18,
+      "key": "P18",
+      "variable": "fogBase",
+      "label": "底部雾气",
+      "min": 0,
+      "max": 1.5,
+      "step": 0.01,
+      "default": 0.6,
+      "aliases": {
+        "zh-CN": "底部雾气",
+        "en": "Base fog"
+      },
+      "property": "_MF_1_fogBase"
+    },
+    {
+      "slot": 19,
+      "key": "P19",
+      "variable": "motionSpeed",
+      "label": "动画速度",
+      "min": 0,
+      "max": 3,
+      "step": 0.01,
+      "default": 1,
+      "aliases": {
+        "zh-CN": "动画速度",
+        "en": "Animation speed"
+      },
+      "property": "_MF_1_motionSpeed"
+    }
+  ],
+  "verification": {
+    "hlslCompilation": "passed",
+    "engineCompilation": "passed",
+    "engineVisualReview": "passed",
+    "browserParity": "passed",
+    "referenceCases": 22,
+    "worstBackgroundMAE255": 8.368553792645804,
+    "referenceResolution": 128,
+    "maeThreshold255": 10,
+    "engineParameterMapping": "passed",
+    "engineMaterialPersistence": "passed",
+    "engineReferenceCases": 22,
+    "engineEnvironment": "Unity 2022.3.62f2 / URP 14.0.12 / Windows Editor / D3D11 / Linear",
+    "sampling": "Analytic 1x; matched 2x for sampling-sensitive cases. Optional shared 2x renderer included.",
+    "playerVerification": "not-run",
+    "mobileVerification": "not-run",
+    "gammaVerification": "not-run"
+  },
+  "files": [
+    "Unity/TF51ab6c4d9dc4.shader",
+    "Unity/TF51ab6c4d9dc4.hlsl",
+    "Unity/Editor/TF51ab6c4d9dc4Importer.cs",
+    "Unity/parameters.json",
+    "Reference/graphic.glsl",
+    "README.md",
+    "README.en.md",
+    "Reference/NOTICE.txt",
+    "Unity/Shared/Runtime/MomoGraphicRenderer.cs",
+    "Unity/Shared/GraphicResolve.shader",
+    "Unity/Shared/NumericSRGBDisplay.shader"
+  ],
+  "compositionContract": "momo.analytic-module/v1"
+}

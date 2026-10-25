@@ -1,7 +1,8 @@
 import {buildEffectsKit} from './build-effects-kit.mjs';
 import {buildShaderReferences} from './build-shader-references.mjs';
 import {build} from 'esbuild';
-import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {readFile,mkdir} from 'node:fs/promises';
+import {writeGenerated as writeFile} from './tools/write-generated.mjs';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {loadDefinitionURL} from './web/definition-loader.js';
@@ -9,8 +10,10 @@ import {AUTHORING_SKILL,AUTHORING_GUIDE,AUTHORING_EXAMPLE} from './web/ai-author
 import {GENERATOR_EXAMPLE} from './web/generator-authoring.js';
 import {encodeZIP} from './web/encoders.js';
 import {buildHanddrawn} from './build-handdrawn.mjs';
+import {buildEngineShaderRuntime} from './build-engine-shader-runtime.mjs';
 const root=dirname(fileURLToPath(import.meta.url));
 export async function buildAuthoringKit(){
+ await buildEngineShaderRuntime();
  const registry=await loadDefinitionURL(new URL('./web/definitions/builtin.json',import.meta.url));
  const shaderReferences=await buildShaderReferences();
  const handdrawn=await buildHanddrawn();
@@ -29,6 +32,8 @@ export async function buildAuthoringKit(){
   'references/shader-architecture.en.md':await readFile(resolve(root,'skills/texture-forge-author/references/shader-architecture.en.md'),'utf8'),
   'references/engine-integration.md':await readFile(resolve(root,'skills/texture-forge-author/references/engine-integration.md'),'utf8'),
   'references/engine-integration.en.md':await readFile(resolve(root,'skills/texture-forge-author/references/engine-integration.en.md'),'utf8'),
+  'references/unity-modules.md':await readFile(resolve(root,'skills/texture-forge-author/references/unity-modules.md'),'utf8'),
+  'references/unity-modules.en.md':await readFile(resolve(root,'skills/texture-forge-author/references/unity-modules.en.md'),'utf8'),
   'references/project-tools.md':await readFile(resolve(root,'skills/texture-forge-author/references/project-tools.md'),'utf8'),
   'references/project-tools.en.md':await readFile(resolve(root,'skills/texture-forge-author/references/project-tools.en.md'),'utf8'),
   ...Object.fromEntries(await Promise.all(['handdrawn-postprocess.md','handdrawn-postprocess.en.md','dynamic-handdrawn.md','dynamic-handdrawn.en.md','realtime-shaders.md','realtime-shaders.en.md','installation.md','installation.en.md','live-editor.md','live-editor.en.md','offline-projects.md','offline-projects.en.md','example.project.json','example-bolt.svg'].map(async name=>['references/'+name,await readFile(resolve(root,'skills/texture-forge-author/references',name),'utf8')]))),

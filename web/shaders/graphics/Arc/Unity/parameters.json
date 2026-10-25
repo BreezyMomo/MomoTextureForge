@@ -1,0 +1,213 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF08e14032a102",
+  "shaderName": "MomoTextureForge/Generated/TF08e14032a102",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_jitterAmplitude",
+      "type": "Float",
+      "floatValue": 0.1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_jitterFrequency",
+      "type": "Float",
+      "floatValue": 6,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_lineWidth",
+      "type": "Float",
+      "floatValue": 0.012,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_breakProbability",
+      "type": "Float",
+      "floatValue": 0.35,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "抖动幅度",
+      "min": 0,
+      "max": 0.4,
+      "step": 0.005,
+      "default": 0.1,
+      "variable": "jitterAmplitude",
+      "aliases": {
+        "zh-CN": "抖动幅度",
+        "en": "Jitter amplitude"
+      },
+      "property": "_MF_1_jitterAmplitude"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "抖动频率",
+      "min": 0.5,
+      "max": 20,
+      "step": 0.1,
+      "default": 6,
+      "variable": "jitterFrequency",
+      "aliases": {
+        "zh-CN": "抖动频率",
+        "en": "Jitter frequency"
+      },
+      "property": "_MF_1_jitterFrequency"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "线宽",
+      "min": 0.002,
+      "max": 0.06,
+      "step": 0.001,
+      "default": 0.012,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      },
+      "property": "_MF_1_lineWidth"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "断点概率",
+      "min": 0,
+      "max": 0.9,
+      "step": 0.01,
+      "default": 0.35,
+      "variable": "breakProbability",
+      "aliases": {
+        "zh-CN": "断点概率",
+        "en": "Break probability"
+      },
+      "property": "_MF_1_breakProbability"
+    }
+  ]
+}

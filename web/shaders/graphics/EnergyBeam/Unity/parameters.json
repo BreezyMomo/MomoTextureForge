@@ -1,0 +1,213 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF931ba1ff7886",
+  "shaderName": "MomoTextureForge/Generated/TF931ba1ff7886",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_width",
+      "type": "Float",
+      "floatValue": 0.09,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_coreRatio",
+      "type": "Float",
+      "floatValue": 0.16,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_outerHalo",
+      "type": "Float",
+      "floatValue": 1.2,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_softness",
+      "type": "Float",
+      "floatValue": 0.06,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "宽度",
+      "min": 0.01,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.09,
+      "variable": "width",
+      "aliases": {
+        "zh-CN": "宽度",
+        "en": "Width"
+      },
+      "property": "_MF_1_width"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "核心比",
+      "min": 0.01,
+      "max": 0.6,
+      "step": 0.005,
+      "default": 0.16,
+      "variable": "coreRatio",
+      "aliases": {
+        "zh-CN": "核心比",
+        "en": "Core ratio"
+      },
+      "property": "_MF_1_coreRatio"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "外晕",
+      "min": 0,
+      "max": 3,
+      "step": 0.05,
+      "default": 1.2,
+      "variable": "outerHalo",
+      "aliases": {
+        "zh-CN": "外晕",
+        "en": "Outer halo"
+      },
+      "property": "_MF_1_outerHalo"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "柔和",
+      "min": 0.005,
+      "max": 0.4,
+      "step": 0.005,
+      "default": 0.06,
+      "variable": "softness",
+      "aliases": {
+        "zh-CN": "柔和",
+        "en": "Softness"
+      },
+      "property": "_MF_1_softness"
+    }
+  ]
+}

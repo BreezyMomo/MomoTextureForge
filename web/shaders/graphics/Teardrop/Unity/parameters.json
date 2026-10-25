@@ -1,0 +1,266 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF598841f36baa",
+  "shaderName": "MomoTextureForge/Generated/TF598841f36baa",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_halfHeight",
+      "type": "Float",
+      "floatValue": 0.75,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_halfWidth",
+      "type": "Float",
+      "floatValue": 0.4,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_tipTaper",
+      "type": "Float",
+      "floatValue": 0.65,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_bend",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_asymmetry",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_feather",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "半高",
+      "min": 0.1,
+      "max": 1.3,
+      "step": 0.01,
+      "default": 0.75,
+      "variable": "halfHeight",
+      "aliases": {
+        "zh-CN": "半高",
+        "en": "Half height"
+      },
+      "property": "_MF_1_halfHeight"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "半宽",
+      "min": 0.05,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4,
+      "variable": "halfWidth",
+      "aliases": {
+        "zh-CN": "半宽",
+        "en": "Half width"
+      },
+      "property": "_MF_1_halfWidth"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "尖端收紧",
+      "min": 0.05,
+      "max": 2,
+      "step": 0.01,
+      "default": 0.65,
+      "variable": "tipTaper",
+      "aliases": {
+        "zh-CN": "尖端收紧",
+        "en": "Tip taper"
+      },
+      "property": "_MF_1_tipTaper"
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "label": "弯曲",
+      "min": -0.8,
+      "max": 0.8,
+      "step": 0.01,
+      "default": 0,
+      "variable": "bend",
+      "aliases": {
+        "zh-CN": "弯曲",
+        "en": "Bend"
+      },
+      "property": "_MF_1_bend"
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "label": "不对称",
+      "min": -0.8,
+      "max": 0.8,
+      "step": 0.01,
+      "default": 0,
+      "variable": "asymmetry",
+      "aliases": {
+        "zh-CN": "不对称",
+        "en": "Asymmetry"
+      },
+      "property": "_MF_1_asymmetry"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "羽化",
+      "min": 0.001,
+      "max": 0.3,
+      "step": 0.001,
+      "default": 0.015,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather",
+      "property": "_MF_1_feather"
+    }
+  ]
+}

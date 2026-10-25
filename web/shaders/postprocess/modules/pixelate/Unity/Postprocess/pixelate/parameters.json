@@ -1,0 +1,33 @@
+{
+  "schema": "momo.postprocess-material/v1",
+  "componentType": "MomoTextureForge.Modules.MomoPixelate",
+  "shaderName": "Hidden/MomoTextureForge/Postprocess/pixelate",
+  "settings": "{\"size\":8}",
+  "values": [
+    {
+      "variable": "size",
+      "type": "number",
+      "number": 8,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "size",
+      "label": "fx.param.size",
+      "min": 1,
+      "max": 200,
+      "default": 8,
+      "step": 1,
+      "path": "postEffects.pixelate.size",
+      "variable": "size",
+      "property": "_MF_size"
+    }
+  ]
+}

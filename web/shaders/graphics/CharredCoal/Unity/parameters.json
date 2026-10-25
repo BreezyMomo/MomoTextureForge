@@ -1,0 +1,213 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF1cbaf9768963",
+  "shaderName": "MomoTextureForge/Generated/TF1cbaf9768963",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_density",
+      "type": "Float",
+      "floatValue": 5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_crackWidth",
+      "type": "Float",
+      "floatValue": 0.05,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_levels",
+      "type": "Float",
+      "floatValue": 0.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_brightness",
+      "type": "Float",
+      "floatValue": 0.7,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "密度",
+      "min": 2,
+      "max": 18,
+      "step": 0.5,
+      "default": 5,
+      "variable": "density",
+      "aliases": {
+        "zh-CN": "密度",
+        "en": "Density"
+      },
+      "property": "_MF_1_density"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "裂纹宽",
+      "min": 0.01,
+      "max": 0.2,
+      "step": 0.005,
+      "default": 0.05,
+      "variable": "crackWidth",
+      "aliases": {
+        "zh-CN": "裂纹宽",
+        "en": "Crack width"
+      },
+      "property": "_MF_1_crackWidth"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "层级",
+      "min": 0.2,
+      "max": 0.8,
+      "step": 0.01,
+      "default": 0.5,
+      "variable": "levels",
+      "aliases": {
+        "zh-CN": "层级",
+        "en": "Levels"
+      },
+      "property": "_MF_1_levels"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "亮度",
+      "min": 0.2,
+      "max": 1.5,
+      "step": 0.02,
+      "default": 0.7,
+      "variable": "brightness",
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      },
+      "property": "_MF_1_brightness"
+    }
+  ]
+}

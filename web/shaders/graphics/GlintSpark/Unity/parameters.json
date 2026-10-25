@@ -1,0 +1,239 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF229b751d1851",
+  "shaderName": "MomoTextureForge/Generated/TF229b751d1851",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_armLength",
+      "type": "Float",
+      "floatValue": 0.85,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_pointedness",
+      "type": "Float",
+      "floatValue": 26,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_centerSize",
+      "type": "Float",
+      "floatValue": 0.05,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_armCount",
+      "type": "Float",
+      "floatValue": 4,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_flickerSpeed",
+      "type": "Float",
+      "floatValue": 1.2,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "臂长",
+      "min": 0.15,
+      "max": 1.2,
+      "step": 0.01,
+      "default": 0.85,
+      "variable": "armLength",
+      "aliases": {
+        "zh-CN": "臂长",
+        "en": "Arm length"
+      },
+      "property": "_MF_1_armLength"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "尖度",
+      "min": 6,
+      "max": 64,
+      "step": 1,
+      "default": 26,
+      "variable": "pointedness",
+      "aliases": {
+        "zh-CN": "尖度",
+        "en": "Pointedness"
+      },
+      "property": "_MF_1_pointedness"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "芯大小",
+      "min": 0.01,
+      "max": 0.25,
+      "step": 0.005,
+      "default": 0.05,
+      "variable": "centerSize",
+      "aliases": {
+        "zh-CN": "芯大小",
+        "en": "Center size"
+      },
+      "property": "_MF_1_centerSize"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "臂数",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "default": 4,
+      "variable": "armCount",
+      "aliases": {
+        "zh-CN": "臂数",
+        "en": "Arm count"
+      },
+      "property": "_MF_1_armCount"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "闪烁速度",
+      "min": 0,
+      "max": 3,
+      "step": 0.05,
+      "default": 1.2,
+      "variable": "flickerSpeed",
+      "aliases": {
+        "zh-CN": "闪烁速度",
+        "en": "Flicker speed"
+      },
+      "property": "_MF_1_flickerSpeed"
+    }
+  ]
+}

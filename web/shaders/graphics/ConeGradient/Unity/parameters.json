@@ -1,0 +1,260 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TFd6f5e2c67c0f",
+  "shaderName": "MomoTextureForge/Generated/TFd6f5e2c67c0f",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_startAngle",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_sweepAngle",
+      "type": "Float",
+      "floatValue": 360,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_radialWarp",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_gradientPower",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_reverse",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "起始角 °",
+      "min": -360,
+      "max": 360,
+      "step": 1,
+      "default": 0,
+      "variable": "startAngle",
+      "aliases": {
+        "zh-CN": "起始角 °",
+        "en": "Start angle"
+      },
+      "property": "_MF_1_startAngle"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "扫过角 °",
+      "min": 1,
+      "max": 360,
+      "step": 1,
+      "default": 360,
+      "variable": "sweepAngle",
+      "aliases": {
+        "zh-CN": "扫过角 °",
+        "en": "Sweep angle"
+      },
+      "property": "_MF_1_sweepAngle"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "径向扭曲",
+      "min": -6.28,
+      "max": 6.28,
+      "step": 0.01,
+      "default": 0,
+      "variable": "radialWarp",
+      "aliases": {
+        "zh-CN": "径向扭曲",
+        "en": "Radial warp"
+      },
+      "property": "_MF_1_radialWarp"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "渐变幂",
+      "min": 0.1,
+      "max": 8,
+      "step": 0.1,
+      "default": 1,
+      "variable": "gradientPower",
+      "aliases": {
+        "zh-CN": "渐变幂",
+        "en": "Gradient power"
+      },
+      "property": "_MF_1_gradientPower"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "反向",
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "default": 0,
+      "variable": "reverse",
+      "aliases": {
+        "zh-CN": "反向",
+        "en": "Reverse"
+      },
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "variable": "value0",
+          "label": "正向",
+          "aliases": {
+            "zh-CN": "正向",
+            "en": "Forward"
+          }
+        },
+        {
+          "value": 1,
+          "variable": "value1",
+          "label": "反向",
+          "aliases": {
+            "zh-CN": "反向",
+            "en": "Reverse"
+          }
+        }
+      ],
+      "property": "_MF_1_reverse"
+    }
+  ]
+}

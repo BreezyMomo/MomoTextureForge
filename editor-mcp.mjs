@@ -5,13 +5,14 @@ import {StreamableHTTPServerTransport} from '@modelcontextprotocol/sdk/server/st
 import {z} from 'zod';
 import {mkdir,mkdtemp,readFile,writeFile,link,rm,stat,rename} from 'node:fs/promises';
 import {tmpdir,homedir} from 'node:os';
-import {resolve,dirname,join,isAbsolute,extname,basename} from 'node:path';
+import {resolve,dirname,join,isAbsolute,extname,basename,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash,randomUUID} from 'node:crypto';
 import {EditorBridge,bridgeSecret,readBridgeJSON} from './editor-bridge.mjs';
 import {runProjectBrowser,PROJECT_HANDOFF_PROMPT} from './project-cli.mjs';
 import {EDITOR_BRIDGE_PROTOCOL,EDITOR_BRIDGE_PORT} from './web/editor-bridge-protocol.js';
 import {validateRecipe} from './web/project-authoring-contract.js';
+import {graphicUnityModule} from './web/engine-shader-contract.js';
 import {PACK_LIMIT} from './web/resource-zip.js';
 
 export function editorMCPOptions(args){
@@ -96,7 +97,10 @@ export class LiveProjectService{
    // SVG source remains a file; use forge_render for a rasterized node/mask.
    if(asset.mime!=='image/svg+xml')image={type:'image',data:asset.data,mimeType:asset.mime};
   }
-  await writeFile(base+'.json',JSON.stringify(definition,null,2)+'\n');this.get(snapshotId);return {data:{snapshotId,revision:snapshot.revision,resourceId,asset:definition,assetFile:base+'.json'},image};
+  await writeFile(base+'.json',JSON.stringify(definition,null,2)+'\n');
+  const shaderModules=[];for(const module of [graphicUnityModule(asset)].filter(Boolean)){const directory=base+'-unity';await mkdir(directory,{recursive:true});const files=[];for(const [name,text]of Object.entries(module.files)){const file=resolve(directory,name);if(!file.startsWith(directory+sep))throw Error('Invalid Shader source path');await mkdir(dirname(file),{recursive:true});await writeFile(file,text);files.push(file);}shaderModules.push({id:module.id,target:module.target,parameters:module.parameters,verification:module.verification,files});}
+  delete definition.engineShaders;const inlineAsset=shaderModules.length?{kind:asset.kind,definition:Object.fromEntries(['id','name','aliases','parameters','defaults','generator'].filter(key=>asset.definition[key]!==undefined).map(key=>[key,asset.definition[key]])),nativeSourceFile:base+'.json'}:definition;
+  this.get(snapshotId);return {data:{snapshotId,revision:snapshot.revision,resourceId,asset:inlineAsset,assetFile:base+'.json',shaderModules},image};
  }
  async exportLibrary(pageId,key,{signal,format='zip'}={}){
   if(format!=='zip'){
@@ -205,7 +209,7 @@ export function createEditorMCPServer(bridge,service){
   return textResult({pageId:snapshot.pageId,...await bridge.request(snapshot.pageId,'edit',{args:{expectedRevision:snapshot.editRevision,mode,recipe},signal:extra.signal})});
  },false);
  tool('forge_inspect','Read a pinned snapshot. Without nodeId returns tree/resource summaries; with nodeId returns that node’s native parameters, tracks, ordered effects and evaluated samples.',{snapshotId,nodeId:z.string().min(1).max(128).optional(),times},async({snapshotId,...args})=>textResult(await service.inspect(snapshotId,args)));
- tool('forge_resource','Read the actual definition and GLSL libraries of a dependency. For images also save the original bytes; SVG is delivered as source and can be rasterized with forge_render.',{snapshotId,resourceId:z.string().min(1).max(256)},async({snapshotId,resourceId})=>{const r=await service.resource(snapshotId,resourceId);return {...textResult(r.data),content:[...textResult(r.data).content,...(r.image?[r.image]:[])]};});
+ tool('forge_resource','Read an actual dependency and save its formal Unity Shader files. shaderModules returns source paths, target and complete parameter mappings; reuse these before translating GLSL. The assetFile preserves the full native resource. For images save original bytes; rasterize SVG with forge_render.',{snapshotId,resourceId:z.string().min(1).max(256)},async({snapshotId,resourceId})=>{const r=await service.resource(snapshotId,resourceId);return {...textResult(r.data),content:[...textResult(r.data).content,...(r.image?[r.image]:[])]};});
  tool('forge_render','Render a pinned snapshot at elapsed seconds. Returns a contact-sheet image and local PNG paths. nodeId solos that node; beforeEffect extracts its input. Alpha mode writes coverage to RGB with alpha=1.',{snapshotId,times,size:z.number().int().min(16).max(1024).optional(),nodeId:z.string().min(1).max(128).optional(),channel:z.enum(['color','alpha','height','normal','rgba']).optional(),beforeEffect:z.string().min(1).max(80).optional()},async({snapshotId,...args})=>{const r=await service.render(snapshotId,args);return {...textResult(r.data),content:[...textResult(r.data).content,r.image]};});
  tool('forge_help','Read all native in-app help sections (or one id), or export the exact author/effects Skill ZIP supplied by the connected webpage. Does not install files, start services or alter client configuration. Detailed manual link is returned separately. Artifacts are saved on MCP host.',{pageId:z.string().uuid(),kind:z.enum(['help','author','effects']).default('help'),language:z.enum(['zh-CN','en']).default('en'),id:z.enum(['start','workspace','layout','animation','image','recipes']).optional()},async({pageId,kind,language,id},extra)=>{
   if(kind==='help')return textResult(await bridge.request(pageId,'help-read',{args:{language,id},signal:extra.signal}));

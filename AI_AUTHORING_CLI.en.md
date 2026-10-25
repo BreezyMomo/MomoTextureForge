@@ -81,6 +81,14 @@ Under **AI tools → 1. Install Skill**, select an agent/Skills and authorize a 
 
 ## Shader categories and export
 
+For Unity work, first extract and read [formal modules carried by resources](skills/texture-forge-author/references/unity-modules.en.md). This command uses no browser and does not translate GLSL:
+
+```sh
+node portable-authoring-cli.mjs modules effect.zip --output engine-modules
+```
+
+
+
 Distinguish graphic generation from image processing using [responsibility rules](skills/texture-forge-author/references/shader-architecture.en.md). Query support first rather than omitting unsupported nodes:
 
 ```sh

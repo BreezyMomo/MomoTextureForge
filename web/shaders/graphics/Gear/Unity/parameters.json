@@ -1,0 +1,365 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF160e9f7402d4",
+  "shaderName": "MomoTextureForge/Generated/TF160e9f7402d4",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_toothCount",
+      "type": "Float",
+      "floatValue": 10,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_outerRadius",
+      "type": "Float",
+      "floatValue": 0.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_toothDepth",
+      "type": "Float",
+      "floatValue": 0.12,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_holeRadius",
+      "type": "Float",
+      "floatValue": 0.18,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_toothWidth",
+      "type": "Float",
+      "floatValue": 0.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_toothTipWidth",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_feather",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_roundedToothMode",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_roundedToothSharpness",
+      "type": "Float",
+      "floatValue": 1.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "齿数",
+      "min": 4,
+      "max": 32,
+      "step": 1,
+      "default": 10,
+      "variable": "toothCount",
+      "aliases": {
+        "zh-CN": "齿数",
+        "en": "Tooth count"
+      },
+      "property": "_MF_1_toothCount"
+    },
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "外半径",
+      "min": 0.1,
+      "max": 1.5,
+      "step": 0.01,
+      "default": 0.5,
+      "variable": "outerRadius",
+      "aliases": {
+        "zh-CN": "外半径",
+        "en": "Outer radius"
+      },
+      "property": "_MF_1_outerRadius"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "齿深",
+      "min": 0,
+      "max": 0.4,
+      "step": 0.005,
+      "default": 0.12,
+      "variable": "toothDepth",
+      "aliases": {
+        "zh-CN": "齿深",
+        "en": "Tooth depth"
+      },
+      "property": "_MF_1_toothDepth"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "内孔半径",
+      "min": 0,
+      "max": 0.8,
+      "step": 0.01,
+      "default": 0.18,
+      "variable": "holeRadius",
+      "aliases": {
+        "zh-CN": "内孔半径",
+        "en": "Hole radius"
+      },
+      "property": "_MF_1_holeRadius"
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "label": "齿宽",
+      "min": 0.05,
+      "max": 0.95,
+      "step": 0.01,
+      "default": 0.5,
+      "variable": "toothWidth",
+      "aliases": {
+        "zh-CN": "齿宽",
+        "en": "Tooth width"
+      },
+      "property": "_MF_1_toothWidth"
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "label": "齿顶宽度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 1,
+      "variable": "toothTipWidth",
+      "aliases": {
+        "zh-CN": "齿顶宽度",
+        "en": "Tooth tip width"
+      },
+      "property": "_MF_1_toothTipWidth"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "羽化",
+      "min": 0.001,
+      "max": 0.3,
+      "step": 0.001,
+      "default": 0.015,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather",
+      "property": "_MF_1_feather"
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "label": "圆齿模式",
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "default": 0,
+      "variable": "roundedToothMode",
+      "aliases": {
+        "zh-CN": "圆齿模式",
+        "en": "Rounded tooth mode"
+      },
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "variable": "value0",
+          "label": "直边齿",
+          "aliases": {
+            "zh-CN": "直边齿",
+            "en": "Straight teeth"
+          }
+        },
+        {
+          "value": 1,
+          "variable": "value1",
+          "label": "圆齿",
+          "aliases": {
+            "zh-CN": "圆齿",
+            "en": "Rounded teeth"
+          }
+        }
+      ],
+      "property": "_MF_1_roundedToothMode"
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "label": "圆齿锐度",
+      "min": 0.3,
+      "max": 6,
+      "step": 0.1,
+      "default": 1.5,
+      "variable": "roundedToothSharpness",
+      "aliases": {
+        "zh-CN": "圆齿锐度",
+        "en": "Rounded tooth sharpness"
+      },
+      "property": "_MF_1_roundedToothSharpness"
+    }
+  ]
+}

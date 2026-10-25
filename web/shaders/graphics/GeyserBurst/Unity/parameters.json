@@ -1,0 +1,213 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF8c0b22cd6e29",
+  "shaderName": "MomoTextureForge/Generated/TF8c0b22cd6e29",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_eruptionPeriod",
+      "type": "Float",
+      "floatValue": 2.4,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_columnWidth",
+      "type": "Float",
+      "floatValue": 0.1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_riseSpeed",
+      "type": "Float",
+      "floatValue": 1.1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_splashSpread",
+      "type": "Float",
+      "floatValue": 0.45,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "喷发周期",
+      "min": 0.5,
+      "max": 6,
+      "step": 0.1,
+      "default": 2.4,
+      "variable": "eruptionPeriod",
+      "aliases": {
+        "zh-CN": "喷发周期",
+        "en": "Eruption period"
+      },
+      "property": "_MF_1_eruptionPeriod"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "柱宽",
+      "min": 0.02,
+      "max": 0.3,
+      "step": 0.01,
+      "default": 0.1,
+      "variable": "columnWidth",
+      "aliases": {
+        "zh-CN": "柱宽",
+        "en": "Column width"
+      },
+      "property": "_MF_1_columnWidth"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "上升速度",
+      "min": 0.2,
+      "max": 3,
+      "step": 0.05,
+      "default": 1.1,
+      "variable": "riseSpeed",
+      "aliases": {
+        "zh-CN": "上升速度",
+        "en": "Rise speed"
+      },
+      "property": "_MF_1_riseSpeed"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "溅散",
+      "min": 0,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.45,
+      "variable": "splashSpread",
+      "aliases": {
+        "zh-CN": "溅散",
+        "en": "Splash spread"
+      },
+      "property": "_MF_1_splashSpread"
+    }
+  ]
+}

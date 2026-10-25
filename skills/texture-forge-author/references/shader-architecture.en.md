@@ -21,6 +21,8 @@ A generator may process its own intermediate textures. That does not imply arbit
 
 ## 2. Boundaries for new modules
 
+- Standard Unity modules travel with resources for user learning/use and direct AI reuse; see [module contracts](unity-modules.en.md). Map every native graphic parameter to an adjustable property, retaining type, units, ranges and time semantics. Update and validate implementations when their source changes. Custom resources may carry engineShaders.unity without changing a framework list. Ordinary builds package maintained sources without translating again at download time.
+
 - A new graphic implements its generation logic and specific parameters. Effects applicable independently to other images should use or extend reusable postprocessing; do not copy handdrawn, blur or outline algorithms into every graphic Shader.
 - A new postprocess consumes explicit image input without hardcoding an upstream graphic ID, formula or screenshot. The core should remain reusable after replacing compatible inputs. Declare required channels, auxiliary inputs and static/dynamic capabilities; reject unsupported inputs explicitly.
 - When both a new graphic and a new postprocess are needed, implement and validate them separately, then compose them in order. Internal steps intrinsic to a graphic may remain in its generator; avoid unnecessary fragmentation.
@@ -39,7 +41,7 @@ These are contract topics, not shared numeric constants. Short-side512 units, Co
 
 ## 4. Separate web and engine acceptance
 
-Working in the web editor does not imply an HLSL/Unity adapter exists. When extending exportable graphics or effects, update actual support queries, parameter mappings, package/dependencies, runtime and any required importer together. Claim only implemented and verified capabilities. Current routes are [analytic graphic export](realtime-shaders.en.md) and [handdrawn postprocessing](handdrawn-postprocess.en.md); this does not establish Unity export support for other web post effects.
+Working in the web editor does not imply an HLSL/Unity adapter exists. When extending exportable graphics or effects, update actual support queries, parameter mappings, package/dependencies, runtime and any required importer together. Claim only implemented and verified capabilities. [Standard modules](unity-modules.en.md), [bounded composition export](realtime-shaders.en.md) and [handdrawn postprocessing](handdrawn-postprocess.en.md) each deliver their actual supported capabilities.
 
 Unsupported nodes, effects, parameters or animation must report reasons and paths rather than being omitted or substituted. Static baking is an explicit choice, never described as realtime implementation. Retired light fill and frozen-stroke handdrawn exports remain unavailable.
 

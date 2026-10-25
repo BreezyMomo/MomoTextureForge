@@ -1,0 +1,239 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF9bc7b203a02e",
+  "shaderName": "MomoTextureForge/Generated/TF9bc7b203a02e",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_stratumDensity",
+      "type": "Float",
+      "floatValue": 7,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_holeCount",
+      "type": "Float",
+      "floatValue": 9,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_holeSize",
+      "type": "Float",
+      "floatValue": 0.055,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_holeDepth",
+      "type": "Float",
+      "floatValue": 0.62,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_stratumContrast",
+      "type": "Float",
+      "floatValue": 0.45,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "层理密度",
+      "min": 2,
+      "max": 16,
+      "step": 0.5,
+      "default": 7,
+      "variable": "stratumDensity",
+      "aliases": {
+        "zh-CN": "层理密度",
+        "en": "Stratum density"
+      },
+      "property": "_MF_1_stratumDensity"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "孔洞数量",
+      "min": 2,
+      "max": 18,
+      "step": 1,
+      "default": 9,
+      "variable": "holeCount",
+      "aliases": {
+        "zh-CN": "孔洞数量",
+        "en": "Hole count"
+      },
+      "property": "_MF_1_holeCount"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "孔洞大小",
+      "min": 0.02,
+      "max": 0.16,
+      "step": 0.002,
+      "default": 0.055,
+      "variable": "holeSize",
+      "aliases": {
+        "zh-CN": "孔洞大小",
+        "en": "Hole size"
+      },
+      "property": "_MF_1_holeSize"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "孔洞深度",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.62,
+      "variable": "holeDepth",
+      "aliases": {
+        "zh-CN": "孔洞深度",
+        "en": "Hole depth"
+      },
+      "property": "_MF_1_holeDepth"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "层理对比",
+      "min": 0,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.45,
+      "variable": "stratumContrast",
+      "aliases": {
+        "zh-CN": "层理对比",
+        "en": "Stratum contrast"
+      },
+      "property": "_MF_1_stratumContrast"
+    }
+  ]
+}

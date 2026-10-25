@@ -1,0 +1,213 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF24a7d5485c74",
+  "shaderName": "MomoTextureForge/Generated/TF24a7d5485c74",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_position",
+      "type": "Float",
+      "floatValue": 0.45,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_thickness",
+      "type": "Float",
+      "floatValue": 0.05,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_strength",
+      "type": "Float",
+      "floatValue": 1.2,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_turbulence",
+      "type": "Float",
+      "floatValue": 0.12,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "位置",
+      "min": -0.2,
+      "max": 1.2,
+      "step": 0.01,
+      "default": 0.45,
+      "variable": "position",
+      "aliases": {
+        "zh-CN": "位置",
+        "en": "Position"
+      },
+      "property": "_MF_1_position"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "厚度",
+      "min": 0.005,
+      "max": 0.3,
+      "step": 0.005,
+      "default": 0.05,
+      "variable": "thickness",
+      "aliases": {
+        "zh-CN": "厚度",
+        "en": "Thickness"
+      },
+      "property": "_MF_1_thickness"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "强度",
+      "min": 0.1,
+      "max": 3,
+      "step": 0.05,
+      "default": 1.2,
+      "variable": "strength",
+      "aliases": {
+        "zh-CN": "强度",
+        "en": "Strength"
+      },
+      "property": "_MF_1_strength"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "扰流",
+      "min": 0,
+      "max": 0.4,
+      "step": 0.005,
+      "default": 0.12,
+      "variable": "turbulence",
+      "aliases": {
+        "zh-CN": "扰流",
+        "en": "Turbulence"
+      },
+      "property": "_MF_1_turbulence"
+    }
+  ]
+}

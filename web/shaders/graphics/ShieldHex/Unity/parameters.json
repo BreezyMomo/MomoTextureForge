@@ -1,0 +1,213 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF47906a3d4e0d",
+  "shaderName": "MomoTextureForge/Generated/TF47906a3d4e0d",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_gridDensity",
+      "type": "Float",
+      "floatValue": 5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_gridLineWidth",
+      "type": "Float",
+      "floatValue": 0.05,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_pulsationSpeed",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_pulsationStrength",
+      "type": "Float",
+      "floatValue": 0.7,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "网格密度",
+      "min": 2,
+      "max": 12,
+      "step": 0.5,
+      "default": 5,
+      "variable": "gridDensity",
+      "aliases": {
+        "zh-CN": "网格密度",
+        "en": "Grid density"
+      },
+      "property": "_MF_1_gridDensity"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "网格线宽",
+      "min": 0.01,
+      "max": 0.2,
+      "step": 0.005,
+      "default": 0.05,
+      "variable": "gridLineWidth",
+      "aliases": {
+        "zh-CN": "网格线宽",
+        "en": "Grid line width"
+      },
+      "property": "_MF_1_gridLineWidth"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "脉动速度",
+      "min": 0,
+      "max": 3,
+      "step": 0.05,
+      "default": 1,
+      "variable": "pulsationSpeed",
+      "aliases": {
+        "zh-CN": "脉动速度",
+        "en": "Pulsation speed"
+      },
+      "property": "_MF_1_pulsationSpeed"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "脉动强度",
+      "min": 0,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.7,
+      "variable": "pulsationStrength",
+      "aliases": {
+        "zh-CN": "脉动强度",
+        "en": "Pulsation strength"
+      },
+      "property": "_MF_1_pulsationStrength"
+    }
+  ]
+}

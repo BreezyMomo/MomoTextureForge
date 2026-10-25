@@ -1,0 +1,52 @@
+{
+  "schema": "momo.postprocess-material/v1",
+  "componentType": "MomoTextureForge.Modules.MomoMirror",
+  "shaderName": "Hidden/MomoTextureForge/Postprocess/mirror",
+  "settings": "{\"mirrorX\":true,\"mirrorY\":false}",
+  "values": [
+    {
+      "variable": "mirrorX",
+      "type": "boolean",
+      "number": 0,
+      "boolean": true,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "mirrorY",
+      "type": "boolean",
+      "number": 0,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "mirrorX",
+      "label": "fx.param.mirrorX",
+      "type": "boolean",
+      "default": true,
+      "path": "postEffects.mirror.mirrorX",
+      "variable": "mirrorX",
+      "property": "_MF_mirrorX"
+    },
+    {
+      "key": "mirrorY",
+      "label": "fx.param.mirrorY",
+      "type": "boolean",
+      "default": false,
+      "path": "postEffects.mirror.mirrorY",
+      "variable": "mirrorY",
+      "property": "_MF_mirrorY"
+    }
+  ]
+}

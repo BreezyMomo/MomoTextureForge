@@ -1,0 +1,239 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TFfde0e0773759",
+  "shaderName": "MomoTextureForge/Generated/TFfde0e0773759",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_stripCount",
+      "type": "Float",
+      "floatValue": 22,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_maximumHeight",
+      "type": "Float",
+      "floatValue": 0.82,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_bounceSpeed",
+      "type": "Float",
+      "floatValue": 1.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_stripWidthRatio",
+      "type": "Float",
+      "floatValue": 0.68,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_peakJitter",
+      "type": "Float",
+      "floatValue": 0.42,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "条数",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "default": 22,
+      "variable": "stripCount",
+      "aliases": {
+        "zh-CN": "条数",
+        "en": "Strip count"
+      },
+      "property": "_MF_1_stripCount"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "最大高度",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.82,
+      "variable": "maximumHeight",
+      "aliases": {
+        "zh-CN": "最大高度",
+        "en": "Maximum height"
+      },
+      "property": "_MF_1_maximumHeight"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "跳动速度",
+      "min": 0.2,
+      "max": 4,
+      "step": 0.05,
+      "default": 1.5,
+      "variable": "bounceSpeed",
+      "aliases": {
+        "zh-CN": "跳动速度",
+        "en": "Bounce speed"
+      },
+      "property": "_MF_1_bounceSpeed"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "条宽比",
+      "min": 0.2,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.68,
+      "variable": "stripWidthRatio",
+      "aliases": {
+        "zh-CN": "条宽比",
+        "en": "Strip width ratio"
+      },
+      "property": "_MF_1_stripWidthRatio"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "峰值抖动",
+      "min": 0,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.42,
+      "variable": "peakJitter",
+      "aliases": {
+        "zh-CN": "峰值抖动",
+        "en": "Peak jitter"
+      },
+      "property": "_MF_1_peakJitter"
+    }
+  ]
+}

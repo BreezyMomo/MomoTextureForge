@@ -1,4 +1,5 @@
 import {gifSettings} from './gif-settings.js';
+import {validateEngineShader} from './engine-shader-contract.js';
 import {normalizeDashPattern} from './sketch-options.js';
 import {sanitizeBezierTail,BEZIER_LIMIT} from './bezier-path.js';
 import {graphicAliasesField} from './graphic-name.js';
@@ -136,6 +137,7 @@ export function sanitizeTree(raw,{component=false}={}){
   n.children=(r.children??[]).map(c=>read(c,depth+1));if(r.mask)n.mask=read(r.mask,depth+1);return n;
  }
  const p=project();p.root=read(raw.root,0);
+ if(raw.engineShaderModules){p.engineShaderModules={};for(const [id,module]of Object.entries(raw.engineShaderModules)){if(!POST_EFFECTS.some(effect=>effect.id===id)||module.effectId!==id)throw Error('Invalid postprocess Shader binding');validateEngineShader(module);p.engineShaderModules[id]=structuredClone(module);}}
  if(raw.projectResources!==undefined){if(!Array.isArray(raw.projectResources))throw messageError("ui.invalidGraphicsListFormat");const ids=new Set();p.projectResources=raw.projectResources.map(entry=>{if(!entry||typeof entry.id!=='string'||ids.has(entry.id))throw messageError("ui.invalidOrDuplicateGraphicsListID");ids.add(entry.id);const clean=sanitizeTree({...project(),root:entry.root,projectResources:[]},{component:true}).root;return {id:entry.id,...(typeof entry.builtin==='string'&&BY_ID.has(entry.builtin)&&!entry.builtin.startsWith('asset_')?{builtin:entry.builtin}:{}),name:String(entry.name??clean.name).slice(0,80),...graphicAliasesField(entry.aliases),category:String(entry.category??'图形列表').slice(0,80),description:String(entry.description??'').slice(0,2000),kind:['formula','image','composition'].includes(entry.kind)?entry.kind:'composition',resourceId:typeof entry.resourceId==='string'?entry.resourceId:uid(),versionId:Math.max(1,Math.floor(num(entry.versionId,1,1,1000000000))),personalRevision:Math.floor(num(entry.personalRevision,0,0,1000000000)),source:entry.source?{resourceId:String(entry.source.resourceId).slice(0,128),versionId:Math.max(1,Math.floor(num(entry.source.versionId,1,1,1000000000)))}:null,root:clean};});}
 if(!component)p.root=canvasRoot(p.root);p.name=String(raw.name??p.name).slice(0,80);
  for(const [key,min,max] of [['width',1,4096],['height',1,4096],['columns',1,32],['depth',8,16],['seconds',.05,600],['normal',0,20]])p.output[key]=num(raw.output?.[key],p.output[key],min,max);

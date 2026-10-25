@@ -1,0 +1,629 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF51ab6c4d9dc4",
+  "shaderName": "MomoTextureForge/Generated/TF51ab6c4d9dc4",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_seed",
+      "type": "Float",
+      "floatValue": 7872,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_width",
+      "type": "Float",
+      "floatValue": 0.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_flameHeight",
+      "type": "Float",
+      "floatValue": 0.8,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_disparity",
+      "type": "Float",
+      "floatValue": 0.7,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_taper",
+      "type": "Float",
+      "floatValue": 0.55,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_baseY",
+      "type": "Float",
+      "floatValue": 0.1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_warp",
+      "type": "Float",
+      "floatValue": 0.65,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_warpScale",
+      "type": "Float",
+      "floatValue": 5.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_octaves",
+      "type": "Float",
+      "floatValue": 7,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_flicker",
+      "type": "Float",
+      "floatValue": 0.35,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_fillAmount",
+      "type": "Float",
+      "floatValue": 0.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_coreTemp",
+      "type": "Float",
+      "floatValue": 0.82,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_edgeTemp",
+      "type": "Float",
+      "floatValue": 0.35,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_smokeMix",
+      "type": "Float",
+      "floatValue": 0.35,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_intensity",
+      "type": "Float",
+      "floatValue": 1.65,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_smokeDensity",
+      "type": "Float",
+      "floatValue": 0.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_smokeRise",
+      "type": "Float",
+      "floatValue": 0.6,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_smokeSpread",
+      "type": "Float",
+      "floatValue": 0.4,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_fogBase",
+      "type": "Float",
+      "floatValue": 0.6,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_motionSpeed",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 7872,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      },
+      "property": "_MF_1_seed"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "variable": "width",
+      "label": "火焰宽度",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "火焰宽度",
+        "en": "Flame width"
+      },
+      "property": "_MF_1_width"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "variable": "flameHeight",
+      "label": "火焰高度",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.8,
+      "aliases": {
+        "zh-CN": "火焰高度",
+        "en": "Flame height"
+      },
+      "property": "_MF_1_flameHeight"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "variable": "disparity",
+      "label": "焰尖高低差",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.7,
+      "aliases": {
+        "zh-CN": "焰尖高低差",
+        "en": "Flame tip variation"
+      },
+      "property": "_MF_1_disparity"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "taper",
+      "label": "收尖",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.55,
+      "aliases": {
+        "zh-CN": "收尖",
+        "en": "Taper"
+      },
+      "property": "_MF_1_taper"
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "variable": "baseY",
+      "label": "底部位置",
+      "min": -0.2,
+      "max": 0.5,
+      "step": 0.01,
+      "default": 0.1,
+      "aliases": {
+        "zh-CN": "底部位置",
+        "en": "Base position"
+      },
+      "property": "_MF_1_baseY"
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "variable": "warp",
+      "label": "湍流强度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.65,
+      "aliases": {
+        "zh-CN": "湍流强度",
+        "en": "Turbulence strength"
+      },
+      "property": "_MF_1_warp"
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "variable": "warpScale",
+      "label": "湍流尺度",
+      "min": 1,
+      "max": 12,
+      "step": 0.1,
+      "default": 5.5,
+      "aliases": {
+        "zh-CN": "湍流尺度",
+        "en": "Turbulence scale"
+      },
+      "property": "_MF_1_warpScale"
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "variable": "octaves",
+      "label": "细节层数",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 7,
+      "aliases": {
+        "zh-CN": "细节层数",
+        "en": "Detail layers"
+      },
+      "property": "_MF_1_octaves"
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "variable": "flicker",
+      "label": "明暗变化",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.35,
+      "aliases": {
+        "zh-CN": "明暗变化",
+        "en": "Brightness variation"
+      },
+      "property": "_MF_1_flicker"
+    },
+    {
+      "slot": 10,
+      "key": "C",
+      "variable": "fillAmount",
+      "label": "填充",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "填充",
+        "en": "Fill"
+      },
+      "property": "_MF_1_fillAmount"
+    },
+    {
+      "slot": 11,
+      "key": "E",
+      "variable": "coreTemp",
+      "label": "焰芯温度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.82,
+      "aliases": {
+        "zh-CN": "焰芯温度",
+        "en": "Core temperature"
+      },
+      "property": "_MF_1_coreTemp"
+    },
+    {
+      "slot": 12,
+      "key": "F",
+      "variable": "edgeTemp",
+      "label": "边缘温度",
+      "min": 0,
+      "max": 0.7,
+      "step": 0.01,
+      "default": 0.35,
+      "aliases": {
+        "zh-CN": "边缘温度",
+        "en": "Edge temperature"
+      },
+      "property": "_MF_1_edgeTemp"
+    },
+    {
+      "slot": 13,
+      "key": "G",
+      "variable": "smokeMix",
+      "label": "烟气混合",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.35,
+      "aliases": {
+        "zh-CN": "烟气混合",
+        "en": "Smoke blend"
+      },
+      "property": "_MF_1_smokeMix"
+    },
+    {
+      "slot": 14,
+      "key": "I",
+      "variable": "intensity",
+      "label": "火焰强度",
+      "min": 0.5,
+      "max": 4,
+      "step": 0.05,
+      "default": 1.65,
+      "aliases": {
+        "zh-CN": "火焰强度",
+        "en": "Flame strength"
+      },
+      "property": "_MF_1_intensity"
+    },
+    {
+      "slot": 15,
+      "key": "J",
+      "variable": "smokeDensity",
+      "label": "烟气密度",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.5,
+      "aliases": {
+        "zh-CN": "烟气密度",
+        "en": "Smoke density"
+      },
+      "property": "_MF_1_smokeDensity"
+    },
+    {
+      "slot": 16,
+      "key": "P16",
+      "variable": "smokeRise",
+      "label": "烟气上升",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.6,
+      "aliases": {
+        "zh-CN": "烟气上升",
+        "en": "Smoke rise"
+      },
+      "property": "_MF_1_smokeRise"
+    },
+    {
+      "slot": 17,
+      "key": "P17",
+      "variable": "smokeSpread",
+      "label": "烟气扩散",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.4,
+      "aliases": {
+        "zh-CN": "烟气扩散",
+        "en": "Smoke spread"
+      },
+      "property": "_MF_1_smokeSpread"
+    },
+    {
+      "slot": 18,
+      "key": "P18",
+      "variable": "fogBase",
+      "label": "底部雾气",
+      "min": 0,
+      "max": 1.5,
+      "step": 0.01,
+      "default": 0.6,
+      "aliases": {
+        "zh-CN": "底部雾气",
+        "en": "Base fog"
+      },
+      "property": "_MF_1_fogBase"
+    },
+    {
+      "slot": 19,
+      "key": "P19",
+      "variable": "motionSpeed",
+      "label": "动画速度",
+      "min": 0,
+      "max": 3,
+      "step": 0.01,
+      "default": 1,
+      "aliases": {
+        "zh-CN": "动画速度",
+        "en": "Animation speed"
+      },
+      "property": "_MF_1_motionSpeed"
+    }
+  ]
+}

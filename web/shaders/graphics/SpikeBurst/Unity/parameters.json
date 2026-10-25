@@ -1,0 +1,240 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TFb64a30b4c22f",
+  "shaderName": "MomoTextureForge/Generated/TFb64a30b4c22f",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_count",
+      "type": "Float",
+      "floatValue": 12,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_parameterLength",
+      "type": "Float",
+      "floatValue": 0.8,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_lengthRandomness",
+      "type": "Float",
+      "floatValue": 0.55,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_bottomWidth",
+      "type": "Float",
+      "floatValue": 0.07,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_feather",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "数量",
+      "min": 3,
+      "max": 32,
+      "step": 1,
+      "default": 12,
+      "variable": "count",
+      "aliases": {
+        "zh-CN": "数量",
+        "en": "Count"
+      },
+      "property": "_MF_1_count"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "长度",
+      "min": 0.1,
+      "max": 1.4,
+      "step": 0.01,
+      "default": 0.8,
+      "variable": "parameterLength",
+      "aliases": {
+        "zh-CN": "长度",
+        "en": "Length"
+      },
+      "property": "_MF_1_parameterLength"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "长度随机",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.55,
+      "variable": "lengthRandomness",
+      "aliases": {
+        "zh-CN": "长度随机",
+        "en": "Length randomness"
+      },
+      "property": "_MF_1_lengthRandomness"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "底宽",
+      "min": 0.01,
+      "max": 0.4,
+      "step": 0.002,
+      "default": 0.07,
+      "variable": "bottomWidth",
+      "aliases": {
+        "zh-CN": "底宽",
+        "en": "Bottom width"
+      },
+      "property": "_MF_1_bottomWidth"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "羽化",
+      "min": 0.001,
+      "max": 0.1,
+      "step": 0.001,
+      "default": 0.006,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather",
+      "property": "_MF_1_feather"
+    }
+  ]
+}

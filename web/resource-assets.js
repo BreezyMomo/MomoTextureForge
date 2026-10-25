@@ -7,6 +7,8 @@ import {GRAPHIC_LIST_KEY} from './persistent-graphic-list.js';
 import {BUILTIN} from './definition-runtime.js';
 import {CATALOG,BY_ID,CATEGORIES} from './catalog.js';
 import {validateLibrary,validateFormula,LIBRARY_SCHEMA,PATTERN_ABI} from './definition-schema.js';
+import engineShaders from './engine-shader-runtime.js';
+import {graphicShaderSignature,validateEngineShader} from './engine-shader-contract.js';
 export const ASSET_KEY='momo-texture-resources:v1';
 export const resources=new Map();
 export const bitmaps=new Map();
@@ -19,12 +21,15 @@ export function builtinAsset(id){
  for(const spec of [definition.outputs.scalar,definition.seamless.source].filter(Boolean)){for(const n of spec.libraries)names.add(n);spec.inline=spec.inline??BUILTIN.sources[spec.file];delete spec.file;}
  if(definition.seamless.kind==='periodic')names.add('periodic-v1');if(p.vector)names.add('vector-v1');
  const libraries=Object.fromEntries([...names].map(n=>[n,BUILTIN.libraries[n]]));
- return {kind:'formula',definition,libraries,vectorIds:p.vector?BUILTIN.catalog.map(p=>p.id):[]};
+ const asset={kind:'formula',definition,libraries,vectorIds:p.vector?BUILTIN.catalog.map(p=>p.id):[]},module=engineShaders.graphics[id];
+ if(module?.sourceSignature===graphicShaderSignature(asset))asset.engineShaders={unity:structuredClone(module)};
+ return asset;
 }
 export function assetFor(id){const asset=resources.get(id)??builtinAsset(id);return asset;}
 export function validateAsset(asset){
  if(!asset||!['formula','image'].includes(asset.kind))throw messageError("ui.unsupportedGraphicResourceType");
  const d=structuredClone(asset.definition);d.order=0;d.variant=0;d.category='imported';
+ if(asset.engineShaders){if(Object.keys(asset.engineShaders).some(key=>key!=='unity'))throw Error('Unsupported engine Shader target');if(asset.engineShaders.unity)validateEngineShader(asset.engineShaders.unity);}
  const libs=asset.libraries;if(!libs||Object.keys(libs).length>32)throw messageError("ui.invalidFormulaLibrary");
  const library={schema:LIBRARY_SCHEMA,abi:PATTERN_ABI,revision:1,categories:[{id:'imported',name:'导入图形'}],patterns:[d],libraries:Object.fromEntries(Object.keys(libs).map((n,i)=>[n,{abi:PATTERN_ABI,file:`lib${i}.glsl`}]))};
  validateLibrary(library,{legacyParameters:true});

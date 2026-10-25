@@ -1,0 +1,213 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TFaadd98125906",
+  "shaderName": "MomoTextureForge/Generated/TFaadd98125906",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_arcRadius",
+      "type": "Float",
+      "floatValue": 0.52,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_arcSpread",
+      "type": "Float",
+      "floatValue": 2,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_arcThickness",
+      "type": "Float",
+      "floatValue": 0.07,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_endTaper",
+      "type": "Float",
+      "floatValue": 0.22,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "弧半径",
+      "min": 0.15,
+      "max": 0.62,
+      "step": 0.005,
+      "default": 0.52,
+      "variable": "arcRadius",
+      "aliases": {
+        "zh-CN": "弧半径",
+        "en": "Arc radius"
+      },
+      "property": "_MF_1_arcRadius"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "弧张角",
+      "min": 0.4,
+      "max": 3.2,
+      "step": 0.05,
+      "default": 2,
+      "variable": "arcSpread",
+      "aliases": {
+        "zh-CN": "弧张角",
+        "en": "Arc spread"
+      },
+      "property": "_MF_1_arcSpread"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "弧厚",
+      "min": 0.01,
+      "max": 0.25,
+      "step": 0.005,
+      "default": 0.07,
+      "variable": "arcThickness",
+      "aliases": {
+        "zh-CN": "弧厚",
+        "en": "Arc thickness"
+      },
+      "property": "_MF_1_arcThickness"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "两端收束",
+      "min": 0.02,
+      "max": 0.6,
+      "step": 0.005,
+      "default": 0.22,
+      "variable": "endTaper",
+      "aliases": {
+        "zh-CN": "两端收束",
+        "en": "End taper"
+      },
+      "property": "_MF_1_endTaper"
+    }
+  ]
+}

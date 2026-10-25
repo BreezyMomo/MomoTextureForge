@@ -1,0 +1,318 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF5f46387a95c6",
+  "shaderName": "MomoTextureForge/Generated/TF5f46387a95c6",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_heightRatio",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_widthRatio",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_borderThickness",
+      "type": "Float",
+      "floatValue": 0.023,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_feather",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_arcBend",
+      "type": "Float",
+      "floatValue": 0.065,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_flowerCenterSize",
+      "type": "Float",
+      "floatValue": 0.13,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_borderRatio",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_accentDotSize",
+      "type": "Float",
+      "floatValue": 0.027,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "高度比例",
+      "min": 0.5,
+      "max": 1.05,
+      "step": 0.01,
+      "default": 1,
+      "variable": "heightRatio",
+      "aliases": {
+        "zh-CN": "高度比例",
+        "en": "Height ratio"
+      },
+      "property": "_MF_1_heightRatio"
+    },
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "宽度比例",
+      "min": 0.5,
+      "max": 1.2,
+      "step": 0.01,
+      "default": 1,
+      "variable": "widthRatio",
+      "aliases": {
+        "zh-CN": "宽度比例",
+        "en": "Width ratio"
+      },
+      "property": "_MF_1_widthRatio"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "边框粗细",
+      "min": 0.005,
+      "max": 0.04,
+      "step": 0.001,
+      "default": 0.023,
+      "variable": "borderThickness",
+      "aliases": {
+        "zh-CN": "边框粗细",
+        "en": "Border thickness"
+      },
+      "property": "_MF_1_borderThickness"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "羽化",
+      "min": 0.001,
+      "max": 0.03,
+      "step": 0.001,
+      "default": 0.003,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather",
+      "property": "_MF_1_feather"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "弧线弯曲",
+      "min": 0,
+      "max": 0.1,
+      "step": 0.001,
+      "default": 0.065,
+      "variable": "arcBend",
+      "aliases": {
+        "zh-CN": "弧线弯曲",
+        "en": "Arc bend"
+      },
+      "property": "_MF_1_arcBend"
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "label": "花芯大小",
+      "min": 0.04,
+      "max": 0.18,
+      "step": 0.001,
+      "default": 0.13,
+      "variable": "flowerCenterSize",
+      "aliases": {
+        "zh-CN": "花芯大小",
+        "en": "Flower center size"
+      },
+      "property": "_MF_1_flowerCenterSize"
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "label": "边框比例",
+      "min": 0.7,
+      "max": 1.08,
+      "step": 0.01,
+      "default": 1,
+      "variable": "borderRatio",
+      "aliases": {
+        "zh-CN": "边框比例",
+        "en": "Border ratio"
+      },
+      "property": "_MF_1_borderRatio"
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "label": "装饰点大小",
+      "min": 0,
+      "max": 0.04,
+      "step": 0.001,
+      "default": 0.027,
+      "variable": "accentDotSize",
+      "aliases": {
+        "zh-CN": "装饰点大小",
+        "en": "Accent dot size"
+      },
+      "property": "_MF_1_accentDotSize"
+    }
+  ]
+}

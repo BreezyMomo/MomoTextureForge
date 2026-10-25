@@ -1,0 +1,239 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF721a4ab9078a",
+  "shaderName": "MomoTextureForge/Generated/TF721a4ab9078a",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_density",
+      "type": "Float",
+      "floatValue": 7,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_blockSize",
+      "type": "Float",
+      "floatValue": 0.2,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_spawnProbability",
+      "type": "Float",
+      "floatValue": 0.75,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_edgeSoftness",
+      "type": "Float",
+      "floatValue": 0.012,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_strokeWidth",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "密度",
+      "min": 3,
+      "max": 20,
+      "step": 0.5,
+      "default": 7,
+      "variable": "density",
+      "aliases": {
+        "zh-CN": "密度",
+        "en": "Density"
+      },
+      "property": "_MF_1_density"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "块大小",
+      "min": 0.05,
+      "max": 0.5,
+      "step": 0.005,
+      "default": 0.2,
+      "variable": "blockSize",
+      "aliases": {
+        "zh-CN": "块大小",
+        "en": "Block size"
+      },
+      "property": "_MF_1_blockSize"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "出现概率",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.75,
+      "variable": "spawnProbability",
+      "aliases": {
+        "zh-CN": "出现概率",
+        "en": "Spawn probability"
+      },
+      "property": "_MF_1_spawnProbability"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "边缘柔化",
+      "min": 0.002,
+      "max": 0.06,
+      "step": 0.002,
+      "default": 0.012,
+      "variable": "edgeSoftness",
+      "aliases": {
+        "zh-CN": "边缘柔化",
+        "en": "Edge softness"
+      },
+      "property": "_MF_1_edgeSoftness"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "描边宽",
+      "min": 0,
+      "max": 0.06,
+      "step": 0.002,
+      "default": 0,
+      "variable": "strokeWidth",
+      "aliases": {
+        "zh-CN": "描边宽",
+        "en": "Stroke width"
+      },
+      "property": "_MF_1_strokeWidth"
+    }
+  ]
+}

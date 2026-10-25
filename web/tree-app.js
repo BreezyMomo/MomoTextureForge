@@ -41,6 +41,7 @@ import {hasGraphicShader} from './project-shader-compiler.js';
 import {exportGraphicShader} from './graphic-shader.js';
 import {createAnimationBadge} from './shader-badge.js';
 import {exportHanddrawnPostprocess} from './handdrawn-postprocess.js';
+import {exportPostEffectShader} from './post-effect-shader.js';
 import {parameterLabel,onLanguageChange,interfaceLanguage} from './language.js';
 import {parameterRole} from './parameter-metadata.js';
 import {createEffectPreview} from './effect-preview.js';
@@ -727,6 +728,10 @@ const liveAuthoring=createLiveAuthoring({getTimeline:liveTimeline,controlTimelin
 }});
 installAITools({button:aiToolsButton,getProject:liveProject,onOperation:liveAuthoring,onCatalog:()=>graphicsLibrary.open({aiCatalog:true})});
 let shaderExportBusy=false;
+document.addEventListener('momo-download-postprocess-module',async event=>{
+ const target=find(animationPreviewProject().root,event.detail?.nodeId)?.node;if(shaderExportBusy||!target)return;shaderExportBusy=true;
+ try{notify(uiText('shader.packing'));const pack=await exportPostEffectShader(event.detail.effectId,{values:effectValues(target,event.detail.effectId)});download(pack.bytes,pack.filename,'application/zip');notify(uiText('shader.packageReady'));}catch(error){notifyError(uiError(error));}finally{shaderExportBusy=false;}
+});
 document.addEventListener('momo-download-handdrawn-postprocess',async event=>{
  if(shaderExportBusy||!find(state.root,event.detail?.nodeId))return;shaderExportBusy=true;
  try{notify(uiText('shader.packing'));const pack=await exportHanddrawnPostprocess(animationPreviewProject(),{nodeId:event.detail.nodeId,handdrawnInput:event.detail.handdrawnInput,times:[formulaSeconds],size:512});download(pack.bytes,'Momo-Handdrawn-postprocess.zip','application/zip');notify(uiText('shader.packageReady'));}catch(error){notifyError(uiError(error));}finally{shaderExportBusy=false;}

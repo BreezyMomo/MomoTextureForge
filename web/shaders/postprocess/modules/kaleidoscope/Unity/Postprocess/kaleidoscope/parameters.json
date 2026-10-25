@@ -1,0 +1,56 @@
+{
+  "schema": "momo.postprocess-material/v1",
+  "componentType": "MomoTextureForge.Modules.MomoKaleidoscope",
+  "shaderName": "Hidden/MomoTextureForge/Postprocess/kaleidoscope",
+  "settings": "{\"segments\":6,\"rotation\":0}",
+  "values": [
+    {
+      "variable": "segments",
+      "type": "number",
+      "number": 6,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "rotation",
+      "type": "number",
+      "number": 0,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "segments",
+      "label": "fx.param.segments",
+      "min": 2,
+      "max": 24,
+      "default": 6,
+      "step": 1,
+      "path": "postEffects.kaleidoscope.segments",
+      "variable": "segments",
+      "property": "_MF_segments"
+    },
+    {
+      "key": "rotation",
+      "label": "fx.param.rotation",
+      "min": -360,
+      "max": 360,
+      "default": 0,
+      "step": 1,
+      "path": "postEffects.kaleidoscope.rotation",
+      "variable": "rotation",
+      "property": "_MF_rotation"
+    }
+  ]
+}

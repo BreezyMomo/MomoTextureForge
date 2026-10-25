@@ -34,7 +34,7 @@ Startup markup/styles in `web/index.html` display before scripts finish download
 | Editor nodes/rendering | `web/tree-app.js`, `web/tree-model.js`, `web/tree-renderer.js` | [Canvas/compositing](05-canvas-and-compositing.en.md), [animation](06-animation.en.md) |
 | Builtin graphics/generators | `web/definitions/builtin.json` and referenced definitions | [Graphic definitions](../PATTERN_DEFINITIONS.en.md), [formulas/generators](04-formulas-and-generators.en.md) |
 | Postprocessing | `web/post-effect-specs.js`, `web/post-fx.js` and effect modules | [Node postprocessing](05-canvas-and-compositing.en.md#node-post-processing-and-execution-order) |
-| Shader adaptation/delivery | `web/project-shader-compiler.js`, `web/project-shader-package.js`, `web/handdrawn-postprocess.js`, `web/shaders/handdrawn/` | [Shader responsibilities](../skills/texture-forge-author/references/shader-architecture.en.md), [export scope](14-shader-reference.en.md) |
+| Shader adaptation/delivery | `web/shaders/graphics/`, `web/shaders/postprocess/`, `web/shaders/handdrawn/`, `web/engine-shader-contract.js` | [Shader responsibilities](../skills/texture-forge-author/references/shader-architecture.en.md), [export scope](14-shader-reference.en.md) |
 | MCP/offline authoring | `editor-mcp.mjs`, `portable-authoring-cli.mjs`, `web/editor-live-authoring.js` | [MCP capabilities](mcp-capabilities.en.md), [CLI](../AI_AUTHORING_CLI.en.md) |
 | Appearance/controls | `web/appearance.js`, `web/theme-tokens.css` and component styles | [Interface design rules](ui-design-guidelines.en.md) |
 | Skills | Chinese authoring entry in `web/ai-authoring.js`; English entry/references in `skills/texture-forge-author/`; Effects source in `skills/texture-forge-effects/` | Regenerate downloads; do not edit only `*-runtime.js` or `site/index.html` |
@@ -292,3 +292,18 @@ Run `tests/graphic-name.test.mjs` and source/built `tests/graphic-name-browser-c
 Keep Chinese `.md` files and adjacent `.en.md` editions, not a translation dictionary. Each pair has a language switch. Body links remain within the current edition; screenshots use the matching interface language, while code and example files are shared. Preserve API names, keys and formats. Update both editions together. `web/documentation-links.js` routes the detailed guide to Chinese for `zh-CN`, English for every other language, and updates immediately on selection changes. GitHub/Gitee entries open their English README in non-Chinese interfaces, retaining repository homepages for Chinese.
 
 Skill builders include both editions and generate both parameter tables. Chinese authoring entry/guide text comes from `web/ai-authoring.js`; edit that source rather than generated copies. Run `node tools/check-docs.mjs`, `npm test`, rebuild, and check the source/static guide links in a browser. See [documentation plan](plans/bilingual-documentation.en.md).
+
+## Maintain standard Unity modules
+
+Formal graphics/postprocess implementations travel with resources; see [module contracts](../skills/texture-forge-author/references/unity-modules.en.md). Ordinary authoring-kit/static builds read maintained files in web/shaders and generate a compressed distribution index without retranslating. Algorithm changes invalidate old bindings and require corresponding adaptation and acceptance.
+
+To extend coverage, set TEXFORGE_FXC to Windows SDK fxc (default 10.0.26100.0). Generate candidates in batches, then validate together; do not simply remove capability checks. These are maintainer commands, not prerequisites for users or offline source extraction:
+
+```sh
+node build-engine-shaders.mjs --missing-only
+node build-postprocess-modules.mjs
+node tests/engine-shader-batch-browser-check.mjs --new-only --output test-results/engine-shader-batch-next
+node tools/approve-engine-shader-batch.mjs test-results/engine-shader-batch-next/batch.json
+```
+
+One browser batch produces native references, parameter variants, default/time comparisons, module packages and SHA indexes. Approval verifies the current Shader/HLSL matches that index and records browser comparison only. Send the frozen batch to real Unity for compilation, visuals, parameters, import/persistence and lifecycle checks. Clearly mismatched modules remain unavailable. Adding modules alone does not justify repeating all existing checks; shared-code changes receive one relevant batch regression. Outputs remain in test-results; no historical formula fingerprint lists are maintained.

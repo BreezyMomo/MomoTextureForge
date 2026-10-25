@@ -1,5 +1,5 @@
 import {execFileSync} from 'node:child_process';
-import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {readFile,mkdir,writeFile,rename} from 'node:fs/promises';
 import {build} from 'esbuild';
 import {dirname,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -14,6 +14,6 @@ if(/<\/script/i.test(code))throw Error('Unsafe analytics inline script terminato
 const html=(await readFile(join(root,'dist','MomoTextureForge.html'),'utf8'))
  .replace("script-src 'unsafe-inline'", "script-src 'unsafe-inline' https://hm.baidu.com")
  .replace('</head>',()=>`<script>${code}</script></head>`);
-await writeFile(join(output,'index.html'),html);
+const temporary=join(output,`.index-${process.pid}.html`);await writeFile(temporary,html);await rename(temporary,join(output,'index.html'));
 await writeFile(join(output,'.nojekyll'),'');
 console.log('GitHub Pages site: '+join(output,'index.html'));

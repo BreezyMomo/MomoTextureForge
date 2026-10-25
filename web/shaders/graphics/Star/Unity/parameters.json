@@ -1,0 +1,296 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF64fee36e6c62",
+  "shaderName": "MomoTextureForge/Generated/TF64fee36e6c62",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_starPoints",
+      "type": "Float",
+      "floatValue": 5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_innerRadiusRatio",
+      "type": "Float",
+      "floatValue": 0.45,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_outerRadius",
+      "type": "Float",
+      "floatValue": 0.62,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_starProfile",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_tipRounding",
+      "type": "Float",
+      "floatValue": 0.06,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_feather",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "星角数量",
+      "min": 3,
+      "max": 24,
+      "step": 1,
+      "default": 5,
+      "variable": "starPoints",
+      "aliases": {
+        "zh-CN": "星角数量",
+        "en": "Star points"
+      },
+      "property": "_MF_1_starPoints"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "内径比例",
+      "min": 0.1,
+      "max": 0.9,
+      "step": 0.01,
+      "default": 0.45,
+      "variable": "innerRadiusRatio",
+      "aliases": {
+        "zh-CN": "内径比例",
+        "en": "Inner radius ratio"
+      },
+      "property": "_MF_1_innerRadiusRatio"
+    },
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "外半径",
+      "min": 0.02,
+      "max": 1.5,
+      "step": 0.01,
+      "default": 0.62,
+      "variable": "outerRadius",
+      "aliases": {
+        "zh-CN": "外半径",
+        "en": "Outer radius"
+      },
+      "property": "_MF_1_outerRadius"
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "label": "星形轮廓",
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "default": 0,
+      "variable": "starProfile",
+      "aliases": {
+        "zh-CN": "星形轮廓",
+        "en": "Star profile"
+      },
+      "type": "select",
+      "options": [
+        {
+          "value": 0,
+          "variable": "value0",
+          "label": "直边星",
+          "aliases": {
+            "zh-CN": "直边星",
+            "en": "Straight star"
+          }
+        },
+        {
+          "value": 1,
+          "variable": "value1",
+          "label": "圆角星",
+          "aliases": {
+            "zh-CN": "圆角星",
+            "en": "Rounded star"
+          }
+        },
+        {
+          "value": 2,
+          "variable": "value2",
+          "label": "旧版波瓣",
+          "aliases": {
+            "zh-CN": "旧版波瓣",
+            "en": "Legacy lobes"
+          }
+        }
+      ],
+      "property": "_MF_1_starProfile"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "星尖圆角",
+      "min": 0,
+      "max": 0.25,
+      "step": 0.005,
+      "default": 0.06,
+      "variable": "tipRounding",
+      "aliases": {
+        "zh-CN": "星尖圆角",
+        "en": "Tip rounding"
+      },
+      "property": "_MF_1_tipRounding"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "羽化",
+      "min": 0.001,
+      "max": 0.3,
+      "step": 0.001,
+      "default": 0.015,
+      "variable": "feather",
+      "aliases": {
+        "zh-CN": "羽化",
+        "en": "Feather"
+      },
+      "role": "feather",
+      "property": "_MF_1_feather"
+    }
+  ]
+}

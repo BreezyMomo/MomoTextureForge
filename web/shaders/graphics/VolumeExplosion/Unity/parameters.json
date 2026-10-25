@@ -1,0 +1,369 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TFf34ce106626c",
+  "shaderName": "MomoTextureForge/Generated/TFf34ce106626c",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_seed",
+      "type": "Float",
+      "floatValue": 237,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_speed",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_scale",
+      "type": "Float",
+      "floatValue": 4,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_radius",
+      "type": "Float",
+      "floatValue": 0.8,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_density",
+      "type": "Float",
+      "floatValue": 2.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_turbulence",
+      "type": "Float",
+      "floatValue": 1.1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_lightDirection",
+      "type": "Float",
+      "floatValue": 0.8,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_lightStrength",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_temperature",
+      "type": "Float",
+      "floatValue": 1.3,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_quality",
+      "type": "Float",
+      "floatValue": 56,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 237,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      },
+      "property": "_MF_1_seed"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "variable": "speed",
+      "label": "演化速度",
+      "min": 0.1,
+      "max": 3,
+      "step": 0.01,
+      "default": 1,
+      "aliases": {
+        "zh-CN": "演化速度",
+        "en": "Evolution speed"
+      },
+      "property": "_MF_1_speed"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "variable": "scale",
+      "label": "细节密度",
+      "min": 1,
+      "max": 12,
+      "step": 0.1,
+      "default": 4,
+      "aliases": {
+        "zh-CN": "细节密度",
+        "en": "Detail density"
+      },
+      "property": "_MF_1_scale"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "variable": "radius",
+      "label": "体积范围",
+      "min": 0.2,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.8,
+      "aliases": {
+        "zh-CN": "体积范围",
+        "en": "Volume range"
+      },
+      "property": "_MF_1_radius"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "density",
+      "label": "密度",
+      "min": 0.1,
+      "max": 6,
+      "step": 0.01,
+      "default": 2.5,
+      "aliases": {
+        "zh-CN": "密度",
+        "en": "Density"
+      },
+      "property": "_MF_1_density"
+    },
+    {
+      "slot": 5,
+      "key": "K",
+      "variable": "turbulence",
+      "label": "湍流",
+      "min": 0,
+      "max": 2,
+      "step": 0.01,
+      "default": 1.1,
+      "aliases": {
+        "zh-CN": "湍流",
+        "en": "Turbulence"
+      },
+      "property": "_MF_1_turbulence"
+    },
+    {
+      "slot": 6,
+      "key": "H",
+      "variable": "lightDirection",
+      "label": "光源方向",
+      "min": -3.14,
+      "max": 3.14,
+      "step": 0.01,
+      "default": 0.8,
+      "aliases": {
+        "zh-CN": "光源方向",
+        "en": "Light direction"
+      },
+      "property": "_MF_1_lightDirection"
+    },
+    {
+      "slot": 7,
+      "key": "T",
+      "variable": "lightStrength",
+      "label": "光照强度",
+      "min": 0,
+      "max": 3,
+      "step": 0.01,
+      "default": 1,
+      "aliases": {
+        "zh-CN": "光照强度",
+        "en": "Light intensity"
+      },
+      "property": "_MF_1_lightStrength"
+    },
+    {
+      "slot": 8,
+      "key": "A",
+      "variable": "temperature",
+      "label": "温度",
+      "min": 0.1,
+      "max": 2,
+      "step": 0.01,
+      "default": 1.3,
+      "aliases": {
+        "zh-CN": "温度",
+        "en": "Temperature"
+      },
+      "property": "_MF_1_temperature"
+    },
+    {
+      "slot": 9,
+      "key": "B",
+      "variable": "quality",
+      "label": "采样步数",
+      "min": 24,
+      "max": 96,
+      "step": 1,
+      "default": 56,
+      "aliases": {
+        "zh-CN": "采样步数",
+        "en": "Sample steps"
+      },
+      "property": "_MF_1_quality"
+    }
+  ]
+}

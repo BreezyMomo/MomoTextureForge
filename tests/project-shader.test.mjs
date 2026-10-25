@@ -5,21 +5,21 @@ import {compileProjectShader,projectShaderSupport,SHADER_GRAPHICS,shaderHLSL,has
 import {builtinAsset,registerAsset,unregisterAsset} from '../web/resource-assets.js';
 
 test('reviewed shader graphics compile with per-instance properties and no full-catalog switch',async()=>{
- for(const type of SHADER_GRAPHICS){const p=project();p.root.children=[node('shape',type),node('shape',type)];p.root.children[0].params[0]=.31;p.root.children[1].params[0]=.79;
+ for(const type of SHADER_GRAPHICS){const p=project();p.root.children=[node('shape',type),node('shape',type)];const slot=builtinAsset(type).definition.parameters[0].slot;p.root.children[0].params[slot]=.31;p.root.children[1].params[slot]=.79;
   const before=JSON.stringify(p),compiled=await compileProjectShader(p);assert.equal(JSON.stringify(p),before);assert.equal(compiled.support.supported,true);
   assert.equal(new Set(compiled.properties.map(p=>p.name)).size,compiled.properties.length);
-  const values=compiled.mapping.slice(1).map(m=>m.properties.find(p=>p.path==='params.0'));assert.deepEqual(values.map(p=>p.value),[.31,.79]);assert.notEqual(values[0].name,values[1].name);
+  const values=compiled.mapping.slice(1).map(m=>m.properties.find(p=>p.path==='params.'+slot));assert.deepEqual(values.map(p=>p.value),[.31,.79]);assert.notEqual(values[0].name,values[1].name);
   assert.ok(!compiled.hlsl.includes('switch(id)'));assert.ok(!compiled.hlsl.includes('vec2'));assert.ok(!/\bpoint\b/.test(compiled.hlsl));
  }
 });
 test('support rejects each unsupported node explicitly, including disabled nodes, and never returns a partial shader',async()=>{
- for(const [capability,change]of [['keyframes',n=>n.tracks['params.0']={mode:'absolute',ease:'linear',keys:[[0,.2],[1,.8]]}],['effect:blur',n=>{n.postEffects.blur.enabled=true;n.postFx[0]=4;}],['graphic',n=>n.type='Star'],['arrangement',n=>n.arrange[0]=1],['timing',n=>n.timing.loop=true],['uv-animation',n=>n.uv[4]=1]]){
+ for(const [capability,change]of [['keyframes',n=>n.tracks['params.0']={mode:'absolute',ease:'linear',keys:[[0,.2],[1,.8]]}],['effect:blur',n=>{n.postEffects.blur.enabled=true;n.postFx[0]=4;}],['graphic',n=>n.type='PlumeSmoke'],['arrangement',n=>n.arrange[0]=1],['timing',n=>n.timing.loop=true],['uv-animation',n=>n.uv[4]=1]]){
   const p=project();p.root.children[0].id='specific-node';change(p.root.children[0]);p.root.children[0].enabled=false;const r=projectShaderSupport(p);assert.equal(r.supported,false);assert.ok(r.issues.some(i=>i.nodeId==='specific-node'&&i.capability===capability));await assert.rejects(compileProjectShader(p),/specific-node/);
  }
 });
 test('custom resources require the reviewed actual implementation, not a claimed builtin name',async()=>{
  for(const type of SHADER_GRAPHICS)assert.equal(hasGraphicShader(type),true);
- assert.equal(hasGraphicShader('Star'),false);assert.equal(hasGraphicShader('missing-resource'),false);
+ assert.equal(hasGraphicShader('PlumeSmoke'),false);assert.equal(hasGraphicShader('missing-resource'),false);
  const a=builtinAsset('Circle');a.definition.name='Renamed circle';const id='asset_unreviewed_circle';registerAsset(id,a);
  try{assert.equal(hasGraphicShader(id),true,'renamed copies use actual source identity');}finally{unregisterAsset(id);}
  a.definition.outputs.scalar.inline='return .5;';registerAsset(id,a);

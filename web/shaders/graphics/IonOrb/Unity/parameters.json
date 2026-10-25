@@ -1,0 +1,239 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF72a5b08db9e3",
+  "shaderName": "MomoTextureForge/Generated/TF72a5b08db9e3",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_tendrilCount",
+      "type": "Float",
+      "floatValue": 11,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_ballRadius",
+      "type": "Float",
+      "floatValue": 0.3,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_pulsationSpeed",
+      "type": "Float",
+      "floatValue": 1.6,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_lineWidth",
+      "type": "Float",
+      "floatValue": 0.004,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_coreBrightness",
+      "type": "Float",
+      "floatValue": 0.85,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "label": "触须数",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "default": 11,
+      "variable": "tendrilCount",
+      "aliases": {
+        "zh-CN": "触须数",
+        "en": "Tendril count"
+      },
+      "property": "_MF_1_tendrilCount"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "label": "球半径",
+      "min": 0.08,
+      "max": 0.8,
+      "step": 0.01,
+      "default": 0.3,
+      "variable": "ballRadius",
+      "aliases": {
+        "zh-CN": "球半径",
+        "en": "Ball radius"
+      },
+      "property": "_MF_1_ballRadius"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "label": "脉动速度",
+      "min": 0,
+      "max": 6,
+      "step": 0.05,
+      "default": 1.6,
+      "variable": "pulsationSpeed",
+      "aliases": {
+        "zh-CN": "脉动速度",
+        "en": "Pulsation speed"
+      },
+      "property": "_MF_1_pulsationSpeed"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "label": "线宽",
+      "min": 0.0015,
+      "max": 0.02,
+      "step": 0.0005,
+      "default": 0.004,
+      "variable": "lineWidth",
+      "aliases": {
+        "zh-CN": "线宽",
+        "en": "Line width"
+      },
+      "property": "_MF_1_lineWidth"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "label": "内核亮度",
+      "min": 0,
+      "max": 1,
+      "step": 0.02,
+      "default": 0.85,
+      "variable": "coreBrightness",
+      "aliases": {
+        "zh-CN": "内核亮度",
+        "en": "Core brightness"
+      },
+      "property": "_MF_1_coreBrightness"
+    }
+  ]
+}

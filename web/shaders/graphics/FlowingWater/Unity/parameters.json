@@ -1,0 +1,239 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TFa357069dd127",
+  "shaderName": "MomoTextureForge/Generated/TFa357069dd127",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_seed",
+      "type": "Float",
+      "floatValue": 123,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_speed",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_scale",
+      "type": "Float",
+      "floatValue": 6,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_sharpness",
+      "type": "Float",
+      "floatValue": 14,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_intensity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "slot": 0,
+      "key": "R",
+      "variable": "seed",
+      "label": "随机种子",
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 123,
+      "aliases": {
+        "zh-CN": "随机种子",
+        "en": "Random seed"
+      },
+      "property": "_MF_1_seed"
+    },
+    {
+      "slot": 1,
+      "key": "W",
+      "variable": "speed",
+      "label": "流动速度",
+      "min": -3,
+      "max": 3,
+      "step": 0.01,
+      "default": 1,
+      "aliases": {
+        "zh-CN": "流动速度",
+        "en": "Flow speed"
+      },
+      "property": "_MF_1_speed"
+    },
+    {
+      "slot": 2,
+      "key": "N",
+      "variable": "scale",
+      "label": "纹理密度",
+      "min": 1,
+      "max": 20,
+      "step": 0.1,
+      "default": 6,
+      "aliases": {
+        "zh-CN": "纹理密度",
+        "en": "Texture density"
+      },
+      "property": "_MF_1_scale"
+    },
+    {
+      "slot": 3,
+      "key": "S",
+      "variable": "sharpness",
+      "label": "水纹锐度",
+      "min": 1,
+      "max": 30,
+      "step": 0.1,
+      "default": 14,
+      "aliases": {
+        "zh-CN": "水纹锐度",
+        "en": "Water sharpness"
+      },
+      "property": "_MF_1_sharpness"
+    },
+    {
+      "slot": 4,
+      "key": "D",
+      "variable": "intensity",
+      "label": "亮度",
+      "min": 0.1,
+      "max": 3,
+      "step": 0.01,
+      "default": 1,
+      "aliases": {
+        "zh-CN": "亮度",
+        "en": "Brightness"
+      },
+      "property": "_MF_1_intensity"
+    }
+  ]
+}

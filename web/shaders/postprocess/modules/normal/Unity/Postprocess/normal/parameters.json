@@ -1,0 +1,77 @@
+{
+  "schema": "momo.postprocess-material/v1",
+  "componentType": "MomoTextureForge.Modules.MomoNormal",
+  "shaderName": "Hidden/MomoTextureForge/Postprocess/normal",
+  "settings": "{\"strength\":3,\"sampleStep\":1,\"flipY\":false}",
+  "values": [
+    {
+      "variable": "strength",
+      "type": "number",
+      "number": 3,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "sampleStep",
+      "type": "number",
+      "number": 1,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "flipY",
+      "type": "boolean",
+      "number": 0,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "strength",
+      "label": "fx.param.strength",
+      "min": 0,
+      "max": 20,
+      "default": 3,
+      "step": 0.1,
+      "path": "postEffects.normal.strength",
+      "variable": "strength",
+      "property": "_MF_strength"
+    },
+    {
+      "key": "sampleStep",
+      "label": "fx.param.sampleStep",
+      "min": 1,
+      "max": 8,
+      "default": 1,
+      "step": 1,
+      "path": "postEffects.normal.sampleStep",
+      "variable": "sampleStep",
+      "property": "_MF_sampleStep"
+    },
+    {
+      "key": "flipY",
+      "label": "fx.param.flipY",
+      "type": "boolean",
+      "default": false,
+      "path": "postEffects.normal.flipY",
+      "variable": "flipY",
+      "property": "_MF_flipY"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+=== math-v1 ===
+// Tooth width is a fraction of one pitch; top ratio zero forms a point, one a square tooth.
+// Continuous union of the root disk and a folded trapezoid. Differentiating
+// r-gearRadius across a square tooth's angular boundary creates false inner edges.
+// Extend the tooth into the disk within its angular wedge. A bottom chord
+// leaves a shallow internal distance ridge that antialiasing exposes as a seam.
+// Exact contour distance: upper circular lobes join lower diagonal segments.
+// Unlike a polynomial threshold, the distance has uniform feathering at the tip.
+
+=== generator-common-v1 ===
+// Generator noise is assembled from the host math library and MIT simplex noise.
+
+=== generator-fire-v1 ===
+// Smoke has its own rising, widening volume behind the emissive flame.
+// Height and spread change the plume silhouette rather than multiplying opacity.

@@ -34,7 +34,7 @@ npm start -- --port 8799
 | 编辑器节点与渲染 | `web/tree-app.js`、`web/tree-model.js`、`web/tree-renderer.js` | [画布与合成](05-canvas-and-compositing.md)、[动画](06-animation.md) |
 | 内置图形与生成器 | `web/definitions/builtin.json`及对应定义 | [图形定义](../PATTERN_DEFINITIONS.md)、[公式与生成器](04-formulas-and-generators.md) |
 | 后处理 | `web/post-effect-specs.js`、`web/post-fx.js`及对应效果模块 | [节点后处理](05-canvas-and-compositing.md#节点后处理与执行顺序) |
-| Shader适配与交付 | `web/project-shader-compiler.js`、`web/project-shader-package.js`、`web/handdrawn-postprocess.js`、`web/shaders/handdrawn/` | [Shader职责规范](../skills/texture-forge-author/references/shader-architecture.md)、[导出范围](14-shader-reference.md) |
+| Shader适配与交付 | `web/shaders/graphics/`、`web/shaders/postprocess/`、`web/shaders/handdrawn/`、`web/engine-shader-contract.js` | [Shader职责规范](../skills/texture-forge-author/references/shader-architecture.md)、[导出范围](14-shader-reference.md) |
 | MCP与离线创作 | `editor-mcp.mjs`、`portable-authoring-cli.mjs`、`web/editor-live-authoring.js` | [MCP能力](mcp-capabilities.md)、[CLI](../AI_AUTHORING_CLI.md) |
 | 外观与控件 | `web/appearance.js`、`web/theme-tokens.css`和组件样式 | [界面设计规则](ui-design-guidelines.md) |
 | Skill | 中文创作入口在`web/ai-authoring.js`，英文入口与参考资料在`skills/texture-forge-author/`；效果指导源在`skills/texture-forge-effects/` | 修改后生成下载包，勿只改`*-runtime.js`或`site/index.html` |
@@ -296,3 +296,18 @@ PSD 编码器许可见 [PSD-LICENSES.txt](../web/vendor/PSD-LICENSES.txt)，需�
 保留中文 `.md` 与相邻英文 `.en.md`，不使用翻译词库。每篇顶部提供语言切换，正文链接跳到当前语言的文档；截图使用对应语言的界面，代码、示例共用。API 名称、配置键和数据格式保持原样，两版内容同步维护。`web/documentation-links.js` 将网页详细说明在 `zh-CN` 时指向中文，其余语言指向英文，并在语言切换后立即更新。GitHub/Gitee仓库入口在英文界面落到各自的英文README，中文界面保留仓库首页。
 
 Skill 构建同时包含中英文参考文档，并生成两版排列参数表。中文创作 Skill 入口及规范来自 `web/ai-authoring.js`，应修改源文本后重建，不能只改生成文件。运行 `node tools/check-docs.mjs`、`npm test`，构建后检查源码与静态版的说明链接。见[文档计划](plans/bilingual-documentation.md)。
+
+## Unity 标准模块维护
+
+图形和后处理的正式实现随资源携带，见[模块契约](../skills/texture-forge-author/references/unity-modules.md)。普通 `build-authoring-kit` / 静态构建只读取 `web/shaders/` 的维护文件并生成压缩分发索引，不重新翻译。修改图形算法后，旧源码绑定失效，应同步适配和验收。
+
+需要扩展覆盖时，开发机设置 `TEXFORGE_FXC` 指向 Windows SDK 的 fxc（默认查找 10.0.26100.0）。先批量生成候选，再统一验证；不要直接删除能力检查。以下命令是维护流程，普通用户和离线源码提取不需要这些编译工具：
+
+```sh
+node build-engine-shaders.mjs --missing-only
+node build-postprocess-modules.mjs
+node tests/engine-shader-batch-browser-check.mjs --new-only --output test-results/engine-shader-batch-next
+node tools/approve-engine-shader-batch.mjs test-results/engine-shader-batch-next/batch.json
+```
+
+验收脚本在单次浏览器批次中生成原生参考、参数变体、默认/时间对照、模块包和 SHA 清单。审批工具核对清单与当前 Shader/HLSL 一致，只确认浏览器对照状态；随后把冻结整批交给真实 Unity 验证编译、视觉、参数、导入保存重开和资源生命周期。明显不一致的模块保持不提供。已有模块不因仅增加新模块而重复全部测试，共用代码改变则批量回归相关模块。输出仅在 `test-results/`，不维护历史公式指纹清单。

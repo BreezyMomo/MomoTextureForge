@@ -1,5 +1,6 @@
 import {messageText} from './web/message-catalog.js';
-import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {readFile,mkdir} from 'node:fs/promises';
+import {writeGenerated as writeFile} from './tools/write-generated.mjs';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {loadDefinitionURL} from './web/definition-loader.js';

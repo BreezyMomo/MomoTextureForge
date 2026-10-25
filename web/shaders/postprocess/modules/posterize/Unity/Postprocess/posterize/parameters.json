@@ -1,0 +1,56 @@
+{
+  "schema": "momo.postprocess-material/v1",
+  "componentType": "MomoTextureForge.Modules.MomoPosterize",
+  "shaderName": "Hidden/MomoTextureForge/Postprocess/posterize",
+  "settings": "{\"darkSteps\":0,\"lightSteps\":0}",
+  "values": [
+    {
+      "variable": "darkSteps",
+      "type": "number",
+      "number": 0,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "variable": "lightSteps",
+      "type": "number",
+      "number": 0,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "darkSteps",
+      "label": "fx.param.darkSteps",
+      "min": 0,
+      "max": 16,
+      "default": 0,
+      "step": 1,
+      "path": "postFx.6",
+      "variable": "darkSteps",
+      "property": "_MF_darkSteps"
+    },
+    {
+      "key": "lightSteps",
+      "label": "fx.param.lightSteps",
+      "min": 0,
+      "max": 16,
+      "default": 0,
+      "step": 1,
+      "path": "postEffects.posterize.lightSteps",
+      "variable": "lightSteps",
+      "property": "_MF_lightSteps"
+    }
+  ]
+}

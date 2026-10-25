@@ -1,0 +1,73 @@
+{
+  "schema": "momo.postprocess-material/v1",
+  "componentType": "MomoTextureForge.Modules.MomoTricolor",
+  "shaderName": "Hidden/MomoTextureForge/Postprocess/tricolor",
+  "settings": "{\"shadow\":{\"x\":0,\"y\":0,\"z\":0,\"w\":1},\"midtone\":{\"x\":0.5019607843137255,\"y\":0.5019607843137255,\"z\":0.5019607843137255,\"w\":1},\"highlight\":{\"x\":1,\"y\":1,\"z\":1,\"w\":1}}",
+  "values": [
+    {
+      "variable": "shadow",
+      "type": "vector",
+      "number": 0,
+      "boolean": false,
+      "vector": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "variable": "midtone",
+      "type": "vector",
+      "number": 0,
+      "boolean": false,
+      "vector": {
+        "x": 0.5019607843137255,
+        "y": 0.5019607843137255,
+        "z": 0.5019607843137255,
+        "w": 1
+      }
+    },
+    {
+      "variable": "highlight",
+      "type": "vector",
+      "number": 0,
+      "boolean": false,
+      "vector": {
+        "x": 1,
+        "y": 1,
+        "z": 1,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "shadow",
+      "label": "fx.param.shadow",
+      "type": "color",
+      "default": "#000000",
+      "path": "postEffects.tricolor.shadow",
+      "variable": "shadow",
+      "property": "_MF_shadow"
+    },
+    {
+      "key": "midtone",
+      "label": "fx.param.midtone",
+      "type": "color",
+      "default": "#808080",
+      "path": "postEffects.tricolor.midtone",
+      "variable": "midtone",
+      "property": "_MF_midtone"
+    },
+    {
+      "key": "highlight",
+      "label": "fx.param.highlight",
+      "type": "color",
+      "default": "#ffffff",
+      "path": "postEffects.tricolor.highlight",
+      "variable": "highlight",
+      "property": "_MF_highlight"
+    }
+  ]
+}
