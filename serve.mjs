@@ -2,6 +2,23 @@ import http from "node:http";
 import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { EDITOR_BRIDGE_ORIGIN, EDITOR_BRIDGE_PROTOCOL } from './web/editor-bridge-protocol.js';
+let mcp, startingMCP;
+async function ensureMCP() {
+  if (startingMCP) return startingMCP;
+  startingMCP = (async () => {
+    try {
+      const response = await fetch(EDITOR_BRIDGE_ORIGIN + '/health', { signal: AbortSignal.timeout(1500) });
+      if (response.ok && (await response.json()).protocol === EDITOR_BRIDGE_PROTOCOL) return;
+      throw new Error('Another service uses the MCP port');
+    } catch (error) {
+      if (error.message === 'Another service uses the MCP port') throw error;
+    }
+    const { startEditorMCP } = await import('./editor-mcp.mjs');
+    mcp = await startEditorMCP();
+  })();
+  try { await startingMCP; } finally { startingMCP = null; }
+}
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "web");
 const args = process.argv.slice(2);
 const portIndex = args.indexOf("--port");
@@ -18,6 +35,23 @@ const types = {
 };
 const server = http.createServer(async (req, res) => {
   try {
+    if (req.url === '/api/editor-mcp/start') {
+      const origins = [`http://127.0.0.1:${port}`, `http://localhost:${port}`];
+      if (req.method !== 'POST' || !origins.includes(req.headers.origin) ||
+          !origins.some(origin => new URL(origin).host === req.headers.host) ||
+          req.headers['content-type'] !== 'application/json') {
+        res.writeHead(403).end(); return;
+      }
+      try {
+        await ensureMCP();
+        res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+        res.end(JSON.stringify({ protocol: EDITOR_BRIDGE_PROTOCOL, origin: EDITOR_BRIDGE_ORIGIN }));
+      } catch {
+        res.writeHead(503, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Local MCP could not start. Check dependencies and port 8798.' }));
+      }
+      return;
+    }
     if (!["GET", "HEAD"].includes(req.method)) {
       res.writeHead(405);
       res.end();
@@ -55,4 +89,4 @@ server.listen(port, "127.0.0.1", () =>
   console.log(`Momo Texture Forge: http://127.0.0.1:${port}`),
 );
 for (const signal of ["SIGINT", "SIGTERM"])
-  process.on(signal, () => server.close());
+  process.on(signal, () => { server.close(); void mcp?.close(); });

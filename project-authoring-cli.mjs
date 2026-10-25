@@ -37,7 +37,7 @@ export async function runAuthoringTool(action,args){
   const result=await runProjectBrowser('runProjectAuthoring',{action,input:inputFile?await projectInput(inputFile):null,recipe,resources,options},options.timeout);
   if(!result.ok)throw Error(result.error);
   await writeFile(output,result.zip?Buffer.from(result.zip,'base64'):JSON.stringify(result.json,null,2)+'\n');report.files.push(output);
-  for(const key of ['normalizations','created','imported','nodes','validation'])if(result[key]!==undefined)report[key]=result[key];
+  for(const key of ['normalizations','created','graphicChanges','imported','nodes','validation'])if(result[key]!==undefined)report[key]=result[key];
   report.ok=true;
  }catch(error){report.error=error.message;}
  await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({...report,reportPath},null,2));if(!report.ok)process.exitCode=1;return report;

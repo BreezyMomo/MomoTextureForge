@@ -19,6 +19,8 @@ export function nodeShortcutState(storage){
  const get=id=>{const local=entries.get(id);return [...new Set([...defaults.filter(key=>!local?.hidden.includes(key)),...(local?.pinned??[])])];};
  function save(){for(const [id,value]of entries)if(!value.pinned.length&&!value.hidden.length)entries.delete(id);while(entries.size>2048)entries.delete(entries.keys().next().value);try{storage?.setItem(NODE_SHORTCUTS_KEY,JSON.stringify({version:2,defaults,nodes:Object.fromEntries(entries)}));}catch{}}
  return {
+  snapshot:()=>structuredClone({version:2,defaults,nodes:Object.fromEntries(entries)}),
+  replace(value){defaults=structuredClone(value.defaults);entries=new Map(Object.entries(structuredClone(value.nodes)));save();},
   get,global:key=>defaults.includes(key),
   copyTree(source,target){
    const copies=[];function visit(from,to){if(!from||!to)return;const local=entries.get(from.id);if(local&&from.id!==to.id)copies.push([to.id,structuredClone(local)]);for(let i=0;i<(from.children?.length??0);i++)visit(from.children[i],to.children?.[i]);visit(from.mask,to.mask);}visit(source,target);

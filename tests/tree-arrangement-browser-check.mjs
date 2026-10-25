@@ -13,11 +13,20 @@ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));let browser;
 try{
  browser=await chromium.launch({channel:'msedge',headless:true});const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  const origin='http://127.0.0.1:'+server.address().port;await page.goto(origin+'/authoring-render.html');
- const report=await page.evaluate(async()=>{
+ const report=await page.evaluate(async(legacyOnly)=>{
   const {TreeRenderer}=await import('./tree-renderer.js'),{treeSamples}=await import('./tree-samples.js'),{project,cloneNode,sanitizeTree,expandInstances,evaluateNode,node}=await import('./tree-model.js');
   const renderer=new TreeRenderer(document.createElement('canvas')),results=[],diff=(a,b)=>a.reduce((sum,v,i)=>sum+Math.abs(v-b[i]),0)/a.length;
   const draw=(p,w,h,time=.3,stream=false)=>{const pixels=renderer.draw(p,w,h,{read:true,quality:2,time,stream});if(!pixels.every(Number.isFinite)||renderer.gl.getError())throw Error('Invalid GPU output');return pixels;};
   try{
+   for(const mode of [2,3])for(const aspect of [.5,1,2]){
+    const p=project(),n=node('group');n.children=[node('shape','Star')];Object.assign(n.arrange,{0:mode,3:8,4:.12,5:.3});p.root.children=[n];p.canvas.ratio=aspect;
+    const w=aspect===.5?128:256,h=aspect===2?128:256,a=draw(p,w,h),records=renderer.records(evaluateNode(n,.3).node,.3,{original:n,aspect});
+    if(records.length!==8||!a.some((v,i)=>i%4===3&&v>.1))throw Error('Empty legacy arrangement '+mode);
+    const expanded=structuredClone(p);expandInstances(expanded.root,n.id,.3,records);const b=draw(expanded,w,h);if(!b.some((v,i)=>i%4===3&&v>.1)||expanded.root.children[0].children.length!==8)throw Error('Empty legacy expansion '+mode);
+    let union=0,intersection=0;for(let i=3;i<a.length;i+=4){if(a[i]>.1||b[i]>.1)union++;if(a[i]>.1&&b[i]>.1)intersection++;}if(intersection/union<.8)throw Error('Legacy expansion silhouette mismatch');
+    results.push({mode,aspect,count:records.length,silhouetteIoU:intersection/union});
+   }
+   if(legacyOnly)return results;
    // Advanced arrangements are tested here; single-cell puzzle examples have their own overflow checks.
    for(const sample of treeSamples().filter(s=>s.category==='arrangement'&&s.root.type!=='PuzzlePiece'&&s.root.arrange[0]>0))for(const [w,h]of [[192,192],[256,128],[128,256]]){
     const raw=project();raw.root.children=[cloneNode(sample.root)];raw.canvas.ratio=w/h;Object.assign(raw.output,sample.output);const p=sanitizeTree(raw),n=p.root.children[0],a=draw(p,w,h);
@@ -42,8 +51,9 @@ try{
    const contour=treeSamples().find(s=>s.name==='星形轮廓光点').root;p.root.children=[contour];draw(p,128,128);const lo=renderer.records(contour,.3);draw(p,512,512);const hi=renderer.records(contour,.3);if(JSON.stringify(lo)!==JSON.stringify(hi))throw Error('Contour layout depends on render resolution');
    return results;
   }finally{renderer.destroy();}
- });
+ },process.argv.includes('--legacy-only'));
  console.log(JSON.stringify({gpu:report}));
+ if(process.argv.includes('--legacy-only')){assert.deepEqual(errors,[]);}else{
  const p=project();p.root.children=[cloneNode(treeSamples().find(s=>s.name==='圆角边框灯带').root)];
  await page.goto(origin+'/#tree='+Buffer.from(JSON.stringify(p)).toString('base64'));await page.locator('[role=treeitem]').first().click();await page.getByRole('button',{name:'变换/排列',exact:true}).click();
  const modes=page.getByRole('combobox',{name:'排列方式',exact:true});for(const value of ['13','14','15','16'])assert.ok(await modes.locator('option[value="'+value+'"]').count());
@@ -57,4 +67,5 @@ try{
  await page.reload();assert.deepEqual((await saved()).arrange.slice(1,3),[16,16]);
  await page.goto(origin+'/examples.html');await page.waitForFunction(count=>document.querySelector('#status')?.textContent.includes(count+' 种'),treeSamples().length,{timeout:180000});await page.getByRole('combobox',{name:'示例分类',exact:true}).selectOption('arrangement');assert.equal(await page.locator('#samples article:visible').count(),treeSamples().filter(s=>s.category==='arrangement').length);
  assert.deepEqual(errors,[]);console.log({uiPersistence:true,sevenExamples:true,errors});
+}
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

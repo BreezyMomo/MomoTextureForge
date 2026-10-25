@@ -1,3 +1,4 @@
+import {exportNativeProject} from './native-export.js';
 import {readResourcePack} from './resource-pack.js';
 import {sanitizeTree,find} from './tree-model.js';
 import {TreeRenderer} from './tree-renderer.js';
@@ -15,6 +16,7 @@ window.runProjectTool=async({action,input,options})=>{
  try{
   let raw;if(input.zip){pack=await readResourcePack(decode64(input.zip));pack.register();raw=pack.payload;}else raw=input.project;
   const project=sanitizeTree(raw),selected=options.node?find(project.root,options.node)?.node:null;
+  if(action==='export'){const {bytes,...metadata}=await exportNativeProject(project,options,stage=>window.momoExportStage?.(stage)?.catch(()=>{}));return {ok:true,...metadata,data:encode64(bytes)};}
   if(action==='resource'){
    if(!projectDependencyIds(project).has(options.resourceId))throw Error('Resource is not a dependency of this snapshot');
    return {ok:true,asset:structuredClone(assetFor(options.resourceId))};
@@ -24,6 +26,7 @@ window.runProjectTool=async({action,input,options})=>{
   if(action==='inspect')return {ok:true,brief};
   if(action==='shader'){
    if(!selected)throw Error('project shader requires --node <node ID>');
+   if(!effectPresent(selected,'sketch'))throw Error('Shader reference requires an existing sketch effect on the selected node');
    const reference=await exportSketchShaderReference({project,nodeId:selected.id,time:options.times[0]/project.output.seconds,formulaSeconds:options.times[0]});
    return {ok:true,manifest:reference.manifest,zip:encode64(reference.bytes)};
   }

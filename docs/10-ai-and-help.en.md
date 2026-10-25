@@ -17,9 +17,9 @@
 
 The hand-drawn effect panel offers **Download fill shader reference**, including sources, current settings, mask and comparison images for AI integration. See [Shader reference packages](14-shader-reference.en.md).
 
-In **AI tools → Install and configure**, select an agent and Skills, then **Choose directory and install…** to select and authorize a location in the system dialog. For personal use, follow the recommended path to an existing Skill directory. For a project, choose its root and the tool completes the agent subdirectories. Every installation asks for a directory; canceling does not write files.
+In **AI tools → Install Skills**, select an agent and Skills, then **Choose directory and install…** to select and authorize a location in the system dialog. For personal use, follow the recommended path to an existing Skill directory. For a project, choose its root and the tool completes the agent subdirectories. Every installation asks for a directory; canceling does not write files.
 
-The website writes files only; it cannot install runtime dependencies. For first use of the authoring tools, ask AI to set up the runtime following the Skill instructions. Successful file installation does not prove agent activation. See [installation instructions](../skills/texture-forge-author/references/installation.en.md).
+After installation, copy the next step’s startup instructions to AI. AI prepares the runtime and starts the service following the Skill; users do not install dependencies themselves. Successful file installation does not prove agent activation. See [installation instructions](../skills/texture-forge-author/references/installation.en.md).
 
 **Download ZIP** on the right of each Skill row provides its complete archive for manual extraction and installation. Skills are not graphic resources and should not be imported into the library.
 
@@ -56,8 +56,8 @@ The Authoring Skill bundles offline node-authoring tools. After initial runtime 
 
 ## 5. Give AI direct access to the current web work
 
-Add the Authoring Skill's local MCP (`node /absolute/path/scripts/texforge.mjs mcp`) and ask AI to call `forge_connect`. Use the existing pairing flow in **AI tools → MCP → Connection settings**. Allow local network access if the browser asks. Shared access without per-agent pairing will be revised in a later step. Dependencies are installed once; project ZIP download/upload is unnecessary.
+First use follows **Install Skill → Ask AI to start MCP → Configure MCP**. Install the Authoring Skill in AI tools, continue and copy the startup instructions to AI. AI checks the runtime, installs missing dependencies and starts and verifies the service. Only then return to step 3 to connect the page and copy the MCP configuration into the client. Users do not run installation or startup commands themselves. Allow local network access when asked.
 
-AI calls `forge_capture` to pin the complete main canvas, then reads nodes/effects/tracks/sources/images or renders reference times. Capture again after edits; old snapshots retain their original versions. The connection is read-only. Closing the panel keeps it active; **Disconnect** revokes it. Closing/reloading the page requires pairing again. Exit graphic preview before capturing the main canvas.
+AI calls `forge_pages` to identify the intended work by name and page ID, then `forge_capture({pageId})` to pin its complete main canvas and read nodes, effects, tracks, sources and images or render previews. Capture again after edits; one snapshotId always retains one version. For requested creation/editing, AI queries forge_schema / forge_catalog and submits a recipe with forge_edit. Changes support undo; stale revisions are rejected. Capture and render again after editing. Closing the panel keeps it active; **Disconnect this page** revokes only that page. Refreshing or closing requires enabling again. Exit graphic preview before capturing.
 
-See [Live editor and MCP connection](../skills/texture-forge-author/references/live-editor.en.md) for setup, ports, allowed origins and tools. This entry pairs a local MCP client with a browser on the same machine; cloud-only HTTP clients need a separate bridge.
+See [Live editor and MCP connection](../skills/texture-forge-author/references/live-editor.en.md) for configuration, origins and tools. The page, helper and MCP client must reach the same computer; cloud-only clients cannot directly reach a local loopback address.

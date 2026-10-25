@@ -20,7 +20,7 @@
 
 ## 可以做什么
 
-- **图形与纹理**：301 个内置图形、纹样、噪声与矢量资源，可加载自己的图片和 SVG。
+- **图形与纹理**：305 个内置图形、纹样、噪声与矢量资源，可加载自己的图片和 SVG。
 - **自由创作**：输入 GLSL 公式或多步骤生成器 JSON，自定义参数、颜色和透明度，实时验证预览。
 - **动态特效**：火焰、烟雾、闪电、火花、水纹、焦散和体积效果，支持内置时间运动与参数关键帧。
 - **飘带贴图**：折叠线束、折光薄膜与粒子细丝，提供拖尾风格预设、形态演变和横向无缝。
@@ -103,7 +103,7 @@ npm run build:pages       # 同步生成可部署的 site/index.html
 
 创作 Skill 还包含离线项目工具。AI无需打开网站即可搭建节点树、组合、遮罩、排列、后处理与动画，并打包全部依赖交付原生项目ZIP；用户通过 **文件 → 打开项目**继续编辑，保存后也能交回AI继续修改。详见[离线项目流程](skills/texture-forge-author/references/offline-projects.md)。
 
-也可在AI客户端配置Skill附带的本地MCP，通过 **AI 工具 → MCP → 连接设置** 使用已有的只读网页交接。无需逐个AI配对的统一接入将随后调整。AI能读取当前主画布、依赖源码与图片，按版本渲染参考图；详见[网页作品与MCP连接](skills/texture-forge-author/references/live-editor.md)。
+首次连接按 **安装 Skill → 让 AI 启动 MCP → 配置 MCP** 完成。安装创作 Skill 后，将网页提供的启动说明发给 AI；运行环境、依赖与本机服务由 AI 准备并验证。之后连接当前页面、复制 MCP 配置到客户端。AI 可读取作品与资源并渲染参考图；详见[网页作品与 MCP 连接](skills/texture-forge-author/references/live-editor.md)。
 
 [操作教程](docs/10-ai-and-help.md) · [命令行创作与验证](AI_AUTHORING_CLI.md) · [生成器格式](skills/texture-forge-author/references/generator-guide.md)
 

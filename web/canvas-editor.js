@@ -99,5 +99,5 @@ export function createCanvasEditor(surface,api){
  },true);
  function endPan(){if(space){space=false;api.pan(false);draw();}}
  doc.addEventListener('keyup',e=>{if(e.code==='Space')endPan();});window.addEventListener('blur',()=>{cancel();endPan();});
- setMode('transform');return {draw,navigation,interacting:()=>!!gesture,reset(){cancel();scope=null;activeCopy=0;closeMenu();},deactivate(){transform.setAttribute('aria-pressed','false');pivot.setAttribute('aria-pressed','false');draw();}};
+ setMode('transform');return {draw,navigation,setMode,setSnap(value){snap=value;snapping.setAttribute('aria-pressed',String(snap));},state:()=>({mode,snap,scope:getScope().id}),interacting:()=>!!gesture,reset(){cancel();scope=null;activeCopy=0;closeMenu();},deactivate(){transform.setAttribute('aria-pressed','false');pivot.setAttribute('aria-pressed','false');draw();}};
 }

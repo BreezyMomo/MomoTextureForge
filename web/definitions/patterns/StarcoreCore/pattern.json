@@ -1,0 +1,140 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "StarcoreCore",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "星核 · 炽热星核",
+  "category": "atmosphere",
+  "order": 303,
+  "variant": 14,
+  "parameters": [
+    {
+      "variable": "seed",
+      "aliases": {
+        "zh-CN": "宇宙种子",
+        "en": "Cosmic seed"
+      },
+      "min": 0,
+      "max": 99999,
+      "step": 1,
+      "default": 42,
+      "label": "宇宙种子",
+      "slot": 0,
+      "key": "R"
+    },
+    {
+      "variable": "loopDuration",
+      "aliases": {
+        "zh-CN": "循环秒数",
+        "en": "Loop duration"
+      },
+      "min": 1,
+      "max": 20,
+      "step": 0.1,
+      "default": 6,
+      "label": "循环秒数",
+      "slot": 2,
+      "key": "N"
+    },
+    {
+      "variable": "sceneScale",
+      "aliases": {
+        "zh-CN": "整体大小",
+        "en": "Scene scale"
+      },
+      "min": 0.5,
+      "max": 1.2,
+      "step": 0.01,
+      "default": 0.94,
+      "label": "整体大小",
+      "slot": 3,
+      "key": "S"
+    },
+    {
+      "variable": "exposure",
+      "aliases": {
+        "zh-CN": "曝光",
+        "en": "Exposure"
+      },
+      "min": 0.2,
+      "max": 2.5,
+      "step": 0.01,
+      "default": 1.15,
+      "label": "曝光",
+      "slot": 4,
+      "key": "D"
+    },
+    {
+      "variable": "corePower",
+      "aliases": {
+        "zh-CN": "星核能量",
+        "en": "Core energy"
+      },
+      "min": 0,
+      "max": 3,
+      "step": 0.01,
+      "default": 1.1,
+      "label": "星核能量",
+      "slot": 7,
+      "key": "T"
+    }
+  ],
+  "defaults": [
+    42,
+    0,
+    6,
+    0.94,
+    1.15,
+    0,
+    0,
+    1.1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "libraries": [
+        "math-v1"
+      ],
+      "inline": "return 0.;"
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "星核 · 炽热星核",
+    "en": "Starcore · Stellar Core"
+  },
+  "generator": {
+    "schema": "momo.generator/v1",
+    "revision": 1,
+    "effect": "pipeline",
+    "scalar": "alpha",
+    "libraries": [
+      "generator-starcore-helpers-v1",
+      "generator-starcore-core-v1"
+    ],
+    "helpers": [
+      "generator-starcore-helpers-v1"
+    ],
+    "passes": [
+      {
+        "id": "plasma",
+        "inputs": [],
+        "scale": 1,
+        "program": "generator-starcore-core-v1"
+      }
+    ]
+  }
+}

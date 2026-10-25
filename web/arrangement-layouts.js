@@ -33,6 +33,18 @@ export function densitySampler(pixels,size){
 }
 export function generateArrangement(values,{seamless=false,density=()=>1,avoidOverlap=false,gap=0,wrap=seamless,footprint=null,aspect=1,fit='contain',bezier=[]}={}){
  const a=effectiveArrangement(values,seamless),mode=a[0],count=Math.min(a[3],mode===10?Math.floor(LIMITS.instances/(1+a[37])):LIMITS.instances),radius=a[5],rng=random(a[11]);
+ // The original 16-slot radial/random ABI uses slot 7 for orientation and
+ // independent seeded hashes for position, scale and rotation (arrangedAt).
+ if(mode===2||mode===3){
+  const fract=x=>x-Math.floor(x),hash=index=>{let x=fract(index*.1031),y=fract(a[11]*.11369);const d=x*(y+19.19)+y*(x+19.19);x+=d;y+=d;return fract(x*y*(x+y));},spin=a[6]*DEG;
+  return Array.from({length:count},(_,i)=>{
+   const angle=TAU*i/count*a[15],rnd=hash(i);
+   let x=mode===2?Math.cos(angle)*radius:(rnd-.5)*2*radius,y=mode===2?Math.sin(angle)*radius:(hash(i+173)-.5)*2*radius;
+   [x,y]=rotate(x+(hash(i+41)-.5)*a[8]*2*radius,y+(hash(i+89)-.5)*a[8]*2*radius,spin);x+=.5+a[13];y+=.5+a[14];
+   if(seamless){x=fract(x);y=fract(y);}
+   return {x,y,size:a[4]*(1-a[9]+2*a[9]*hash(i+233)),turn:spin+(mode===2&&a[7]>.5?Math.PI/2-angle:0)+(rnd*2-1)*a[10]*DEG,mirror:1};
+  });
+ }
  if([7,12].includes(mode)&&(footprint&&avoidOverlap||aspect!==1))return visibleScatter(a,{density,footprint:footprint??(()=>({x:0,y:0,radius:avoidOverlap?Math.SQRT1_2:0,empty:!avoidOverlap})),gap:avoidOverlap?gap:0,wrap:seamless||wrap,aspect,fit});
  let points=[];
  if(mode===6){const p=[...a.slice(20,28),...bezier].map(v=>v*radius);points=arcSamples(t=>bezierPoint(p,t),a[28],a[29],count,a[30]?a[31]:0);}

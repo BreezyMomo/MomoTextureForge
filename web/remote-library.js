@@ -6,7 +6,7 @@ import {readResourcePack} from './resource-pack.js';
 import {project,sanitizeTree,PRESET_SCHEMA} from './tree-model.js';
 import {assetFor} from './resource-assets.js';
 export {remoteSources,remoteCatalogs,remoteDownloads,remoteBundle,removeRemoteSource,deleteRemoteDownload};
-export const addRemoteSource=(input,existing)=>saveRemoteSource(sourceConfig(input,existing));
+export const addRemoteSource=(input,existing,options)=>saveRemoteSource(sourceConfig(input,existing),options);
 const checking=new Map(),downloading=new Map();
 export async function fetchRemoteBytes(url,limit,{signal,fetcher=fetch}={}){
  const controller=new AbortController(),abort=()=>controller.abort();signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();const timer=setTimeout(()=>controller.abort(),REMOTE_LIMITS.timeout);

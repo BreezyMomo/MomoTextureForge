@@ -17,9 +17,9 @@ After setup, commands work offline without an open website. Complete works use t
 
 ## Connect directly to the current web work
 
-Local stdio MCP is available through `node portable-authoring-cli.mjs mcp`, or `node /absolute/path/scripts/texforge.mjs mcp` in the download. Let the AI client launch it, call `forge_connect`, and open the pairing panel through **AI tools → MCP → Connection settings**. AI can then capture/inspect/resource/render without manual project transfer. Snapshots, images and actual sources are saved on the MCP machine.
+The shared local Streamable HTTP MCP is started by AI following the installed Skill. Users send AI the startup instructions from webpage step 2; AI prepares the runtime and runs `node scripts/texforge.mjs mcp` (`node portable-authoring-cli.mjs mcp` in a repository). After verified startup, users connect the page and configure their client in step 3. AI calls forge_pages to select a page, then forge_capture({pageId}) and inspect/resource/render. Artifacts belong to the service host.
 
-Options: `--port`, `--output-dir`, repeatable HTTPS `--origin`. The bridge only listens on127.0.0.1, default8798, sharing the main canvas read-only. Standard output is reserved for MCP protocol messages. See [Live editor and MCP connection](skills/texture-forge-author/references/live-editor.en.md) for setup, permissions, revision pinning and tools.
+Options: `--port`, `--output-dir`, repeatable HTTPS `--origin`. The bridge only listens on127.0.0.1, default8798, supporting canvas reads and revision-checked edits. MCP uses HTTP; standard output provides startup diagnostics. See [Live editor and MCP connection](skills/texture-forge-author/references/live-editor.en.md) for setup, permissions, revision pinning and tools.
 
 ## Create and revise editable projects
 

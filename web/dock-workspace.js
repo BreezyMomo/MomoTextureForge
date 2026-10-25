@@ -3,6 +3,7 @@ import {uiText,uiFormat} from './ui-language.js';
 import {animateUI,animateLayout,layoutRects,reducedMotion} from './editor-motion.js';
 import {PANEL_IDS,PANEL_TITLES,LAYOUT_KEY,layoutPreset,sanitizeLayoutSettings,panelStack,findLayoutNode,closePanel,activatePanel,dockPanel,floatPanel,showPanel} from './dock-layout.js';
 import {createSplitResize} from './dock-resize.js';
+import {workspaceActions} from './workspace-actions.js';
 
 const element=(tag,className,text)=>{const e=document.createElement(tag);if(className)e.className=className;if(text)e.textContent=uiText(text);return e;};
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
@@ -111,7 +112,7 @@ export function createDockWorkspace({host,menuHost,panels,onChange=()=>{},onMess
   },()=>clearDrag(true));
  }
  onLanguageChange(()=>{menu.querySelector('summary').textContent=uiText("menu.layout");tip.textContent=uiText("layout.dragPanelTabsToDockAltDragToFloat");for(const [i,title]of ["layout.restoreDefaultLayout","workspace.browseLayout","layout.animationLayout","layout.focusCanvas"].entries())menuBody.querySelectorAll(':scope > button')[i].textContent=uiText(title);for(const id of PANEL_IDS){const input=checks.get(id);input.nextSibling.nodeValue=uiText(PANEL_TITLES[id]);input.setAttribute('aria-label',uiText("layout.show")+uiText(PANEL_TITLES[id]));shells.get(id).setAttribute('aria-label',uiText(PANEL_TITLES[id]));}name.placeholder=uiText("layout.eGMyTwoColumnLayout");name.setAttribute('aria-label',uiText("layout.layoutName"));named.setAttribute('aria-label',uiText("layout.savedLayouts"));status.textContent=uiText("layout.layoutIsSavedInThisBrowserSeparatelyFromTheCanvasProject");save.textContent=uiText("layout.saveCurrentLayout");load.textContent=uiText("layout.applyLayout");remove.textContent=uiText("layout.deleteSavedLayout");render();});
- render();return {show,hide:id=>apply(closePanel(layout,id)),toggle:id=>panelStack(layout,id)?apply(closePanel(layout,id)):show(id),active,has:id=>!!panelStack(layout,id),isRestoring:()=>restoring};
+ render();return {state:()=>structuredClone({...settings,current:layout}),control(operations){if(drag||restoring)throw Error('Workspace is busy');const next=workspaceActions({...settings,current:layout},operations);settings=next;apply(next.current,{motion:false});updateMenu();return this.state();},show,hide:id=>apply(closePanel(layout,id)),toggle:id=>panelStack(layout,id)?apply(closePanel(layout,id)):show(id),active,has:id=>!!panelStack(layout,id),isRestoring:()=>restoring};
 }
 
 export function installEditorDocking({onChange,onMessage}){

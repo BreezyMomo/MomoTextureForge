@@ -49,10 +49,10 @@ export function createEffectPreview(host,{controls}={}){
   for(let i=-3;i<=3;i++){context.moveTo(w*.5+i*w*.1,horizon);context.lineTo(w*.5+i*w*.28,h);}
   context.moveTo(0,h*.9);context.lineTo(w,h*.9);context.stroke();
  }
- function draw(){
+ function draw(dimensions){
   if(disposed)return;const dpr=Math.min(2,window.devicePixelRatio||1);
   for(const {canvas,context,bg,mode}of tiles){
-   const rect=canvas.getBoundingClientRect(),w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));
+   const rect=canvas.getBoundingClientRect(),w=dimensions?.width??Math.max(1,Math.round(rect.width*dpr)),h=dimensions?.height??Math.max(1,Math.round(rect.height*dpr));
    if(canvas.width!==w)canvas.width=w;if(canvas.height!==h)canvas.height=h;
    context.save();context.setTransform(1,0,0,1,0,0);context.globalAlpha=1;context.globalCompositeOperation='source-over';context.filter='none';backdrop(context,w,h,bg);
    if(sampled){const scale=Math.min(w/frame.width,h/frame.height)*values.size,fw=frame.width*scale,fh=frame.height*scale;
@@ -62,6 +62,9 @@ export function createEffectPreview(host,{controls}={}){
  }
  build();
  return {
+  state:()=>({...values}),
+  capture(size=512){if(!sampled||disposed)throw Error('Effect preview has no rendered frame');draw({width:size,height:size});const result=tiles.map(({canvas,bg,mode})=>({background:bg,blend:mode,width:canvas.width,height:canvas.height,data:canvas.toDataURL('image/png').split(',')[1]}));draw();return result;},
+  configure({reset=false,...changes}){if(reset)Object.assign(values,DEFAULTS);Object.assign(values,changes);background.value=values.background;blend.value=values.blend;color.value=values.color;for(const [key,{input,sync}]of Object.entries(sliders)){input.value=values[key];sync();}build();draw();},
   sampleSize(ratio,quick=false){const side=quick?256:512;return {width:Math.max(1,Math.round(side*Math.min(1,ratio))),height:Math.max(1,Math.round(side/Math.max(1,ratio)))};},
   update(source){if(disposed)return;if(frame.width!==source.width)frame.width=source.width;if(frame.height!==source.height)frame.height=source.height;frameContext.clearRect(0,0,frame.width,frame.height);frameContext.drawImage(source,0,0);sampled=true;draw();},
   destroy(){disposed=true;languageDispose();grid.remove();bar.remove();frame.width=frame.height=1;tiles=[];}

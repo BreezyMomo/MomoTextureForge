@@ -1,4 +1,5 @@
 import {EFFECT_PARAMETERS} from './post-effect-specs.js';
+import {animationWorkspaceSettings} from './animation-workspace-controls.js';
 import {normalizeDashPattern} from './sketch-options.js';
 import {messageError} from './message-catalog.js';
 import {uiText} from './ui-language.js';
@@ -38,8 +39,8 @@ export function createAnimationWorkspace(host,api){
  const button=(text,fn,title=text)=>{const b=el('button',text,'ui-action-quiet');b.type='button';b.title=title;b.setAttribute('aria-label',title);b.onclick=fn;return b;};
  const choice=(name,items,value,fn)=>{const s=el('select');s.setAttribute('aria-label',uiText(name));for(const [v,t]of items){const o=el('option',(String(v).startsWith('params.') ? t : uiText(t)));o.value=v;s.append(o);}s.value=value;s.onchange=()=>fn(s.value);return s;};
  const number=(name,value,fn,min,max,step=.001)=>{const e=el('input');e.type='number';e.step=step;if(min!==undefined)e.min=min;if(max!==undefined)e.max=max;e.value=value;e.setAttribute('aria-label',uiText(name));e.title=uiText(name);e.onchange=()=>{const v=+e.value;if(Number.isFinite(v))fn(v);};return e;};
- const fail=e=>(api.notify??(()=>{}))(e.message??String(e));
- const change=fn=>{try{api.change(fn);signature='';update(true);}catch(e){fail(e);}};
+ const fail=e=>{(api.notify??(()=>{}))(e.message??String(e));return false;};
+ const change=fn=>{try{if(api.change(fn)===false)return false;signature='';update(true);return true;}catch(e){return fail(e);}};
  const resetSelection=()=>{selection=[];signature='';};
  const root=()=>find(api.getRoot(),scope)?.node??api.getRoot();
  const progress=()=>api.progressNode(scope);
@@ -157,5 +158,14 @@ export function createAnimationWorkspace(host,api){
  host.querySelectorAll('.animation-playhead').forEach(e=>e.style.left=pos(progress())+'%');const cursor=host.querySelector('[data-animation-cursor]');if(cursor&&document.activeElement!==cursor)cursor.value=progress().toFixed(3);
  host.onkeydown=e=>{if(['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)||e.code==='Space'&&e.target.closest('button,summary'))return;const mod=e.ctrlKey||e.metaKey;if(mod&&e.key.toLowerCase()==='c'){e.preventDefault();copy();}else if(mod&&e.key.toLowerCase()==='v'){e.preventDefault();paste();}else if(mod&&e.key.toLowerCase()==='a'){e.preventDefault();selection=[...host.querySelectorAll('.animation-key:not(.mapped)')].map(k=>({id:k.dataset.id,path:k.dataset.path,time:+k.dataset.time}));signature='';update(true);}else if(['Delete','Backspace'].includes(e.key)){e.preventDefault();deleteSelected();}else if(['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();const d=(e.key==='ArrowLeft'?-1:1)*(e.shiftKey?.1:snap==='frames'?1/(api.frames?.()??30):.01);if(selection.length)moveSelection(d);else seek(progress()+d);}else if(e.key==='Escape'){cancel();}else if(e.code==='Space'){e.preventDefault();api.togglePlay?.();}};
  }
- return {update,reset(){selection=[];signature='';},setScope(id){scope=id;selection=[];signature='';},getScope:()=>scope,enter};
+ const settings=()=>structuredClone({scope:root().id,view,filter,snap,zoom,start,selection:selection.filter(s=>find(api.getRoot(),s.id)?.node.tracks[s.path]?.keys.some(k=>sameTime(k[0],s.time))),curvePath:curvePath&&find(api.getRoot(),curvePath.id)?.node.tracks[curvePath.path]?curvePath:null,folded:[...folded].filter(id=>find(api.getRoot(),id)),extraOpen});
+ const read=()=>{const tracks=[];walk(api.getRoot(),n=>{for(const [path,track]of Object.entries(n.tracks))tracks.push({id:n.id,path,track:structuredClone(track),type:animationType(n,path)});});return {settings:settings(),progress:progress(),tracks,clipboardCount:clipboard?.length??0,dragging};};
+ function configure(changes){
+  if(dragging||api.isInteracting?.())throw Error('Timeline is interacting');
+  if(changes.view==='curves'&&!changes.curvePath&&!curvePath){const n=api.getNode(),path=Object.keys(n.tracks)[0];if(path)changes={...changes,curvePath:{id:n.id,path}};}
+  const next=animationWorkspaceSettings(settings(),changes,api.getRoot()),priorScope=scope,t=api.progressNode(next.scope);
+  ({scope,view,filter,snap,zoom,start,selection,curvePath,extraOpen}=next);folded.clear();for(const id of next.folded)folded.add(id);
+  if(scope!==priorScope){api.selectNode(scope);seek(t);}signature='';update(true);return read();
+ }
+ return {state:read,configure,update,reset(){selection=[];signature='';},setScope(id){scope=id;selection=[];signature='';},getScope:()=>scope,enter};
 }

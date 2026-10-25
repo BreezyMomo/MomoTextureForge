@@ -9,7 +9,7 @@ export async function exportGraphicsLibrary(records,readBundle,onProgress=()=>{}
  const unique=[...new Map(records.map(r=>[r.resourceId+'@'+r.versionId,r])).values()],files=[];let bytes=0;
  for(const [i,item] of unique.entries()){
   let data;
-  if(item.builtin){const root=node('shape',item.builtin);root.id=item.resourceId;const graphicResource={resourceId:item.resourceId,versionId:item.versionId,personalRevision:0,name:item.name,...graphicAliasesField(item.aliases),category:item.category,description:item.description??'',kind:item.kind,thumbnail:item.thumbnail??'',source:null};data=await encodeResourcePack({schema:PRESET_SCHEMA,name:item.name,root,graphicResource});}
+  if(item.builtin){const root=node('shape',item.builtin);root.id=item.resourceId;const graphicResource={resourceId:item.resourceId,versionId:item.versionId,personalRevision:0,name:item.name,...graphicAliasesField(item.aliases),category:item.category,description:item.description??'',kind:item.kind,...(item.generator?{generator:true}:{}),thumbnail:item.thumbnail??'',source:null};data=await encodeResourcePack({schema:PRESET_SCHEMA,name:item.name,root,graphicResource});}
   else {data=await readBundle(item);if(data instanceof Uint8Array)data=await finalizeResourcePack(data);}
   if(!(data instanceof Uint8Array))throw Error('资源数据缺失：'+item.name);
   files.push({name:'resources/'+item.resourceId+'-v'+item.versionId+'.zip',data});bytes+=data.length;

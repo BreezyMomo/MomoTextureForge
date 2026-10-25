@@ -1,6 +1,7 @@
 import {uiError,uiText} from './ui-language.js';
 import {interfaceLanguage} from './language.js';
 import englishHelp from './locales/help-en.js';
+import {messageText} from './message-catalog.js';
 import manual from './effects-kit-runtime.js';
 const el=(tag,text)=>{const e=document.createElement(tag);if(text)e.textContent=uiText(text);return e;};
 const quickStart='help.quickStart.body';
@@ -12,6 +13,10 @@ export const HELP_SECTIONS=[
  ['image',"help.creatingResourcesImageProcessing",manual['references/image-editor.md']],
  ['recipes',"help.effectRecipesTroubleshooting",manual['references/recipes.md']]
 ].map(([id,title,body])=>({id,title,body}));
+export function helpSections(language=interfaceLanguage()){
+ if(!['zh-CN','en'].includes(language))throw Error('Unsupported help language');
+ return HELP_SECTIONS.map(s=>({...s,title:messageText(s.title,language),body:s.id==='start'?messageText(s.body,language):language==='en'?(englishHelp[s.id]??s.body):s.body}));
+}
 // Render only the small Markdown subset used by our bundled manual. All text
 // goes through textContent; no HTML from documentation is executed.
 function renderManual(host,text){
@@ -41,7 +46,7 @@ export function openUserHelp({onValidate}={}){
  layout.className='user-help-layout';nav.setAttribute('aria-label',uiText("help.helpContents"));article.tabIndex=0;article.setAttribute('aria-label',uiText("help.helpArticle"));status.setAttribute('role','status');
  layout.append(nav,article);dialog.append(header,search,status,layout);document.body.append(dialog);let selected='start';
  function show(section){selected=section.id;renderManual(article,section.body);article.scrollTop=0;for(const b of nav.children)b.setAttribute('aria-pressed',String(b.dataset.section===selected));}
- function filter(){const q=search.value.trim().toLocaleLowerCase(),matches=HELP_SECTIONS.map(s=>({...s,title:uiText(s.title),body:s.id==='start'?uiText(s.body):interfaceLanguage()==='en'?(englishHelp[s.id]??s.body):s.body})).filter(s=>(s.title+' '+s.body).toLocaleLowerCase().includes(q));nav.replaceChildren();status.textContent=(q ? (matches.length ? ((uiText("help.found") + matches.length) + uiText("help.relatedChapters")) : uiText("help.noMatchingChaptersTryAnotherKeyword")) : '');status.hidden=!q;
+ function filter(){const q=search.value.trim().toLocaleLowerCase(),matches=helpSections().filter(s=>(s.title+' '+s.body).toLocaleLowerCase().includes(q));nav.replaceChildren();status.textContent=(q ? (matches.length ? ((uiText("help.found") + matches.length) + uiText("help.relatedChapters")) : uiText("help.noMatchingChaptersTryAnotherKeyword")) : '');status.hidden=!q;
   for(const section of matches){const b=el('button',section.title);b.dataset.section=section.id;b.onclick=()=>show(section);nav.append(b);}
   if(matches.length)show(matches.find(s=>s.id===selected)??matches[0]);else article.replaceChildren(el('p',uiText("help.trySearchingForImageParametersOrExport")));
  }

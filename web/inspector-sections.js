@@ -10,6 +10,8 @@ export function inspectorSectionState(storage){
  let expanded={};try{const saved=JSON.parse(storage?.getItem(INSPECTOR_SECTIONS_KEY)||'{}');if(saved&&typeof saved==='object'&&!Array.isArray(saved))expanded=Object.fromEntries(Object.entries(saved).filter(([key,value])=>key.length<200&&typeof value==='boolean'));}catch{}
  let orders={};try{const saved=JSON.parse(storage?.getItem(INSPECTOR_ORDER_KEY)||'{}');for(const tab of ['shape','layout','animation','composite'])if(Array.isArray(saved?.[tab]))orders[tab]=[...new Set(saved[tab].filter(key=>typeof key==='string'&&key.length<200))];}catch{}
  return {
+  snapshot:()=>structuredClone({expanded,orders}),
+  replace(value){expanded=structuredClone(value.expanded);orders=structuredClone(value.orders);try{storage?.setItem(INSPECTOR_SECTIONS_KEY,JSON.stringify(expanded));storage?.setItem(INSPECTOR_ORDER_KEY,JSON.stringify(orders));}catch{}},
   open:(id,fallback)=>Object.hasOwn(expanded,id)?expanded[id]:fallback,
   remember(id,open){expanded[id]=open;try{storage?.setItem(INSPECTOR_SECTIONS_KEY,JSON.stringify(expanded));}catch{}},
   order(tab,keys){const saved=orders[tab]??[];return [...saved.filter(key=>keys.includes(key)),...keys.filter(key=>!saved.includes(key))];},
@@ -100,4 +102,5 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false,sh
   const pins=header.querySelector(':scope>.shortcut-pin-controls');if(pins)actions.prepend(pins);
   header.prepend(grip);header.insertBefore(actions,header.querySelector('.inspector-module-arrow'));
  }
+ return {modules:[...host.querySelectorAll('details.inspector-module')].map(element=>({key:element.dataset.module,scope:scope(element.dataset.module),open:element.open})),order:modules().map(element=>element.dataset.module)};
 }

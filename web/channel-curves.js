@@ -1,5 +1,10 @@
 export const CURVE_CHANNELS=['luminance','rgb','red','green','blue','alpha'];
 export const identityCurve=()=>[[0,0],[1,1]];
+export const CURVE_PRESETS=['linear','contrast','soft','brighten','invert'];
+export function curvePreset(id){
+ const shapes={linear:identityCurve(),contrast:[[0,0],[.25,.12],[.75,.88],[1,1]],soft:[[0,0],[.25,.38],[.75,.62],[1,1]],brighten:[[0,0],[.5,.7],[1,1]],invert:[[0,1],[1,0]]};
+ if(!Object.hasOwn(shapes,id))throw Error('Unknown curve preset');return shapes[id];
+}
 export const curveDefaults=()=>({enabled:false,...Object.fromEntries(CURVE_CHANNELS.map(k=>[k,identityCurve()]))});
 export function sanitizeCurves(raw){
  const result=curveDefaults();result.enabled=raw?.enabled===true;

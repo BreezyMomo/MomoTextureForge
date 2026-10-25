@@ -87,6 +87,7 @@ export function createGraphicListView({container,thumbnails,el,isFavorite,onBrow
     if(!members.length)continue;
     let group=groups.get(key);
     if(!group){const element=el('details',{'data-category':key}),summary=el('summary'),body=el('div',{class:'tree-pattern-cards'});element.open=isGroupOpen(key);element.append(summary,body);element.ontoggle=()=>{if(element.isConnected)onGroupToggle(element);};group={element,summary,body};groups.set(key,group);}
+    group.element.open=isGroupOpen(key);
     text(group.summary,title);const records=members.map(updateCard);reconcile(group.body,records.map(record=>record.element));children.push(group.element);visible.push(...records);
    }
    container.className='tree-library-'+view;

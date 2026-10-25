@@ -44,19 +44,19 @@ export async function runProjectAuthoring({action,input,recipe,resources=[],opti
   }
   let result={project:raw?sanitizeTree(raw):null,normalizations:[],created:{}};
   if(raw)result.normalizations=projectNormalizations(raw,result.project).map(d=>({operation:'input',...d}));
-  if(action==='create'||action==='edit'){const applied=applyProjectRecipe(result.project,recipe,{graphics,components});result={...applied,normalizations:[...result.normalizations,...applied.normalizations]};}
+  if(action==='create'||action==='edit'){const applied=applyProjectRecipe(result.project,recipe,{graphics,components,records:(a,n,t,original,aspect)=>{renderer??=new TreeRenderer(document.createElement('canvas'));return renderer.records(n,t,{original,aspect});}});result={...applied,normalizations:[...result.normalizations,...applied.normalizations]};}
   if(!result.project)throw Error('A native tree project is required');
   const p=result.project;
   if(action==='unpack')return {ok:true,json:{schema:DOCUMENT_SCHEMA,project:JSON.parse(serializeLocalProject(p)),assets:[...projectDependencyIds(p)].map(id=>[id,assetFor(id)])}};
   // Compile every dependency, including hidden graphics/masks and alternate density maps.
   // Draw the real composition at its start and midpoint using the editor renderer as well.
-  renderer=new TreeRenderer(document.createElement('canvas'));
+  renderer??=new TreeRenderer(document.createElement('canvas'));
   for(const id of projectDependencyIds(p)){
    const probe=newProject();probe.root.children=[node('shape',id)];renderer.draw(probe,32,32,{time:.25,formulaSeconds:.25,read:true});probe.root.children[0].boundary='repeat';renderer.draw(probe,32,32,{time:.25,formulaSeconds:.25,read:true});
   }
   const width=p.canvas.ratio>=1?128:Math.max(1,Math.round(128*p.canvas.ratio)),height=p.canvas.ratio>=1?Math.max(1,Math.round(128/p.canvas.ratio)):128;
   for(const time of [0,.5])renderer.draw(p,width,height,{time,formulaSeconds:time*p.output.seconds,read:true});
   const bytes=await encodeResourcePack(p),nodes=[];walk(p.root,n=>nodes.push({id:n.id,name:n.name,kind:n.kind,type:n.kind==='shape'?n.type:undefined}));
-  return {ok:true,zip:encode64(bytes),normalizations:result.normalizations,created:result.created,imported,nodes,validation:{structure:'passed',editorRendering:'passed',sampledProgress:[0,.5],engineCompilation:'not-run',visualReview:'not-reviewed'}};
+  return {ok:true,zip:encode64(bytes),normalizations:result.normalizations,created:result.created,graphicChanges:result.graphicChanges??[],imported,nodes,validation:{structure:'passed',editorRendering:'passed',sampledProgress:[0,.5],engineCompilation:'not-run',visualReview:'not-reviewed'}};
  }catch(error){return {ok:false,error:error.message};}finally{renderer?.destroy();for(const dispose of cleanup.reverse())dispose();}
 }

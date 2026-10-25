@@ -9,6 +9,8 @@ export function createGraphicFavorites(storage){
  let initialized=saved!==null;
  function save(next){storage.setItem(GRAPHIC_FAVORITES_KEY,JSON.stringify([...next]));favorites=next;initialized=true;}
  return {
+  snapshot:()=>[...favorites],
+  replace:values=>save(new Set(values)),
   has:entry=>favorites.has(entry.id),
   count:entries=>entries.filter(entry=>favorites.has(entry.id)).length,
   toggle(entry){const next=new Set(favorites);if(next.has(entry.id))next.delete(entry.id);else next.add(entry.id);save(next);},

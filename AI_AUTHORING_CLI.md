@@ -17,9 +17,9 @@ Linux 若缺系统库，可按 Playwright 的安装提示安装依赖。浏览�
 
 ## 与当前网页作品直接连接
 
-工具同时支持本地 stdio MCP：`node portable-authoring-cli.mjs mcp`，下载包入口为 `node /绝对路径/scripts/texforge.mjs mcp`。由AI客户端启动该命令，调用 `forge_connect` 生成一次性代码，用户从网页 **AI 工具 → MCP → 连接设置** 打开配对面板。此后AI直接capture/inspect/resource/render，不需用户手工传项目；快照、贴图和实际源码保存在MCP机器的输出目录。
+工具支持共享本机 Streamable HTTP MCP。安装 Skill 后，用户将网页第 2 步的启动说明发给 AI，由 AI 按 Skill 准备运行环境并运行 `node scripts/texforge.mjs mcp`；仓库入口为 `node portable-authoring-cli.mjs mcp`。服务验证可用后，用户在第 3 步连接页面并配置客户端。AI 通过 forge_pages 选择页面，再 forge_capture({pageId})、inspect/resource/render；快照与产物保存在服务主机。
 
-支持 `--port`、`--output-dir`、可重复的HTTPS `--origin`；连接仅监听127.0.0.1，默认8798，完整主画布只读共享。标准输出仅用于MCP协议。配置、权限、版本固定与工具参数见[网页作品与MCP连接](skills/texture-forge-author/references/live-editor.md)。
+支持 `--port`、`--output-dir`、可重复的HTTPS `--origin`；连接仅监听127.0.0.1，默认8798，支持读取主画布和按版本校验编辑；HTTP 为 MCP 传输，标准输出用于启动诊断。配置、权限、版本固定与工具参数见[网页作品与MCP连接](skills/texture-forge-author/references/live-editor.md)。
 
 ## 创建与修改可编辑项目
 

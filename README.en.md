@@ -20,7 +20,7 @@ Source and documentation: [GitHub primary repository](https://github.com/BreezyM
 
 ## What you can create
 
-- **Graphics and textures:** 301 built-in shapes, patterns, noise and vector resources, plus your own images and SVG files.
+- **Graphics and textures:** 305 built-in shapes, patterns, noise and vector resources, plus your own images and SVG files.
 - **Custom resources:** write GLSL formulas or multipass generator JSON, expose parameters, colors and opacity, and validate the live preview.
 - **Animated effects:** fire, smoke, lightning, sparks, water, caustics and volumetric effects, with built-in time motion and parameter keyframes.
 - **Ribbon textures:** folded strands, refractive membranes and particle strands, with trail style presets, evolving shapes and horizontal seamless tiling.
@@ -105,7 +105,7 @@ The toolbar's **AI tools** panel brings together the Authoring/Effects Skills, M
 
 The Authoring Skill also bundles offline project tools. AI can build node trees, groups, masks, arrangement, effects and animation without opening the website, then deliver a native ZIP with all dependencies. Users continue editing through **File → Open project** and can return saved revisions to AI. See the [offline project workflow](skills/texture-forge-author/references/offline-projects.en.md).
 
-Alternatively, configure the Skill's local MCP and use the existing read-only connection through **AI tools → MCP → Connection settings**. Shared access without per-agent pairing will be revised in a later step. AI reads the main canvas, dependency sources/images and renders versioned reference frames. See [Live editor and MCP connection](skills/texture-forge-author/references/live-editor.en.md).
+First use follows **Install Skill → Ask AI to start MCP → Configure MCP**. After installing the Authoring Skill, send AI the startup instructions provided by the page. AI prepares and verifies the runtime, dependencies and local service. Then connect this page and copy its MCP configuration into the client. AI can read works/resources and render references; see [Live editor and MCP connection](skills/texture-forge-author/references/live-editor.en.md).
 
 [Workflow](docs/10-ai-and-help.en.md) · [CLI authoring and validation](AI_AUTHORING_CLI.en.md) · [Generator format](skills/texture-forge-author/references/generator-guide.en.md)
 

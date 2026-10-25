@@ -1,0 +1,292 @@
+{
+  "schema": "momo.project-authoring/v1",
+  "operations": [
+    {
+      "op": "add-node",
+      "id": "replacement-star",
+      "parent": "canvas",
+      "graphic": "Star",
+      "name": "星形",
+      "index": 0,
+      "values": {
+        "enabled": true,
+        "transform": {
+          "x": 0.5,
+          "y": 0.5,
+          "width": 1,
+          "height": 1,
+          "rotation": 0,
+          "mirrorX": false,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "fit": "stretch",
+          "lockAspect": false
+        },
+        "boundary": "clip",
+        "opacity": 1,
+        "blend": "over",
+        "seamMode": 0,
+        "seamBlend": 0.2,
+        "uv": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "polar": false,
+        "bezier": {
+          "shape": [],
+          "layout": []
+        },
+        "color": {
+          "mode": "inherit",
+          "fill": "gradient",
+          "low": "#000000",
+          "high": "#ffffff"
+        },
+        "arrange": [
+          0,
+          4,
+          4,
+          12,
+          0.22,
+          0.38,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          137.507764,
+          0,
+          1,
+          0,
+          -0.8,
+          -0.5,
+          -0.5,
+          0.9,
+          0.5,
+          -0.9,
+          0.8,
+          0.5,
+          0,
+          1,
+          0,
+          0.06,
+          0.06,
+          3,
+          15,
+          3,
+          0.15,
+          1,
+          0,
+          0,
+          0.1,
+          1,
+          0.62,
+          0,
+          8,
+          0.015,
+          0.5,
+          0.25,
+          1,
+          0.2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "arrangeExtra": {
+          "width": 0.84,
+          "height": 0.68,
+          "corner": 0.08,
+          "offset": 0,
+          "threshold": 0.5,
+          "contourOffset": 0,
+          "scaleFrom": 1,
+          "scaleTo": 1,
+          "opacityFrom": 1,
+          "opacityTo": 1,
+          "rotationFrom": 0,
+          "rotationTo": 0,
+          "flowAmount": 0.05,
+          "flowFrequency": 2,
+          "flowPhase": 0,
+          "gradient": "none",
+          "flow": "none",
+          "weave": "herringbone",
+          "reverse": false,
+          "flowTurn": true,
+          "showSource": false
+        },
+        "tileEdges": 0,
+        "arrangeFit": "contain",
+        "imageFit": "contain",
+        "instancePhase": 0,
+        "instanceContent": "all",
+        "scatterAvoidOverlap": false,
+        "scatterGap": 0,
+        "timing": {
+          "start": 0,
+          "end": 1,
+          "from": 0,
+          "to": 1,
+          "cycles": 1,
+          "loop": false,
+          "pingpong": false,
+          "ease": "linear",
+          "outside": "hold",
+          "frozen": false,
+          "at": 0,
+          "offset": 0,
+          "curve": []
+        },
+        "shapeClock": {
+          "follow": true,
+          "speed": 1,
+          "offset": 0,
+          "value": 0
+        },
+        "contour": {
+          "mode": "none",
+          "radius": 0.01
+        },
+        "animationEnabled": true,
+        "curves": {
+          "enabled": false,
+          "luminance": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "rgb": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "red": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "green": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "blue": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "alpha": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        "invert": false,
+        "maskInvert": false
+      },
+      "parameters": {
+        "starPoints": 5,
+        "innerRadiusRatio": 0.45,
+        "outerRadius": 0.62,
+        "starProfile": 0,
+        "tipRounding": 0.06,
+        "feather": 0
+      }
+    },
+    {
+      "op": "set-effect",
+      "node": "replacement-star",
+      "effect": "sketch",
+      "enabled": true,
+      "parameters": {
+        "strokeRoughness": 1.3,
+        "bowing": 1,
+        "strokeWidth": 1.8,
+        "doubleStroke": true,
+        "strokeColor": "#202020",
+        "fillStyle": 2,
+        "roughness": 1.3,
+        "fillColor": "#ff0000",
+        "hatchAngle": -41,
+        "hatchGap": 8,
+        "hatchWidth": 0.8,
+        "source": 0,
+        "threshold": 0.5,
+        "smoothing": 0.5,
+        "simplify": 2,
+        "seed": 1,
+        "strokeOpacity": 1,
+        "fillOpacity": 1,
+        "maxRandomnessOffset": 2,
+        "preserveVertices": false,
+        "fillMultiStroke": 0,
+        "fillShapeRoughnessGain": 0.8,
+        "strokeDashPattern": "",
+        "strokeDashOffset": 0,
+        "fillDashPattern": "",
+        "fillDashOffset": 0,
+        "dashLength": 8,
+        "dashGap": 8,
+        "zigzagOffset": 8,
+        "curveStepCount": 9,
+        "curveFitting": 0.95,
+        "curveTightness": 0,
+        "pathSimplification": 0,
+        "fixedDecimalPlaceDigits": -1,
+        "sunburstCenterX": 0.5,
+        "sunburstCenterY": 0.5,
+        "sunburstRays": 72
+      }
+    },
+    {
+      "op": "remove-node",
+      "node": "original-heart"
+    }
+  ]
+}

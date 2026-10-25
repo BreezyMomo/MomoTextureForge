@@ -149,7 +149,7 @@ function readZIP(bytes) {
 }
 
 test("all catalogue entries have unique identities and explicit shader branches", () => {
-  assert.equal(CATALOG.length, 301);
+  assert.equal(CATALOG.length, 305);
   assert.equal(BY_ID.size, CATALOG.length);
   assert.equal(
     CATEGORIES.reduce((n, c) => n + c.count, 0),

@@ -95,3 +95,14 @@ test('expansion bakes per-instance opacity once and keeps contour source once',(
  const expanded=p.root.children[0];assert.equal(expanded.children.length,3);assert.notEqual(expanded.children[0].id,source);
  assert.deepEqual(expanded.children.slice(1).map(c=>c.opacity),[.3,.8]);assert.ok(expanded.children.slice(1).every(c=>c.arrangeExtra.gradient==='none'&&c.children.length===1));assert.doesNotThrow(()=>sanitizeTree(p));
 });
+
+
+test('legacy radial and random layouts retain all instances and the 16-slot controls',()=>{
+ for(const mode of [2,3]){
+  const n=node('group');n.children=[node('shape','Star')];n.arrange[0]=mode;n.arrange[3]=8;n.arrange[4]=.12;n.arrange[5]=.3;n.arrangeFit='none';
+  const a=placements(n.arrange,n);assert.equal(a.length,8);assert.ok(a.every(r=>[r.x,r.y,r.width,r.height,r.turn].every(Number.isFinite)));assert.deepEqual(a,placements(n.arrange,n));
+  if(mode===2){for(const r of a)assert.ok(Math.abs(Math.hypot(r.x-.5,r.y-.5)-.3)<1e-10);n.arrange[7]=0;assert.ok(placements(n.arrange,n).every(r=>r.turn===0));n.arrange[15]=.5;assert.ok(placements(n.arrange,n).every(r=>r.y>=.5-1e-10));}
+  else {n.arrange[11]++;assert.notDeepEqual(a,placements(n.arrange,n));}
+  const p=project();p.root.children=[n];const expanded=expandInstances(p.root,n.id,0,placements(n.arrange,n));assert.equal(expanded.children[0].children.length,8);
+ }
+});

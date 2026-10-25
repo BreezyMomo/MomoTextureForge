@@ -30,6 +30,8 @@ import {libraryEntries,libraryBundle,bundleKey,bytesHash,builtinIdentity,library
 import {graphicLabel,categoryLabel} from './graphic-label.js';
 import {CATALOG,BY_ID} from './catalog.js';
 import {libraryVisible} from './library-policy.js';
+import {packageGraphic} from './graphics-package.js';
+export {packageGraphic} from './graphics-package.js';
 import {project,node,cloneNode,PRESET_SCHEMA} from './tree-model.js';
 import {SLOT_KEYS} from './definition-schema.js';
 import {TreeRenderer} from './tree-renderer.js';
@@ -52,7 +54,6 @@ export function confirmGraphicAction(message){return new Promise(resolve=>{const
 export function requestGraphicMetadata(title,initialMeta){return new Promise(resolve=>{const {d,body}=modal(title),form=el('form'),name=el('input',{value:initialMeta.name,maxLength:80,'aria-label':uiText("library.graphicsListName")}),status=el('p',{role:'status'});const nameAliases=createGraphicNameEditor(name,initialMeta.aliases);let result=null;form.append(labelled(uiText("library.graphicsListName"),name),nameAliases.element,el('p',{text:uiText("library.renamesThisListEntryWithoutChangingCanvasInstancesOrTheLocal")}),el('button',{type:'button',text:uiText("common.cancel"),onclick:()=>d.close()}),el('button',{type:'submit',text:uiText("common.save")}),status);form.onsubmit=e=>{e.preventDefault();const value=name.value.trim();if(!value||value.length>80){status.textContent=uiText("library.nameMustContainCharacters");name.focus();return;}try{result={name:value,aliases:nameAliases.read()};d.close();}catch(error){status.textContent=uiError(error);}};body.append(form);d.addEventListener('close',()=>resolve(result),{once:true});name.focus();name.select();});}
 export const requestGraphicName=async(title,initialName)=>(await requestGraphicMetadata(title,{name:initialName}))?.name??null;
 function labelled(name,input){input.setAttribute('aria-label',name);return el('label',{},[el('span',{text:name}),input]);}
-export async function packageGraphic(root,meta,thumbnail='') {const entry={...libraryIdentity(meta),name:meta.name||root.name,...graphicAliasesField(meta.aliases),category:meta.category||'我的图形',description:meta.description||'',kind:meta.kind||'composition',...(meta.generator?{generator:true}:{}),thumbnail,source:meta.source??null};const bytes=await encodeResourcePack({schema:PRESET_SCHEMA,name:entry.name,root:cloneNode(root),graphicResource:entry});return {entry,bytes};}
 async function unpack(bytes){const pack=await readResourcePack(bytes);try{pack.register();return pack;}catch(error){pack.rollback();throw error;}}
 function thumbnail(root){const r=new TreeRenderer(previewSurface);try{const p=project();p.root.children=[cloneNode(root)];r.draw(p,160,160,{time:.25});return r.canvas.toDataURL();}finally{r.destroy();}}
 export function createGraphicsLibrary({onLoad,onLoadBatch,onInsert,onComposition,onPublished,getResources=()=>[],notify}){

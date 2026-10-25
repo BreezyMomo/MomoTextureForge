@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {applyProjectRecipe,authoringCatalog,authoringSchema,RECIPE_SCHEMA,parameterPath,safeData} from '../web/project-authoring.js';
 import {authoringOptions} from '../project-authoring-cli.mjs';
-import {node,find,nodeClock} from '../web/tree-model.js';
+import {node,find,nodeClock,shapeDefaults} from '../web/tree-model.js';
+import {RECIPE_LIMITS,validateRecipe} from '../web/project-authoring-contract.js';
 import {effectStack} from '../web/post-effect-specs.js';
 const recipe=operations=>({schema:RECIPE_SCHEMA,operations});
 const add=(id='circle')=>({op:'add-node',id,graphic:'Circle'});
@@ -47,6 +48,27 @@ test('sanitizer adjustments are reported instead of silently disappearing',()=>{
 test('density selection uses actual resource IDs and survives sanitizing',()=>{
  const r=run([add(),{op:'set-density',node:'circle',graphic:'Star'}]);const n=r.project.root.children[0];assert.equal(n.arrange[39],authoringCatalog().graphics.findIndex(g=>g.id==='Star'));
 });
+
+test('density uses stable variables and roles, native defaults on changes, and reports actual paths',()=>{
+ const target=authoringCatalog({graphic:'Star'}).graphics[0],param=target.parameters[0];
+ assert.equal(param.densityPath,'arrange.'+(42+param.slot));
+ const source=run([add(),{op:'set-density',node:'circle',graphic:'Star',parameters:{[param.variable]:param.min}}]).project;
+ assert.equal(source.root.children[0].arrange[42+param.slot],param.min);
+ const same=applyProjectRecipe(source,recipe([{op:'set-density',node:'circle',graphic:'Star'}]));assert.deepEqual(same.project,source);
+ const roleParam=target.parameters.find(p=>p.role),changed=applyProjectRecipe(source,recipe([{op:'set-density',node:'circle',parameters:{[roleParam.role]:roleParam.max}}]));assert.equal(changed.project.root.children[0].arrange[42+roleParam.slot],roleParam.max);assert.equal(changed.project.root.children[0].arrange[39],source.root.children[0].arrange[39]);
+ const circle=authoringCatalog({graphic:'Circle'}).graphics[0],switched=applyProjectRecipe(source,recipe([{op:'set-density',node:'circle',graphic:'Circle'}])).project;
+ for(const p of circle.parameters)assert.equal(switched.root.children[0].arrange[42+p.slot],p.default);
+ const before=JSON.stringify(source);
+ for(const op of [{op:'set-density',node:'circle',parameters:{unknown:1}},{op:'set-density',node:'circle',parameters:[]},{op:'set-density',node:'@root',graphic:'Star'}])assert.throws(()=>applyProjectRecipe(source,recipe([op])));
+ assert.equal(JSON.stringify(source),before);
+});
+
+test('non-animation enums expose native values and group-only applicability',()=>{
+ const fields=authoringSchema().fields;
+ assert.deepEqual(fields.instanceContent.options,['all','random-child','cycle-child']);assert.deepEqual(fields.instanceContent.appliesTo,['group']);assert.equal(fields.instanceContent.animationType,null);
+ for(const value of fields.instanceContent.options){const p=run([{op:'add-node',id:'g',kind:'group',values:{instanceContent:value}}]).project;assert.equal(p.root.children[0].instanceContent,value);}
+ assert.deepEqual(fields['timing.before'].options,['hold','hide']);assert.deepEqual(fields.imageFit.options,['contain','stretch']);
+});
 test('reject invalid graph, field, effect, parameter and track operations',()=>{
  const cases=[
   [add(),add()], [add(),{op:'add-node',id:'child',parent:'circle',graphic:'Circle'}],
@@ -66,4 +88,36 @@ test('offline CLI validates options and protects input files',()=>{
  assert.equal(authoringOptions('catalog',['--id','Circle']).id,'Circle');assert.equal(authoringOptions('create',['recipe.json']).file,'recipe.json');
  assert.throws(()=>authoringOptions('edit',['scene.zip']),/operations/);assert.throws(()=>authoringOptions('edit',['scene.zip','--operations','ops.json','--output','scene.zip']),/different/);
  assert.throws(()=>authoringOptions('create',['scene.json','--output','out.png']));assert.throws(()=>authoringOptions('schema',['--from','x.zip']));assert.throws(()=>authoringOptions('catalog',['--timeout','NaN']));
+});
+
+test('set-graphic preserves identity, mask, effect stack, reference and unrelated animation',()=>{
+ const source=run([{op:'add-node',id:'heart',graphic:'HeartLeafTeardrop',name:'My shape',values:{resourceRef:'shelf-reference',transform:{x:.3,rotation:20},color:{mode:'own',high:'#ff0000'}}},add('mask'),{op:'set-mask',node:'heart',mask:'mask'},
+  {op:'set-effect',node:'heart',effect:'sketch',parameters:{fillStyle:3}},
+  {op:'set-track',node:'heart',path:'params.0',track:{keys:[[0,.3],[1,.7]]}},
+  {op:'set-track',node:'heart',path:'opacity',track:{keys:[[0,.2],[1,1]]}}]).project;
+ const before=structuredClone(source),old=find(source.root,'heart').node;
+ const changed=applyProjectRecipe(source,recipe([{op:'set-graphic',node:'heart',graphic:'Star'}])),star=find(changed.project.root,'heart').node;
+ assert.deepEqual(source,before);assert.equal(star.type,'Star');assert.deepEqual(star.params,shapeDefaults('Star'));assert.equal(star.tracks['params.0'],undefined);
+ for(const key of Object.keys(old).filter(k=>!['type','params','tracks'].includes(k)))assert.deepEqual(star[key],old[key],key);
+ assert.deepEqual(star.tracks.opacity,old.tracks.opacity);assert.deepEqual(changed.graphicChanges,[{operation:0,node:'heart',from:'HeartLeafTeardrop',to:'Star',parametersReset:true,removedParameterTracks:['params.0']}]);
+ const schema=authoringSchema();assert.deepEqual(schema.operations['set-graphic'],['node','graphic','parameters']);assert.ok(schema.patchNode.blockedFields.includes('type'));assert.ok(schema.patchNode.blockedFields.includes('params'));assert.deepEqual(schema.recipeLimits,RECIPE_LIMITS);
+});
+
+test('set-graphic same-type calls preserve parameter animation and accept target parameter overrides',()=>{
+ const variable=authoringCatalog({graphic:'Circle'}).graphics[0].parameters[0].variable;
+ const source=run([add(),{op:'set-parameter',node:'circle',parameter:variable,value:.28},{op:'set-track',node:'circle',parameter:variable,track:{keys:[[0,.2],[1,.4]]}}]).project;
+ const same=applyProjectRecipe(source,recipe([{op:'set-graphic',node:'circle',graphic:'Circle'}]));assert.deepEqual(same.project,source);assert.deepEqual(same.graphicChanges,[]);
+ const changed=applyProjectRecipe(source,recipe([{op:'set-graphic',node:'circle',graphic:'Circle',parameters:{[variable]:.35}}]));assert.equal(changed.project.root.children[0].params[0],.35);assert.deepEqual(changed.project.root.children[0].tracks,source.root.children[0].tracks);
+ const target=authoringCatalog({graphic:'Star'}).graphics[0].parameters[0];
+ const switched=applyProjectRecipe(source,recipe([{op:'set-graphic',node:'circle',graphic:'Star',parameters:{[target.variable]:target.default}}]));assert.equal(switched.project.root.children[0].type,'Star');
+ for(const op of [{op:'set-graphic',node:'@root',graphic:'Star'},{op:'set-graphic',node:'circle',graphic:'missing'},{op:'set-graphic',node:'circle',graphic:'Star',parameters:{missing:1}},{op:'set-graphic',node:'circle',graphic:'Star',parameters:[]}])assert.throws(()=>applyProjectRecipe(source,recipe([op])));
+});
+
+test('recipes reject excessive UTF-8 size, depth, members and operations before mutation',()=>{
+ assert.doesNotThrow(()=>validateRecipe(recipe([])));
+ assert.throws(()=>validateRecipe({...recipe([]),name:'界'.repeat(RECIPE_LIMITS.bytes/3+1)}),/UTF-8 bytes/);
+ let nested={};for(let i=0;i<RECIPE_LIMITS.depth+1;i++)nested={child:nested};assert.throws(()=>validateRecipe({...recipe([]),nested}),/depth/);
+ assert.throws(()=>validateRecipe({...recipe([]),values:Array(RECIPE_LIMITS.elements).fill(0)}),/elements/);
+ assert.throws(()=>validateRecipe(recipe(Array(RECIPE_LIMITS.operations+1).fill({op:'set-project',name:'x'}))),/operations/);
+ const cycle={};cycle.self=cycle;assert.throws(()=>validateRecipe(cycle),/depth/);
 });

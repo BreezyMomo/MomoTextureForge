@@ -1,5 +1,5 @@
 import {uiText} from './ui-language.js';
-import {CURVE_CHANNELS,curveDefaults,identityCurve,curveTangents} from './channel-curves.js';
+import {CURVE_CHANNELS,CURVE_PRESETS,curvePreset,curveDefaults,identityCurve,curveTangents} from './channel-curves.js';
 const channelKey=k=>'curves.'+k;
 export function createChannelCurvesEditor({read,edit,begin,change,end,cancel,canEdit=()=>true,view={channel:'luminance',index:0}}){
  const el=(tag,props={})=>{const e=document.createElement(tag);for(const [k,v]of Object.entries(props))if(k==='text')e.textContent=v;else e.setAttribute(k,v);return e;};
@@ -7,7 +7,7 @@ export function createChannelCurvesEditor({read,edit,begin,change,end,cancel,can
  const controls=el('div',{class:'channel-curve-controls channel-curve-toolbar'}),select=el('select',{'aria-label':uiText('curves.channel')});
  for(const k of CURVE_CHANNELS)select.append(el('option',{value:k,text:uiText(channelKey(k))}));
  let channel=view.channel,index=view.index,drag=null;select.value=channel;
- const preset=el('select',{'aria-label':uiText('curves.preset')});for(const key of ['choose','linear','contrast','soft','brighten','invert'])preset.append(el('option',{value:key,text:uiText('curves.'+key)}));
+ const preset=el('select',{'aria-label':uiText('curves.preset')});for(const key of ['choose',...CURVE_PRESETS])preset.append(el('option',{value:key,text:uiText('curves.'+key)}));
  const reset=el('button',{type:'button',text:uiText('curves.resetChannel')}),resetAll=el('button',{type:'button',text:uiText('curves.resetAll')});controls.append(select,preset,reset,resetAll);host.append(controls);
  const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 260 180');svg.setAttribute('class','channel-curve-graph');svg.setAttribute('aria-label',uiText('curves.graph'));svg.setAttribute('role','group');svg.style.touchAction='none';host.append(svg);
  const make=(tag,attrs)=>{const e=document.createElementNS(ns,tag);for(const [k,v]of Object.entries(attrs))e.setAttribute(k,v);svg.append(e);return e;};
@@ -30,7 +30,7 @@ export function createChannelCurvesEditor({read,edit,begin,change,end,cancel,can
  remove.onclick=()=>{if(index>0&&index<points().length-1)edit(c=>{c[channel].splice(index,1);c.enabled=true;});};
  reset.onclick=()=>edit(c=>c[channel]=identityCurve());resetAll.onclick=()=>edit(c=>Object.assign(c,curveDefaults()));
  select.onchange=()=>{channel=select.value;index=0;refresh();};
- preset.onchange=()=>{const shapes={linear:identityCurve(),contrast:[[0,0],[.25,.12],[.75,.88],[1,1]],soft:[[0,0],[.25,.38],[.75,.62],[1,1]],brighten:[[0,0],[.5,.7],[1,1]],invert:[[0,1],[1,0]]};if(shapes[preset.value]){const p=shapes[preset.value];edit(c=>{c[channel]=p;c.enabled=true;});}preset.value='choose';};
+ preset.onchange=()=>{if(CURVE_PRESETS.includes(preset.value)){const p=curvePreset(preset.value);edit(c=>{c[channel]=p;c.enabled=true;});}preset.value='choose';};
  const xy=e=>{const b=svg.getBoundingClientRect();return [Math.max(0,Math.min(1,((e.clientX-b.left)/b.width*260-10)/240)),Math.max(0,Math.min(1,(170-(e.clientY-b.top)/b.height*180)/160))];};
  svg.onpointerdown=e=>{
   if(e.button!==0||!canEdit())return;e.preventDefault();const hit=e.target.closest('[data-index]'),[px,py]=xy(e);

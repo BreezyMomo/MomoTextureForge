@@ -52,6 +52,8 @@ export function createGraphicListFilters(modeHost,categoryHost,onChange){
  }
  return {
   get mode(){return mode;},
+  snapshot:()=>({mode,categories:[...categories.selected]}),
+  configure(value){mode=value.mode;categories.selected.clear();for(const key of value.categories)categories.selected.add(key);},
   update(entries,{favorites=new Set()}={}){
    updateModes(entries.filter(entry=>favorites.has(entry.id)).length);
    categories.update(graphicCategoryGroups(entries).map(group=>({value:group.key,label:group.title})));

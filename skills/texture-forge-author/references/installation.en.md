@@ -4,7 +4,7 @@
 [简体中文](installation.md) · [English](installation.en.md)
 <!-- /doc-language -->
 
-Open **AI tools → Install and configure**, select an agent and Skills, then click **Choose directory and install…** to select and authorize a location in the system dialog. The system directory picker determines the actual installation location. Installation does not change the artwork or agent configuration.
+Open **AI tools → Install Skills**, select an agent and Skills, then click **Choose directory and install…** to select and authorize a location in the system dialog. The system directory picker determines the actual installation location. Installation does not change the artwork or agent configuration.
 
 ## Recommended directories
 
@@ -33,14 +33,9 @@ Reinstalling the same version skips writes; versions use content hashes. Backups
 
 ## First use of the authoring tools
 
-The Effects Skill contains instructions only. The Authoring Skill includes offline tools and local MCP, requiring Node.js 22+. Ask AI to follow the Skill instructions and set up the runtime in the installed Authoring Skill directory:
+After installing the Authoring Skill, continue to step 2 below, copy its startup instructions and send them to your AI. AI follows the Skill to locate its directory, prepare missing runtime/dependencies, start or reuse the local MCP service and verify it. Users do not install prerequisites or execute startup commands themselves. Initial setup may need network access. The Effects Skill is documentation-only and cannot start MCP.
 
-```sh
-npm install --no-audit --no-fund
-npx playwright install chromium
-```
-
-Initial runtime setup needs network access; afterward the offline tools work without a network. The website writes files only and cannot execute these commands. See [Live editor and MCP connection](live-editor.en.md) for MCP configuration.
+After AI confirms the service is ready, return to step 3: connect the page and copy the configuration into your AI client. Installed files, a running service, a registered page and a configured client are separate states. See [Live editor and MCP connection](live-editor.en.md) for the procedure AI must execute.
 
 **Download ZIP** next to each Skill provides its complete archive with the same files as direct installation. Downloading does not change its checkbox selection. Skills are not graphic resources and should not be imported into the library. If a Skill is missing in the client, check its actual directory or reload the client.
 
