@@ -6,8 +6,6 @@
 
 [Manual contents](README.en.md) · [Project home](../README.en.md)
 
-Before continuing AI tools, Skill installation or MCP development, read the [AI tools handoff](ai-handoff.en.md) for the current implementation and confirmed product decisions.
-
 Post-effect specimen art and curated settings live in `web/post-effect-specimens.js`, using an isolated renderer and real `applyPostFx` without registering resources or reading node settings. Lazy 384×240 before/after cards animate only on hover/focus, honor reduced motion and release their context on close. `node tests/post-effect-previews-browser-check.mjs` (add `--built`) covers all 31 pixel differences, motion, comparison dragging, project isolation, preserved settings and narrow layouts. It exports an artwork contact sheet for inspection, without UI screenshots.
 
 ## Run locally

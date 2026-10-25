@@ -28,3 +28,9 @@
 
 .graphics-dialog .graphics-card .graphics-insert{background:var(--ui-selected);color:var(--ui-subtle);border-color:var(--ui-accent-text);font-weight:600}.graphics-dialog .graphics-card .graphics-insert:hover{background:var(--ui-selected);border-color:var(--ui-accent-text)}
 .graphics-batch-progress{flex:none;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px 12px;padding:12px;margin:0 0 10px;border:1px solid var(--ui-line-strong);border-radius:var(--ui-control-radius);background:var(--ui-surface)}.graphics-batch-progress[hidden]{display:none}.graphics-batch-progress progress{grid-column:1;width:100%;height:12px;accent-color:var(--ui-accent-text)}.graphics-batch-name{grid-column:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ui-muted)}.graphics-batch-progress button{grid-column:2;grid-row:1 / 4;align-self:center}
+
+/* All resource dialogs, including subscriptions and import, share a fixed header. */
+.tree-editor dialog.graphics-dialog[open]{display:flex;flex-direction:column;box-sizing:border-box;overflow:hidden;max-height:calc(100dvh - 32px)}
+.graphics-dialog>header{flex:none;gap:12px}.graphics-dialog>header>strong{min-width:0;overflow-wrap:anywhere}.graphics-dialog>header>button{flex:none}
+.graphics-dialog>.graphics-body{min-height:0;max-height:none;overflow:auto;overscroll-behavior:contain;scroll-padding-block:12px}
+.graphics-library-dialog>.graphics-body{overflow:hidden}

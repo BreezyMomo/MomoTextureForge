@@ -1,3 +1,4 @@
+import {prepareDialogLayout} from './dialog-layout.js';
 import {SKILL_AGENTS,installPathLabel,skillDirectoryParts} from './agent-install-paths.js';
 import {skillFiles,downloadSkill} from './skill-downloads.js';
 import {installSkill,installRoot} from './skill-install.js';
@@ -54,7 +55,7 @@ export function installAITools({button,getProject,onOperation,onCatalog}){
   q('#download-author-skill').onclick=()=>downloadSkill('author');q('#download-effects-skill').onclick=()=>downloadSkill('effects');
   view.catalog.onclick=()=>{if(locked)return;close();onCatalog();};view.configure.onclick=()=>{if(locked)return;close();bridge.open();};q('[data-close]').onclick=close;
   dialog.addEventListener('cancel',event=>{if(locked)event.preventDefault();});
-  document.body.append(dialog);const dispose=localizeApplicationMarkup(dialog);dialog.addEventListener('close',()=>{dispose();dialog.remove();dialog=null;view=null;message=null;copyFeedback=null;button.focus();},{once:true});render();dialog.showModal();makeDialogMovable(dialog);
+  document.body.append(dialog);const dispose=localizeApplicationMarkup(dialog);dialog.addEventListener('close',()=>{dispose();dialog.remove();dialog=null;view=null;message=null;copyFeedback=null;button.focus();},{once:true});render();prepareDialogLayout(dialog);dialog.showModal();makeDialogMovable(dialog);
  };
  button.onclick=open;onLanguageChange(render);render();return {open,connection:bridge};
 }

@@ -1,3 +1,4 @@
+import {prepareDialogLayout} from './dialog-layout.js';
 import {editorIcon} from './editor-icons.js';
 import {appearance,THEME_IDS,COLOR_ROLE_IDS,STYLE_IDS,DENSITY_IDS,TAB_STYLE_IDS,defaultAppearanceColors} from './appearance.js';
 import {uiText,uiFormat,localizeApplicationMarkup} from './ui-language.js';
@@ -52,5 +53,5 @@ export function openAppearanceSettings(){
  dialog.addEventListener('keydown',event=>event.stopPropagation());
  document.body.append(dialog);const disposeLanguage=localizeApplicationMarkup(dialog),disposeAppearance=appearance.subscribe(sync),disposeValidation=onLanguageChange(()=>{for(const {hex}of colorFields.values())hex.setCustomValidity('');sync();});
  dialog.addEventListener('close',()=>{disposeLanguage();disposeAppearance();disposeValidation();if(!accepted)appearance.preview(original);dialog.remove();returnFocus?.focus();},{once:true});
- sync();dialog.showModal();styleButtons.find(([button])=>button.getAttribute('aria-pressed')==='true')?.[0].focus();
+ sync();prepareDialogLayout(dialog);dialog.showModal();styleButtons.find(([button])=>button.getAttribute('aria-pressed')==='true')?.[0].focus();
 }

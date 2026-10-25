@@ -78,7 +78,11 @@
 .tree-preview>.tree-timeline{margin-top:6px;flex:none}
 #solo.active{background:var(--ui-selected);border-color:var(--ui-accent-text);color:var(--ui-accent-text)}
 .tree-modal{position:fixed;inset:0;background:var(--ui-overlay);z-index:30;display:flex;align-items:center;justify-content:center;padding:20px}
-.tree-modal>section{width:460px;max-width:100%;max-height:90vh;overflow:auto;padding:20px;background:var(--ui-panel);border:1px solid var(--ui-line-strong);border-radius:var(--ui-window-radius);box-shadow:0 12px 50px var(--ui-shadow)}
+.tree-modal>section{display:flex;flex-direction:column;box-sizing:border-box;width:500px;max-width:100%;max-height:min(90dvh,calc(100dvh - 32px));overflow:hidden;padding:20px;background:var(--ui-panel);border:1px solid var(--ui-line-strong);border-radius:var(--ui-window-radius);box-shadow:0 12px 50px var(--ui-shadow)}
+.tree-modal>section>header{flex:none;gap:12px}.tree-modal>section>header button{flex:none}
+#global-controls{min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-right:8px;scroll-padding-block:12px}
+#global-actions{flex:none;border-top:1px solid var(--ui-line);padding-top:10px;max-height:40dvh;overflow:auto}#global-actions[hidden]{display:none}
+@media(max-height:500px){.tree-modal{padding:8px}.tree-modal>section{max-height:calc(100dvh - 16px);padding:12px}#global-actions #export-progress{margin:4px 0}#global-actions #export-progress .tree-note{display:none}}
 .tree-modal header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--ui-line);padding-bottom:12px}
 .tree-modal h2{font-size:18px;margin:0}.tree-modal h3{font-size:14px;color:var(--ui-text)}
 .tree-modal #confirm-export{width:100%;padding:12px;margin-top:8px}
@@ -593,3 +597,11 @@
 .ai-tools-step textarea{box-sizing:border-box;width:100%;min-height:120px;resize:vertical;font:inherit;line-height:1.6;overflow-wrap:anywhere}
 .ai-tools-extra{margin-top:24px;padding-top:12px;border-top:1px solid var(--ui-line)}
 .ai-tools-dialog [data-start-feedback]:empty{display:none}
+
+/* Window headers and actions stay outside the content scrollport. */
+.tree-editor dialog.scrollable-dialog[open],.tree-editor :is(.bezier-editor-dialog,.node-curves-dialog)[open]{display:flex;flex-direction:column;overflow:hidden;box-sizing:border-box;max-height:calc(100dvh - 32px)}
+.scrollable-dialog>header,.scrollable-dialog>footer,.bezier-editor-dialog>header,.node-curves-dialog>header{flex:none}
+.scrollable-dialog>header{gap:12px}.scrollable-dialog>header>:first-child{min-width:0;overflow-wrap:anywhere}.scrollable-dialog>header>button{flex:none}
+.dialog-scroll-body,.bezier-editor-dialog>.bezier-editor-panel,.node-curves-dialog>div{min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scroll-padding-block:12px}
+.scrollable-dialog>footer{position:static}
+@media(max-height:500px){.tree-editor dialog.scrollable-dialog[open],.tree-editor :is(.bezier-editor-dialog,.node-curves-dialog)[open]{max-height:calc(100dvh - 16px)}.scrollable-dialog>header{margin-bottom:8px}.appearance-dialog>header,.appearance-dialog>footer{padding-block:8px}.appearance-dialog>footer>p{flex-basis:auto}}

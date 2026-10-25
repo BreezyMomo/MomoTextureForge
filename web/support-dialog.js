@@ -1,3 +1,4 @@
+import {prepareDialogLayout} from './dialog-layout.js';
 import {localizeApplicationMarkup} from './ui-language.js';
 import appreciationCode from './appreciation-code.js';
 
@@ -15,5 +16,5 @@ export function openSupportDialog(){
  dialog.addEventListener('close',()=>{dialog.remove();returnFocus?.focus();},{once:true});
  document.body.append(dialog);
  const disposeLanguage=localizeApplicationMarkup(dialog);dialog.addEventListener('close',disposeLanguage,{once:true});
- dialog.showModal();
+ prepareDialogLayout(dialog);dialog.showModal();
 }

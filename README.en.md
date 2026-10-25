@@ -109,8 +109,6 @@ First use follows **Install Skill → Ask AI to start MCP → Configure MCP**. A
 
 [Workflow](docs/10-ai-and-help.en.md) · [CLI authoring and validation](AI_AUTHORING_CLI.en.md) · [Generator format](skills/texture-forge-author/references/generator-guide.en.md)
 
-Before continuing AI tools development, read the [development handoff](docs/ai-handoff.en.md) for current capabilities, confirmed interactions and the next MCP direction.
-
 ## Technical references and feedback
 
 [Pattern definitions](PATTERN_DEFINITIONS.en.md) · [Local graphics library](LOCAL_GRAPHICS_LIBRARY.en.md) · [Resource-pack format](RESOURCE-PACK.en.md) · [Remote-library implementation](REMOTE_LIBRARIES.en.md)

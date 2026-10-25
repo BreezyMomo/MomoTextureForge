@@ -107,8 +107,6 @@ npm run build:pages       # 同步生成可部署的 site/index.html
 
 [操作教程](docs/10-ai-and-help.md) · [命令行创作与验证](AI_AUTHORING_CLI.md) · [生成器格式](skills/texture-forge-author/references/generator-guide.md)
 
-后续继续 AI 工具开发，请先阅读[开发交接](docs/ai-handoff.md)，了解当前实现、用户已确认的交互和 MCP 后续方向。
-
 ## 深入资料与反馈
 
 [图形定义](PATTERN_DEFINITIONS.md) · [本地图形库](LOCAL_GRAPHICS_LIBRARY.md) · [资源包格式](RESOURCE-PACK.md) · [远程图库技术说明](REMOTE_LIBRARIES.md)

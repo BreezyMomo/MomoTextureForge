@@ -1,3 +1,4 @@
+import {prepareDialogLayout} from './dialog-layout.js';
 import {EDITOR_BRIDGE_PROTOCOL,EDITOR_BRIDGE_ORIGIN} from './editor-bridge-protocol.js';
 import {editorRevision} from './editor-live-authoring.js';
 import {encodeResourcePack} from './resource-pack.js';
@@ -91,7 +92,7 @@ export function installEditorAIConnection({button,getProject,onOperation,onStart
   view.connect.onclick=()=>void connection.connect().catch(()=>{});
   view.copy.onclick=async()=>{const current=view;try{await navigator.clipboard.writeText(current.configuration.value);if(view===current)current.status.textContent=uiText('editorBridge.copied');}catch{if(view===current){current.configDetails.open=true;current.configuration.focus();current.configuration.select();current.status.textContent=uiText('editorBridge.copyManually');}}};
   document.body.append(dialog);const disposeLanguage=localizeApplicationMarkup(dialog);dialog.addEventListener('close',()=>{disposeLanguage();dialog.remove();dialog=null;view=null;returnFocus.focus();},{once:true});
-  render();dialog.showModal();makeDialogMovable(dialog);view.connect.focus();
+  render();prepareDialogLayout(dialog);dialog.showModal();makeDialogMovable(dialog);view.connect.focus();
  };
  globalThis.addEventListener?.('pagehide',()=>{void connection.disconnect({keepalive:true});});
  return Object.assign(connection,{open:()=>button.onclick()});

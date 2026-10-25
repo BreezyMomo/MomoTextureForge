@@ -26,7 +26,7 @@ try{
   assert.ok(files.author.includes('texture-forge-author'));assert.ok(files.effects.includes('texture-forge-effects'));assert.ok(JSON.parse(files.runtime).dependencies.playwright);
   assert.match(await dialog.locator('[data-progress]').innerText(),/test-personal\/\.agents\/skills/);
   // The first-use path hands runtime setup to the installed Skill, then exposes configuration.
-  assert.deepEqual(await dialog.locator(':scope > [data-step]').evaluateAll(nodes=>nodes.map(n=>n.dataset.step)),['install','start','configure']);assert.equal(await dialog.locator('[role=tablist],[role=tab],[role=tabpanel],[data-next]').count(),0);
+  assert.deepEqual(await dialog.locator(':scope > .dialog-scroll-body > [data-step]').evaluateAll(nodes=>nodes.map(n=>n.dataset.step)),['install','start','configure']);assert.equal(await dialog.locator('[role=tablist],[role=tab],[role=tabpanel],[data-next]').count(),0);
   await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{globalThis.copiedStartup=text;}}}));
   await dialog.locator('[data-start-copy]').click();assert.match(await dialog.locator('[data-start-feedback]').innerText(),/^Copied/);
   assert.match(await page.evaluate(()=>globalThis.copiedStartup),/texture-forge-author/);assert.match(await page.evaluate(()=>globalThis.copiedStartup),/install missing dependencies/);
