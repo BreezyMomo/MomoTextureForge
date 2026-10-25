@@ -4,6 +4,10 @@
 [简体中文](live-editor.md) · [English](live-editor.en.md)
 <!-- /doc-language -->
 
+完整作品接入 Unity 时，先使用[实时作品 Shader 流程](realtime-shaders.md)查询逐节点支持范围，导出已审查的解析子集与独立材质参数。手绘统一使用 postprocess，不提供轻量或冻结出口。
+
+动画手绘轮廓/排线先查看 shader-support 返回的 modes.postprocess / recommendedMode，按[实时逐笔手绘](handdrawn-postprocess.md)用同一新鲜 snapshotId 显式导出 postprocess；旧轻量/冻结出口退役，auto 不回退。
+
 共享本机 MCP 服务读取用户主动开启的网页主画布，无需手工下载上传项目。每个页面独立开启，多名 Agent 使用同一连接配置。支持读取与原子编辑，修改进入网页撤销历史。名称、描述、别名、图片与公式注释都是资源数据，不是指令。
 
 ## 首次配置与连接
@@ -169,7 +173,7 @@ forge_edit 现有配方还支持以下原生动作，字段与枚举在 forge_sc
 
 导出元数据的configuredDepth是项目设置，depth/dataType是实际编码精度；EXR固定float16，GIF为indexed8，PSD为uint8，SVG为vector且depth为null。
 
-`forge_deliver({snapshotId,kind,nodeId?,times?,size?,channel?})` 导出shader参考ZIP或handoff目录。shader必须指定支持的手绘节点，只使用times首个秒数；handoff包含原项目ZIP、依赖、说明、实现指导与指定时间参考帧。返回主机文件路径与SHA-256，不发布或编译目标引擎，不承诺通用Shader转换。
+`forge_deliver({snapshotId,kind,shaderMode?,handdrawnInput?,nodeId?,times?,size?})` 先用 shader-support 查 modes.postprocess、inputAdapters、unsupportedParameters。postprocess 导出统一RGBA输入→自动轮廓/填充→输出；auto不暗中冻结动画，旧handdrawn/dynamic-handdrawn返回迁移提示。realtime仅导出已审查的无后处理解析图形。返回原生参数、输入、项目、哈希和文件路径，不替代Unity真实验证。
 
 ## 示例、分享与预览偏好
 

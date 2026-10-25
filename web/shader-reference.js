@@ -1,3 +1,4 @@
+import {RETIRED_HANDDRAWN_MESSAGE} from './handdrawn-contract.js';
 import sources from './shader-reference-runtime.js';
 import {encodeZIP} from './encoders.js';
 import {messageError} from './message-catalog.js';
@@ -22,10 +23,10 @@ export function parseShaderSettings(text){
  return sanitizeShaderParameters(raw.parameters);
 }
 export function sketchShaderParameters(values){
- const style=({1:0,2:1,3:2,6:3,7:4,8:5})[values.fillStyle];
+ const style=({1:0,2:1,3:2,4:0,6:3,7:4,8:5})[values.fillStyle];
  if(style===undefined)throw messageError('shader.unsupportedFill');
  return sanitizeShaderParameters({...shaderDefaults(),style,gap:values.hatchGap,width:values.hatchWidth,angle:values.hatchAngle,
-  roughness:values.roughness/10,seed:values.seed,dashLength:values.dashLength,dashGap:values.dashGap,inkColor:values.fillColor,inkOpacity:values.fillOpacity});
+  roughness:values.roughness/10,seed:values.seed,dashLength:values.dashLength,dashGap:values.dashGap,inkColor:values.fillColor,inkOpacity:values.fillStyle===4?0:values.fillOpacity});
 }
 export const srgbToLinear=x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4;
 export const linearToSrgb=x=>x<=.0031308?x*12.92:1.055*Math.max(0,x)**(1/2.4)-.055;
@@ -47,24 +48,41 @@ export function shaderManifest(raw,width=512,height=512,time=0){
 }
 // This fixed dialect mapping is only for our reviewed HLSL reference, not a general shader converter.
 export function referenceGLSL(){
+ throw Error(RETIRED_HANDDRAWN_MESSAGE);
  return sources['handdrawn-fill.hlsl'].replace(/\bfloat([234])\b/g,(_,n)=>'vec'+n)
   .replace(/\blerp\b/g,'mix').replace(/\bfrac\b/g,'fract').replace(/\bfmod\b/g,'mod')
   .replace(/\bsaturate\(([^()]+)\)/g,'clamp($1,0.0,1.0)');
 }
 export const SHADER_VERTEX='#version 300 es\nout vec2 uv;void main(){vec2 p=vec2(float((gl_VertexID<<1)&2),float(gl_VertexID&2));uv=p;gl_Position=vec4(p*2.-1.,0.,1.);}';
-export function shaderFragment(){return `#version 300 es
+export function shaderFragment(){
+ throw Error(RETIRED_HANDDRAWN_MESSAGE);return `#version 300 es
 precision highp float;in vec2 uv;out vec4 frag;
-uniform sampler2D maskTex;
+uniform sampler2D maskTex,strokeTex;
 uniform float style,gap,width,angle,roughness,seed,dashLength,dashGap,inkOpacity,paperOpacity,timeSeconds;
 uniform vec2 scroll,designSize;uniform vec3 inkColor,paperColor;
+uniform float strokeEnabled,strokeOpacity;uniform vec3 strokeColor;
+uniform float nodeOpacity;
 ${referenceGLSL()}
 vec3 displaySRGB(vec3 rgb){return mix(rgb*12.92,1.055*pow(max(rgb,vec3(0)),vec3(1.0/2.4))-.055,step(vec3(.0031308),rgb));}
 void main(){MFHanddrawnParams v;v.style=style;v.gap=gap;v.width=width;v.angle=angle;v.roughness=roughness;v.seed=seed;v.dashLength=dashLength;v.dashGap=dashGap;v.inkOpacity=inkOpacity;v.paperOpacity=paperOpacity;v.scroll=scroll;v.designSize=designSize;v.inkColor=inkColor;v.paperColor=paperColor;
-frag=MFHanddrawnFill(uv,texture(maskTex,uv).r,timeSeconds,v);frag.rgb=displaySRGB(frag.rgb);}`;}
-export function shaderReferencePackage({parameters,mask,preview,width,height,time=0,editorPreview=null,sourceEffect=null}){
+frag=MFHanddrawnFill(uv,texture(maskTex,uv).r,timeSeconds,v);if(strokeEnabled>.5)frag=MFHanddrawnStroke(frag,texture(strokeTex,uv).r,strokeColor,strokeOpacity);frag.a*=nodeOpacity;frag.rgb=displaySRGB(frag.rgb);}`;}
+export function shaderReferencePackage({parameters,mask,preview,width,height,time=0,editorPreview=null,sourceEffect=null,stroke=null}){
+ throw Error(RETIRED_HANDDRAWN_MESSAGE);
  const manifest=shaderManifest(parameters,width,height,time),utf8=new TextEncoder(),text={...sources,
   'parameters.json':JSON.stringify(manifest,null,2)+'\n','reference-preview.vert.glsl':SHADER_VERTEX,'reference-preview.frag.glsl':shaderFragment()};
- if(sourceEffect){manifest.sourceEffect=sourceEffect;text['parameters.json']=JSON.stringify(manifest,null,2)+'\n';}
+ if(stroke){
+  if(!(stroke.mask instanceof Uint8Array)||stroke.mask.length<8||!/^#[0-9a-f]{6}$/i.test(stroke.color))throw messageError('shader.missingImages');
+  manifest.referenceVersion=2;
+  const identity=crypto.randomUUID().replaceAll('-',''),importNamespace='MomoTextureForge.Exported.Handdrawn'+identity,menu='Assets/Momo Texture Forge/Import handdrawn reference ('+identity.slice(0,8)+')';
+  // Each new package coexists with other exports and the original public v1 importer.
+  text['MomoHanddrawnImporter.cs']=text['MomoHanddrawnImporter.cs'].replace('namespace MomoTextureForge.Editor','namespace '+importNamespace).replace('"Assets/Momo Texture Forge/Import handdrawn reference"',JSON.stringify(menu));
+  manifest.unityImporter={file:'MomoHanddrawnImporter.cs',type:importNamespace+'.MomoHanddrawnImporter',method:'Import',menu};
+  manifest.stroke={input:{file:'stroke-mask.png',channel:'red',meaning:'linear coverage including baked stroke overlap and source stroke opacity',sRGB:false,wrap:'Clamp',dimensions:[width,height]},color:stroke.color,opacity:1,sourceOpacity:stroke.sourceOpacity,nodeOpacity:stroke.nodeOpacity??1,opacityAfterComposite:true,
+   geometry:'frozen native Rough.js contour strokes in canvas coordinates',baked:['contour','width','roughness','bowing','seed','doubleStroke','dash pattern and offset','source stroke opacity','node placement'],runtime:['color','opacity multiplier','node opacity after composition'],clippedByFillMask:false};
+  manifest.colors.strokeLinear=shaderColor(stroke.color);manifest.scope.push('native Rough.js stroke coverage snapshot over procedural fill');
+  manifest.excluded=['runtime contour reconstruction','node tree','keyframes','other post-processing'];
+ }
+ if(sourceEffect)manifest.sourceEffect=sourceEffect;text['parameters.json']=JSON.stringify(manifest,null,2)+'\n';
  if(!(mask instanceof Uint8Array)||!(preview instanceof Uint8Array)||mask.length<8||preview.length<8)throw messageError('shader.missingImages');
- return {manifest,bytes:encodeZIP([...Object.entries(text).map(([name,text])=>({name,data:utf8.encode(text)})),{name:'mask.png',data:mask},{name:'reference-preview.png',data:preview},...(editorPreview?[{name:'editor-preview.png',data:editorPreview}]:[])])};
+ return {manifest,bytes:encodeZIP([...Object.entries(text).map(([name,text])=>({name,data:utf8.encode(text)})),{name:'mask.png',data:mask},{name:'reference-preview.png',data:preview},...(stroke?[{name:'stroke-mask.png',data:stroke.mask}]:[]),...(editorPreview?[{name:'editor-preview.png',data:editorPreview}]:[])])};
 }

@@ -9,7 +9,8 @@ import {CATALOG} from '../web/catalog.js';
 test('project CLI distinguishes seconds, scalar channels, isolated input and bounded outputs',()=>{
  assert.equal(projectToolOptions('render',['--node','node-a','--before-effect','sketch','--channel','alpha','--time','1.5']).times[0],1.5);
  assert.equal(projectToolOptions('handoff',[]).output,'effect-handoff');
- for(const [action,args]of [['unknown',[]],['shader',[]],['render',['--before-effect','sketch']],['render',['--size','4']],['render',['--time','NaN']],['render',['--time','0,1']],['render',['--channel','depth']],['render',['--output','x.jpg']],['inspect',['--output','x.png']],['render',['--size','64','--size','128']],['check',['--times',Array(17).fill(0).join(',')]],['shader',['--node','x','--channel','alpha']]])assert.throws(()=>projectToolOptions(action,args));
+ assert.equal(projectToolOptions('shader',[]).node,null);assert.deepEqual(projectToolOptions('shader',['--times','0,.75,1.5']).times,[0,.75,1.5]);assert.equal(projectToolOptions('shader-support',[]).output,'shader-support.json');
+ for(const [action,args]of [['unknown',[]],['shader',['--shader-mode','handdrawn']],['render',['--before-effect','sketch']],['render',['--size','4']],['render',['--time','NaN']],['render',['--time','0,1']],['render',['--channel','depth']],['render',['--output','x.jpg']],['inspect',['--output','x.png']],['render',['--size','64','--size','128']],['check',['--times',Array(17).fill(0).join(',')]],['shader',['--node','x','--channel','alpha']]])assert.throws(()=>projectToolOptions(action,args));
 });
 
 test('project brief identifies native RGBA generators without treating their placeholder scalar as the implementation',()=>{

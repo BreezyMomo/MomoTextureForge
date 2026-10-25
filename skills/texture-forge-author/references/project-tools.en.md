@@ -4,7 +4,11 @@
 [简体中文](project-tools.md) · [English](project-tools.en.md)
 <!-- /doc-language -->
 
+For complete authored works, first use the [realtime project Shader workflow](realtime-shaders.en.md). It queries actual per-node support and exports a reviewed analytical subset with independent material properties. Handdrawn conversion uses the unified postprocess workflow.
+
 Use this workflow when the user supplies a ZIP from **File → Save project** and wants AI to understand the effect, produce supporting textures or implement it in a game. Project ZIPs carry nodes, parameters, keyframes, formulas and image dependencies. No editor/browser control or matching library installation is required. The library's AI graphic catalog remains metadata only and cannot replace an authored project.
+
+For animated sketch without baked outline inputs, follow [Live contours and individual strokes](handdrawn-postprocess.en.md). Discover modes.postprocess / recommendedMode through shader-support, then explicitly choose postprocess instead of rewriting a temporary shader.
 
 The user need not create a starting project. For AI-authored node trees, offline revisions and editable ZIP delivery, see [Create and edit complete projects offline](offline-projects.en.md). The same tools provide create/edit/pack/unpack/catalog/schema.
 
@@ -33,16 +37,7 @@ Read actual IDs from the brief. `--node` uses editor solo semantics, excluding a
 
 For new noise, gradients or contours, use this Skill's existing formula/generator validate/render/check tools and inspect their results. Extraction and new texture creation can be combined. Structural validation is not GPU compilation or visual acceptance. Read new failure reports rather than presenting stale images. Raw JSON projects need all referenced built-ins; custom graphics/images require a project ZIP.
 
-## First Unity URP integration path
 
-```sh
-node scripts/texforge.mjs project shader /work/effect.zip --node NODE_ID --time 1.5 --output /work/handdrawn-reference.zip
-```
+## Unified handdrawn integration
 
-Currently project shader exports only the existing handdrawn fill reference with supported fill styles. Compare sourceEffect.values/mapping/limitations, editor-preview.png and reference-preview.png. Outlines, entire compositions and tracks are not automatically converted. Other effects provide implementation data for AI, not a promised ready-made shader export.
-
-Extract the reference into a dedicated Assets subfolder of the target URP project. Put MomoHanddrawnImporter.cs in an Editor folder. Run **Assets → Momo Texture Forge → Import handdrawn reference** and select the extracted parameters.json, or call `MomoTextureForge.Editor.MomoHanddrawnImporter.Import(absolutePath)` from an authorized editor script.
-
-The importer accepts only the matching handdrawn reference schema and requires an active URP asset. It sets the mask to linear/Clamp/uncompressed/no mipmaps and creates a new material without overwriting old materials. Explicit time uses the reference image's time for initial comparison; existing game systems can drive motion afterward. Colors follow the package's sRGB Color-property convention; do not apply `.linear` twice. It does not create particles, UI clipping or an animation controller.
-
-The wrapper targets Unity 6 / URP 17. Browser reports always mark engine compilation not-run. Verify shader compilation, alpha edges, colors, parameter endpoints and multiple times in the actual target project and report executed checks separately. Export success, C# material creation and browser rendering do not establish visual parity in the game.
+Read [Unified RGBA handdrawn postprocess](handdrawn-postprocess.en.md). Query inputAdapters/unsupportedParameters, then export with --shader-mode postprocess. Texture2D, RT and reviewed generators share the same automatic contour/fill core. Light/frozen renderers are retired; legacy calls return migration. Analytic realtime remains for graphs without post effects.

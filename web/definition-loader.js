@@ -20,7 +20,8 @@ async function readFiles(files, readSource, label) {
       } catch (error) { throw new Error(`无法加载${label} ${file}：${error.message}`, {cause:error}); }
     }
   }));
-  return sources;
+  // Keep serialization stable across concurrent file completion order.
+  return Object.fromEntries([...files].map(file=>[file,sources[file]]));
 }
 // Resolve each pattern's local paths into the library namespace before publishing.
 // Inline library/v1 remains supported for existing API/CLI callers.

@@ -81,6 +81,22 @@ test("definition files load atomically, once per file, and reject missing/empty 
   await assert.rejects(loadDefinitions(clone(),file=>file===circleFile?'':read(file)),/Circle/);
   assert.equal(BUILTIN.catalog[0].id,'Circle');
 });
+test("concurrent source completion order does not change serialized definitions", async () => {
+  const baseline=await loadDefinitions(clone(),read),pending=[],completed=[];
+  let reads=0;
+  const reordered=await loadDefinitions(clone(),file=>{
+    if(reads++>=8)return read(file);
+    return new Promise(resolve=>{
+      pending.push({file,resolve});
+      if(pending.length===8)for(const entry of [...pending].reverse()){
+        completed.push(entry.file);entry.resolve(read(entry.file));
+      }
+    });
+  });
+  assert.deepEqual(completed,pending.map(entry=>entry.file).reverse());
+  assert.notDeepEqual(completed,pending.map(entry=>entry.file));
+  assert.equal(JSON.stringify(reordered),JSON.stringify(baseline));
+});
 test("schema rejects incompatible ABI, duplicate IDs/slots, unstable indices, unsafe paths and missing capabilities", () => {
   const cases = [
     r=>r.abi='future', r=>r.schema='unknown', r=>r.patterns[1].id=r.patterns[0].id,

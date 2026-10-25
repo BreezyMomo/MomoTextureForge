@@ -5,7 +5,7 @@ import sources from '../web/shader-reference-runtime.js';
 import {SHADER_FIELDS,FILL_STYLES,shaderDefaults,sanitizeShaderParameters,parseShaderSettings,shaderManifest,shaderReferencePackage,referenceGLSL,shaderColor,srgbToLinear,linearToSrgb,sketchShaderParameters} from '../web/shader-reference.js';
 import {decodeZIP} from '../web/resource-zip.js';
 
-test('reference package retains standalone sources, numeric semantics and AI integration data',async()=>{
+test.skip('Retired renderer history: reference package retains standalone sources, numeric semantics and AI integration data',async()=>{
  const parameters={...shaderDefaults(),style:4,scrollY:12,inkColor:'#3498db'};
  const png=Uint8Array.from([137,80,78,71,13,10,26,10]);
  const pack=shaderReferencePackage({parameters,mask:png,preview:png,width:1024,height:512,time:1.5}),files=await decodeZIP(pack.bytes);
@@ -15,7 +15,7 @@ test('reference package retains standalone sources, numeric semantics and AI int
  for(const name of ['handdrawn-fill.hlsl','HanddrawnFillURP.shader'])assert.equal(new TextDecoder().decode(files.get(name)),await readFile(new URL('../web/shaders/'+name,import.meta.url),'utf8'));
  assert.equal(manifest.parameters.seed,parameters.seed);assert.equal(manifest.previewTimeSeconds,1.5);
 });
-test('preview math is generated from the shipped HLSL and does not retain HLSL-only tokens',async()=>{
+test.skip('Retired renderer history: preview math is generated from the shipped HLSL and does not retain HLSL-only tokens',async()=>{
  assert.equal(sources['handdrawn-fill.hlsl'],await readFile(new URL('../web/shaders/handdrawn-fill.hlsl',import.meta.url),'utf8'));
  const glsl=referenceGLSL();assert.ok(glsl.includes('MFHanddrawnFill'));assert.ok(glsl.includes('fwidth'));assert.ok(!/\b(?:float[234]|saturate|frac|fmod|lerp)\s*\(/.test(glsl));assert.ok(sources['HanddrawnFillURP.shader'].includes('#include "handdrawn-fill.hlsl"'));
 });
@@ -31,6 +31,18 @@ test('color properties export both display hex and linear math values',()=>{
 });
 test('effect export maps supported fills and rejects unsupported styles without substituting',()=>{
  for(const [fillStyle,style]of [[1,0],[2,1],[3,2],[6,3],[7,4],[8,5]])assert.equal(sketchShaderParameters({fillStyle,hatchGap:18,hatchWidth:2,roughness:2.4,fillColor:'#3498db'}).style,style);
- for(const fillStyle of [0,4,5,9])assert.throws(()=>sketchShaderParameters({fillStyle}),/填充|fill/);
+ for(const fillStyle of [0,5,9])assert.throws(()=>sketchShaderParameters({fillStyle}),/填充|fill/);
+ assert.equal(sketchShaderParameters({fillStyle:4,fillOpacity:1}).inkOpacity,0);
  const mapped=sketchShaderParameters({fillStyle:3,hatchGap:100,hatchWidth:40,roughness:10,fillOpacity:.4});assert.equal(mapped.gap,96);assert.equal(mapped.width,12);assert.equal(mapped.roughness,1);assert.equal(mapped.inkOpacity,.4);
 });
+test.skip('Retired renderer history: optional baked strokes preserve old packages and declare adjustable versus frozen properties',async()=>{
+ const png=Uint8Array.from([137,80,78,71,13,10,26,10]);
+ const old=shaderReferencePackage({parameters:shaderDefaults(),mask:png,preview:png,width:512,height:512});assert.equal(old.manifest.stroke,undefined);assert.equal(old.manifest.referenceVersion,1);
+ const next=shaderReferencePackage({parameters:shaderDefaults(),mask:png,preview:png,width:512,height:512,time:1.5,stroke:{mask:png,color:'#cf4f35',sourceOpacity:.45}}),files=await decodeZIP(next.bytes);
+ assert.ok(files.has('stroke-mask.png'));assert.equal(next.manifest.referenceVersion,2);assert.equal(next.manifest.stroke.input.sRGB,false);assert.equal(next.manifest.stroke.sourceOpacity,.45);assert.equal(next.manifest.stroke.opacity,1);assert.equal(next.manifest.stroke.clippedByFillMask,false);assert.equal(next.manifest.previewTimeSeconds,1.5);
+ assert.deepEqual(next.manifest.stroke.runtime,['color','opacity multiplier','node opacity after composition']);assert.equal(next.manifest.stroke.nodeOpacity,1);assert.equal(next.manifest.stroke.opacityAfterComposite,true);assert.equal(next.manifest.target.engineCompilation,'not-run');
+ const other=shaderReferencePackage({parameters:shaderDefaults(),mask:png,preview:png,width:512,height:512,stroke:{mask:png,color:'#cf4f35',sourceOpacity:.45}});
+ assert.notEqual(next.manifest.unityImporter.type,other.manifest.unityImporter.type);assert.match(new TextDecoder().decode(files.get('MomoHanddrawnImporter.cs')),new RegExp('namespace '+next.manifest.unityImporter.type.slice(0,-'.MomoHanddrawnImporter'.length).replaceAll('.','\\.')));
+});
+
+test('retired light/frozen APIs return migration instead of rendering or packaging',()=>{assert.throws(()=>shaderReferencePackage({}),/retired|postprocess/);assert.throws(()=>referenceGLSL(),/retired|postprocess/);});

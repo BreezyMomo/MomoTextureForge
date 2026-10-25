@@ -45,8 +45,9 @@ export function createPostEffectsEditor({document:doc,host,node,scope=node.id,co
    }
   }
   if(id==='sketch'&&allowShaderExport){
-   const exportButton=button(uiText('shader.downloadFill'),uiText('shader.downloadFill'),()=>doc.dispatchEvent(new doc.defaultView.CustomEvent('momo-download-shader-reference',{detail:{nodeId:node.id}})));
-   body.append(el('p',{class:'tree-note',text:uiText('shader.fillReferenceHint')}),exportButton);
+   const input=el('select',{'aria-label':uiText('handdrawn.inputAdapter')});for(const [value,key]of [['auto','handdrawn.input.auto'],['generator','handdrawn.input.generator'],['texture','handdrawn.input.texture'],['external','handdrawn.input.external']]){const option=el('option',{value,text:uiText(key)});input.append(option);}
+   const exportButton=button(uiText('handdrawn.download'),uiText('handdrawn.download'),()=>doc.dispatchEvent(new doc.defaultView.CustomEvent('momo-download-handdrawn-postprocess',{detail:{nodeId:node.id,handdrawnInput:input.value}})));
+   body.append(el('p',{class:'tree-note',text:uiText('handdrawn.description')}),input,exportButton);
   }
   grip.onpointerdown=start=>{
    if(start.button!==0)return;start.preventDefault();start.stopPropagation();const before=order(),events=new AbortController(),options={capture:true,signal:events.signal};let pointerY=start.clientY,preview=null,ghost=null;

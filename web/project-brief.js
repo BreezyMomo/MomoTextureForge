@@ -18,7 +18,7 @@ export function createProjectBrief(project,{times=[0],nodeId=null}={}){
    parameters:(definition?.parameters??[]).map(spec=>({...structuredClone(spec),path:'params.'+spec.slot,base:node.params[spec.slot],samples:samples.map(s=>({seconds:s.seconds,value:s.node.params[spec.slot]}))})),
    effects:effectStack(node).map(id=>({id,parameters:structuredClone(EFFECT_BY_ID.get(id).parameters),base:effectValues(node,id),
     samples:samples.map(s=>({seconds:s.seconds,enabled:effectEnabled(s.node,id),values:effectValues(s.node,id)})),
-    shaderReference:id==='sketch'?'handdrawn-fill-only; run project shader and read its mapping and limitations':'AI implementation required; no built-in engine shader claimed'})),
+    shaderReference:id==='sketch'?'unified RGBA handdrawn postprocess; query shader-support modes.postprocess/inputAdapters, then use shaderMode postprocess; retired references never fallback':'AI implementation required; no built-in engine shader claimed'})),
    samples:samples.map(({seconds,progress,visible,node:evaluated,formulaSeconds})=>({seconds,progress,localVisible:visible,formulaSeconds,transform:evaluated.transform,opacity:evaluated.opacity,color:evaluated.color}))});
  });
  if(nodeId&&!nodes.some(n=>n.id===nodeId))throw Error('Unknown node: '+nodeId);

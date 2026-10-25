@@ -47,7 +47,7 @@
 | GIF、PSD层级、SVG与矢量PSD | [导出](08-export.md)、[编辑器导出](../web/tree-app.js) | forge_export_start/job | 原生GIF/PSD/SVG文件和像素已实页验收。 |
 | RGBA 节点通道配置 | [导出](08-export.md)、[通道](../web/output-channels.js) | set-project / forge_export_start | 10种节点来源、14种通道选择已通过实页像素验收；已接通原生导出。 |
 | 导出进度、取消、失败诊断 | [导出](08-export.md)、[导出作业](../web/export-job.js) | forge_export_start/job | 12项作业验收通过：真实运行中取消、排队取消、预算失败与后续任务恢复。 |
-| Shader参考包与项目handoff | [Shader](14-shader-reference.md)、[Shader导出](../web/shader-effect-export.js) | forge_deliver | 交付5项和Shader适用范围9项实页通过；不承诺目标引擎编译或任意节点转Shader。 |
+| 实时Shader、手绘参考与项目handoff | [Shader](14-shader-reference.md)、[实时支持范围](../skills/texture-forge-author/references/realtime-shaders.md) | forge_deliver | shader-support按节点查询；realtime导出已审查解析子集的实际参数、Shader/HLSL、导入器及时间参考；旧轻量/冻结调用明确退役。不承诺任意节点转换，导出器引擎验证状态保持not-run。 |
 | 播放暂停、定位、二维缩放平移、吸附、辅助线、平铺与solo | [快速开始](01-quick-start.md)、[编辑器](../web/tree-app.js) | forge_editor_control | 选择、播放与二维视图20项实页通过；工具模式和吸附已实页验收。 |
 | 三维模型、灯光、材质、相机与复位 | [三维](07-normal-and-material.md)、[三维预览](../web/material-preview.js) | forge_editor_control / forge_preview_capture | 设置与真实预览PNG已实页验收；三模型、材质灯光相机与法线实际像素验证通过。 |
 | 特效背景、透明／相加比较与预设 | [特效](13-effect-presets.md)、[预览](../web/effect-preview.js) | forge_editor_control / forge_preview_capture | 背景/混合/亮度/尺寸/复位已实页验收；四种比较图和自定义背景实际像素通过。 |
@@ -63,3 +63,5 @@
 ## 使用约束
 
 完整参数与操作示例见[实时创作指南](../skills/texture-forge-author/references/live-editor.md)。先读取对应范围的状态和版本，再执行结构化操作；不要用旧快照跨越用户编辑。创作闭环5项实页通过：新生成器、批量加入、组件插入、参数/动画/效果、多时间渲染、PNG16实解码与原生ZIP；删除测试原件/列表副本后重开ZIP仍保持作品哈希与渲染，最后恢复原状态。不将已通过的代表性测试解释为穷举所有输入。提交、推送与发布仍按用户指令执行。
+
+动画手绘无烘焙输入贴图时，先用 forge_deliver 的 shader-support 查询 modes.postprocess / recommendedMode，再显式选择 postprocess；能力范围、参数与运行资源见[实时逐笔手绘](../skills/texture-forge-author/references/handdrawn-postprocess.md)。

@@ -1,0 +1,19 @@
+# Unified RGBA handdrawn postprocess
+
+<!-- doc-language -->
+[简体中文](README.md) · [English](README.en.md)
+<!-- /doc-language -->
+
+The sole formal pipeline is **RGBA input → automatic contours and fill → output**. There is no light fill-only or frozen-stroke export. Texture2D, single-sampled2D RenderTexture and optional generators share one core, Compute and runtime component. The manifest uses `momo.handdrawn-postprocess/v1`; old project nodes remain readable, while retired shader modes return migration to `postprocess`.
+
+Copy the complete `Unity/` directory into a new Assets folder. After compilation invoke `unityImporter.menu` or `unityImporter.type.ImportFile(absoluteParametersPath)` to create materials and a Prefab. Import verifies hashes, Compute/SM4.5/RFloat, input dimensions and budgets, without overwriting output. Namespaces/Shader names are unique per package. Prefabs serialize materials, coverage Shader, Compute and the optional RGBA producer. Target Unity2022.3/URP14; mobile/Player are unverified.
+
+`HanddrawnEffect.displayTemplate._InputTex` accepts images or runtime RT. Static input caches by texture/material version; RT refreshes every frame. Native plugins can call `Refresh()`. Assigning `inputGenerator` renders RGBA with a separate material before the exact same postprocess, without duplicating handdrawn logic. Disable `animate` and call `RenderAt(seconds)` for explicit sampling. Producer input requires ARGBHalf. The initial captured image/producer retains native stage crop geometry. A replacement image or RT automatically uses its new aspect and short side512; no manual clearing is required. Only explicit `useFixedDesignSize` enables the `fixedDesignSize` override. Switching away from generator input releases its unused RGBA resources immediately.
+
+`sourceAlphaMode`: Straight0 / Premultiplied1. `sourceColorSpace`: UnitySampled0 / NativeSRGB1. Ordinary sRGB images use default Unity sampling and straight alpha. Numeric sRGB data RT uses NativeSRGB; premultiplied inputs are not multiplied twice. Native source0 reads alpha; source1 computes **dot of premultiplied numeric sRGB RGB**, matching the web stage. Indices2/3/4 are separate linear luminance, inverse linear luminance and red extensions. Color-property SetColor receives sRGB; do not pre-apply `.linear`.
+
+Design scale is **short side512**, extending the long side proportionally. `parameters.nativeFillMapping`: native0→OriginalInput2 (entire original input plus optional outlines),1→Solid0,2→IndividualHachure1,4→NoFill3 (outlines only). `_UseSourceColor` is an extra fill-color option, not OriginalInput. Node opacity is applied once after input/fill/stroke composition. Roughness1.3, bowing, max offset, seed, width and double pens keep native units; the normalized legacy roughness control is removed.
+
+Support reports enumerate implemented styles/parameters. Unsupported native styles, dashes and vertex options fail explicitly. Vector smoothing/simplification/curve preprocessing currently accepts only declared default approximations; non-default values report their exact path. Editor options remain available rather than being deleted to imply support. Contours and random streams are still approximations, not complete Rough.js equivalence.
+
+Resources are one RFloat coverage RT, row/run double-cubic buffers and diagnostics, plus an RGBA RT for a producer. Default32 spans/row, adjustable1–128; limits4096 rows,64MiB buffers and128 neighboring rows. Budget errors release resources; overflow displays magenta. `RequestDiagnostics()` performs optional explicit asynchronous readback, never per-frame CPU readback. Disable releases all resources and restores Renderer state; restart/gap/resolution changes rebuild. The input PNG is the actual raw RGBA stage, never a baked outline. Native output references are comparisons only.

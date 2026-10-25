@@ -10,7 +10,9 @@ Post-effect specimen art and curated settings live in `web/post-effect-specimens
 
 ## Run locally
 
-Shader references download directly from the hand-drawn effect panel, without a separate workbench. `web/shaders/handdrawn-fill.hlsl` is canonical; internal GLSL reference images use a fixed dialect mapping. `build-shader-references.mjs` embeds sources and bilingual instructions; `build-authoring-kit.mjs` includes them in the Skill. `node tests/shader-reference-browser-check.mjs` (add `--built`) checks mappings, packages, both previews, project preservation and English entry points without screenshots. `node tests/shader-reference-hlsl-check.mjs --fxc <fxc.exe>` checks SM5 core compilation, not Unity/URP integration. Run source/static UI-language regression as well.
+Before adding Shaders, generators or postprocesses, read [responsibilities and extension rules](../skills/texture-forge-author/references/shader-architecture.en.md). Separate graphic generation, image postprocessing and composition; validate input/output contracts and web/engine delivery separately.
+
+Download the unified handdrawn postprocess from the effect or export panel. `web/shaders/handdrawn/` is the canonical shared core for images, live RTs and optional graphic producers; `build-handdrawn.mjs` embeds sources and bilingual instructions, and `build-authoring-kit.mjs` includes them in the Skill. `node tests/handdrawn-postprocess-browser-check.mjs` checks actual effect inputs, parameters, package integrity and retired-entry refusal; add `--fxc <fxc.exe>` to compile HLSL. `node tests/handdrawn-postprocess-portable-check.mjs` exports from an independently extracted Skill; `node tests/project-shader-ui-browser-check.mjs` (add `--built`) checks web entry points. Independent Unity/URP consumption and source/static UI-language regression are also required. Fill-only, frozen-stroke and dynamic-handdrawn routes are retired; historical tests and artifacts do not describe current delivery.
 
 Use Node.js 22+ and a desktop WebGL2 browser. At the repository root:
 

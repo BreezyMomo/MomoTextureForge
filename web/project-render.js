@@ -4,7 +4,8 @@ import {sanitizeTree,find} from './tree-model.js';
 import {TreeRenderer} from './tree-renderer.js';
 import {createProjectBrief} from './project-brief.js';
 import {effectOrder,effectPresent,EFFECT_BY_ID} from './post-effect-specs.js';
-import {exportSketchShaderReference} from './shader-effect-export.js';
+import {exportProjectShader} from './project-shader-package.js';
+import {shaderCapabilities,hasHanddrawnStage,exportHanddrawnPostprocess,RETIRED_HANDDRAWN_MESSAGE} from './handdrawn-postprocess.js';
 import {runProjectAuthoring} from './project-authoring-runtime.js';
 import {assetFor} from './resource-assets.js';
 import {projectDependencyIds} from './project-dependencies.js';
@@ -22,12 +23,13 @@ window.runProjectTool=async({action,input,options})=>{
    return {ok:true,asset:structuredClone(assetFor(options.resourceId))};
   }
   if(options.node&&!selected)throw Error('Unknown node: '+options.node);
+  if(action==='shader-support')return {ok:true,support:shaderCapabilities(project,{nodeId:options.node,shaderMode:options.shaderMode,handdrawnInput:options.handdrawnInput})};
   const brief=createProjectBrief(project,{times:options.times,nodeId:options.node});
   if(action==='inspect')return {ok:true,brief};
   if(action==='shader'){
-   if(!selected)throw Error('project shader requires --node <node ID>');
-   if(!effectPresent(selected,'sketch'))throw Error('Shader reference requires an existing sketch effect on the selected node');
-   const reference=await exportSketchShaderReference({project,nodeId:selected.id,time:options.times[0]/project.output.seconds,formulaSeconds:options.times[0]});
+   if(['handdrawn','dynamic-handdrawn'].includes(options.shaderMode))throw Error(RETIRED_HANDDRAWN_MESSAGE);
+   const postprocess=options.shaderMode==='postprocess'||options.shaderMode!=='realtime'&&hasHanddrawnStage(project,options.node);
+   const reference=postprocess?await exportHanddrawnPostprocess(project,{nodeId:options.node,handdrawnInput:options.handdrawnInput,times:options.times,size:options.size,snapshotId:options.snapshotId,sourceRevision:options.sourceRevision,sourceZIP:input.zip?decode64(input.zip):null}):await exportProjectShader(project,{nodeId:options.node,times:options.times,size:options.size,snapshotId:options.snapshotId,sourceRevision:options.sourceRevision,sourceZIP:input.zip?decode64(input.zip):null});
    return {ok:true,manifest:reference.manifest,zip:encode64(reference.bytes)};
   }
   if(options.beforeEffect){
@@ -48,6 +50,6 @@ window.runProjectTool=async({action,input,options})=>{
   });
   brief.verification.editorRendering='passed';
   return {ok:true,width,height,frames,sheet:sheet.toDataURL('image/png'),brief};
- }catch(error){return {ok:false,error:error.message};}finally{renderer?.destroy();pack?.rollback();}
+ }catch(error){return {ok:false,error:error.message,...(error.support?{support:error.support}:{})};}finally{renderer?.destroy();pack?.rollback();}
 };
 window.runProjectAuthoring=runProjectAuthoring;

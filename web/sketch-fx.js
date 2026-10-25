@@ -8,7 +8,7 @@ function trace(renderer,pixels,width,height,values,source){
  return tracer(pixels,width,height,values,{aspect:source.aspect,bounds:source.bounds});
 }
 
-export function applySketchFx(renderer,source,values){
+export function applySketchFx(renderer,source,values,{strokeOnly=false,fillOnly=false}={}){
  const gl=renderer.gl,[left,bottom,right,top]=source.bounds,bw=right-left,bh=top-bottom;
  // Bounded tracing independent of export size; paths are redrawn at full output resolution.
  const short=Math.min(source.aspect,1),baseWidth=512*source.aspect/short,baseHeight=512/short,shrink=Math.min(.5,768/Math.max(baseWidth*bw,baseHeight*bh)),aw=Math.max(2,Math.ceil(baseWidth*bw*shrink)),ah=Math.max(2,Math.ceil(baseHeight*bh*shrink));
@@ -24,16 +24,18 @@ export function applySketchFx(renderer,source,values){
   const sx=source.w/(baseWidth*bw),sy=source.h/(baseHeight*bh);ctx.setTransform(sx,0,0,sy,-left*baseWidth*sx,-(1-top)*baseHeight*sy);ctx.lineCap='round';ctx.lineJoin='round';
   if(outline.path){
    const rc=rough.canvas(canvas),options=sketchOptions(values);
-   if(values.fillStyle!==0&&values.fillStyle!==4){
+   if(fillOnly){ctx.fillStyle='#ffffff';ctx.fill(new Path2D(outline.path),'evenodd');}
+   if(!strokeOnly&&!fillOnly&&values.fillStyle!==0&&values.fillStyle!==4){
     ctx.save();ctx.clip(new Path2D(outline.path),'evenodd');
     if(values.fillStyle===9)rc.path(sunburstPath(values,baseWidth,baseHeight),{...options,stroke:options.fill,strokeWidth:values.hatchWidth,strokeLineDash:options.fillLineDash,strokeLineDashOffset:options.fillLineDashOffset,disableMultiStroke:options.disableMultiStrokeFill,fill:undefined});
     else rc.path(outline.path,{...options,stroke:'none',fillStyle:SKETCH_FILL_STYLES[values.fillStyle]});
     ctx.restore();
    }
-   if(values.strokeWidth>0)rc.path(outline.path,{...sketchOptions(values,'stroke'),fill:undefined});
+   // Export coverage at the original opacity, preserving overlap between Rough.js strokes.
+   if(!fillOnly&&values.strokeWidth>0)rc.path(outline.path,{...sketchOptions(strokeOnly?{...values,strokeColor:'#ffffff'}:values,'stroke'),fill:undefined});
   }
   texture=gl.createTexture();gl.activeTexture(gl.TEXTURE5);gl.bindTexture(gl.TEXTURE_2D,texture);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,canvas);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
-  result=renderer.target(source.w,source.h,false,source.aspect);renderer.pass(result,{source,op:31,table:texture,fxData:[values.fillStyle]});return result;
+  result=renderer.target(source.w,source.h,false,source.aspect);renderer.pass(result,{source,op:31,table:texture,fxData:[strokeOnly||fillOnly?4:values.fillStyle]});return result;
  }catch(error){renderer.release(result);throw error;}
  finally{renderer.release(analysis);if(texture)gl.deleteTexture(texture);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,flip);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,premultiply);if(canvas){canvas.width=1;canvas.height=1;}}
 }

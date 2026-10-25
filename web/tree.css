@@ -585,8 +585,8 @@
 .canvas-background-colors{display:flex;align-items:center;gap:6px}
 .canvas-background-colors>label{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:1;min-width:0}
 .tree-editor #canvas-background-color{width:38px;min-width:38px;height:28px;flex:none;padding:3px}
-.tree-editor .canvas-background-preset{width:26px;height:26px;padding:0;background:var(--background-swatch);border:1px solid var(--ui-line-strong);border-radius:var(--ui-control-radius)}
-.tree-editor .canvas-background-preset[aria-pressed=true]{outline:2px solid var(--ui-accent-text);outline-offset:1px}
+.tree-editor #canvas-background .canvas-background-preset{width:26px;height:26px;padding:0;background:var(--background-swatch);border:1px solid var(--ui-line-strong);border-radius:var(--ui-control-radius)}
+.tree-editor #canvas-background .canvas-background-preset[aria-pressed=true]{outline:2px solid var(--ui-accent-text);outline-offset:1px;box-shadow:none}
 #canvas-background .canvas-background-hint{margin:0;max-width:240px;line-height:1.5}
 #canvas-background [hidden]{display:none}
 .tree-editor #canvas-stage.solid:not(.material-mode):not(.effect-mode){background:var(--canvas-background-color)}
@@ -604,4 +604,17 @@
 .scrollable-dialog>header{gap:12px}.scrollable-dialog>header>:first-child{min-width:0;overflow-wrap:anywhere}.scrollable-dialog>header>button{flex:none}
 .dialog-scroll-body,.bezier-editor-dialog>.bezier-editor-panel,.node-curves-dialog>div{min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scroll-padding-block:12px}
 .scrollable-dialog>footer{position:static}
+/* Keep native select semantics while matching popup menus to the active theme. */
+.tree-editor select option{background:var(--ui-panel);color:var(--ui-text)}
+@supports (appearance:base-select){
+ .tree-editor select:not([multiple]):not([size]),.tree-editor select:not([multiple]):not([size])::picker(select){appearance:base-select}
+ .tree-editor select:not([multiple]):not([size]){align-items:center;gap:8px;cursor:pointer}
+ .tree-editor select::picker(select){font:13px system-ui;color:var(--ui-text);background:var(--ui-panel);border:1px solid var(--ui-line-strong);border-radius:var(--ui-control-radius);padding:4px;box-shadow:0 8px 24px var(--ui-shadow);max-block-size:min(360px,60dvh);max-inline-size:calc(100vw - 24px);overflow:auto;overscroll-behavior:contain}
+ .tree-editor select option{min-block-size:30px;padding:6px 10px;gap:8px;border-radius:var(--ui-control-radius);white-space:normal;overflow-wrap:anywhere;cursor:pointer}
+ .tree-editor select option:checked{background:var(--ui-selected);color:var(--ui-accent-text);font-weight:600}
+ .tree-editor select option:not(:disabled):is(:hover,:focus-visible){background:var(--ui-hover);color:var(--ui-text);outline:1px solid var(--ui-line-strong);outline-offset:-1px}
+ .tree-editor select option:disabled{color:var(--ui-muted);cursor:default}
+ .tree-editor select option::checkmark{color:var(--ui-accent-text)}
+ .tree-editor select::picker-icon{color:var(--ui-muted)}
+}
 @media(max-height:500px){.tree-editor dialog.scrollable-dialog[open],.tree-editor :is(.bezier-editor-dialog,.node-curves-dialog)[open]{max-height:calc(100dvh - 16px)}.scrollable-dialog>header{margin-bottom:8px}.appearance-dialog>header,.appearance-dialog>footer{padding-block:8px}.appearance-dialog>footer>p{flex-basis:auto}}

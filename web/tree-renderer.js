@@ -259,7 +259,10 @@ export class TreeRenderer{
  // Cache only finished subtrees; all cached resources remain valid during a draw.
  out.layoutCounts=new Map();walk(original,x=>{if(this.lastCounts.has(x.id))out.layoutCounts.set(x.id,this.lastCounts.get(x.id));});if(!this.streaming)this.cache.set(key,out);return out;
  }
- draw(project,w=512,h=512,{time=0,formulaSeconds=time*(project.output.seconds??1),read=false,solo=null,quality=2,stream=false}={}){
+ draw(project,w=512,h=512,{time=0,formulaSeconds=time*(project.output.seconds??1),read=false,solo=null,quality=2,stream=false,sketchStrokeOnly=null,sketchFillOnly=null,captureEffectInput=null}={}){
+ if(captureEffectInput)this.clearCache();this.captureEffectInput=captureEffectInput;
+ // The export view shares native contour, Rough.js geometry and placement. Never reuse ordinary cached pixels.
+ if(this.sketchStrokeOnly!==sketchStrokeOnly||this.sketchFillOnly!==sketchFillOnly)this.clearCache();this.sketchStrokeOnly=sketchStrokeOnly;this.sketchFillOnly=sketchFillOnly;
  if(this.gl.isContextLost())throw Error('图形上下文已丢失，请等待恢复或重试');
  const activeImages=new Set();const visit=n=>{if(n.kind==='shape')activeImages.add(n.type);if(n.arrange?.[0]===12){activeImages.add(CATALOG[n.arrange[39]]?.id);for(const k of n.tracks?.['arrange.39']?.keys??[])activeImages.add(CATALOG[k[1]]?.id);}for(const c of n.children??[])visit(c);if(n.mask)visit(n.mask);};visit(project.root);for(const [id,tex]of this.base.assetTextures??[]){if(!activeImages.has(id)){this.gl.deleteTexture(tex);this.base.assetTextures.delete(id);}}
  this.formulaSeconds=formulaSeconds;const start=performance.now();this.quality=quality===1?1:2;this.sampleLimit=Math.min(4096,this.base.maxSize,Math.max(w,h)*2);this.operations=0;this.measureOperations=0;this.measureCache=new Map();if(w*h>16777216)throw Error('输出超过像素预算');

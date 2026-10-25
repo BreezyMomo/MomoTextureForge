@@ -13,6 +13,7 @@
 - 修改内置图形视觉公式后，运行 node tests/builtin-release-browser-check.mjs --pattern <图形ID> 更新对应图库缩略图，再构建静态网站；检查实际卡片效果。
 - 教程截图通过 tools/capture-docs.mjs 拍摄，操作标记在 tools/docs-annotations.mjs 维护；按真实控件定位编号框，同步图下注解，保证操作目标可见。
 - 编辑器入口：web/tree-app.js；内置图形：web/definitions。
+- 新增或修改 Shader 时遵守[职责与扩展规范](skills/texture-forge-author/references/shader-architecture.md)：区分图形生成和图像后处理，以明确输入输出串联，通用后处理独立复用，不复制到每个图形；图层合成复用现有流程。网页支持与引擎导出分别验证，扩展导出时同步支持查询、参数映射与交付依赖，不支持项明确拒绝。
 - 图形参数必须有稳定且图形内唯一的 variable，显示名称使用 aliases 语言映射与全局顺序回退；无匹配别名时显示变量名。行为判断用 role，不用中文 label。语言切换不得修改项目、关键帧或资源哈希；格式见 docs/12-language-and-aliases.md。
 - Skill 源文件在 skills/，修改后运行 node build-authoring-kit.mjs，同步生成文件。
 - 图形推荐上下文仅从图形库导出，不恢复选中节点上下文或固定图形清单。用户主动开启的 MCP 可读取主画布完整作品，并按用户创作要求原子编辑；修改使用新鲜 snapshotId 校验版本并支持撤销；先 forge_pages 确认目标，再以 pageId 捕获，页面不明确时询问用户。结构、资源与渲染使用同一 snapshotId，修改后重新捕获，不自动接入其他标签页或读取整个用户图库。

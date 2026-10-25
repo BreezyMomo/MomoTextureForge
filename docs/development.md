@@ -10,7 +10,9 @@
 
 ## 本地启动
 
-Shader参考从手绘后处理面板直接下载，无独立试验台。`web/shaders/handdrawn-fill.hlsl` 为规范核心，内部GLSL参考图采用固定语法映射；`build-shader-references.mjs` 嵌入源码和双语说明，`build-authoring-kit.mjs` 同步到创作Skill。`node tests/shader-reference-browser-check.mjs`（静态版加 `--built`）检查参数映射、源码包、两种预览图、项目不变及英文入口，不截图。`node tests/shader-reference-hlsl-check.mjs --fxc <fxc.exe路径>` 验证核心SM5编译，不能替代目标Unity/URP验证；源码/静态版仍需双语界面回归。
+新增Shader、生成器或后处理前，先阅读[职责与扩展规范](../skills/texture-forge-author/references/shader-architecture.md)，区分图形生成、图像后处理与组合流程；输入输出契约和网页/引擎交付分别验证。
+
+统一手绘后处理从效果面板或导出面板下载。`web/shaders/handdrawn/` 是图像、实时RT与可选图形生成器共用的规范核心；`build-handdrawn.mjs` 嵌入源码和双语说明，`build-authoring-kit.mjs` 同步到创作Skill。`node tests/handdrawn-postprocess-browser-check.mjs` 检查真实效果输入、参数、包完整性与旧入口拒绝，添加 `--fxc <fxc.exe路径>` 检查HLSL编译；`node tests/handdrawn-postprocess-portable-check.mjs` 从独立解压的Skill导出，`node tests/project-shader-ui-browser-check.mjs`（静态版加 `--built`）检查网页入口。另需独立Unity/URP消费验证和源码/静态版双语界面回归。旧填充、冻结描边与dynamic-handdrawn路径已停用；历史测试和产物不代表当前交付方式。
 
 需要 Node.js 22+ 和支持 WebGL2 的桌面浏览器。在仓库根目录执行：
 

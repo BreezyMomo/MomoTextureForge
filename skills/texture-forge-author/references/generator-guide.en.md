@@ -6,6 +6,8 @@
 
 Use generators for native RGB/RGBA, multiple passes or intermediate textures: colored fire, glow, smoke and procedural materials. Prefer formulas for simple scalar shapes. Existing generators can be edited/saved as copies; creation does not require template selection.
 
+First classify the request using [Shader responsibilities](shader-architecture.en.md). This format creates graphic-generation resources and may process their earlier internal passes. Generic postprocessing for arbitrary compatible inputs should be implemented independently rather than copied into each graphic or disguised using invented external-input fields.
+
 Deliver UTF-8 `.generator.json` with `schema: momo.generator-authoring/v1`. Paste/select through Create resource → Generator, preview and import. Import files also supports it alongside formula JSON. Saved generators retain code editing/JSON export; official ZIP export includes dependencies.
 
 See the [complete three-pass example](example.generator.json). Do not generate resource IDs, slots, hashes or manifests.

@@ -1,0 +1,59 @@
+// Rough lineIndex construction adapted from Rough.js renderer._line (MIT, Preet Shihn).
+// See ROUGH-LICENSE.txt. Scan the live scalar field; no offline stroke image.
+#pragma kernel BuildHatch
+#pragma kernel ClearDiagnostics
+Texture2D<float> _Coverage;
+SamplerState sampler_linear_clamp;
+RWStructuredBuffer<float4> _BrushData;
+RWStructuredBuffer<uint> _BrushCounts;
+RWStructuredBuffer<uint> _BrushDiagnostics;
+int _LineCount,_FirstRow,_SpanCapacity;
+float2 _DesignSize;
+float _Gap,_Angle,_Threshold,_Roughness,_MaxOffset,_Bowing,_Seed,_PenWidth;
+uint Next(inout uint state){state^=state<<13;state^=state>>17;state^=state<<5;return state;}
+float Random(inout uint state){return (Next(state)&0x00ffffff)/16777216.;}
+float Signed(inout uint state){return Random(state)*2.-1.;}
+float CoverageAt(float x,float y){
+ float angle=_Angle*.017453292519943295,c=cos(angle),s=sin(angle);
+ float2 p=float2(c*x-s*y,s*x+c*y);float2 uv=p/_DesignSize+.5;
+ if(any(uv<0)||any(uv>1))return 0;
+ return _Coverage.SampleLevel(sampler_linear_clamp,uv,0);
+}
+void Emit(uint row,uint run,float start,float end,float y){
+ if(run>=_SpanCapacity)return;
+ float length=end-start;
+ float gain=length<200?1: length>500?.4:(-0.0016668)*length+1.233334;
+ float offset=min(_MaxOffset,length/10.);
+ [unroll]for(uint penPass=0;penPass<2;penPass++){
+  uint rng=(uint)(_Seed+1)*747796405u+(row+1)*2891336453u+(run+1)*277803737u+(penPass+1)*1597334677u;rng=max(rng,1u);
+  float diverge=.2+Random(rng)*.2;
+  float midY=Signed(rng)*(_Bowing*_MaxOffset*(start-end)/200.)*_Roughness*gain;
+  float amount=offset*_Roughness*gain*(penPass==0?1:.5);
+  float4 xs=float4(start+Signed(rng)*amount,start+length*diverge+Signed(rng)*amount,start+2*length*diverge+Signed(rng)*amount,end+Signed(rng)*amount);
+  float4 ys=float4(y+Signed(rng)*amount,y+midY+Signed(rng)*amount,y+midY+Signed(rng)*amount,y+Signed(rng)*amount);
+  uint index=((row*_SpanCapacity+run)*2+penPass)*3;
+  _BrushData[index]=xs;_BrushData[index+1]=ys;
+  _BrushData[index+2]=float4(min(min(xs.x,xs.y),min(xs.z,xs.w))-_PenWidth,max(max(xs.x,xs.y),max(xs.z,xs.w))+_PenWidth,min(min(ys.x,ys.y),min(ys.z,ys.w))-_PenWidth,max(max(ys.x,ys.y),max(ys.z,ys.w))+_PenWidth);
+ }
+}
+[numthreads(32,1,1)]
+void BuildHatch(uint3 id:SV_DispatchThreadID){
+ uint lineIndex=id.x;if(lineIndex>=_LineCount)return;
+ float y=(_FirstRow+(int)lineIndex)*max(_Gap,1.);
+ float extent=length(_DesignSize)*.5+4.;
+ int steps=(int)ceil(extent);float stepSize=2*extent/steps;
+ float previous=CoverageAt(-extent,y);bool inside=previous>=_Threshold;float start=-extent;uint count=0;
+ [loop]for(int i=1;i<=steps;i++){
+  float x=-extent+i*stepSize;float value=CoverageAt(x,y);bool now=value>=_Threshold;
+  if(now!=inside){float at=x-stepSize+stepSize*saturate((_Threshold-previous)/(value-previous));
+   if(now)start=at;else{if(at-start>.25){Emit(lineIndex,count,start,at,y);count++;}}
+  }
+  inside=now;previous=value;
+ }
+ if(inside){Emit(lineIndex,count,start,extent,y);count++;}
+ _BrushCounts[lineIndex]=count;
+ InterlockedMax(_BrushDiagnostics[0],count);
+}
+
+[numthreads(1,1,1)]
+void ClearDiagnostics(uint3 id:SV_DispatchThreadID){_BrushDiagnostics[0]=0;}

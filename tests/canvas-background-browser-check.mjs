@@ -7,6 +7,7 @@ import {project,node} from '../web/tree-model.js';
 import {createProjectResource} from '../web/project-resources.js';
 import {GRAPHIC_LIST_KEY,serializeGraphicList} from '../web/persistent-graphic-list.js';
 import {GRAPHIC_LIST_DEFAULTS_KEY} from '../web/graphic-list-defaults.js';
+import {STYLE_IDS} from '../web/appearance.js';
 
 const built=process.argv.includes('--built'),root=resolve('web');
 const server=createServer(async(req,res)=>{try{const name=new URL(req.url,'http://local').pathname,file=name==='/built.html'?resolve('site/index.html'):resolve(root,'.'+(name==='/'?'/index.html':name));if(name!=='/built.html'&&!file.startsWith(root+sep))throw Error();res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.json':'application/json','.glsl':'text/plain'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));}catch{res.writeHead(404);res.end();}});
@@ -20,6 +21,17 @@ try{
  const open=async()=>{if(await menu.getAttribute('open')===null)await menu.locator(':scope>summary').click();};
  const pixel=expected=>page.waitForFunction(expected=>{const c=document.querySelector('#tree-canvas');if(!c?.width)return false;const data=c.getContext('2d').getImageData(0,0,1,1).data;return data.every((v,i)=>Math.abs(v-expected[i])<=1);},expected);
  await pixel([255,255,255,255]);await open();assert.equal(await mode.inputValue(),'solid');assert.equal(await color.inputValue(),'#ffffff');assert.equal(await mode.getAttribute('aria-label'),'画布背景');
+ // Selection and hover must never replace the color represented by a swatch.
+ const originalStyle=await page.locator('html').getAttribute('data-interface-style');
+ for(const style of STYLE_IDS){
+  await page.locator('html').evaluate((e,style)=>e.dataset.interfaceStyle=style,style);
+  for(const [i,expected]of ['rgb(0, 0, 0)','rgb(255, 255, 255)'].entries()){
+   await open();const preset=page.locator('.canvas-background-preset').nth(i);await preset.click();await open();await preset.hover();
+   assert.equal(await preset.getAttribute('aria-pressed'),'true');
+   assert.deepEqual(await preset.evaluate(e=>{const s=getComputedStyle(e);return [s.backgroundColor,s.outlineStyle,s.outlineWidth];}),[expected,'solid','2px'],style);
+  }
+ }
+ await page.locator('html').evaluate((e,style)=>{if(style===null)delete e.dataset.interfaceStyle;else e.dataset.interfaceStyle=style;},originalStyle);
  await mode.selectOption('transparent');await pixel([0,0,0,0]);assert.equal((await saved()).output.alpha,true);assert.equal(await color.isVisible(),false);
  await page.locator('#undo').click();await pixel([255,255,255,255]);assert.equal(await mode.inputValue(),'solid');await page.locator('#redo').click();await pixel([0,0,0,0]);
  await open();await mode.selectOption('solid');await color.evaluate(e=>{for(const value of ['#112233','#123456']){e.value=value;e.dispatchEvent(new Event('input',{bubbles:true}));}e.dispatchEvent(new Event('change',{bubbles:true}));});await pixel([18,52,86,255]);assert.equal((await saved()).output.background,'#123456');

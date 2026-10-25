@@ -37,6 +37,9 @@ import {openAppearanceSettings} from './appearance-settings.js';
 import {messageError,restoreMessageError} from './message-catalog.js';
 import {uiOption,uiError,uiText,localizeApplicationMarkup,uiFormat} from './ui-language.js';
 import {installLanguageSelector} from './language-settings.js';
+import {projectShaderSupport} from './project-shader-compiler.js';
+import {exportProjectShader} from './project-shader-package.js';
+import {handdrawnSupport,exportHanddrawnPostprocess} from './handdrawn-postprocess.js';
 import {parameterLabel,onLanguageChange,interfaceLanguage} from './language.js';
 import {parameterRole} from './parameter-metadata.js';
 import {createEffectPreview} from './effect-preview.js';
@@ -49,7 +52,6 @@ import {openUserHelp} from './user-help.js';
 import {openSupportDialog} from './support-dialog.js';
 import {createLiveAuthoring} from './editor-live-authoring.js';
 import {installAITools} from './ai-tools.js';
-import {exportSketchShaderReference} from './shader-effect-export.js';
 import {runExportWorker} from './export-job.js';
 import {signalExportComplete} from './export-events.js';
 import {projectDependencyIds,serializeLocalProject,restoreLocalProject} from './project-dependencies.js';
@@ -119,7 +121,7 @@ localizeApplicationMarkup(document.head);localizeApplicationMarkup(document.body
 let state=project();state.root.children=[];
 let quickAspect=null,canvasToolbar=null,canvasBackgroundUI=null;
 let viewPan=[0,0];
-let selected=state.root.id,time=0,formulaSeconds=0,section='shape',solo=false,playing=false,tiled=false,tileGrid=2,busy=false,history=[],future=[],historyRevision=0,pending=false,globalPanel=null,formTarget='inspector',dragged=null,exportKind='png',componentPreview=null,cancelExport=false,contourThreshold=50,contourSmooth=true;
+let selected=state.root.id,time=0,formulaSeconds=0,section='shape',solo=false,playing=false,tiled=false,tileGrid=2,busy=false,history=[],future=[],historyRevision=0,pending=false,globalPanel=null,formTarget='inspector',dragged=null,exportKind='png',handdrawnInput='auto',componentPreview=null,cancelExport=false,contourThreshold=50,contourSmooth=true;
 const shelf=new GraphicShelf();let shelfStorageError=null,shelfRecoveryBackup=null,shelfRecoveryRejected=[];
 const recentKey='momo-texture-tree:recent:v1';let recent=[];try{const saved=JSON.parse(localStorage.getItem(recentKey)||'[]');if(Array.isArray(saved))recent=[...new Set(saved.filter(id=>typeof id==='string'))].slice(0,24);}catch{}
 let selectedIds=new Set([selected]),selectionPrimary=selected,selectionAnchor=selected,canvasEditor=null,batchInspector=null,editPrimary=false,alignmentReference='selection';
@@ -190,7 +192,8 @@ let inspectorVariant='',localAnimationPreview=null,animationEditMode='normal',an
 function syncPlaybackButton(){ $('play').replaceChildren(editorIcon(playing?'pause':'play'),document.createTextNode(uiText(playing?'playback.pause':'playback.play')));$('play').setAttribute('aria-pressed',String(playing)); }
 function stopAnimation(){playing=false;syncPlaybackButton();}
 function setAnimationMode(mode){stopAnimation();animationEditMode=mode;$('animation-panel').open=true;refresh();}
-function beginAnimationGesture(){stopAnimation();animationGesture??=structuredClone(state);}
+// Parameter gestures preview live; only explicit timeline edits pause playback.
+function beginAnimationGesture(){animationGesture??=structuredClone(state);}
 function endAnimationGesture(){if(!animationGesture)return;const before=animationGesture;animationGesture=null;try{state=validatedState(state);if(JSON.stringify(state)!==JSON.stringify(before)){recordHistory(before);if(history.length>60)history.shift();future=[];}persist();refresh();}catch(e){state=before;notifyError(uiError(e));refresh();}}
 function cancelAnimationGesture(){if(animationGesture){state=animationGesture;animationGesture=null;refresh();}}
 function seekAnimationScope(id,t){stopAnimation();formulaSeconds=t*state.output.seconds;if(id===state.root.id){localAnimationPreview=null;time=t;}else localAnimationPreview={id,time:t};requestRender();}
@@ -246,7 +249,7 @@ const animationEditor=createAnimationWorkspace($('node-animation-editor'),{
  seekNode:seekAnimationScope,getNode:current,getProgress:()=>animationClock(selected).progress,isLocal:()=>localAnimationPreview?.id===selected,
  label:animationLabel,change:fn=>edit(fn),seek:t=>seekAnimationScope(selected,t),returnWork:()=>{localAnimationPreview=null;requestRender();},
  editMode:()=>animationEditMode,setEditMode:setAnimationMode,value:(id,path)=>animationValue(find(state.root,id).node,path),
- discardGesture:()=>{animationGesture=null;},beginGesture:beginAnimationGesture,previewGesture:fn=>{fn();requestRender();},endGesture:endAnimationGesture,cancelGesture:cancelAnimationGesture,
+ discardGesture:()=>{animationGesture=null;},beginGesture:()=>{stopAnimation();beginAnimationGesture();},previewGesture:fn=>{fn();requestRender();},endGesture:endAnimationGesture,cancelGesture:cancelAnimationGesture,
  isInteracting:()=>previewDragging,notify,confirm:message=>window.confirm(message),frames:()=>Math.max(1,state.output.seconds*state.output.fps),togglePlay:()=>$('play').click()
 });
 let lastAnimationNode=null,lastAnimationKeyCount=0;
@@ -368,7 +371,7 @@ function check(label,value,onchange){label=uiText(label);const input=el('input',
 function choice(label,value,options,onchange,translateOptions=true){label=uiText(label);options=options.map(([v,t])=>[v,translateOptions?uiOption(t):t]);const input=el('select',{'aria-label':label},options.map(([v,t])=>el('option',{value:v,text:t})));input.value=String(value);input.onchange=()=>onchange(input.value);controls().append(el('label',{class:'tree-field'},[document.createTextNode(label),input]));return input;}
 function colorInput(label,value,assign,path=null){
  const n=current();if(path)value=animationValue(n,path);const input=el('input',{type:'color',value,'aria-label':label});if(path)decorateAnimated(input,n,path);let before=null,last=value;
- const update=()=>{if(busy){input.value=last;return;}if(input.value===last)return;before??=structuredClone(state);stopAnimation();try{if(path)assignAnimated(current(),path,input.value);else assign(input.value);last=input.value;requestRender();}catch(e){notifyError(uiError(e));input.value=last;}};
+ const update=()=>{if(busy){input.value=last;return;}if(input.value===last)return;before??=structuredClone(state);try{if(path)assignAnimated(current(),path,input.value);else assign(input.value);last=input.value;requestRender();}catch(e){notifyError(uiError(e));input.value=last;}};
  const commit=()=>{if(!before)return;const previous=before;before=null;
   try{state=validatedState(state);if(JSON.stringify(state)!==JSON.stringify(previous)){recordHistory(previous);if(history.length>60)history.shift();future=[];}persist();refresh();}
   catch(error){state=previous;notifyError(uiError(error));refresh();}
@@ -386,9 +389,9 @@ function field(label,path,min,max,step=.01,{target=current(),key=true}={}){
  const value=animatable?animationValue(target,path):pathGet(target,path),input=el('input',{type:'number',min,max,step,value,'aria-label':label}),slider=el('input',{type:'range',min,max,step,value,'aria-label':(label + uiText("editor.slider"))});
  const line=el('div',{class:'tree-field tree-number-field','data-parameter-path':path},[el('label',{text:label}),slider,input]);if(controls().closest('#inspector'))decorateParameterRow(line,path);const definition=parameterDefinition;if(definition){line.title=definition.variable??definition.key;line.dataset.parameterVariable=definition.variable??definition.key;}if(animatable){decorateAnimated(input,target,path);decorateAnimated(slider,target,path);}
  let before=null;
- slider.oninput=()=>{if(busy)return;stopAnimation();before??=structuredClone(state);try{assign(Number(slider.value));input.value=slider.value;requestRender();}catch(e){notifyError(uiError(e));}};
+ slider.oninput=()=>{if(busy)return;before??=structuredClone(state);try{assign(Number(slider.value));input.value=slider.value;requestRender();}catch(e){notifyError(uiError(e));}};
  const commit=()=>{if(!before)return;const previous=before;before=null;const keepFocus=document.activeElement===slider;try{state=validatedState(state);if(JSON.stringify(state)!==JSON.stringify(previous)){recordHistory(previous);if(history.length>60)history.shift();future=[];}persist();refresh();if(keepFocus)[...document.querySelectorAll(surface()+' input[type=range]')].find(e=>e.getAttribute('aria-label')===label+uiText("editor.slider"))?.focus();}catch(e){state=previous;notifyError(uiError(e));refresh();}};
- slider.onchange=commit;slider.onblur=commit;input.onchange=()=>{stopAnimation();edit(()=>assign(Math.max(min,Math.min(max,Number(input.value)))));};
+ slider.onchange=commit;slider.onblur=commit;input.onchange=()=>{edit(()=>assign(Math.max(min,Math.min(max,Number(input.value)))));};
  if(targetId)line.append(el('button',{'data-reset-parameter':path,title:uiText("editor.restoreDefaultRecordsAKeyframeWhileRecording"),'aria-label':(uiText("editor.reset") + label),onclick:()=>edit(()=>assign(pathGet(node(target.kind,target.type),defaultPath)))},[editorIcon('reset')]));
  if(animatable){if(target.tracks[path]){line.classList.add('animated-field');}line.append(keyButton(target,path,label));}controls().append(line);
 }
@@ -430,7 +433,7 @@ function curveControl(n,field,start){
  const editable=index=>!busy&&(index===undefined||[index,...(index%3===0?[index-1,index+1]:[])].filter(i=>i>=0&&i<read().length/2).every(i=>[path(i*2),path(i*2+1)].every(p=>!parameterState(target(),target(),p,animationEditMode).locked)));
  controls().append(createBezierPanel(read,{view:bezierViews.get(key),canEdit:editable,canRestructure,onClose:()=>inspector(),
  changePoints:values=>{if(!editable(bezierViews.get(key).selected))return;const current=read(),changes=values.flatMap((v,i)=>v===current[i]?[]:[[path(i),v]]);try{for(const [p,value]of changes)assignAnimated(target(),p,value);requestRender();}catch(e){notifyError(uiError(e));}},
- begin:()=>{stopAnimation();before=structuredClone(state);},point:(i,x,y)=>{try{assignAnimated(target(),path(i*2),x);assignAnimated(target(),path(i*2+1),y);requestRender();}catch(e){notifyError(uiError(e));}},
+ begin:()=>{before=structuredClone(state);},point:(i,x,y)=>{try{assignAnimated(target(),path(i*2),x);assignAnimated(target(),path(i*2+1),y);requestRender();}catch(e){notifyError(uiError(e));}},
  end:()=>{if(before){if(JSON.stringify(before)!==JSON.stringify(state)){recordHistory(before);future=[];persist();}before=null;refresh();}},cancel:()=>{if(before){state=before;before=null;refresh();}},
  replace:points=>{if(canRestructure())edit(()=>{const n=target();n[field].splice(start,8,...points.slice(0,8));n.bezier??={shape:[],layout:[]};n.bezier[kind]=points.slice(8);});}
  }));
@@ -449,7 +452,7 @@ function applySelectionChanges(changes){
  for(const {id,values,clearStops}of changes){const n=find(state.root,id).node;for(const [path,value]of Object.entries(values))assignAnimated(n,path,structuredClone(value));if(clearStops)delete n.color.stops;}
 }
 function changeSelection(changes){
- if(busy)return false;stopAnimation();
+ if(busy)return false;
  if(animationGesture){try{applySelectionChanges(changes);requestRender();return true;}catch(e){notifyError(uiError(e));return false;}}
  return edit(()=>applySelectionChanges(changes));
 }
@@ -711,9 +714,9 @@ const liveAuthoring=createLiveAuthoring({getTimeline:liveTimeline,controlTimelin
 }});
 installAITools({button:aiToolsButton,getProject:liveProject,onOperation:liveAuthoring,onCatalog:()=>graphicsLibrary.open({aiCatalog:true})});
 let shaderExportBusy=false;
-document.addEventListener('momo-download-shader-reference',async event=>{
+document.addEventListener('momo-download-handdrawn-postprocess',async event=>{
  if(shaderExportBusy||!find(state.root,event.detail?.nodeId))return;shaderExportBusy=true;
- try{notify(uiText('shader.packing'));const pack=await exportSketchShaderReference({project:animationPreviewProject(),nodeId:event.detail.nodeId,time,formulaSeconds});download(pack.bytes,'Momo-HanddrawnFill-reference.zip','application/zip');notify(uiText('shader.packageReady'));}catch(error){notifyError(uiError(error));}finally{shaderExportBusy=false;}
+ try{notify(uiText('shader.packing'));const pack=await exportHanddrawnPostprocess(animationPreviewProject(),{nodeId:event.detail.nodeId,handdrawnInput:event.detail.handdrawnInput,times:[formulaSeconds],size:512});download(pack.bytes,'Momo-Handdrawn-postprocess.zip','application/zip');notify(uiText('shader.packageReady'));}catch(error){notifyError(uiError(error));}finally{shaderExportBusy=false;}
 });
 $('open-graphics-library').onclick=()=>graphicsLibrary.open();
 $('save-whole-library').onclick=()=>graphicsLibrary.publish(state.root);
@@ -744,6 +747,11 @@ async function exportImage(kind,{preview=false}={}){
  }
  try{
   await pause();
+  if(kind==='shader'||kind==='shader-postprocess'){
+   const live=kind==='shader-postprocess',support=live?handdrawnSupport(p,{handdrawnInput}):projectShaderSupport(p);if(!support.supported)throw messageError('shaderProject.unsupported',support.issues.map(i=>i.nodeId+' ['+i.capability+']').join(', '));
+   const duration=exportDuration(o),result=await (live?exportHanddrawnPostprocess:exportProjectShader)(p,{times:[0,.25,.5,.75,1].map(f=>f*duration),size:live?512:256,handdrawnInput,signal:exportController.signal});
+   save(result.bytes,p.name+'-unity-shader.zip','application/zip');return;
+  }
   if(!preview&&(['exr','atlas-exr'].includes(kind)||o.depth===16&&!['copy','gif','psd','psd-vector','svg'].includes(kind))&&!renderer.float)throw messageError("editor.thisDeviceDoesNotSupportFloatingPointRenderingForHighPrecision");
   if(kind==='gif'){const result=await runExportWorker('gif',p,{}, {signal:exportController.signal,stage:exportStage,render:(project,w,h,t,seconds)=>{check();return render(w,h,t,seconds);}});check();if(preview)exportPreview={key:previewKey,bytes:result.bytes,mime:'image/gif',frames:result.frames,fps:gifPlan(o).fps};else{save(result.bytes,p.name+'.gif','image/gif');notify(uiText('editor.exportComplete'));}return;}
   if(preview){const result=await sequence(o.width,o.height,'png');check();exportPreview={key:previewKey,bytes:result.data,mime:'image/png',frames:o.frames,fps:o.fps,columns:Math.min(o.columns,o.frames),frameWidth:o.width,frameHeight:o.height};return;}
@@ -801,7 +809,7 @@ $('tile-preview').onclick=()=>{tiled=!tiled;$('tile-preview').setAttribute('aria
 $('tile-grid').onchange=()=>{const value=Number($('tile-grid').value);if(![2,3,4].includes(value))return;tileGrid=value;tiled=true;$('tile-preview').setAttribute('aria-pressed','true');requestRender();};
 $('play-duration').onchange=()=>{const value=$('play-duration').valueAsNumber;if(!Number.isFinite(value)||value<=0){$('play-duration').value=state.output.seconds;return;}edit(()=>state.output.seconds=Math.max(.05,Math.min(600,value)));};
 $('restart-play').onclick=()=>{seekAnimationScope(animationEditor.getScope(),0);$('play').click();};
-syncPlaybackButton();$('play').onclick=()=>{if(animationEditMode==='base'){animationEditMode='normal';inspector();}if(!playing&&animationEditor.getScope()!==state.root.id&&!localAnimationPreview)localAnimationPreview={id:animationEditor.getScope(),time:animationClock(animationEditor.getScope()).progress};playing=!playing;syncPlaybackButton();requestRender();};let last=performance.now();function tick(now){const dt=(now-last)/1000;last=now;if(playing&&!busy){formulaSeconds+=dt;if(localAnimationPreview)localAnimationPreview.time=(localAnimationPreview.time+dt/state.output.seconds)%1;else time=(time+dt/state.output.seconds)%1;$('tree-time').value=time;requestRender();}requestAnimationFrame(tick);}requestAnimationFrame(tick);
+syncPlaybackButton();$('play').onclick=()=>{if(animationEditMode==='base'){animationEditMode='normal';inspector();}if(!playing&&animationEditor.getScope()!==state.root.id&&!localAnimationPreview)localAnimationPreview={id:animationEditor.getScope(),time:animationClock(animationEditor.getScope()).progress};playing=!playing;syncPlaybackButton();requestRender();};let last=performance.now();function tick(now){const dt=(now-last)/1000;last=now;if(playing&&!busy){formulaSeconds+=dt;if(localAnimationPreview)localAnimationPreview.time=(localAnimationPreview.time+dt/state.output.seconds)%1;else time=(time+dt/state.output.seconds)%1;requestRender();}requestAnimationFrame(tick);}requestAnimationFrame(tick);
 document.addEventListener('keydown',e=>{if(e.defaultPrevented||document.querySelector('dialog[open]'))return;if(e.key==='Escape'&&componentPreview){returnWork();return;}if(e.key==='Escape'&&globalPanel){$('close-global').click();return;}if(e.target.closest('input,select,textarea,[contenteditable=true]')||busy||globalPanel)return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();$('redo').click();return;}if(!e.ctrlKey&&!e.metaKey&&!e.altKey&&e.code==='Space'){if(e.target.closest('button,summary,a,[role=tab]'))return;e.preventDefault();$('play').click();return;}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();$(e.shiftKey?'redo':'undo').click();}if(e.key==='Escape'&&globalPanel)$('close-global').click();});if(!shelfStorageError)try{persistSharedResources();}catch(e){notifyError(uiText("editor.couldNotSaveGraphicsList")+uiError(e));}library();refresh();
 
 // Preview selection is view state; only generation parameters belong to the saved output settings.
@@ -842,7 +850,17 @@ function renderGlobalPanel(){
   note(uiText("editor.theCanvasDefinesAspectRatioNotPixelSizeNodesRetainTheir"));
   field(uiText('animation.cycleSeconds'),'output.seconds',.05,600,.05,{target:state,key:false});
  }else{
-  choice(uiText("editor.exportFormat"),exportKind,[['copy',"editor.copyPNG8Image"],['png',"editor.pngCurrentFrame"],['psd',"editor.psdLayeredCurrentFrame"],['psd-vector',"editor.psdVectorContoursSimplified"],['svg',"editor.svgVectorContoursSimplified"],['exr',"editor.exrCurrentFrame"],['gif',"export.gifFormat"],['frames',"editor.pngFrameSequenceZIP"],['atlas',"editor.pngSpriteAtlas"],['atlas-exr',"editor.exrSpriteAtlas"],['batch-atlas',"editor.threeSizePNGAtlasesZIP"],['batch',"editor.threeSizePNGImagesZIP"]],v=>{if(busy)return;exportKind=v;renderGlobalPanel();});
+  choice(uiText("editor.exportFormat"),exportKind,[['copy',"editor.copyPNG8Image"],['png',"editor.pngCurrentFrame"],['shader','shaderProject.format'],['shader-postprocess','handdrawn.format'],['psd',"editor.psdLayeredCurrentFrame"],['psd-vector',"editor.psdVectorContoursSimplified"],['svg',"editor.svgVectorContoursSimplified"],['exr',"editor.exrCurrentFrame"],['gif',"export.gifFormat"],['frames',"editor.pngFrameSequenceZIP"],['atlas',"editor.pngSpriteAtlas"],['atlas-exr',"editor.exrSpriteAtlas"],['batch-atlas',"editor.threeSizePNGAtlasesZIP"],['batch',"editor.threeSizePNGImagesZIP"]],v=>{if(busy)return;exportKind=v;renderGlobalPanel();});
+  if(exportKind==='shader'||exportKind==='shader-postprocess'){
+   const live=exportKind==='shader-postprocess';if(live)choice(uiText('handdrawn.inputAdapter'),handdrawnInput,[['auto','handdrawn.input.auto'],['generator','handdrawn.input.generator'],['texture','handdrawn.input.texture'],['external','handdrawn.input.external']],value=>{handdrawnInput=value;renderGlobalPanel();});const report=live?handdrawnSupport(state,{handdrawnInput}):projectShaderSupport(state);note(uiText(live?'handdrawn.description':'shaderProject.description'));heading('shaderProject.supportTitle');note(uiText(report.supported?'shaderProject.supported':'shaderProject.blocked'));
+   for(const issue of report.issues)note(uiFormat('shaderProject.issue',issue.name,issue.nodeId,issue.capability.startsWith('effect:')?uiFormat('shaderProject.effectReason',uiText('fx.effect.'+issue.capability.slice(7))):uiText('shaderProject.reason.'+issue.capability.replace(/-([a-z])/g,(_,letter)=>letter.toUpperCase()))));
+   for(const issue of report.issues)if(issue.path){const label=POST_EFFECTS.flatMap(spec=>spec.parameters).find(p=>p.path===issue.path)?.label;note(uiFormat('handdrawn.unsupportedParameter',label?uiText(label):issue.path));}
+   if(!report.supported)note(uiText('shaderProject.adaptation'));
+   note(uiText(live?'handdrawn.package':'shaderProject.package'));note(uiText('shaderProject.verification'));
+   const button=el('button',{id:'confirm-export',class:'primary',text:uiText(busy?'editor.exporting':'editor.startExport'),onclick:()=>exportImage(exportKind)});button.disabled=busy||!report.supported;$('global-actions').append(button);
+   if(busy)$('global-actions').append(el('p',{id:'export-stage',role:'status',text:uiText('shaderProject.generating')}));
+   return;
+  }
   note(uiText("editor.exportsTheFullCanvasIgnoringPreviewChannelSoloModeZoomAnd"));
   if(!['batch','batch-atlas'].includes(exportKind))for(const [key,label]of [['width',"editor.pixelWidth"],['height',"editor.pixelHeight"]])field(uiText(label),'output.'+key,1,4096,1,{target:state,key:false});
   if(animationExportKind(exportKind)){field(uiText("editor.framesPerSecondFPS"),'output.fps',1,120,1,{target:state,key:false});field(uiText('animation.cycleSeconds'),'output.seconds',.05,600,.05,{target:state,key:false});field(uiText('export.durationSeconds'),'output.exportSeconds',.05,600,.05,{target:state,key:false});note(uiText('export.durationExplanation'));check(uiText("editor.loopExportOmitDuplicateEndFrame"),state.output.loopExport,v=>edit(()=>state.output.loopExport=v));if(exportKind!=='gif')note(uiFormat("editor.valueFPSValueSecondsValueFramesValuePlayTheAtlasOr",state.output.fps.toFixed(2),exportDuration(state.output),state.output.frames,(state.output.loopExport ? uiText("editor.endFrameExcluded") : uiText("editor.endFrameIncluded"))));}
@@ -955,7 +973,7 @@ function colorStatus(context){const {local,source,children}=context;if(children)
 function adoptNodeColor(n){const context=currentColorContext(),color=independentColor(context);edit(()=>{for(const key of ['mode','fill','low','high'])assignAnimated(n,'color.'+key,color[key]);if(color.stops)n.color.stops=structuredClone(color.stops);else delete n.color.stops;});}
 function colorControl(n,label,value,assign,path=null){
  const row=el('div',{class:'color-control-row'}),input=colorInput(label,value,assign,path),hex=el('input',{type:'text',value:(path?animationValue(n,path):value).toUpperCase(),'aria-label':label+' HEX','data-color-hex':'',maxLength:7,spellcheck:'false'});
- if(path)decorateAnimated(hex,n,path);hex.oninput=()=>hex.setCustomValidity('');hex.onchange=()=>{const next=normalizeHex(hex.value);if(!next){hex.setCustomValidity('请输入3位或6位十六进制颜色，例如 #80DFFF');hex.reportValidity();return;}stopAnimation();edit(()=>path?assignAnimated(n,path,next):assign(next));};
+ if(path)decorateAnimated(hex,n,path);hex.oninput=()=>hex.setCustomValidity('');hex.onchange=()=>{const next=normalizeHex(hex.value);if(!next){hex.setCustomValidity('请输入3位或6位十六进制颜色，例如 #80DFFF');hex.reportValidity();return;}edit(()=>path?assignAnimated(n,path,next):assign(next));};
  row.append(el('label',{text:label}));if(path)row.append(keyButton(n,path,label));else row.append(el('span'));row.append(el('div',{class:'color-control-inputs'},[input,hex]));controls().append(row);
 }
 const gradientEditorViews=new Map();
@@ -964,8 +982,8 @@ const curveEditorViews=new Map();
 function renderChannelCurves(n){
  const surface=controls().closest('dialog')??$('inspector'),id=n.id,read=()=>find(state.root,id).node.curves;if(!curveEditorViews.has(id))curveEditorViews.set(id,{channel:'luminance',index:0});
  controls().append(createChannelCurvesEditor({read,canEdit:()=>!busy,view:curveEditorViews.get(id),
-  edit:fn=>{stopAnimation();const focused=document.activeElement?.getAttribute('data-index');edit(()=>fn(read()));if(focused!==null&&focused!==undefined)surface.querySelector('.channel-curves-editor [data-index="'+focused+'"]')?.focus();},
-  begin:()=>{stopAnimation();beginAnimationGesture();},change:fn=>{fn(read());requestRender();},end:endAnimationGesture,cancel:cancelAnimationGesture}));
+  edit:fn=>{const focused=document.activeElement?.getAttribute('data-index');edit(()=>fn(read()));if(focused!==null&&focused!==undefined)surface.querySelector('.channel-curves-editor [data-index="'+focused+'"]')?.focus();},
+  begin:beginAnimationGesture,change:fn=>{fn(read());requestRender();},end:endAnimationGesture,cancel:cancelAnimationGesture}));
 }
 function renderColorPanel(n){
  heading('editor.opacity');field(uiText('editor.opacity'),'opacity',0,1);heading('editor.nodeColors');renderNodeColors(n);renderColorAdjustments(n);renderChannelCurves(n);
@@ -1003,7 +1021,7 @@ $('support-project').onclick=openSupportDialog;
 $('tool-help').onclick=()=>openUserHelp({onValidate:()=>window.open(pageHref('validate'),'_blank','noopener')});
 let uvDrag=null,grabUV=false;
 $('grab-uv').onclick=()=>{setCanvasTool(grabUV?'transform':'uv');notify(grabUV?uiText('editor.dragThePreviewToAdjustTheSelectedShapeSInternalUV'):uiText('editor.uvEditingEnded'));};
-$('tree-canvas').onpointerdown=e=>{if(e.button!==0||!grabUV||tiled||busy||current().kind!=='shape')return;const n=current();if(animationEditMode==='normal'&&['uv.2','uv.3'].some(p=>n.tracks[p]&&!n.tracks[p].muted)){notify(uiText("editor.uvIsAnimatedEnableRecordingOrEditBaseValues"));return;}stopAnimation();uvDrag={id:selected,x:e.clientX,y:e.clientY,uv:[...animationClock(selected).node.uv],before:structuredClone(state),rect:$('tree-canvas').getBoundingClientRect()};$('tree-canvas').setPointerCapture(e.pointerId);};
+$('tree-canvas').onpointerdown=e=>{if(e.button!==0||!grabUV||tiled||busy||current().kind!=='shape')return;const n=current();if(animationEditMode==='normal'&&['uv.2','uv.3'].some(p=>n.tracks[p]&&!n.tracks[p].muted)){notify(uiText("editor.uvIsAnimatedEnableRecordingOrEditBaseValues"));return;}uvDrag={id:selected,x:e.clientX,y:e.clientY,uv:[...animationClock(selected).node.uv],before:structuredClone(state),rect:$('tree-canvas').getBoundingClientRect()};$('tree-canvas').setPointerCapture(e.pointerId);};
 $('tree-canvas').onpointermove=e=>{if(!uvDrag)return;const n=find(state.root,uvDrag.id)?.node;if(!n)return;try{assignAnimated(n,'uv.2',Math.max(-2,Math.min(2,uvDrag.uv[2]-(e.clientX-uvDrag.x)/uvDrag.rect.width)));assignAnimated(n,'uv.3',Math.max(-2,Math.min(2,uvDrag.uv[3]+(e.clientY-uvDrag.y)/uvDrag.rect.height)));requestRender();}catch(error){notifyError(uiError(error));}};
 $('tree-canvas').onpointerup=e=>{if(!uvDrag)return;const before=uvDrag.before;uvDrag=null;if($('tree-canvas').hasPointerCapture?.(e.pointerId))$('tree-canvas').releasePointerCapture(e.pointerId);try{state=validatedState(state);if(JSON.stringify(before)!==JSON.stringify(state)){recordHistory(before);future=[];}persist();refresh();}catch(error){state=before;notifyError(uiError(error));refresh();}};
 $('tree-canvas').onpointercancel=()=>{if(uvDrag){state=uvDrag.before;uvDrag=null;refresh();}};
@@ -1049,7 +1067,7 @@ canvasEditor=createCanvasEditor($('tree-preview-surface'),{
  select:setSelection,toggle:id=>multiSelect(id,{ctrlKey:true}),refresh,render:requestRender,notify,hit:canvasHit,
  pan:on=>{if(on){temporaryPan={pan:panPreview,uv:grabUV};if(!panPreview)$('pan-preview').click();}else{if(!temporaryPan?.pan&&panPreview)$('pan-preview').click();if(temporaryPan?.uv&&!grabUV)$('grab-uv').click();temporaryPan=null;finishViewPan();}},
  check:(ids,paths)=>{for(const id of ids){const n=find(state.root,id).node;if(animationEditMode==='normal'&&n.animationEnabled!==false&&paths.some(key=>n.tracks['transform.'+key]&&!n.tracks['transform.'+key].muted))throw messageError("editor.selectedParametersAreAnimatedEnableRecordingOrEditBaseValues");}},
- begin:()=>{stopAnimation();canvasBefore=structuredClone(state);},
+ begin:()=>{canvasBefore=structuredClone(state);},
  apply:changes=>{
   // Validate every node before writing any, including limits enforced by loading.
   for(const {values}of changes)for(const [key,v]of Object.entries(values)){const limit=['x','y'].includes(key)?[-2,2]:key==='rotation'?[-3600,3600]:[0,1];if(!Number.isFinite(v)||v<limit[0]-1e-8||v>limit[1]+1e-8)throw messageError("editor.parameterBoundaryReachedDragCanceled");}
@@ -1063,7 +1081,7 @@ canvasToolbar=installCanvasToolbar({tiled:()=>tiled,tileGrid:()=>tileGrid});
 let canvasBackgroundBefore=null;
 canvasBackgroundUI=installCanvasBackground({host:$('canvas-background'),stage:$('canvas-stage'),getOutput:()=>state.output,isBusy:()=>busy,
  onChange:value=>{if(!sameCanvasBackground(state.output,value))edit(()=>applyCanvasBackground(state,value));},
- previewColor:value=>{if(busy||state.output.background===value)return;stopAnimation();canvasBackgroundBefore??=structuredClone(state);state.output.background=value;requestRender();},
+ previewColor:value=>{if(busy||state.output.background===value)return;canvasBackgroundBefore??=structuredClone(state);state.output.background=value;requestRender();},
  commitColor:()=>{if(!canvasBackgroundBefore)return;const before=canvasBackgroundBefore;canvasBackgroundBefore=null;try{state=validatedState(state);if(!sameCanvasBackground(before.output,state.output)){recordHistory(before);if(history.length>60)history.shift();future=[];}persist();refresh();}catch(error){state=before;notifyError(uiError(error));refresh();}},
  cancelColor:()=>{if(canvasBackgroundBefore){state=canvasBackgroundBefore;canvasBackgroundBefore=null;refresh();}}
 });

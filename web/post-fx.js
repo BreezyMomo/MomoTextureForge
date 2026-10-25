@@ -55,6 +55,7 @@ export function applyPostFx(renderer,source,node){
  const colors=(...values)=>values.flatMap(v=>[1,3,5].map(i=>parseInt(v.slice(i,i+2),16)/255));
  for(const id of effectOrder(node.effectOrder)){
   if(!effectEnabled(node,id))continue;const v=effectValues(node,id);
+  if(renderer.captureEffectInput?.nodeId===node.id&&renderer.captureEffectInput.effect===id)renderer.captureEffectInput.capture(out,node);
   if(id==='blur'&&fx[0]>0)replace(blur(out,fx[0]));
   if(id==='bloom'&&fx[1]>0){const bright=pass(out,11,{fxThreshold:fx[3]}),soft=blur(bright,fx[2]);renderer.release(bright);const next=pass(soft,12,{dest:out,fxAmount:fx[1]});renderer.release(soft);replace(next);}
   if(id==='sharpen'&&fx[4]>0)replace(pass(out,13,{fxAmount:fx[4]}));
@@ -71,7 +72,7 @@ export function applyPostFx(renderer,source,node){
   if(id==='radialMask')replace(pass(out,28,{fxData:[v.centerX,v.centerY,v.radius,v.feather,+v.invert]}));
   if(id==='unblack')replace(pass(out,29,{fxAmount:v.strength}));
   if(id==='normal')replace(pass(out,30,{contourStep:[v.sampleStep*scale/out.w,v.sampleStep*scale/out.h],fxAmount:v.strength/v.sampleStep,fxData:[+v.flipY]}));
-  if(id==='sketch')replace(applySketchFx(renderer,out,v));
+  if(id==='sketch')replace(applySketchFx(renderer,out,v,{strokeOnly:renderer.sketchStrokeOnly===node.id,fillOnly:renderer.sketchFillOnly===node.id}));
   // A zero mix is an exact bypass, including expensive paint and readback effects.
   if(v.mix===0)continue;
   if(id==='pixelSort'&&v.lowThreshold>v.highThreshold)continue;

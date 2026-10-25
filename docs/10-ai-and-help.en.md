@@ -15,7 +15,7 @@
 - **Gitee repository ↗:** opens the mainland source mirror for documentation and downloads; it follows GitHub synchronization.
 - **Support:** an independent toolbar entry opens the WeChat appreciation code for voluntary donations toward maintenance and development.
 
-The hand-drawn effect panel offers **Download fill shader reference**, including sources, current settings, mask and comparison images for AI integration. See [Shader reference packages](14-shader-reference.en.md).
+The hand-drawn effect panel offers **Download handdrawn postprocess**, including current parameters, actual RGBA input, shared Shader/Compute, a Unity component, importer and comparison images. Images, live RTs and supported graphic inputs share automatic contour and fill processing; frozen strokes and separate fill reference packages are retired. Use the authoring Skill for game integration. See [Handdrawn postprocess and Shader delivery](14-shader-reference.en.md).
 
 In **AI tools → Install Skills**, select an agent and Skills, then **Choose directory and install…** to select and authorize a location in the system dialog. For personal use, follow the recommended path to an existing Skill directory. For a project, choose its root and the tool completes the agent subdirectories. Every installation asks for a directory; canceling does not write files.
 

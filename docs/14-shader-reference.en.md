@@ -1,4 +1,4 @@
-# Shader reference packages and AI integration
+# Shader categories, postprocessing and Unity export
 
 <!-- doc-language -->
 [简体中文](14-shader-reference.md) · [English](14-shader-reference.en.md)
@@ -6,38 +6,28 @@
 
 [Manual index](README.en.md) · [AI collaboration](10-ai-and-help.en.md)
 
-## Download from the effect panel
+## General responsibilities and extensions
 
-Select a shape or group, tune **Composite → Post-processing → Hand-drawn style**, and inspect the usual canvas preview. **Download fill shader reference** at the bottom exports sources, current-frame settings and textures. There is no separate workbench or duplicate parameter window. Base-value editing exports base settings; animation editing exports evaluated current-frame values.
+Shaders have two responsibilities: **graphic generation** produces images from algorithms, coordinates, parameters and time; **image postprocessing** processes an existing image and is reusable with bitmaps, live RTs or upstream generated output. Compose them as “generated graphic / imported image → ordered postprocessing → layer composition and output.” Reuse generic postprocesses instead of copying their implementation into each graphic.
 
-Only hand-drawn fill currently provides a reference: solid, hachure, cross-hatch, dots, dashed and zigzag-line. Original fill, no fill, zigzag fill and sunburst do not yet have references; attempting a download explains this. Other post-effects do not have a download entry yet.
+Before adding a Shader, read [responsibilities and extension rules](../skills/texture-forge-author/references/shader-architecture.en.md) for module boundaries, input/output contracts, color/alpha/time/size, resource lifecycle and verification. Both repository `AGENTS.md` and the authoring Skill route to these rules. Check web and Unity export coverage separately: analytic export covers adapted graphics, and formal generic postprocess export currently covers handdrawn, not every web effect.
 
-## Read the two preview images
+## One handdrawn pipeline
 
-- `editor-preview.png` shows the current node in the editor, including its outlines and other post-effects.
-- `reference-preview.png` shows the packaged shader fill, excluding Rough.js outlines, repeated strokes and advanced fill details.
-- `parameters.json` contains actual shader values in `parameters`, original hand-drawn settings in `sourceEffect.values`, and explicit `mapping`/`limitations`. Roughness divided by 10 becomes line wobble; values outside shader ranges are bounded while originals remain available. This is not a pixel-identical conversion.
+Use **Export → Unity handdrawn postprocess (ZIP)** or **Composite → Handdrawn → Download handdrawn postprocess**. RGBA input goes through automatic contour extraction and fill, then composition. Images, runtime RT and reviewed generators share the same GPU core and component. There is no light fill or frozen-outline rendering alternative.
 
-The mask captures content entering the selected node's hand-drawn effect, retaining child effects and skipping this node's hand-drawn and subsequent effects. Its contour uses current source, threshold and simplification settings. The static snapshot uses canvas coordinates and aspect ratio, at most 512 pixels on the long side. Transforms and the current frame are baked in; no node tree or keyframes are exported. Animation and complex transforms need target-project adaptation.
+Query actual support first. The dialog/CLI/MCP reports unsupported native styles and parameter paths; editor controls remain available. Source adapters are automatic, reviewed producer, explicitly captured static RGBA or external texture/RT. Auto never silently snapshots unsupported animation. A captured input is the raw image before handdrawn processing, not a baked outline.
 
-`mask.png` stores coverage in RGB with constant alpha one. **Read red, disable sRGB and use Clamp sampling.** Reading alpha would make the whole texture solid. Design pixels use a 512-unit short side; width is dot radius in dots mode. The bilingual package README documents the full contract.
+Read [Unified postprocess](../skills/texture-forge-author/references/handdrawn-postprocess.en.md) for CLI/MCP, native fill/source mappings, input alpha/color encoding, short-side512 design units and persistence. Packages include actual parameters, a true pre-sketch input, shared Shader/Compute/runtime, material/Prefab importer, source ZIP and references. Namespace and integrity checks allow multiple packages to coexist.
 
-## Give the package to AI
+## Scope and verification
 
-Download the **Authoring Skill** from Help and supply the package, target project and intended change, for example:
+OriginalInput, solid, individual hachure and no fill have explicit native mappings. Unsupported styles/dashes/vertices and non-default vector preprocessing fail instead of being substituted or ignored. The core remains a declared Rough.js approximation, not exact vector/RNG equivalence. Node opacity is applied once after composition. Static inputs cache by version; runtime RT/producers update and resources release/rebuild correctly. Requires Compute/SM4.5/RFloat, with ARGBHalf for producers. Mobile/Player are unverified.
 
-> Integrate the supplied shader into this project's URP material. Compare editor and reference images first; retain cross-hatch fill and color, and explain how outline differences will be handled. Compile and check transparency. Use Texture Forge for additional masks if needed.
+Exporter verification is separate from real Unity compilation, visual review and Play Mode. Validate the new package in its actual project, including semitransparent inputs, rectangular scale, original/no-fill, cache/switching, resources, overflow and Prefab reload.
 
-`handdrawn-fill.hlsl` is the core; `HanddrawnFillURP.shader` targets Unity 6 / URP 17 as a reference wrapper. The internal GLSL reference image uses the same core math. **Browser success is not target-engine compilation**, recorded as `engineCompilation: not-run`. The Skill guides source/parameter inspection and adaptation to the actual project; texture authoring retains its existing workflow.
+## Retirement and analytic shaders
 
-Downloading leaves project data and undo history unchanged. This is not a graphics-library resource ZIP.
+Existing project data is unchanged. Old `handdrawn`, `dynamic-handdrawn` and fill/frozen reference APIs return a migration error to `postprocess`. No old renderer is distributed by the Skill. Old test artifacts are historical evidence, not current export choices.
 
-## Hand an authored project to AI
-
-Use **File → Save project** and supply the project ZIP plus the latest Authoring Skill to AI, together with Unity URP as the target, usage and performance requirements. No new screenshots or manual parameter transcription are needed. Project ZIPs include nodes, keyframes, actual formulas and image dependencies. The AI graphic catalog still describes the library only.
-
-The Skill now supplies project inspect/render/check/handoff/shader tools. AI can inspect stable parameter identities and structure, render times in seconds, extract a node or the input before an effect, and create additional textures through formula/generator tools. Handoff preserves the original, an effect brief, sampled frames, a contact sheet and implementation instructions; it does not convert all effects automatically. See [AI command-line rendering](../AI_AUTHORING_CLI.en.md) for commands and contracts.
-
-The first integration path uses the existing handdrawn fill reference: AI reads actual node IDs and runs project shader to export current parameters, mask, sources and comparisons. Extract into a dedicated Assets folder, place the supplied MomoHanddrawnImporter.cs in an Editor folder, then use **Assets → Momo Texture Forge → Import handdrawn reference** to select parameters.json and create a new material. The importer configures linear red-channel masks, Clamp, no compression and reference time without overwriting materials. An active URP asset is required.
-
-The brief preserves animation data for AI implementation, while the handdrawn reference mask remains a frame snapshot. Strokes, complex compositions, particle/UI integration and animation driving require adaptation. Export results and actual Unity compilation/visual validation are recorded separately; texture preview success does not establish game reproduction.
+Without handdrawn processing, **Unity realtime Shader ZIP** remains the [reviewed analytic graph route](../skills/texture-forge-author/references/realtime-shaders.en.md). It does not silently omit post effects or replace the unified postprocess.
