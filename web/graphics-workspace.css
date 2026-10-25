@@ -34,3 +34,5 @@
 .graphics-dialog>header{flex:none;gap:12px}.graphics-dialog>header>strong{min-width:0;overflow-wrap:anywhere}.graphics-dialog>header>button{flex:none}
 .graphics-dialog>.graphics-body{min-height:0;max-height:none;overflow:auto;overscroll-behavior:contain;scroll-padding-block:12px}
 .graphics-library-dialog>.graphics-body{overflow:hidden}
+
+.graphics-card-preview{position:relative;height:100px;min-width:0;background:#15181e}.graphics-card-preview>img{display:block;width:100%;height:100%;object-fit:contain}.graphics-card-preview>.graphics-placeholder{width:100%;height:100%}.graphics-card-badges{position:absolute;inset:0 0 auto;display:flex;align-items:center;gap:2px;min-height:28px;padding:2px 4px;background:linear-gradient(to bottom,#000000b8 0%,#0008 70%,transparent 100%)}.graphics-card-badges .graphic-animated{color:var(--ui-artwork-motion)}.graphics-card-badges .graphic-animated svg{filter:drop-shadow(0 1px 1px #0009)}

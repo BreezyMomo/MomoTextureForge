@@ -5,6 +5,7 @@ import {AUTHORING_EXAMPLE,AUTHORING_GUIDE,AUTHORING_SKILL,parseAuthoring,assetFr
 import {builtinAsset,contentHash} from '../web/resource-assets.js';
 import {CATALOG} from '../web/catalog.js';
 import {encodeResourcePack,readResourcePack} from '../web/resource-pack.js';
+import authoringRuntime from '../web/authoring-kit-runtime.js';
 const example=()=>structuredClone(AUTHORING_EXAMPLE);
 test('authoring accepts JSON/fence, binds variables and preserves portable source in pack',async()=>{
  const draft=parseAuthoring('```json\n'+JSON.stringify(example())+'\n```'),a=assetFromAuthoring(draft);assert.equal(a.definition.parameters[0].slot,0);assert.equal(a.definition.authoring.portable,true);const pack=await readResourcePack(await encodeResourcePack({schema:'momo.texture-assets/v1'},{assets:new Map([['example',a]])}));assert.equal(pack.prepared[0][1].definition.authoring.formula,draft.formula.source);assert.equal(await contentHash(a),await contentHash(pack.prepared[0][1]));pack.rollback();
@@ -16,4 +17,9 @@ test('all builtin scalar drafts retain helpers and export without IDs or slots',
  for(const p of CATALOG.filter(p=>!p.definition.generator)){const a=builtinAsset(p.id),d=a.definition,specs=d.parameters.map(s=>({...s,variable:s.variable??s.key})),draft=authoringFromEditor(a,{name:d.name,category:p.categoryName,description:''},d.authoring?.formula??d.outputs.scalar.inline,d.authoring?.kind??d.outputs.scalar.kind,specs,scalarHelpers(a));const parsed=parseAuthoring(draft);assert.equal(parsed.parameters.length,specs.length,p.id);assert.ok(!('slot' in (parsed.parameters[0]??{})));}
 });
 test('repair prompts include broken source/error/time without validation blocking copy',()=>{const d=example();d.formula.source='invalid';const p=authoringPrompt({draft:d,error:'undeclared identifier',time:2});assert.ok(p.includes('undeclared identifier'));assert.ok(p.includes('invalid'));assert.ok(p.includes('2'));});
-test('distributed skill and reference files match shared contract',async()=>{const root=new URL('../skills/texture-forge-author/',import.meta.url);assert.equal((await readFile(new URL('SKILL.md',root),'utf8')).trim(),AUTHORING_SKILL.trim());assert.equal((await readFile(new URL('references/authoring-guide.md',root),'utf8')).trim(),AUTHORING_GUIDE.trim());});
+test('distributed skill and reference files match shared contract',async()=>{
+ const root=new URL('../skills/texture-forge-author/',import.meta.url);
+ assert.equal((await readFile(new URL('SKILL.md',root),'utf8')).trim(),AUTHORING_SKILL.trim());
+ assert.equal((await readFile(new URL('references/authoring-guide.md',root),'utf8')).trim(),AUTHORING_GUIDE.trim());
+ for(const name of ['references/engine-integration.md','references/engine-integration.en.md'])assert.equal(authoringRuntime[name],await readFile(new URL(name,root),'utf8'),name);
+});

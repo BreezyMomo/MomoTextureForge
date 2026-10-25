@@ -4,11 +4,11 @@
 [简体中文](project-tools.md) · [English](project-tools.en.md)
 <!-- /doc-language -->
 
-完整作品接入 Unity 时，先使用[实时作品 Shader 流程](realtime-shaders.md)查询逐节点支持范围，导出已审查的解析子集与独立材质参数。手绘统一使用 postprocess 流程。
+将编辑器作品接入游戏时，先遵守[游戏引擎接入通用规则](engine-integration.md)：写代码前查询实际模块支持，优先复用、再适配，仅实现缺失部分。本页说明如何离线读取作品和交付参考；当前 Unity 的具体查询与导出见[已适配图形](realtime-shaders.md)。
 
 用户提供编辑器“文件 → 保存项目”生成的 ZIP，并希望 AI 理解效果、制作辅助贴图或接入游戏时使用本流程。项目 ZIP 携带节点、参数、关键帧、图形公式与图片依赖；无需操作用户的浏览器，也不依赖另一台机器上的相同图库。图形库的“导出 AI 图形目录”仍只提供目录元数据，不能代替作品文件。
 
-动态手绘无烘焙边框贴图时，先读[实时轮廓与逐笔手绘](handdrawn-postprocess.md)，从 shader-support 的 modes.postprocess / recommendedMode 选择统一 postprocess，而非临时重写 Shader。
+需要手绘模块时，输入适配、原生参数和运行组件约定见[统一后处理](handdrawn-postprocess.md)；其他效果同样遵守通用接入规则，具体能力以实际模块为准。
 
 不需要先由用户创建项目。AI从零搭建节点树、离线修改作品并交付可继续编辑的ZIP，见[离线创建与编辑完整项目](offline-projects.md)；同一套工具支持 create/edit/pack/unpack/catalog/schema。
 

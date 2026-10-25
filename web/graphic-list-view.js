@@ -4,6 +4,9 @@ import {interfaceLanguage} from './language.js';
 import {uiText,uiFormat} from './ui-language.js';
 import {animateUI} from './editor-motion.js';
 import {builtinThumbnail,thumbnailVisualKey} from './thumbnail-source.js';
+import {graphicEntryHasShader} from './graphic-shader.js';
+import {editorIcon} from './editor-icons.js';
+import {createShaderBadge} from './shader-badge.js';
 
 const text=(element,value)=>{if(element.textContent!==value)element.textContent=value;};
 const attr=(element,key,value)=>{if(element.getAttribute(key)!==String(value))element.setAttribute(key,value);};
@@ -18,7 +21,7 @@ function reconcile(parent,children){
  for(const child of children){if(child===cursor)cursor=cursor.nextSibling;else parent.insertBefore(child,cursor);}
  while(cursor){const next=cursor.nextSibling;cursor.remove();cursor=next;}
 }
-export function createGraphicListView({container,thumbnails,el,isFavorite,onBrowse,onInsert,onRename,onPublish,onRemove,onFavorite,onFavoriteRemoved,makeAnimationBadge,onGroupToggle,isGroupOpen}){
+export function createGraphicListView({container,thumbnails,el,isFavorite,onBrowse,onInsert,onRename,onPublish,onRemove,onDownloadShader,onFavorite,onFavoriteRemoved,makeAnimationBadge,onGroupToggle,isGroupOpen}){
  const cards=new Map(),groups=new Map(),empty=el('p',{class:'tree-note'});let active=null;
  function closeMore(focus=false){
   if(!active)return;const record=active;active=null;
@@ -37,7 +40,7 @@ export function createGraphicListView({container,thumbnails,el,isFavorite,onBrow
  document.addEventListener('scroll',()=>closeMore(),{capture:true});window.addEventListener('resize',()=>closeMore());
  function card(entry){
   const image=el('img',{width:72,height:72}),name=el('span',{class:'tree-pattern-text'}),element=el('div',{class:'tree-pattern-card','data-entry-id':entry.id});
-  const record={entry,image,name,element,revision:null,metadata:null,renderKey:null,animated:false,badge:null};
+  const badges=el('div',{class:'graphic-badges'}),record={entry,image,name,element,badges,revision:null,metadata:null,renderKey:null,animated:false,badge:null,shader:false,shaderBadge:null};
   const button=onclick=>el('button',{onclick});
   record.inspect=button(()=>onBrowse(record.entry));record.inspect.className='component-inspect';record.inspect.append(image,name);
   record.add=button(()=>onInsert(record.entry));record.add.className='component-add';
@@ -48,28 +51,33 @@ export function createGraphicListView({container,thumbnails,el,isFavorite,onBrow
   record.publish=action('component-publish','M3 9V5h7l2 2h9v13H3V9ZM12 17v-6M9 14l3-3 3 3',onPublish);
   record.remove=action('component-remove','M4 6h16M9 6V3h6v3M6 6l1 15h10l1-15M10 10v7M14 10v7',onRemove);
   record.panel=el('div',{class:'component-more-panel',popover:'manual',role:'group'},[el('div',{class:'component-more-meta'},[record.version,record.personal]),el('div',{class:'component-more-actions'},[record.rename,record.publish,record.remove])]);
+  record.download=el('button',{type:'button',class:'component-download-shader',onclick:async()=>{if(record.downloading)return;closeMore(true);record.downloading=true;record.download.disabled=true;try{await onDownloadShader(record.entry);}finally{record.downloading=false;record.download.disabled=false;}}});record.download.append(editorIcon('shader'),el('span'));record.panel.append(record.download);
   record.panel.addEventListener('keydown',event=>event.stopPropagation());
   record.more=el('details',{class:'component-more'},[record.summary,record.panel]);
   record.summary.onclick=event=>{event.preventDefault();if(active===record){closeMore();return;}closeMore();record.more.open=true;active=record;record.panel.showPopover();positionMore();};
   record.star=el('button',{type:'button',class:'graphic-favorite',onkeydown:event=>{if(event.key===' '||event.key==='Enter')event.stopPropagation();},onclick:()=>{onFavorite(record.entry);if(!record.star.isConnected)onFavoriteRemoved();}});
   record.star.append(actionIcon('M12 3l2.78 5.93 6.22.95-4.5 4.62L17.56 21 12 17.93 6.44 21l1.06-6.5L3 9.88l6.22-.95L12 3Z'));
-  element.append(record.inspect,record.add,record.more,record.star);cards.set(entry.id,record);return record;
+  const toolbar=el('div',{class:'graphic-card-toolbar'},[badges,record.star]);element.append(record.inspect,record.add,record.more,toolbar);cards.set(entry.id,record);return record;
  }
  function updateCard(entry){
   const record=cards.get(entry.id)??card(entry);record.entry=entry;
   const revision=JSON.stringify([entry.resourceId,entry.versionId,entry.personalRevision]);let renderChanged=false;
   if(revision!==record.revision){
    const key=thumbnailVisualKey(entry.root);renderChanged=key!==record.renderKey;record.renderKey=key;record.revision=revision;record.animated=graphicIsAnimated(entry);
+   record.shader=graphicEntryHasShader(entry);
   }
-  const name=graphicLabel(entry),metadata=JSON.stringify([interfaceLanguage(),name,entry.versionId,entry.personalRevision,record.animated]);
+  const name=graphicLabel(entry),metadata=JSON.stringify([interfaceLanguage(),name,entry.versionId,entry.personalRevision,record.animated,record.shader]);
   if(metadata!==record.metadata){
    text(record.name,name);attr(record.name,'title',name);attr(record.inspect,'aria-label',uiText('library.viewPrefix')+name);text(record.add,uiText('library.addInstance'));attr(record.add,'aria-label',uiText('library.addPrefix')+name);
    record.image.alt=name+uiText('editor.preview');
    text(record.summary,uiText('editor.more'));attr(record.panel,'aria-label',name);text(record.version,uiText('editor.version')+entry.versionId);text(record.personal,uiText('editor.personalEdits')+entry.personalRevision);
    for(const [control,key]of [[record.rename,'editor.rename'],[record.publish,'editor.saveToGraphicsLibrary'],[record.remove,'editor.removeFromGraphicsList']]){attr(control,'title',uiText(key));attr(control,'aria-label',uiText(key));}
    attr(record.rename,'aria-label',uiText('library.renamePrefix')+name);
-   if(record.animated){record.badge??=makeAnimationBadge();attr(record.badge,'aria-label',uiText('library.animatedBadge'));attr(record.badge,'title',uiText('library.animatedHint'));if(!record.badge.parentElement)record.element.append(record.badge);}
+   record.download.hidden=!record.shader;attr(record.download,'aria-label',uiFormat('graphicShader.downloadNamed',name));attr(record.download,'title',uiText('graphicShader.scope'));text(record.download.querySelector('span'),uiText('fx.downloadShader'));
+   if(record.animated){record.badge??=makeAnimationBadge();attr(record.badge,'aria-label',uiText('library.animatedBadge'));attr(record.badge,'title',uiText('library.animatedHint'));if(!record.badge.parentElement)record.badges.prepend(record.badge);}
    else{record.badge?.remove();record.badge=null;}
+   record.shaderBadge?.remove();record.shaderBadge=null;
+   if(record.shader){record.shaderBadge=createShaderBadge(document,{className:'graphic-shader',label:uiText('library.shaderBadge'),hint:uiText('library.shaderHint')});record.badges.append(record.shaderBadge);}
    if(!renderChanged)thumbnails.localize(record.image);
    record.metadata=metadata;
   }

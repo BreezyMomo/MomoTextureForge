@@ -3,5 +3,7 @@ vec4 generate(vec2 uv){
  c+=spaceLayer(p,ph,sd)*nebulaAmount;
  c=1.-exp(-max(c,vec3(0))*exposure);
  float edge=1.-smoothstep(.87,1.1,length(p));
- c*=.5+.5*edge;return vec4(c,1.);
+ c*=.5+.5*edge;
+ // Output straight RGBA so empty space reveals the canvas background.
+ float a=max(c.r,max(c.g,c.b));return vec4(c/max(a,.00001),a);
 }

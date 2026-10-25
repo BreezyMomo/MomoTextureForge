@@ -4,7 +4,9 @@
 [简体中文](realtime-shaders.md) · [English](realtime-shaders.en.md)
 <!-- /doc-language -->
 
-For Unity integration, query support before exporting an authored work. This is separate from the [unified handdrawn postprocess](handdrawn-postprocess.en.md). Having GLSL source is not proof of realtime export support.
+First follow [Game-engine integration rules](engine-integration.en.md). This page describes current Unity graphic modules and bounded composition delivery; current coverage does not limit the common reuse priority.
+
+The tool provides a few adapted graphic generation Shaders and postprocess modules, not one-click conversion of arbitrary canvases. For complex work, AI must read the native project, reuse, combine and modify modules for the target engine, then validate the result. Query actual support before Unity delivery; handdrawn uses the [unified postprocess](handdrawn-postprocess.en.md). Having GLSL source is not proof of Unity support.
 
 For animated handdrawn effects without baked outline inputs, read [Live contours and individual strokes](handdrawn-postprocess.en.md) and select the reported live mode. The analytic single-pass route below is for graphs without post effects; old light/frozen renderers are retired.
 
@@ -46,7 +48,7 @@ When supported, export:
 {"snapshotId":"actual-snapshot-id","kind":"shader","shaderMode":"realtime","times":[0,0.75,1.5,2.25,3],"size":256}
 ```
 
-Files live on the MCP host. No canvas or client configuration is changed. The webpage also exposes the support check and download under **Export → Unity realtime Shader ZIP**.
+Files live on the MCP host. No canvas or client configuration is changed. The CLI/MCP analytic composition route covers only the subset above and is not a global webpage export format. In the webpage, select an adapted graphic node and use **Shape → Graphic selection → Unity graphic Shader** to download its independent generation module with current base parameters. Node colors, transforms, arrangement, keyframes, composition and post effects are excluded. This download does not recreate the original work.
 
 ## Package and Unity integration
 

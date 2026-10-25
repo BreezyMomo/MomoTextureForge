@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {project,node} from '../web/tree-model.js';
-import {compileProjectShader,projectShaderSupport,SHADER_GRAPHICS,shaderHLSL} from '../web/project-shader-compiler.js';
+import {compileProjectShader,projectShaderSupport,SHADER_GRAPHICS,shaderHLSL,hasGraphicShader} from '../web/project-shader-compiler.js';
 import {builtinAsset,registerAsset,unregisterAsset} from '../web/resource-assets.js';
 
 test('reviewed shader graphics compile with per-instance properties and no full-catalog switch',async()=>{
@@ -18,8 +18,12 @@ test('support rejects each unsupported node explicitly, including disabled nodes
  }
 });
 test('custom resources require the reviewed actual implementation, not a claimed builtin name',async()=>{
- const a=builtinAsset('Circle');a.definition.name='Renamed circle';a.definition.outputs.scalar.inline='return .5;';const id='asset_unreviewed_circle';registerAsset(id,a);
- try{const p=project();p.root.children=[node('shape',id)];assert.equal(projectShaderSupport(p).supported,false);}finally{unregisterAsset(id);}
+ for(const type of SHADER_GRAPHICS)assert.equal(hasGraphicShader(type),true);
+ assert.equal(hasGraphicShader('Star'),false);assert.equal(hasGraphicShader('missing-resource'),false);
+ const a=builtinAsset('Circle');a.definition.name='Renamed circle';const id='asset_unreviewed_circle';registerAsset(id,a);
+ try{assert.equal(hasGraphicShader(id),true,'renamed copies use actual source identity');}finally{unregisterAsset(id);}
+ a.definition.outputs.scalar.inline='return .5;';registerAsset(id,a);
+ try{const p=project();p.root.children=[node('shape',id)];assert.equal(hasGraphicShader(id),false);assert.equal(projectShaderSupport(p).supported,false);}finally{unregisterAsset(id);}
 });
 test('dialect adapter handles vector splats and vector swizzles and avoids reserved identifiers',()=>{
  const source='vec3 x=vec3(p.xyx);vec3 y=vec3(.5);vec2 point=vec2(1.);';const hlsl=shaderHLSL(source);

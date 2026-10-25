@@ -4,7 +4,7 @@
 [简体中文](live-editor.md) · [English](live-editor.en.md)
 <!-- /doc-language -->
 
-完整作品接入 Unity 时，先使用[实时作品 Shader 流程](realtime-shaders.md)查询逐节点支持范围，导出已审查的解析子集与独立材质参数。手绘统一使用 postprocess，不提供轻量或冻结出口。
+将编辑器效果接入游戏引擎时，先遵守[通用接入规则](engine-integration.md)，优先检查并复用已有模块，再适配和补充缺失部分。forge_guide 的 shader 主题返回同一规则；当前 Unity 的具体支持见[已适配图形](realtime-shaders.md)。
 
 动画手绘轮廓/排线先查看 shader-support 返回的 modes.postprocess / recommendedMode，按[实时逐笔手绘](handdrawn-postprocess.md)用同一新鲜 snapshotId 显式导出 postprocess；旧轻量/冻结出口退役，auto 不回退。
 
@@ -120,7 +120,7 @@ MCP 参数成员与数组元素总数最多 65,536，HTTP JSON 请求体上限 1
 
 ## 将作品实现到游戏
 
-先捕获、检查相关节点、按需读取源码，再用同一快照渲染多个时刻。按用户的引擎、使用场景与性能预算实现 Shader、材质和动画。浏览器渲染只验证编辑器输出，不代表 Unity 编译或引擎视觉一致性已经通过。
+先读取[游戏引擎接入通用规则](engine-integration.md)，或调用 forge_guide 的 shader 主题。捕获并检查相关节点后，用同一新鲜快照查询支持、获取现有模块与参数并渲染代表性时刻；适用的代码优先复用，只适配或补充缺口。浏览器输出与目标引擎编译、视觉及播放分别验证。
 
 返回的原生 ZIP 可继续交给项目交接、Shader 参考和离线编辑命令。路径属于 MCP 主机，不是公共下载地址；远程 AI 执行环境需要客户端另行传输文件。修改游戏项目仍遵守用户授权和目标工程规则。
 

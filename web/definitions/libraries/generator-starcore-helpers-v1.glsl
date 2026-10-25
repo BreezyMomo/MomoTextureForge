@@ -8,7 +8,7 @@ vec3 cold(float x){return mix(vec3(.11,.32,1.),vec3(.28,1.,1.),clamp(x,0.,1.));}
 vec3 hot(float x){return mix(vec3(1.,.13,.045),vec3(1.,.85,.43),clamp(x,0.,1.));}
 float angled(float a,float b){return atan(sin(a-b),cos(a-b));}
 vec3 starfield(vec2 p,float phase,float sd){vec3 c=vec3(0);for(int k=0;k<3;k++){float sc=18.+float(k)*19.;vec2 q=p*sc,cell=floor(q),v=fract(q)-.5;float h=shash(cell+sd+float(k)*31.);vec2 off=vec2(shash(cell+4.1),shash(cell+7.4))*.6-.3;float d=length(v-off);float pulse=.6+.4*sin(phase+6.283*h);float st=exp(-d*d/(.0006+.0008*h))*step(.84,h);c+=mix(vec3(.3,.5,1.),vec3(1.,.74,.55),h)*st*pulse*(.25+float(k)*.15);}return c;}
-vec3 spaceLayer(vec2 p,float ph,float sd){float r=length(p);vec2 q=srot(.45)*p;float n=sfbm(q*3.+vec2(cos(ph),sin(ph))*.10+sd);float mist=pow(n,3.)*exp(-abs(q.y+.18*sin(q.x*3.))*3.);vec3 c=vec3(.004,.008,.022)+vec3(.13,.045,.28)*mist; c+=vec3(.0,.12,.19)*pow(sfbm(p*4.+7.+sd),4.)*exp(-r);return c+starfield(p,ph,sd);}
+vec3 spaceLayer(vec2 p,float ph,float sd){float r=length(p);vec2 q=srot(.45)*p;float n=sfbm(q*3.+vec2(cos(ph),sin(ph))*.10+sd);float mist=pow(n,3.)*exp(-abs(q.y+.18*sin(q.x*3.))*3.);vec3 c=vec3(.13,.045,.28)*mist; c+=vec3(.0,.12,.19)*pow(sfbm(p*4.+7.+sd),4.)*exp(-r);return c+starfield(p,ph,sd);}
 vec3 diskLayer(vec2 p,float ph,float sd,float amt){
  vec2 q=srot(.26)*p; q.y*=2.8; float r=length(q),a=atan(q.y,q.x);vec3 c=vec3(0);
  float region=smoothstep(.18,.27,r)*(1.-smoothstep(.67,.88,r));

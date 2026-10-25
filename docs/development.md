@@ -137,7 +137,7 @@ node tests/startup-browser-check.mjs
 | 界面文案与语言 | `node tests/ui-language-browser-check.mjs` | 加`--built`；单位检查`tests/ui-language.test.mjs` |
 | 播放中参数编辑 | `node tests/playback-parameter-browser-check.mjs` | 加`--built`；覆盖撤销、录制与局部播放 |
 | MCP | `node tests/editor-mcp-browser-check.mjs` | 加`--built-only`验证静态版与HTTPS；使用隔离服务，勿占用用户连接 |
-| Shader网页入口 | `node tests/project-shader-ui-browser-check.mjs` | 加`--built`；检查不支持项阻断与项目不变 |
+| Shader网页入口 | `node tests/project-shader-ui-browser-check.mjs` | 加`--built`；检查通用导出无Shader项、图形模块下载范围、后处理阻断与项目不变 |
 | 解析Shader | `node tests/project-shader-browser-check.mjs` | 支持`--fxc <路径>`；仍需目标引擎检查 |
 | 手绘输入与共享核心 | `node tests/handdrawn-postprocess-browser-check.mjs` | 支持`--fxc <路径>`；检查真实效果前输入与参数 |
 | 可下载Skill | `node tests/handdrawn-postprocess-portable-check.mjs` | 从实际ZIP独立解压并导出；不依赖源码工程 |

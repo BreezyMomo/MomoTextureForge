@@ -4,6 +4,8 @@
 [简体中文](shader-architecture.md) · [English](shader-architecture.en.md)
 <!-- /doc-language -->
 
+When bringing editor effects into a game engine, first follow the reuse → adapt → implement gaps priority in [Game-engine integration rules](engine-integration.en.md). This page defines technical boundaries for developing and extending modules.
+
 Before adding or changing a Shader, generator, postprocess or engine adapter, identify its responsibility and use the existing interfaces. These rules define module boundaries; they do not claim Unity support for every web feature or add fields/interfaces to current authoring JSON.
 
 ## 1. Two responsibilities
@@ -23,6 +25,7 @@ A generator may process its own intermediate textures. That does not imply arbit
 - A new postprocess consumes explicit image input without hardcoding an upstream graphic ID, formula or screenshot. The core should remain reusable after replacing compatible inputs. Declare required channels, auxiliary inputs and static/dynamic capabilities; reject unsupported inputs explicitly.
 - When both a new graphic and a new postprocess are needed, implement and validate them separately, then compose them in order. Internal steps intrinsic to a graphic may remain in its generator; avoid unnecessary fragmentation.
 - Reuse existing resources, nodes and effect ordering instead of inventing a project format for one example. Do not disguise a generic postprocess as a library graphic tied to one source image.
+- Match web delivery entry points to their scope: global export delivers rendered results, without whole-canvas Unity Shader conversion. Adapted generation Shaders belong in graphic selection with explicit base-parameter scope, not a claim to recreate the node or work. Postprocess packages belong in their effect panels. AI combines, modifies and validates modules using the native project for complex work. CLI/MCP retains bounded composition delivery after per-node support checks; a few adapted modules do not establish general conversion capability.
 
 For graphic authoring, use [scalar formulas](authoring-guide.en.md) or [RGBA generators](generator-guide.en.md). A new postprocess requires implementation in the tool's actual effect registration, parameters, order and rendering entry points. Existing `.graphic.json` / `.generator.json` are not generic postprocess plugin formats; invented fields do not implement integration.
 

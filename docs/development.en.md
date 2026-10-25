@@ -137,7 +137,7 @@ Choose checks for the changed scope; compilation alone is not visual acceptance:
 | UI text/language | `node tests/ui-language-browser-check.mjs` | Add `--built`; unit check `tests/ui-language.test.mjs` |
 | Live parameter editing | `node tests/playback-parameter-browser-check.mjs` | Add `--built`; undo, recording and local playback |
 | MCP | `node tests/editor-mcp-browser-check.mjs` | Add `--built-only ` for static/HTTPS; isolated service, preserving user connections |
-| Shader web entry | `node tests/project-shader-ui-browser-check.mjs` | Add `--built`; unsupported blocking and unchanged project |
+| Shader web entry | `node tests/project-shader-ui-browser-check.mjs` | Add `--built`; no global Shader format, graphic module scope, postprocess blocking and unchanged project |
 | Analytic Shaders | `node tests/project-shader-browser-check.mjs` | Optional `--fxc <path>`; target engine still required |
 | Handdrawn input/shared core | `node tests/handdrawn-postprocess-browser-check.mjs` | Optional `--fxc <path>`; actual pre-effect input and parameters |
 | Downloadable Skill | `node tests/handdrawn-postprocess-portable-check.mjs` | Extracts/exports the real ZIP independently of the source checkout |

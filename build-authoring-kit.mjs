@@ -27,6 +27,8 @@ export async function buildAuthoringKit(){
   'scripts/web/project-render.html':await readFile(resolve(root,'web/project-render.html'),'utf8'),
   'references/shader-architecture.md':await readFile(resolve(root,'skills/texture-forge-author/references/shader-architecture.md'),'utf8'),
   'references/shader-architecture.en.md':await readFile(resolve(root,'skills/texture-forge-author/references/shader-architecture.en.md'),'utf8'),
+  'references/engine-integration.md':await readFile(resolve(root,'skills/texture-forge-author/references/engine-integration.md'),'utf8'),
+  'references/engine-integration.en.md':await readFile(resolve(root,'skills/texture-forge-author/references/engine-integration.en.md'),'utf8'),
   'references/project-tools.md':await readFile(resolve(root,'skills/texture-forge-author/references/project-tools.md'),'utf8'),
   'references/project-tools.en.md':await readFile(resolve(root,'skills/texture-forge-author/references/project-tools.en.md'),'utf8'),
   ...Object.fromEntries(await Promise.all(['handdrawn-postprocess.md','handdrawn-postprocess.en.md','dynamic-handdrawn.md','dynamic-handdrawn.en.md','realtime-shaders.md','realtime-shaders.en.md','installation.md','installation.en.md','live-editor.md','live-editor.en.md','offline-projects.md','offline-projects.en.md','example.project.json','example-bolt.svg'].map(async name=>['references/'+name,await readFile(resolve(root,'skills/texture-forge-author/references',name),'utf8')]))),

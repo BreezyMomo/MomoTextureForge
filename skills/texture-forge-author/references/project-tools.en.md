@@ -4,11 +4,11 @@
 [简体中文](project-tools.md) · [English](project-tools.en.md)
 <!-- /doc-language -->
 
-For complete authored works, first use the [realtime project Shader workflow](realtime-shaders.en.md). It queries actual per-node support and exports a reviewed analytical subset with independent material properties. Handdrawn conversion uses the unified postprocess workflow.
+Before bringing authored work into a game, follow [Game-engine integration rules](engine-integration.en.md): query actual module support before writing code, prefer reuse, then adaptation, and implement only gaps. This page covers offline inspection and reference delivery; see [Adapted graphics](realtime-shaders.en.md) for current Unity queries and export.
 
 Use this workflow when the user supplies a ZIP from **File → Save project** and wants AI to understand the effect, produce supporting textures or implement it in a game. Project ZIPs carry nodes, parameters, keyframes, formulas and image dependencies. No editor/browser control or matching library installation is required. The library's AI graphic catalog remains metadata only and cannot replace an authored project.
 
-For animated sketch without baked outline inputs, follow [Live contours and individual strokes](handdrawn-postprocess.en.md). Discover modes.postprocess / recommendedMode through shader-support, then explicitly choose postprocess instead of rewriting a temporary shader.
+For handdrawn input adapters, native parameters and runtime contracts, see [Unified postprocessing](handdrawn-postprocess.en.md). Other effects follow the same common integration rule, with capabilities determined by their actual modules.
 
 The user need not create a starting project. For AI-authored node trees, offline revisions and editable ZIP delivery, see [Create and edit complete projects offline](offline-projects.en.md). The same tools provide create/edit/pack/unpack/catalog/schema.
 

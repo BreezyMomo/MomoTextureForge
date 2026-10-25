@@ -3,6 +3,9 @@ import {interfaceLanguage} from './language.js';
 import {EFFECT_CATEGORIES,matchingEffects} from './post-effect-catalog.js';
 import {effectPreviewSpec,EFFECT_PREVIEW_SIZE} from './post-effect-specimens.js';
 import {makeDialogMovable} from './movable-dialog.js';
+import {createShaderBadge} from './shader-badge.js';
+import {hasPostEffectShader,exportPostEffectShader} from './post-effect-shader.js';
+import {download} from './encoders.js';
 let active=null;
 export function reconcilePostEffectPicker(context){if(!active)return;if(active.context!==context||active.language!==interfaceLanguage())active.close(false);else active.refresh();}
 export function openPostEffectPicker({document:doc,anchor,context,present,onAdd}){
@@ -18,10 +21,10 @@ export function openPostEffectPicker({document:doc,anchor,context,present,onAdd}
  const resultCount=el('span','tree-note');resultCount.setAttribute('aria-live','polite');filters.append(category,resultCount);
  const note=el('p','tree-note',uiText('fx.previewSpecimen')),grid=el('div','post-effect-picker-grid'),status=el('p','tree-note post-effect-picker-status');status.setAttribute('aria-live','polite');
  dialog.append(header,searchRow,filters,note,grid,status);doc.body.append(dialog);
- let closed=false,preview=null,initializing=null,running=false,observer=null;const queue=[],cache=new Map(),view=doc.defaultView,motionPreference=view.matchMedia('(prefers-reduced-motion: reduce)');let moving=null,motionFrame=0,motionStart=0,lastFrame=0;
+ let closed=false,preview=null,initializing=null,running=false,observer=null;const queue=[],cache=new Map(),shaderDownloads=new Set(),view=doc.defaultView,motionPreference=view.matchMedia('(prefers-reduced-motion: reduce)');let moving=null,motionFrame=0,motionStart=0,lastFrame=0;
  function clamp(){if(closed)return;const box=dialog.getBoundingClientRect();dialog.style.left=Math.max(8,Math.min(box.left,view.innerWidth-box.width-8))+'px';dialog.style.top=Math.max(8,Math.min(box.top,view.innerHeight-box.height-8))+'px';}
  function close(focus=true){if(closed)return;closed=true;stopMotion();observer?.disconnect();queue.length=0;preview?.destroy();preview=null;doc.removeEventListener('keydown',escape,true);view.removeEventListener('resize',clamp);view.removeEventListener('blur',stopMotion);view.removeEventListener('focus',resumeMotion);doc.removeEventListener('visibilitychange',visibility);motionPreference.removeEventListener('change',motionChanged);if(dialog.open)dialog.close();dialog.remove();if(active?.dialog===dialog)active=null;if(focus){const target=anchor.isConnected?anchor:doc.querySelector('#inspector .post-effects-add');target?.focus({preventScroll:true});}}
- function escape(event){if(event.key==='Escape'){event.preventDefault();event.stopPropagation();close();}}
+ function escape(event){if(event.key==='Escape'&&!doc.querySelector('.inspector-help-tooltip:popover-open')){event.preventDefault();event.stopPropagation();close();}}
  function paint(entry,data){
   entry.data=data;const ctx=entry.canvas.getContext('2d'),split=Math.round(entry.canvas.width*Number(entry.compare.value)/100);
   ctx.putImageData(data.before,0,0);if(split<entry.canvas.width)ctx.putImageData(data.after,0,0,split,0,entry.canvas.width-split,entry.canvas.height);
@@ -71,7 +74,13 @@ export function openPostEffectPicker({document:doc,anchor,context,present,onAdd}
   const release=event=>{if(event.pointerId!==pointer)return;pointer=null;if(image.hasPointerCapture(event.pointerId))image.releasePointerCapture(event.pointerId);};image.onpointerup=release;image.onpointercancel=release;image.onlostpointercapture=()=>{pointer=null;};
   return entry;
  }
- function refreshActions(){for(const item of grid.querySelectorAll('[data-effect-choice]')){const state=present(item.dataset.effectChoice),action=item.querySelector('button'),name=item.querySelector('strong').textContent;action.disabled=state===true;action.textContent=uiText(state===true?'fx.alreadyAdded':state===undefined?'fx.addToAll':'fx.addEffect');action.setAttribute('aria-label',uiFormat(state===undefined?'fx.addNamedToAll':'fx.addNamed',name));}}
+ function refreshActions(){for(const item of grid.querySelectorAll('[data-effect-choice]')){const state=present(item.dataset.effectChoice),action=item.querySelector('[data-add-effect]'),name=item.querySelector('strong').textContent;action.disabled=state===true;action.textContent=uiText(state===true?'fx.alreadyAdded':state===undefined?'fx.addToAll':'fx.addEffect');action.setAttribute('aria-label',uiFormat(state===undefined?'fx.addNamedToAll':'fx.addNamed',name));const shader=item.querySelector('[data-download-effect-shader]');if(shader){shader.disabled=shaderDownloads.has(item.dataset.effectChoice);shader.textContent=uiText(shader.disabled?'fx.shaderPreparing':'fx.downloadShader');}}}
+ async function downloadShader(id){
+  if(shaderDownloads.has(id))return;shaderDownloads.add(id);refreshActions();status.textContent=uiText('shader.packing');
+  try{const result=await exportPostEffectShader(id);download(result.bytes,result.filename,'application/zip');if(!closed)status.textContent=uiText('shader.packageReady');}
+  catch(error){if(!closed)status.textContent=uiError(error);}
+  finally{shaderDownloads.delete(id);if(!closed)refreshActions();}
+ }
  function render(){
   stopMotion();observer?.disconnect();queue.length=0;grid.replaceChildren();clear.disabled=!search.value;
   observer=new IntersectionObserver(entries=>{for(const observed of entries){const entry=observed.target.effectPreview;entry.visible=observed.isIntersecting;if(!entry.visible){if(moving===entry)stopMotion();continue;}if(!entry.data&&!entry.queued){entry.queued=true;queue.push(entry);}else startMotion(entry);}if(queue.length)void drain();},{root:grid,rootMargin:'40px'});
@@ -80,10 +89,11 @@ export function openPostEffectPicker({document:doc,anchor,context,present,onAdd}
   for(const spec of effects){
    const item=el('article','post-effect-choice');item.dataset.effectChoice=spec.id;
    const image=el('div','post-effect-choice-image'),canvas=el('canvas'),label=el('span','tree-note post-effect-preview-state',uiText('fx.previewLoading'));[canvas.width,canvas.height]=EFFECT_PREVIEW_SIZE;canvas.setAttribute('role','img');canvas.setAttribute('aria-label',uiFormat('fx.previewOf',uiText(spec.label)));image.append(canvas,label);
-   const name=el('strong','',uiText(spec.label)),description=el('p','tree-note',uiText('fx.summary.'+spec.id)),state=present(spec.id);
+   const name=el('strong','',uiText(spec.label)),heading=el('div','post-effect-choice-heading'),description=el('p','tree-note',uiText('fx.summary.'+spec.id)),actions=el('div','post-effect-choice-actions'),state=present(spec.id);heading.append(name);
+   if(hasPostEffectShader(spec.id)){heading.append(createShaderBadge(doc,{className:'post-effect-shader',label:uiText('fx.shaderBadge'),hint:uiText('fx.shaderHint')}));const shader=button(uiText(shaderDownloads.has(spec.id)?'fx.shaderPreparing':'fx.downloadShader'),uiFormat('fx.downloadNamedShader',uiText(spec.label)),()=>void downloadShader(spec.id));shader.dataset.downloadEffectShader=spec.id;shader.disabled=shaderDownloads.has(spec.id);actions.append(shader);}
    const action=button(uiText(state===true?'fx.alreadyAdded':state===undefined?'fx.addToAll':'fx.addEffect'),uiFormat(state===undefined?'fx.addNamedToAll':'fx.addNamed',uiText(spec.label)),()=>{
     if(closed)return;const added=onAdd(spec.id);if(closed)return;if(added===false){status.textContent=uiText('fx.addBlocked');return;}status.textContent=uiFormat('fx.addedNamed',uiText(spec.label));refreshActions();
-   });action.disabled=state===true;item.dataset.previewState='loading';item.append(image,name,description,action);grid.append(item);observe(comparison(image,canvas,label,item,spec.id));
+   });action.dataset.addEffect=spec.id;action.disabled=state===true;actions.append(action);item.dataset.previewState='loading';item.append(image,heading,description);if(hasPostEffectShader(spec.id))item.append(el('small','tree-note post-effect-shader-scope',uiText('fx.shaderDefaultScope')));item.append(actions);grid.append(item);observe(comparison(image,canvas,label,item,spec.id));
   }
  }
  search.oninput=()=>{grid.scrollTop=0;render();};category.onchange=()=>{grid.scrollTop=0;render();};

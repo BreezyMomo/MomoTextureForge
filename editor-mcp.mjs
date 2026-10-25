@@ -211,8 +211,8 @@ export function createEditorMCPServer(bridge,service){
   if(kind==='help')return textResult(await bridge.request(pageId,'help-read',{args:{language,id},signal:extra.signal}));
   const result=await bridge.request(pageId,'skill-export',{args:{kind},signal:extra.signal});if(typeof result.zip!=='string'||result.zip.length>Math.ceil(PACK_LIMIT/3)*4)throw Error('Invalid Skill ZIP');const bytes=Buffer.from(result.zip,'base64');if(bytes[0]!==80||bytes[1]!==75||bytes.length>PACK_LIMIT)throw Error('Invalid Skill ZIP');const file=resolve(await service.directory(),'skill-'+kind+'-'+randomUUID()+'.zip');await writeFile(file,bytes,{flag:'wx'});return textResult({file,filename:result.filename,bytes:bytes.length,sha256:digest(bytes)});
  });
- tool('forge_guide','Read the bundled workflow or shader integration guide without manually uploading a Skill.',{language:z.enum(['zh-CN','en']).optional(),topic:z.enum(['live','project','shader','offline']).optional()},async({language='en',topic='live'})=>{
-  const name={live:'live-editor',project:'project-tools',shader:'shader-reference',offline:'offline-projects'}[topic]+(language==='en'?'.en':'')+'.md',root=dirname(fileURLToPath(import.meta.url));let text;
+ tool('forge_guide','Read bundled editor workflows or the common game-engine integration rules without manually uploading a Skill.',{language:z.enum(['zh-CN','en']).optional(),topic:z.enum(['live','project','shader','offline']).optional()},async({language='en',topic='live'})=>{
+  const name={live:'live-editor',project:'project-tools',shader:'engine-integration',offline:'offline-projects'}[topic]+(language==='en'?'.en':'')+'.md',root=dirname(fileURLToPath(import.meta.url));let text;
   try{text=await readFile(resolve(root,'../references',name),'utf8');}catch{text=await readFile(resolve(root,'skills/texture-forge-author/references',name),'utf8');}
   return {content:[{type:'text',text}]};
  });

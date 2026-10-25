@@ -8,7 +8,9 @@ export const SHADER_GRAPHICS=['Circle','Ring','RoundedRect','LinearGradient','Ra
 const identityPost=[0,1,1,0,1,0,1],blendModes=['over','add','max','multiply','subtract','screen','difference','overlay','softlight','dodge','mask','inverseMask'];
 const stable=v=>JSON.stringify(v,(_,x)=>x&&typeof x==='object'&&!Array.isArray(x)?Object.fromEntries(Object.keys(x).sort().map(k=>[k,x[k]])):x);
 const sourceKey=a=>stable({kind:a.kind,scalar:a.definition.outputs.scalar,generator:a.definition.generator,parameters:a.definition.parameters.map(p=>[p.variable,p.slot,p.type??'number']),libraries:a.libraries});
-function graphicProfile(id){const asset=assetFor(id);if(asset.kind!=='formula')return null;return SHADER_GRAPHICS.find(id=>sourceKey(builtinAsset(id))===sourceKey(asset))??null;}
+export function graphicAssetShaderProfile(asset){if(asset.kind!=='formula')return null;return SHADER_GRAPHICS.find(id=>sourceKey(builtinAsset(id))===sourceKey(asset))??null;}
+function graphicProfile(id){return graphicAssetShaderProfile(assetFor(id));}
+export function hasGraphicShader(id){try{return !!graphicProfile(id);}catch{return false;}}
 function rootFor(project,nodeId){return nodeId?find(project.root,nodeId)?.node:canvasRoot(project.root);}
 export function projectShaderSupport(project,{nodeId=null}={}){
  const root=rootFor(project,nodeId),issues=[],nodes=[];

@@ -4,7 +4,9 @@
 [简体中文](realtime-shaders.md) · [English](realtime-shaders.en.md)
 <!-- /doc-language -->
 
-把已调好的作品接入 Unity 时，先查询支持范围，再导出。手绘另使用[统一后处理](handdrawn-postprocess.md)；支持范围不是“所有有 GLSL 的图形”。
+先遵守[游戏引擎接入通用规则](engine-integration.md)。本页仅描述当前 Unity 图形模块与受限组合交付；通用复用优先级不受这些当前支持项限制。
+
+工具提供少数已适配的图形生成 Shader 和后处理模块，不提供任意画布的一键转换。复杂作品需要 AI 读取原生项目，复用、组合并按目标工程修改模块，再验证结果。接入 Unity 时先查询实际支持；手绘另使用[统一后处理](handdrawn-postprocess.md)，有 GLSL 不等于已有 Unity 适配。
 
 ## 首批支持
 
@@ -46,7 +48,7 @@ node scripts/texforge.mjs project shader source.project.zip --shader-mode realti
 {"snapshotId":"实际快照ID","kind":"shader","shaderMode":"realtime","times":[0,0.75,1.5,2.25,3],"size":256}
 ```
 
-输出文件在 MCP 主机，不会修改画布或 AI 客户端配置。网页也可通过 **导出 → Unity 实时 Shader ZIP** 查看支持检查和下载。
+输出文件在 MCP 主机，不会修改画布或 AI 客户端配置。CLI／MCP 的解析组合出口仅覆盖上表子集，不作为网页通用导出项。网页选中已适配的图形节点，在 **图形 → 图形选择 → Unity 图形 Shader** 下载独立图形模块：只取当前基础参数，不含节点配色、变换、排列、关键帧、合成或后处理。该下载不是原作品的完整实时还原。
 
 ## 产物与 Unity 接入
 

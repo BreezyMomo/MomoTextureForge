@@ -37,9 +37,10 @@ import {openAppearanceSettings} from './appearance-settings.js';
 import {messageError,restoreMessageError} from './message-catalog.js';
 import {uiOption,uiError,uiText,localizeApplicationMarkup,uiFormat} from './ui-language.js';
 import {installLanguageSelector} from './language-settings.js';
-import {projectShaderSupport} from './project-shader-compiler.js';
-import {exportProjectShader} from './project-shader-package.js';
-import {handdrawnSupport,exportHanddrawnPostprocess} from './handdrawn-postprocess.js';
+import {hasGraphicShader} from './project-shader-compiler.js';
+import {exportGraphicShader} from './graphic-shader.js';
+import {createAnimationBadge} from './shader-badge.js';
+import {exportHanddrawnPostprocess} from './handdrawn-postprocess.js';
 import {parameterLabel,onLanguageChange,interfaceLanguage} from './language.js';
 import {parameterRole} from './parameter-metadata.js';
 import {createEffectPreview} from './effect-preview.js';
@@ -121,7 +122,7 @@ localizeApplicationMarkup(document.head);localizeApplicationMarkup(document.body
 let state=project();state.root.children=[];
 let quickAspect=null,canvasToolbar=null,canvasBackgroundUI=null;
 let viewPan=[0,0];
-let selected=state.root.id,time=0,formulaSeconds=0,section='shape',solo=false,playing=false,tiled=false,tileGrid=2,busy=false,history=[],future=[],historyRevision=0,pending=false,globalPanel=null,formTarget='inspector',dragged=null,exportKind='png',handdrawnInput='auto',componentPreview=null,cancelExport=false,contourThreshold=50,contourSmooth=true;
+let selected=state.root.id,time=0,formulaSeconds=0,section='shape',solo=false,playing=false,tiled=false,tileGrid=2,busy=false,history=[],future=[],historyRevision=0,pending=false,globalPanel=null,formTarget='inspector',dragged=null,exportKind='png',componentPreview=null,cancelExport=false,contourThreshold=50,contourSmooth=true;
 const shelf=new GraphicShelf();let shelfStorageError=null,shelfRecoveryBackup=null,shelfRecoveryRejected=[];
 const recentKey='momo-texture-tree:recent:v1';let recent=[];try{const saved=JSON.parse(localStorage.getItem(recentKey)||'[]');if(Array.isArray(saved))recent=[...new Set(saved.filter(id=>typeof id==='string'))].slice(0,24);}catch{}
 let selectedIds=new Set([selected]),selectionPrimary=selected,selectionAnchor=selected,canvasEditor=null,batchInspector=null,editPrimary=false,alignmentReference='selection';
@@ -481,11 +482,25 @@ function buildInspector(){const n=current();inspectorVariant=inspectorVariantKey
  if(componentPreview)note(uiText("editor.previewEditsStayInThisSessionUntilYouAddThemTo"));
  renderInspectorTab(n,section);
 }
+function renderGraphicShaderDownload(n){
+ // Deliver a graphic module, never a silently simplified copy of the selected node.
+ if(!hasGraphicShader(n.type))return;
+ const graphic={type:n.type,params:[...n.params]};
+ const detail=el('details',{'data-graphic-shader':n.type}),description=el('p',{class:'tree-note',text:uiText('graphicShader.scope')}),status=el('p',{class:'tree-note',role:'status'});
+ const button=el('button',{type:'button',text:uiText('graphicShader.download'),onclick:async()=>{
+  button.disabled=true;status.textContent=uiText('graphicShader.generating');
+  try{const result=await exportGraphicShader(graphic);download(result.bytes,result.filename,'application/zip');status.textContent=uiText('editor.exportComplete');}
+  catch(error){status.textContent=uiError(error);}
+  finally{button.disabled=false;}
+ }});
+ detail.append(el('summary',{text:uiText('graphicShader.title')}),description,el('p',{class:'tree-note',text:uiText('graphicShader.target')}),button,status);controls().append(detail);
+}
 function renderInspectorTab(n,tab){
  if(tab==='shape'){
   const name=el('input',{value:n.name,'aria-label':uiText("editor.nodeName")});name.onchange=()=>edit(()=>n.name=name.value);controls().append(el('label',{class:'tree-field'},[document.createTextNode(uiText("editor.name")),name]));animatedCheck(uiText("editor.visible"),'enabled');
   if(n.kind==='group'){note(uiFormat("editor.thisGroupContainsValueChildrenSelectAnyNodeInTheTree",n.children.length));renderColorPanel(n);return;}
   heading('modules.generator');choice(uiText("editor.baseShape"),n.type,CATALOG.filter(p=>projectShapeIds().has(p.id)||p.id===n.type).map(p=>[p.id,p.id.startsWith('asset_')?p.zh+' · '+uiText("editor.custom"):graphicLabel(p)+' · '+p.id]),v=>edit(()=>{typeMemory.set(n.id+':'+n.type,{params:[...n.params],tracks:structuredClone(Object.fromEntries(Object.entries(n.tracks).filter(([k])=>k.startsWith('params.'))))});n.type=v;const cached=typeMemory.get(n.id+':'+v);n.params=cached?[...cached.params]:shapeDefaults(v);for(const key of Object.keys(n.tracks))if(key.startsWith('params.'))delete n.tracks[key];if(cached)Object.assign(n.tracks,structuredClone(cached.tracks));remember('shape:'+v);}));
+  renderGraphicShaderDownload(n);
   heading('modules.shapeParameters',uiFormat('modules.graphicParameters',graphicLabel(BY_ID.get(n.type))));controls().append(el('button',{'data-parameter-action':'reset',text:uiText("editor.resetShapeParameters"),onclick:()=>edit(()=>shapeDefaults(n.type).forEach((v,i)=>assignAnimated(n,'params.'+i,v)))}));
   if(BY_ID.get(n.type).definition.generator?.effect==='ribbon'){
    const definition=BY_ID.get(n.type).definition,presets=ribbonPresets(definition);
@@ -573,15 +588,13 @@ const libraryFilters=createGraphicListFilters($('library-filter'),$('library-cat
 const favorites=createGraphicFavorites(localStorage);
 const libraryOpen=new Set();
 function animationBadge(){
- const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 20 20');svg.setAttribute('aria-hidden','true');svg.setAttribute('focusable','false');
- const frame=document.createElementNS(ns,'rect');frame.setAttribute('x','2.5');frame.setAttribute('y','3.5');frame.setAttribute('width','15');frame.setAttribute('height','13');frame.setAttribute('rx','2');
- const play=document.createElementNS(ns,'path');play.setAttribute('d','M8 6.5 13 10 8 13.5Z');svg.append(frame,play);
- return el('span',{class:'graphic-animated',role:'img','aria-label':uiText('library.animatedBadge'),title:uiText('library.animatedHint')},[svg]);
+ return createAnimationBadge(document);
 }
 function rememberLibraryGroup(details){const key='closed:'+details.dataset.category;if(details.open)libraryOpen.delete(key);else libraryOpen.add(key);}
 function syncLibraryToggle(){const groups=[...$('shape-library').children].filter(e=>e.tagName==='DETAILS');$('collapse-library').textContent=(groups.some(e=>e.open) ? uiText("editor.collapseAll") : uiText("editor.expandAll"));$('collapse-library').disabled=!groups.length;}
 function projectShapeIds(){const ids=new Set();for(const r of projectOwner().projectResources)walk(r.root,n=>{if(n.kind==='shape')ids.add(n.type);});return ids;}
 const libraryView=createGraphicListView({container:$('shape-library'),thumbnails:libraryThumbs,el,isFavorite:p=>favorites.has(p),makeAnimationBadge:animationBadge,
+ onDownloadShader:async entry=>{try{notify(uiText('graphicShader.generating'));const result=await exportGraphicShader(entry.root,{name:graphicLabel(entry)});download(result.bytes,result.filename,'application/zip');notify(uiText('shader.packageReady'));}catch(error){notifyError(uiError(error));}},
  isGroupOpen:category=>!libraryOpen.has('closed:'+category),onGroupToggle:details=>{rememberLibraryGroup(details);syncLibraryToggle();},
  onBrowse:p=>browse({id:'preset:'+p.id,name:graphicLabel(p),kind:'preset',preset:p}),
  onInsert:p=>{const copy=cloneWithShortcuts(p.root);copy.resourceRef=p.id;copy.name=graphicLabel(p);if(insert(copy)){remember('preset:'+p.id);library();}},
@@ -747,11 +760,6 @@ async function exportImage(kind,{preview=false}={}){
  }
  try{
   await pause();
-  if(kind==='shader'||kind==='shader-postprocess'){
-   const live=kind==='shader-postprocess',support=live?handdrawnSupport(p,{handdrawnInput}):projectShaderSupport(p);if(!support.supported)throw messageError('shaderProject.unsupported',support.issues.map(i=>i.nodeId+' ['+i.capability+']').join(', '));
-   const duration=exportDuration(o),result=await (live?exportHanddrawnPostprocess:exportProjectShader)(p,{times:[0,.25,.5,.75,1].map(f=>f*duration),size:live?512:256,handdrawnInput,signal:exportController.signal});
-   save(result.bytes,p.name+'-unity-shader.zip','application/zip');return;
-  }
   if(!preview&&(['exr','atlas-exr'].includes(kind)||o.depth===16&&!['copy','gif','psd','psd-vector','svg'].includes(kind))&&!renderer.float)throw messageError("editor.thisDeviceDoesNotSupportFloatingPointRenderingForHighPrecision");
   if(kind==='gif'){const result=await runExportWorker('gif',p,{}, {signal:exportController.signal,stage:exportStage,render:(project,w,h,t,seconds)=>{check();return render(w,h,t,seconds);}});check();if(preview)exportPreview={key:previewKey,bytes:result.bytes,mime:'image/gif',frames:result.frames,fps:gifPlan(o).fps};else{save(result.bytes,p.name+'.gif','image/gif');notify(uiText('editor.exportComplete'));}return;}
   if(preview){const result=await sequence(o.width,o.height,'png');check();exportPreview={key:previewKey,bytes:result.data,mime:'image/png',frames:o.frames,fps:o.fps,columns:Math.min(o.columns,o.frames),frameWidth:o.width,frameHeight:o.height};return;}
@@ -850,17 +858,7 @@ function renderGlobalPanel(){
   note(uiText("editor.theCanvasDefinesAspectRatioNotPixelSizeNodesRetainTheir"));
   field(uiText('animation.cycleSeconds'),'output.seconds',.05,600,.05,{target:state,key:false});
  }else{
-  choice(uiText("editor.exportFormat"),exportKind,[['copy',"editor.copyPNG8Image"],['png',"editor.pngCurrentFrame"],['shader','shaderProject.format'],['shader-postprocess','handdrawn.format'],['psd',"editor.psdLayeredCurrentFrame"],['psd-vector',"editor.psdVectorContoursSimplified"],['svg',"editor.svgVectorContoursSimplified"],['exr',"editor.exrCurrentFrame"],['gif',"export.gifFormat"],['frames',"editor.pngFrameSequenceZIP"],['atlas',"editor.pngSpriteAtlas"],['atlas-exr',"editor.exrSpriteAtlas"],['batch-atlas',"editor.threeSizePNGAtlasesZIP"],['batch',"editor.threeSizePNGImagesZIP"]],v=>{if(busy)return;exportKind=v;renderGlobalPanel();});
-  if(exportKind==='shader'||exportKind==='shader-postprocess'){
-   const live=exportKind==='shader-postprocess';if(live)choice(uiText('handdrawn.inputAdapter'),handdrawnInput,[['auto','handdrawn.input.auto'],['generator','handdrawn.input.generator'],['texture','handdrawn.input.texture'],['external','handdrawn.input.external']],value=>{handdrawnInput=value;renderGlobalPanel();});const report=live?handdrawnSupport(state,{handdrawnInput}):projectShaderSupport(state);note(uiText(live?'handdrawn.description':'shaderProject.description'));heading('shaderProject.supportTitle');note(uiText(report.supported?'shaderProject.supported':'shaderProject.blocked'));
-   for(const issue of report.issues)note(uiFormat('shaderProject.issue',issue.name,issue.nodeId,issue.capability.startsWith('effect:')?uiFormat('shaderProject.effectReason',uiText('fx.effect.'+issue.capability.slice(7))):uiText('shaderProject.reason.'+issue.capability.replace(/-([a-z])/g,(_,letter)=>letter.toUpperCase()))));
-   for(const issue of report.issues)if(issue.path){const label=POST_EFFECTS.flatMap(spec=>spec.parameters).find(p=>p.path===issue.path)?.label;note(uiFormat('handdrawn.unsupportedParameter',label?uiText(label):issue.path));}
-   if(!report.supported)note(uiText('shaderProject.adaptation'));
-   note(uiText(live?'handdrawn.package':'shaderProject.package'));note(uiText('shaderProject.verification'));
-   const button=el('button',{id:'confirm-export',class:'primary',text:uiText(busy?'editor.exporting':'editor.startExport'),onclick:()=>exportImage(exportKind)});button.disabled=busy||!report.supported;$('global-actions').append(button);
-   if(busy)$('global-actions').append(el('p',{id:'export-stage',role:'status',text:uiText('shaderProject.generating')}));
-   return;
-  }
+  choice(uiText("editor.exportFormat"),exportKind,[['copy',"editor.copyPNG8Image"],['png',"editor.pngCurrentFrame"],['psd',"editor.psdLayeredCurrentFrame"],['psd-vector',"editor.psdVectorContoursSimplified"],['svg',"editor.svgVectorContoursSimplified"],['exr',"editor.exrCurrentFrame"],['gif',"export.gifFormat"],['frames',"editor.pngFrameSequenceZIP"],['atlas',"editor.pngSpriteAtlas"],['atlas-exr',"editor.exrSpriteAtlas"],['batch-atlas',"editor.threeSizePNGAtlasesZIP"],['batch',"editor.threeSizePNGImagesZIP"]],v=>{if(busy)return;exportKind=v;renderGlobalPanel();});
   note(uiText("editor.exportsTheFullCanvasIgnoringPreviewChannelSoloModeZoomAnd"));
   if(!['batch','batch-atlas'].includes(exportKind))for(const [key,label]of [['width',"editor.pixelWidth"],['height',"editor.pixelHeight"]])field(uiText(label),'output.'+key,1,4096,1,{target:state,key:false});
   if(animationExportKind(exportKind)){field(uiText("editor.framesPerSecondFPS"),'output.fps',1,120,1,{target:state,key:false});field(uiText('animation.cycleSeconds'),'output.seconds',.05,600,.05,{target:state,key:false});field(uiText('export.durationSeconds'),'output.exportSeconds',.05,600,.05,{target:state,key:false});note(uiText('export.durationExplanation'));check(uiText("editor.loopExportOmitDuplicateEndFrame"),state.output.loopExport,v=>edit(()=>state.output.loopExport=v));if(exportKind!=='gif')note(uiFormat("editor.valueFPSValueSecondsValueFramesValuePlayTheAtlasOr",state.output.fps.toFixed(2),exportDuration(state.output),state.output.frames,(state.output.loopExport ? uiText("editor.endFrameExcluded") : uiText("editor.endFrameIncluded"))));}

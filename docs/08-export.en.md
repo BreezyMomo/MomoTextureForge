@@ -85,7 +85,7 @@ The default threshold is 50%; smoothing reduces stepped edges. A 0% threshold in
 
 ## 5. Check before delivery
 
-The export title, close control and bottom actions remain visible while long settings scroll in the middle. Image/animation formats deliver rendered pixels; **Unity realtime Shader ZIP** and **Unity handdrawn postprocess (ZIP)** deliver code, parameters and dependencies. See [Shader categories and Unity export](14-shader-reference.en.md). Query support first: unsupported nodes, styles or parameters block Shader export. Web rendering does not imply a Unity adapter exists. Project ZIPs retain editable work.
+The export title, close control and bottom actions remain visible while long settings scroll in the middle. Global export delivers rendered results and has no whole-canvas Unity Shader option. Adapted graphic code is available under **Shape → Graphic selection → Unity graphic Shader**; postprocess code stays in its effect panel, such as **Composite → Handdrawn → Download handdrawn postprocess**. These are reusable modules. AI must combine, modify and validate them in the target project for complex work; web rendering does not imply a Unity adapter exists. See [Shader categories and Unity export](14-shader-reference.en.md). Project ZIPs retain editable work.
 
 Open downloads in the target application and confirm dimensions, alpha, frame count, direction and color/normal channels. Save a project ZIP separately for later editing.
 
