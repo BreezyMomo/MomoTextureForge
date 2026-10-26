@@ -181,7 +181,7 @@ forge_edit 现有配方还支持以下原生动作，字段与枚举在 forge_sc
 
 `forge_project_share({snapshotId})` 返回当前作品配置链接，不上传或写剪贴板。自定义依赖、file 页面或超过 100000 UTF-8 字节返回不可用原因及 `forge_project_save` 替代入口。localhost 链接不能被另一台电脑直接访问；可保留片段改用接收者的编辑器地址。
 
-`forge_editor_control.changes.preview` 支持 tool（transform/pivot/uv/pan）和 snap。changes.material 支持 model（0球/1面/2立方体）、lightAngle、roughness、metallic、tiling、orbit 与 resetView；changes.effect 支持 background、blend、size、brightness、color 和 reset。changes.appearance 与 language 采用 state.preferences.options 的枚举。设置仅影响视图或本浏览器偏好，不修改作品或撤销历史。改前读回，测试后恢复原偏好。Shader 参考导出要求节点实际存在 sketch 效果；普通无效果节点不能转换成默认手绘效果。
+`forge_editor_control.changes.preview` 支持 tool（transform/pivot/uv/pan）和 snap。changes.material 支持 model（0球/1面/2立方体）、lightAngle、ambientIntensity（0～2，默认0.18）、lightIntensity（0～3，默认1）、roughness、metallic、tiling、orbit 与 resetView；changes.effect 支持 background、blend、size、brightness、color 和 reset。changes.appearance 与 language 采用 state.preferences.options 的枚举。设置仅影响视图或本浏览器偏好，不修改作品或撤销历史。改前读回，测试后恢复原偏好。Shader 参考导出要求节点实际存在 sketch 效果；普通无效果节点不能转换成默认手绘效果。
 
 ## 工作区布局
 

@@ -206,6 +206,7 @@
 .material-controls{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:0 0 10px}
 .material-controls label{display:flex;align-items:center;gap:6px;white-space:nowrap;color:var(--ui-muted);font-size:12px}
 .material-controls input{width:95px;min-width:60px;padding:0}
+.material-controls .material-control-value{min-width:4ch;text-align:right;font-variant-numeric:tabular-nums;color:var(--ui-text)}
 .material-controls button,.material-controls select{padding:5px}
 .preview-heading{gap:8px 12px}.preview-heading strong{flex:none;white-space:nowrap}
 .preview-heading #render-status{flex:1 1 170px;min-width:170px;line-height:1.5}

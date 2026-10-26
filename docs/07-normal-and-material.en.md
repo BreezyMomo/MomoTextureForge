@@ -53,7 +53,8 @@ Select **Preview mode → 3D material** in the same preview area:
 
 - Choose sphere, plane or cube and drag to rotate the view.
 - Normal mode uses a neutral material to show relief lighting; Color shows a flat surface pattern, and Height shows grayscale.
-- Light direction, roughness, metalness, texture repeat and reset view aid inspection.
+- Light direction, main light intensity and ambient light intensity control preview lighting. The main light controls direct diffuse lighting and highlights; ambient light provides uniform fill so shaded surfaces remain visible. Both can be set to 0; their defaults are 1 and 0.18, respectively.
+- Roughness, metalness, texture repeat and reset view aid inspection. Ambient light is simplified fill lighting without HDR environment reflections.
 - Return to 2D canvas for selection, movement and UV editing.
 
 This is a material preview, not a modeling or extrusion tool. Models and lights are not exported. Use Color when you want a graphic printed flat on the model without relief.

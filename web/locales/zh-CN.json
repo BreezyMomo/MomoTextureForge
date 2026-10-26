@@ -1517,6 +1517,8 @@
   "material.draw": "绘制",
   "material.initialization": "初始化",
   "material.lightDirection": "灯光方向",
+  "material.lightIntensity": "主光强度",
+  "material.ambientIntensity": "环境光强度",
   "material.materialSampling": "材质采样",
   "material.metallic": "金属度",
   "material.parameterBinding": "参数绑定",

@@ -7,6 +7,7 @@ import {project,node} from '../web/tree-model.js';
 const url=process.argv[2]??'http://127.0.0.1:8799/';
 await mkdir('test-results/material-preview',{recursive:true});
 for(const channel of ['chrome','msedge']){
+ const artifact=(process.argv.includes('--built')?'built-':'source-')+channel;
  const browser=await chromium.launch({channel,headless:true});
  try{
   const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];
@@ -22,18 +23,35 @@ for(const channel of ['chrome','msedge']){
   const canvas=page.locator('#material-preview canvas'),pictures=[];
   for(const model of ['0','1','2']){
    await dialog.getByRole('combobox',{name:'预览模型'}).selectOption(model);
-   const picture=await canvas.screenshot({path:'test-results/material-preview/'+channel+'-'+model+'.png'});
+   const picture=await canvas.screenshot({path:'test-results/material-preview/'+artifact+'-'+model+'.png'});
    assert.ok(picture.length>4000,channel+' model '+model+' is blank');
    for(const other of pictures)assert.notDeepEqual(picture,other,channel+' models must differ');
    pictures.push(picture);
   }
   assert.equal(await dialog.getByRole('slider',{name:'凹凸强度',exact:true}).count(),0);
   assert.equal(await dialog.getByRole('slider',{name:'视差深度',exact:true}).count(),0);
-  const flat=await canvas.screenshot({path:'test-results/material-preview/'+channel+'-flat.png'});
+  const ambient=()=>dialog.getByRole('slider',{name:'环境光强度',exact:true}),mainLight=()=>dialog.getByRole('slider',{name:'主光强度',exact:true});
+  assert.equal(await ambient().inputValue(),'0.18');assert.equal(await mainLight().inputValue(),'1');
+  const lightingDraft=await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1'));
+  const pixels=async()=>page.evaluate(async encoded=>{const bitmap=await createImageBitmap(new Blob([Uint8Array.from(atob(encoded),c=>c.charCodeAt(0))],{type:'image/png'})),canvas=document.createElement('canvas');canvas.width=bitmap.width;canvas.height=bitmap.height;const ctx=canvas.getContext('2d');ctx.drawImage(bitmap,0,0);const {data}=ctx.getImageData(0,0,canvas.width,canvas.height);let center=0,count=0;for(let y=Math.floor(canvas.height*.45);y<canvas.height*.55;y++)for(let x=Math.floor(canvas.width*.45);x<canvas.width*.55;x++){const i=(y*canvas.width+x)*4;center+=(data[i]+data[i+1]+data[i+2])/3;count++;}bitmap.close();return {center:center/count,background:[...data.slice(0,4)]};},(await canvas.screenshot()).toString('base64'));
+  await ambient().fill('0');await mainLight().fill('0');const dark=await pixels();assert.ok(dark.center<1,channel+' disabling both lights must remove diffuse and highlights');
+  await ambient().fill('0.6');const ambientOnly=await pixels();assert.ok(ambientOnly.center>dark.center+20,channel+' ambient fill must illuminate without the main light');assert.deepEqual(ambientOnly.background,dark.background,channel+' ambient fill must not brighten the preview backdrop');
+  await ambient().fill('0');await mainLight().fill('1');const directOnly=await pixels();assert.ok(directOnly.center>dark.center+5,channel+' main light must work independently');
+  await ambient().fill('0.42');await mainLight().fill('0.75');
+  assert.deepEqual(await dialog.locator('.material-control-value').allTextContents(),['0.75','0.42']);
+  await page.locator('#preview-mode').selectOption('canvas');await page.locator('#preview-mode').selectOption('material');
+  assert.equal(await ambient().inputValue(),'0.42');assert.equal(await mainLight().inputValue(),'0.75');
+  await page.locator('#language-settings').selectOption('en');await page.setViewportSize({width:768,height:900});
+  assert.equal(await dialog.getByRole('slider',{name:'Ambient light intensity',exact:true}).inputValue(),'0.42');assert.equal(await dialog.getByRole('slider',{name:'Main light intensity',exact:true}).inputValue(),'0.75');
+  assert.equal(await page.locator('#material-preview-controls').evaluate(e=>e.scrollWidth<=e.clientWidth+1),true,channel+' English lighting controls must wrap in a narrow panel');
+  await page.locator('#language-settings').selectOption('zh-CN');await page.setViewportSize({width:1440,height:1000});
+  await ambient().fill('0.18');await mainLight().fill('1');
+  assert.equal(await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1')),lightingDraft,channel+' preview lighting must not change the saved project');
+  const flat=await canvas.screenshot({path:'test-results/material-preview/'+artifact+'-flat.png'});
   const originalDraft=await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1'));
   await page.getByRole('combobox',{name:'预览贴图类型',exact:true}).selectOption('normal');
   await page.waitForFunction(()=>!document.querySelector('#normal-preview-settings').hidden);
-  const raised=await canvas.screenshot({path:'test-results/material-preview/'+channel+'-normal.png'});
+  const raised=await canvas.screenshot({path:'test-results/material-preview/'+artifact+'-normal.png'});
   assert.notDeepEqual(raised,flat,channel+' generated normals must change surface lighting');
   assert.equal(await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1')),originalDraft,channel+' viewing a channel must not edit the project');
   const strength=()=>page.locator('#normal-preview-settings').getByRole('spinbutton',{name:'法线强度',exact:true});
@@ -55,7 +73,7 @@ for(const channel of ['chrome','msedge']){
   await page.mouse.down();await page.mouse.move(bounds.x+bounds.width*.65,bounds.y+bounds.height*.6,{steps:8});await page.mouse.up();
   assert.notDeepEqual(await canvas.screenshot(),pictures[2],channel+' orbit must change');
   await dialog.getByRole('button',{name:'复位视角'}).click();
-  await dialog.screenshot({path:'test-results/material-preview/'+channel+'-dialog.png'});
+  await dialog.screenshot({path:'test-results/material-preview/'+artifact+'-dialog.png'});
   await page.getByRole('combobox',{name:'预览模式',exact:true}).selectOption('canvas');
   await page.waitForFunction(()=>document.querySelector('#render-status').textContent.includes('高清预览'));
   assert.equal(await page.locator('#tree-preview-surface').isVisible(),true);
@@ -88,9 +106,9 @@ for(const channel of ['chrome','msedge']){
   const {readResourcePack}=await import('../web/resource-pack.js');
   const saved=(await readResourcePack(await readFile(await downloaded.path()))).payload;
   assert.equal(saved.output.mode,'color');assert.equal(saved.root.children[0].type,'WaterCaustics');assert.equal(saved.root.children[0].params[4],.4);
-  assert.equal(saved.previewMode,undefined);assert.equal(saved.output.metallic,undefined);
+  assert.equal(saved.previewMode,undefined);assert.equal(saved.output.metallic,undefined);assert.equal(saved.output.ambientIntensity,undefined);assert.equal(saved.output.lightIntensity,undefined);
   assert.deepEqual(errors,[]);
-  const report={channel,models:3,flatDefault:true,generatedNormalPreview:true,previewChannelIndependent:true,normalUndo:true,lighting:true,orbit:true,reopen:true,liveTime:true,liveParameters:true,canvasPreserved:true,exportUnchanged:true,errors};
-  await writeFile('test-results/material-preview/'+channel+'.json',JSON.stringify(report,null,2));console.log(report);
+  const report={channel,models:3,flatDefault:true,generatedNormalPreview:true,previewChannelIndependent:true,normalUndo:true,lighting:true,independentLightIntensities:true,lightsOff:true,lightingViewOnly:true,lightingLanguageAndNarrowPanel:true,orbit:true,reopen:true,liveTime:true,liveParameters:true,canvasPreserved:true,exportUnchanged:true,errors};
+  await writeFile('test-results/material-preview/'+artifact+'.json',JSON.stringify(report,null,2));console.log(report);
  }finally{await browser.close();}
 }

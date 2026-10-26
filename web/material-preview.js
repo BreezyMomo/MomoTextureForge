@@ -2,12 +2,13 @@ import {messageError} from './message-catalog.js';
 import {onLanguageChange} from './language.js';
 import {uiText,uiFormat} from './ui-language.js';
 import {TreeRenderer} from './tree-renderer.js';
+import {MATERIAL_DEFAULTS} from './editor-preferences.js';
 const VS=`#version 300 es
 out vec2 uv;void main(){vec2 p=vec2(float((gl_VertexID<<1)&2),float(gl_VertexID&2));uv=p;gl_Position=vec4(p*2.-1.,0,1);}`;
 const FS=`#version 300 es
 precision highp float;in vec2 uv;out vec4 frag;
 uniform sampler2D albedoTex,normalTex,heightTex;
-uniform vec2 orbit;uniform float aspect,lightAngle,roughness,metallic,tiling;uniform int model,previewChannel;
+uniform vec2 orbit;uniform float aspect,lightAngle,ambientIntensity,lightIntensity,roughness,metallic,tiling;uniform int model,previewChannel;
 vec3 rotateView(vec3 p){float a=orbit.x,b=orbit.y;p=mat3(1,0,0,0,cos(b),sin(b),0,-sin(b),cos(b))*p;return mat3(cos(a),0,-sin(a),0,1,0,sin(a),0,cos(a))*p;}
 void main(){
  vec2 q=(uv*2.-1.)*vec2(aspect,1.);vec3 ro=rotateView(vec3(0,0,3)),rd=rotateView(normalize(vec3(q,-1.8))),p,n,tangent,bitangent;float hit=-1.;vec2 st;
@@ -26,16 +27,17 @@ void main(){
  if(previewChannel==2){base=vec3(.55);n=normalize(tangent*map.x+bitangent*map.y+n*map.z);}
  vec3 light=normalize(vec3(cos(lightAngle),.8,sin(lightAngle))),view=normalize(ro-p),halfway=normalize(light+view);
  float diffuse=max(0.,dot(n,light)),spec=pow(max(0.,dot(n,halfway)),mix(128.,4.,roughness))*(1.-roughness*.7);
- vec3 result=base*(.18+diffuse*(1.-metallic)*.9)+mix(vec3(.28),base,metallic)*spec;
+ vec3 result=base*ambientIntensity+(base*diffuse*(1.-metallic)*.9+mix(vec3(.28),base,metallic)*spec)*lightIntensity;
  frag=vec4(pow(max(result,vec3(0)),vec3(1./2.2)),1.);
 }`;
 // The caller supplies the current preview project and clock; view controls never change exported data.
 export function createMaterialPreview(host,{controls,onError=()=>{},onStatus=()=>{}}={}){
  const canvas=document.createElement('canvas');canvas.setAttribute('aria-label',uiText("material.dMaterialView"));canvas.className='material-preview-canvas';host.append(canvas);
  const bar=controls??document.createElement('div');if(!controls)host.prepend(bar);bar.classList.add('material-controls');
- const gl=canvas.getContext('webgl2'),textures=[],shaders=[],values={model:0,lightAngle:.6,roughness:.4,metallic:0,tiling:1,previewChannel:0};
+ const {orbit:initialOrbit,...initialSettings}=MATERIAL_DEFAULTS;
+ const gl=canvas.getContext('webgl2'),textures=[],shaders=[],values={...initialSettings,previewChannel:0};
  let languageDispose=()=>{};const labels=[];let modelChoice;
- let disposed=false,program=null,vao=null,ownedRenderer=null,orbit=[.35,-.2],pointer=null,sampled=false;
+ let disposed=false,program=null,vao=null,ownedRenderer=null,orbit=[...initialOrbit],pointer=null,sampled=false;
  const check=stage=>{const error=gl.getError();if(error)throw messageError("errors.materialPreviewFailedWebGL", stage, error);};
  const loc=name=>gl.getUniformLocation(program,name);
  const draw=(dimensions)=>{
@@ -60,8 +62,10 @@ export function createMaterialPreview(host,{controls,onError=()=>{},onStatus=()=
   }
   check(uiText("material.initialization"));
   const choice=modelChoice=document.createElement('select');choice.setAttribute('aria-label',uiText("material.previewMesh"));["material.sphere","material.plane","material.cube"].forEach((text,i)=>choice.add(new Option(uiText(text),i)));choice.onchange=()=>{values.model=+choice.value;redraw();};bar.append(choice);
-  for(const [key,label,min,max,step]of [['lightAngle',"material.lightDirection",-3.14,3.14,.01],['roughness',"material.roughness",0,1,.01],['metallic',"material.metallic",0,1,.01],['tiling',"material.textureRepeat",1,4,1]]){
-   const l=document.createElement('label');l.textContent=uiText(label);const input=document.createElement('input');Object.assign(input,{type:'range',min,max,step,value:values[key]});input.setAttribute('aria-label',uiText(label));input.oninput=()=>{values[key]=+input.value;redraw();};l.append(input);bar.append(l);labels.push({row:l,input,label,key});
+  for(const [key,label,min,max,step]of [['lightAngle',"material.lightDirection",-3.14,3.14,.01],['lightIntensity',"material.lightIntensity",0,3,.01],['ambientIntensity',"material.ambientIntensity",0,2,.01],['roughness',"material.roughness",0,1,.01],['metallic',"material.metallic",0,1,.01],['tiling',"material.textureRepeat",1,4,1]]){
+   const l=document.createElement('label');l.textContent=uiText(label);const input=document.createElement('input');Object.assign(input,{type:'range',min,max,step,value:values[key]});input.setAttribute('aria-label',uiText(label));l.append(input);
+   let output;if(key==='lightIntensity'||key==='ambientIntensity'){output=document.createElement('output');output.className='material-control-value';output.textContent=values[key].toFixed(2);l.append(output);}
+   input.oninput=()=>{values[key]=+input.value;if(output)output.textContent=values[key].toFixed(2);redraw();};bar.append(l);labels.push({row:l,input,output,label,key});
   }
   const reset=document.createElement('button');reset.textContent=uiText("material.resetView");reset.onclick=()=>{orbit=[.35,-.2];redraw();};bar.append(reset);languageDispose=onLanguageChange(()=>{canvas.setAttribute('aria-label',uiText("material.dMaterialView"));choice.setAttribute('aria-label',uiText("material.previewMesh"));["material.sphere","material.plane","material.cube"].forEach((text,i)=>choice.options[i].text=uiText(text));for(const {row,input,label}of labels){row.firstChild.nodeValue=uiText(label);input.setAttribute('aria-label',uiText(label));}reset.textContent=uiText("material.resetView");});
   canvas.onpointerdown=e=>{if(e.button!==0)return;pointer=[e.clientX,e.clientY];canvas.setPointerCapture(e.pointerId);};
@@ -75,7 +79,7 @@ export function createMaterialPreview(host,{controls,onError=()=>{},onStatus=()=
   configure(changes){
    const {orbit:nextOrbit,resetView,...next}=changes;Object.assign(values,next);
    if(resetView)orbit=[.35,-.2];if(nextOrbit)orbit=[...nextOrbit];
-   modelChoice.value=String(values.model);for(const {input,key}of labels)input.value=String(values[key]);redraw();
+   modelChoice.value=String(values.model);for(const {input,output,key}of labels){input.value=String(values[key]);if(output)output.textContent=values[key].toFixed(2);}redraw();
   },
   update(project,{time=0,formulaSeconds=time*project.output.seconds,solo=null,quick=false,renderer}={}){
    if(disposed)return;

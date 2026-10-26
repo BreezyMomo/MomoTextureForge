@@ -1517,6 +1517,8 @@
   "material.draw": "Draw",
   "material.initialization": "Initialization",
   "material.lightDirection": "Light direction",
+  "material.lightIntensity": "Main light intensity",
+  "material.ambientIntensity": "Ambient light intensity",
   "material.materialSampling": "Material sampling",
   "material.metallic": "Metallic",
   "material.parameterBinding": "Parameter binding",
