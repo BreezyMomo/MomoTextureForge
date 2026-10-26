@@ -1,0 +1,267 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TF703c640ca14b",
+  "shaderName": "MomoTextureForge/Generated/TF703c640ca14b",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_seed",
+      "type": "Float",
+      "floatValue": 2057,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_motionSpeed",
+      "type": "Float",
+      "floatValue": 2,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_nebulaDensity",
+      "type": "Float",
+      "floatValue": 3,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_coldColor",
+      "type": "Float",
+      "floatValue": 374015,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_hotColor",
+      "type": "Float",
+      "floatValue": 16717024,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_starDensity",
+      "type": "Float",
+      "floatValue": 0.45,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "variable": "seed",
+      "label": "宇宙种子",
+      "aliases": {
+        "zh-CN": "宇宙种子",
+        "en": "Cosmic seed"
+      },
+      "min": 0,
+      "max": 9999,
+      "step": 1,
+      "default": 2057,
+      "slot": 0,
+      "key": "R",
+      "property": "_MF_1_seed"
+    },
+    {
+      "variable": "motionSpeed",
+      "label": "运动速度",
+      "aliases": {
+        "zh-CN": "运动速度",
+        "en": "Motion speed"
+      },
+      "min": 0,
+      "max": 2,
+      "step": 0.01,
+      "default": 2,
+      "slot": 1,
+      "key": "W",
+      "property": "_MF_1_motionSpeed"
+    },
+    {
+      "variable": "nebulaDensity",
+      "label": "星云浓度",
+      "aliases": {
+        "zh-CN": "星云浓度",
+        "en": "Nebula density"
+      },
+      "min": 0.2,
+      "max": 3,
+      "step": 0.05,
+      "default": 3,
+      "slot": 2,
+      "key": "N",
+      "property": "_MF_1_nebulaDensity"
+    },
+    {
+      "variable": "coldColor",
+      "label": "青蓝星云颜色",
+      "aliases": {
+        "zh-CN": "青蓝星云颜色",
+        "en": "Cool nebula color"
+      },
+      "min": 0,
+      "max": 16777215,
+      "step": 1,
+      "default": 374015,
+      "type": "color",
+      "slot": 3,
+      "key": "S",
+      "property": "_MF_1_coldColor"
+    },
+    {
+      "variable": "hotColor",
+      "label": "玫红星云颜色",
+      "aliases": {
+        "zh-CN": "玫红星云颜色",
+        "en": "Warm nebula color"
+      },
+      "min": 0,
+      "max": 16777215,
+      "step": 1,
+      "default": 16717024,
+      "type": "color",
+      "slot": 4,
+      "key": "D",
+      "property": "_MF_1_hotColor"
+    },
+    {
+      "variable": "starDensity",
+      "label": "星尘强度",
+      "aliases": {
+        "zh-CN": "星尘强度",
+        "en": "Star intensity"
+      },
+      "min": 0,
+      "max": 2,
+      "step": 0.05,
+      "default": 0.45,
+      "slot": 5,
+      "key": "K",
+      "property": "_MF_1_starDensity"
+    }
+  ]
+}

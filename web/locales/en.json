@@ -2645,5 +2645,13 @@
   "handdrawn.unsupportedParameter": "Unsupported parameter: {0}",
   "shaderProject.reason.parameter": "This vector-preprocessing value is unsupported and was not ignored",
   "shaderProject.reason.input": "No input adapter for this source; explicitly choose static input or external RGBA/RT",
-  "shaderProject.reason.effectKeyframes": "Handdrawn parameter or opacity keyframe tracks are not exported"
+  "shaderProject.reason.effectKeyframes": "Handdrawn parameter or opacity keyframe tracks are not exported",
+  "fx.effect.gravitationalLens": "Gravitational Lens",
+  "fx.help.gravitationalLens": "Bend the input image around a gravitational center. Preserves input alpha and distorts height with color.",
+  "fx.summary.gravitationalLens": "Deflect light around a gravitational center",
+  "fx.search.gravitationalLens": "gravity lens black hole space distortion",
+  "fx.param.lensingStrength": "Lensing strength",
+  "fx.param.magnification": "Lens size",
+  "examples.eventHorizon.name": "Event Horizon · Black Hole",
+  "examples.eventHorizon.description": "Nebula smoke and stars → gravitational lens → transparent black hole and accretion disk, finished with bloom and vignette."
 }

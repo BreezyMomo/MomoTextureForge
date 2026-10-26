@@ -15,8 +15,12 @@ const output=resolve('test-results/engine-shaders'),fxc=process.env.TEXFORGE_FXC
 await mkdir(output,{recursive:true});
 await access(fxc);
 const shared=await graphicSharedFiles();
-const graphics={},rows=[];
+const requested=process.argv.flatMap((arg,i)=>arg==='--pattern'?[process.argv[i+1]]:[]);
+if(requested.some(id=>!CATALOG.some(g=>g.id===id)))throw Error('Unknown --pattern');
+const graphics=requested.length?{...current.graphics}:{},rows=[];
 for(const graphic of CATALOG){
+ if(requested.length&&!requested.includes(graphic.id))continue;
+ delete graphics[graphic.id];
  const asset=builtinAsset(graphic.id),spec=asset.definition.generator;
  if(!process.argv.includes('--regenerate')){let prior;try{prior=JSON.parse(await readFile(resolve('web/shaders/graphics',graphic.id,'module.json'),'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}if(prior?.verification.engineCompilation==='failed'||prior?.verification.engineVisualReview==='failed'){rows.push({id:graphic.id,supported:false,reason:prior.verification.reason??'Target-engine verification failed; fix and explicitly regenerate before a new batch.'});continue;}}
  if(!process.argv.includes('--regenerate')&&asset.engineShaders?.unity){graphics[graphic.id]=asset.engineShaders.unity;rows.push({id:graphic.id,supported:true,existing:true});continue;}

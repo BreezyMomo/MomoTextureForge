@@ -43,7 +43,8 @@ export const POST_EFFECTS=[
   number('pathSimplification',0,1,0,.01),number('fixedDecimalPlaceDigits',-1,6,-1,1),
   number('sunburstCenterX',0,1,.5),number('sunburstCenterY',0,1,.5),number('sunburstRays',4,720,72,1)
  ]}
-,...CREATIVE_EFFECTS,NOISE_WARP_SPEC,...CONTENT_EFFECTS
+,...CREATIVE_EFFECTS,NOISE_WARP_SPEC,...CONTENT_EFFECTS,
+ {id:'gravitationalLens',parameters:[number('lensingStrength',0,1,.3),number('magnification',.1,2,.84),number('centerX',0,1,.5),number('centerY',0,1,.5)]}
 ].map(spec=>({...spec,label:'fx.effect.'+spec.id,description:'fx.help.'+spec.id,parameters:spec.parameters.map(p=>({...p,path:p.path??'postEffects.'+spec.id+'.'+p.key}))}));
 export const EFFECT_IDS=POST_EFFECTS.map(s=>s.id);
 export const EFFECT_BY_ID=new Map(POST_EFFECTS.map(s=>[s.id,s]));

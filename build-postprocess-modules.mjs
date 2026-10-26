@@ -11,9 +11,12 @@ const out=resolve('test-results/engine-shaders');await mkdir(out,{recursive:true
 const fxc=process.env.TEXFORGE_FXC??'C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/fxc.exe';
 await access(fxc);
 const runtime=await readFile('web/shaders/postprocess/MomoPostprocess.cs','utf8'),importer=await readFile('web/shaders/postprocess/PostprocessImporter.cs','utf8');
-const effects={},rows=[];
+const effectFlag=process.argv.indexOf('--effect'),effectId=effectFlag<0?null:process.argv[effectFlag+1];
+if(effectFlag>=0&&!POST_BINDINGS[effectId])throw Error('Unknown --effect');
+const effects=effectId?{...current.effects}:{},rows=[];
 const tidy=text=>text.replace(/[ \t]+$/gm,'').trimEnd()+'\n';
-for(const spec of POST_EFFECTS){const binding=POST_BINDINGS[spec.id];if(!binding)continue;
+for(const spec of POST_EFFECTS){const binding=POST_BINDINGS[spec.id];if(!binding||(effectId&&spec.id!==effectId))continue;
+ delete effects[spec.id];
  try{
   const full=postprocessShader(spec,binding),native=full.split('HLSLPROGRAM')[1].split('ENDHLSL')[0],program=native.replace(/^\s*#pragma[^\n]*$/gm,'').replace(/#include "Packages[^\n]+/,'float4 _Time;float4 TransformObjectToHClip(float3 p){return float4(p,1.);}')
   const test=resolve(out,spec.id+'-postprocess.hlsl');await writeFile(test,program);

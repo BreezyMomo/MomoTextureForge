@@ -8,8 +8,8 @@ import {effectMargins} from '../web/render-bounds.js';
 import {contentEffectSamples} from '../web/content-effect-samples.js';
 
 test('content effects append stable IDs to existing saved stacks without enabling themselves',()=>{
- assert.deepEqual(EFFECT_IDS.slice(28),['dissolve','shockwave','liquidFusion']);
- assert.equal(POST_EFFECTS.length,31);assert.equal(new Set(EFFECT_IDS).size,31);
+ assert.deepEqual(EFFECT_IDS.slice(28,31),['dissolve','shockwave','liquidFusion']);
+ assert.equal(POST_EFFECTS.length,32);assert.equal(new Set(EFFECT_IDS).size,32);
  const old=EFFECT_IDS.slice(0,28);assert.deepEqual(effectOrder(old),EFFECT_IDS);
  const a=node(),b=node();for(const {id}of CONTENT_EFFECTS){assert.equal(a.postEffects[id].enabled,false);a.postEffects[id].mix=.1;assert.equal(b.postEffects[id].mix,1);}
 });

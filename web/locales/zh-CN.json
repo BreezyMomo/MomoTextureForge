@@ -2645,5 +2645,13 @@
   "handdrawn.unsupportedParameter": "未支持的参数：{0}",
   "shaderProject.reason.parameter": "该向量预处理参数尚不支持此值，未自动忽略",
   "shaderProject.reason.input": "输入适配未覆盖当前源；可明确选择静态源或外部 RGBA/RT",
-  "shaderProject.reason.effectKeyframes": "尚未导出手绘参数或透明度的关键帧轨道"
+  "shaderProject.reason.effectKeyframes": "尚未导出手绘参数或透明度的关键帧轨道",
+  "fx.effect.gravitationalLens": "引力透镜",
+  "fx.help.gravitationalLens": "围绕引力中心弯曲输入图像。保留输入透明度，颜色与高度同步变形。",
+  "fx.summary.gravitationalLens": "围绕引力中心弯曲光线",
+  "fx.search.gravitationalLens": "引力 透镜 黑洞 宇宙 扭曲",
+  "fx.param.lensingStrength": "透镜强度",
+  "fx.param.magnification": "透镜范围",
+  "examples.eventHorizon.name": "引力视界 · 黑洞",
+  "examples.eventHorizon.description": "星云烟雾与恒星 → 引力透镜 → 透明黑洞与吸积盘，最后统一泛光与暗角。"
 }

@@ -54,3 +54,11 @@ Projects without the new values keep the original static noise rings. The new sa
 The bands use Aurora Veil's new **Vertical light curtain** appearance, with band foot position, curtain height and vertical ray density controls. The original **Flowing texture** mode and existing parameters remain available. Each layer has an independent graphic-time track. A six-second smooth back-and-forth motion stops gently at the seam, avoiding abrupt repetition of nonperiodic noise. Change band colors and opacity for depth, membrane edge brightness/interior opacity, strand count/width and dust density/size. Check rotation, graphic time and opacity at both endpoints together.
 
 These compositions reuse existing graphics. Noise distortion and glitch processing of arbitrary input images, text or groups remain a later feature.
+
+## Event Horizon
+
+The **Event Horizon · Black Hole** composition uses two separately available built-in graphics: **Nebula Smoke and Stars** and **Black Hole and Accretion Disk**. The background generates smoke and stars, applies the **Gravitational Lens** postprocess, and is then composited beneath the transparent black hole foreground. The parent retains bloom and vignette. The 24-second playback range is not a guarantee of seamless looping for nebula drift or differential disk rotation.
+
+Gravitational Lens lives in the **Warp** effect category. It processes color and height from images, graphics or groups without generating a black hole shadow or accretion disk. Zero strength bypasses processing. Size is relative to the canvas short edge; center X/Y use normalized 0–1 canvas coordinates. It samples premultiplied RGBA together to preserve transparent edges and bounds deflected coordinates inside the input. The lens does not accumulate time; animated inputs continue updating each frame. Lens center and size remain independent of the black hole settings in the example.
+
+Both graphics and the lens carry adjustable Unity standard modules. Export them from their respective graphic and postprocess panels and connect their inputs and outputs as described in the [Shader module guide](14-shader-reference.en.md).

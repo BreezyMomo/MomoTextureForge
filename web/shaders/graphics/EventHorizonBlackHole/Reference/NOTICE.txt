@@ -1,0 +1,17 @@
+=== math-v1 ===
+// Tooth width is a fraction of one pitch; top ratio zero forms a point, one a square tooth.
+// Continuous union of the root disk and a folded trapezoid. Differentiating
+// r-gearRadius across a square tooth's angular boundary creates false inner edges.
+// Extend the tooth into the disk within its angular wedge. A bottom chord
+// leaves a shallow internal distance ridge that antialiasing exposes as a seam.
+// Exact contour distance: upper circular lobes join lower diagonal segments.
+// Unlike a polynomial threshold, the distance has uniform feathering at the tip.
+
+=== generator-event-horizon-black-hole-v1 ===
+// Differential rotation gives shearing filaments rather than a rotating decal.
+// Schwarzschild-inspired null-ray acceleration, spatial step in horizon units.
+// A finite-thickness hot atmosphere softens only the disk, not the whole image.
+// Factor the original E + B*T into straight RGBA so native source-over
+// preserves both shadowing and emissive plasma: A=1-T; RGB=E/A.
+// A tiny floor represents emission in otherwise fully transparent space.
+// Native compositing supports RGB above 1 (verified); do not clamp RGB here.

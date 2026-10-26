@@ -13,9 +13,9 @@ test('node effect switches preserve old filters, validate saved order and retain
  n.effectOrder=['unblack','blur','unblack','missing','normal'];
  const clean=sanitizeTree(JSON.parse(JSON.stringify(p))).root.children[0];
  assert.equal(clean.postEffects.scanline.density,500);assert.equal(clean.postEffects.scanline.color,'#000000');
- assert.deepEqual(clean.effectOrder.slice(0,3),['unblack','blur','normal']);assert.equal(clean.effectOrder.length,31);
+ assert.deepEqual(clean.effectOrder.slice(0,3),['unblack','blur','normal']);assert.equal(clean.effectOrder.length,32);
  assert.equal(clean.postEffects.blur.enabled,false);assert.equal(clean.postFx[0],8);
- assert.deepEqual(effectOrder(['unknown']),EFFECT_IDS);assert.equal(POST_EFFECTS.length,31);
+ assert.deepEqual(effectOrder(['unknown']),EFFECT_IDS);assert.equal(POST_EFFECTS.length,32);
  assert.equal(effectEnableValues(node(),'blur',true)['postFx.0'],4);
 });
 

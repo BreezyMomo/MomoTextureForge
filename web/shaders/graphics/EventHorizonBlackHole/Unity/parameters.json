@@ -1,0 +1,421 @@
+{
+  "schema": "momo.realtime-shader/v1",
+  "version": 1,
+  "packageId": "TFb01dce7017ee",
+  "shaderName": "MomoTextureForge/Generated/TFb01dce7017ee",
+  "materialProperties": [
+    {
+      "name": "_MF_0_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_0_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_placement",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 1,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_pivotTurn",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "_MF_1_opacity",
+      "type": "Float",
+      "floatValue": 1,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_seed",
+      "type": "Float",
+      "floatValue": 2057,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_motionSpeed",
+      "type": "Float",
+      "floatValue": 2,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_viewAngle",
+      "type": "Float",
+      "floatValue": 13.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_diskTilt",
+      "type": "Float",
+      "floatValue": 25,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_magnification",
+      "type": "Float",
+      "floatValue": 0.7,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_diskInner",
+      "type": "Float",
+      "floatValue": 2.95,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_diskBrightness",
+      "type": "Float",
+      "floatValue": 2.5,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_diskHeat",
+      "type": "Float",
+      "floatValue": 0.38,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_filamentStrength",
+      "type": "Float",
+      "floatValue": 2,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_exposure",
+      "type": "Float",
+      "floatValue": 2,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_centerX",
+      "type": "Float",
+      "floatValue": 0.54,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_centerY",
+      "type": "Float",
+      "floatValue": 0.53,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uv",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_uvTwist",
+      "type": "Float",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+      "name": "_MF_1_clock",
+      "type": "Vector",
+      "floatValue": 0,
+      "vectorValue": {
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "variable": "seed",
+      "label": "宇宙种子",
+      "aliases": {
+        "zh-CN": "宇宙种子",
+        "en": "Cosmic seed"
+      },
+      "min": 0,
+      "max": 9999,
+      "step": 1,
+      "default": 2057,
+      "slot": 0,
+      "key": "R",
+      "property": "_MF_1_seed"
+    },
+    {
+      "variable": "motionSpeed",
+      "label": "运动速度",
+      "aliases": {
+        "zh-CN": "运动速度",
+        "en": "Motion speed"
+      },
+      "min": 0,
+      "max": 2,
+      "step": 0.01,
+      "default": 2,
+      "slot": 1,
+      "key": "W",
+      "property": "_MF_1_motionSpeed"
+    },
+    {
+      "variable": "viewAngle",
+      "label": "观察仰角",
+      "aliases": {
+        "zh-CN": "观察仰角",
+        "en": "View angle"
+      },
+      "min": 5,
+      "max": 38,
+      "step": 0.5,
+      "default": 13.5,
+      "slot": 2,
+      "key": "N",
+      "property": "_MF_1_viewAngle"
+    },
+    {
+      "variable": "diskTilt",
+      "label": "画面倾角",
+      "aliases": {
+        "zh-CN": "画面倾角",
+        "en": "Disk tilt"
+      },
+      "min": -40,
+      "max": 40,
+      "step": 1,
+      "default": 25,
+      "slot": 3,
+      "key": "S",
+      "property": "_MF_1_diskTilt"
+    },
+    {
+      "variable": "magnification",
+      "label": "黑洞尺寸",
+      "aliases": {
+        "zh-CN": "黑洞尺寸",
+        "en": "Black hole size"
+      },
+      "min": 0.65,
+      "max": 1.3,
+      "step": 0.01,
+      "default": 0.7,
+      "slot": 4,
+      "key": "D",
+      "property": "_MF_1_magnification"
+    },
+    {
+      "variable": "diskInner",
+      "label": "盘内缘 / 视界",
+      "aliases": {
+        "zh-CN": "盘内缘 / 视界",
+        "en": "Inner disk / horizon"
+      },
+      "min": 1.7,
+      "max": 4,
+      "step": 0.05,
+      "default": 2.95,
+      "slot": 5,
+      "key": "K",
+      "property": "_MF_1_diskInner"
+    },
+    {
+      "variable": "diskBrightness",
+      "label": "吸积盘亮度",
+      "aliases": {
+        "zh-CN": "吸积盘亮度",
+        "en": "Disk brightness"
+      },
+      "min": 0.35,
+      "max": 2.5,
+      "step": 0.05,
+      "default": 2.5,
+      "slot": 6,
+      "key": "H",
+      "property": "_MF_1_diskBrightness"
+    },
+    {
+      "variable": "diskHeat",
+      "label": "等离子体温度",
+      "aliases": {
+        "zh-CN": "等离子体温度",
+        "en": "Plasma temperature"
+      },
+      "min": -0.3,
+      "max": 0.5,
+      "step": 0.01,
+      "default": 0.38,
+      "slot": 7,
+      "key": "T",
+      "property": "_MF_1_diskHeat"
+    },
+    {
+      "variable": "filamentStrength",
+      "label": "流动纤维亮度",
+      "aliases": {
+        "zh-CN": "流动纤维亮度",
+        "en": "Filament brightness"
+      },
+      "min": 0.4,
+      "max": 2,
+      "step": 0.05,
+      "default": 2,
+      "slot": 8,
+      "key": "A",
+      "property": "_MF_1_filamentStrength"
+    },
+    {
+      "variable": "exposure",
+      "label": "等离子体曝光",
+      "aliases": {
+        "zh-CN": "等离子体曝光",
+        "en": "Plasma exposure"
+      },
+      "min": 0.5,
+      "max": 2,
+      "step": 0.05,
+      "default": 2,
+      "slot": 9,
+      "key": "B",
+      "property": "_MF_1_exposure"
+    },
+    {
+      "variable": "centerX",
+      "aliases": {
+        "zh-CN": "黑洞中心 X",
+        "en": "Center X"
+      },
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.54,
+      "label": "黑洞中心 X",
+      "slot": 10,
+      "key": "C",
+      "property": "_MF_1_centerX"
+    },
+    {
+      "variable": "centerY",
+      "aliases": {
+        "zh-CN": "黑洞中心 Y",
+        "en": "Center Y"
+      },
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.53,
+      "label": "黑洞中心 Y",
+      "slot": 11,
+      "key": "E",
+      "property": "_MF_1_centerY"
+    }
+  ]
+}

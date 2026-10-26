@@ -3,7 +3,7 @@ import {uiText,uiFormat} from './ui-language.js';
 import {messageText} from './message-catalog.js';
 import {SUPPORTED_LANGUAGES,interfaceLanguage} from './language.js';
 export const EFFECT_CATEGORIES=['optics','warp','color','material','style','mask'];
-const groups={optics:['blur','bloom','chromatic','vignette','zoomBlur'],warp:['kaleidoscope','mirror','swirl','noiseWarp','shockwave'],color:['posterize','tricolor','dither'],material:['sharpen','edge','normal','bevel','liquidFusion'],style:['pixelate','scanline','sketch','halftone','glitch','kuwahara','xdog','crt','ascii','pixelSort'],mask:['radialMask','unblack','dissolve']};
+const groups={optics:['blur','bloom','chromatic','vignette','zoomBlur'],warp:['kaleidoscope','mirror','swirl','gravitationalLens','noiseWarp','shockwave'],color:['posterize','tricolor','dither'],material:['sharpen','edge','normal','bevel','liquidFusion'],style:['pixelate','scanline','sketch','halftone','glitch','kuwahara','xdog','crt','ascii','pixelSort'],mask:['radialMask','unblack','dissolve']};
 export const effectCategory=id=>EFFECT_CATEGORIES.find(key=>groups[key].includes(id));
 export function matchingEffects(query='',category='all'){
  const words=query.normalize('NFKC').toLocaleLowerCase().trim().slice(0,200).split(/\s+/).filter(Boolean);

@@ -33,9 +33,9 @@ test('presence is validated and parameter reset retains stack membership without
  apply(n,effectAddValues(n,'bloom'));assert.equal(effectEnabled(n,'bloom'),true);assert.equal(n.postFx[1],.6);
 });
 test('every effect has one discoverable category and bilingual search supports uses as well as IDs',()=>{
- assert.equal(EFFECT_IDS.length,31);for(const id of EFFECT_IDS)assert.ok(EFFECT_CATEGORIES.includes(effectCategory(id)));
+ assert.equal(EFFECT_IDS.length,32);for(const id of EFFECT_IDS)assert.ok(EFFECT_CATEGORIES.includes(effectCategory(id)));
  assert.deepEqual(matchingEffects('水波').map(s=>s.id),['noiseWarp','shockwave']);assert.deepEqual(matchingEffects('WATER').map(s=>s.id),['noiseWarp','shockwave']);assert.deepEqual(matchingEffects('noiseWarp').map(s=>s.id),['noiseWarp']);assert.ok(matchingEffects('手绘').some(s=>s.id==='sketch'));
- assert.ok(matchingEffects('', 'warp').every(s=>effectCategory(s.id)==='warp'));assert.equal(matchingEffects('^$[invalid').length,0);assert.equal(matchingEffects().length,31);
+ assert.ok(matchingEffects('', 'warp').every(s=>effectCategory(s.id)==='warp'));assert.equal(matchingEffects('^$[invalid').length,0);assert.equal(matchingEffects().length,32);
 });
 test('compact summaries report mixed values and do not mutate authored projects',()=>{
  const a=node(),b=node(),before=JSON.stringify(a);a.postEffects.noiseWarp.warpX=12;b.postEffects.noiseWarp.warpX=24;const snapshot=JSON.stringify([a,b]),summary=compactEffectSummary([a,b],'noiseWarp');assert.ok(summary.includes('12')===false&&summary.includes('24')===false);a.postEffects.noiseWarp.warpX=12;assert.ok(compactEffectSummary([a],'noiseWarp').includes('12'));assert.equal(JSON.stringify([a,b]),snapshot);assert.ok(JSON.parse(before).postEffects.noiseWarp.warpX===12);

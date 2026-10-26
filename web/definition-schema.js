@@ -35,7 +35,7 @@ function validateHeader(raw, schema) {
     require(object(category) && identifier(category.id) && !categoryIds.has(category.id) && typeof category.name === "string" && category.name.trim(), "分类重复或无效");
     categoryIds.add(category.id);
   }
-  require(object(raw.libraries) && Object.keys(raw.libraries).length <= 32, "函数库定义无效");
+  require(object(raw.libraries) && Object.keys(raw.libraries).length <= 64, "函数库定义无效");
   for (const [name, library] of Object.entries(raw.libraries)) {
     require(identifier(name) && object(library) && library.abi === PATTERN_ABI, `函数库 ${name} ABI 无效`);
     sourcePath(library.file);

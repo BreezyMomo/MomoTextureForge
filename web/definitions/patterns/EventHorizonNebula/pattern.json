@@ -1,0 +1,156 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "EventHorizonNebula",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "星云烟雾与恒星",
+  "category": "atmosphere",
+  "order": 305,
+  "variant": 16,
+  "parameters": [
+    {
+      "variable": "seed",
+      "label": "宇宙种子",
+      "aliases": {
+        "zh-CN": "宇宙种子",
+        "en": "Cosmic seed"
+      },
+      "min": 0,
+      "max": 9999,
+      "step": 1,
+      "default": 2057,
+      "slot": 0,
+      "key": "R"
+    },
+    {
+      "variable": "motionSpeed",
+      "label": "运动速度",
+      "aliases": {
+        "zh-CN": "运动速度",
+        "en": "Motion speed"
+      },
+      "min": 0,
+      "max": 2,
+      "step": 0.01,
+      "default": 2,
+      "slot": 1,
+      "key": "W"
+    },
+    {
+      "variable": "nebulaDensity",
+      "label": "星云浓度",
+      "aliases": {
+        "zh-CN": "星云浓度",
+        "en": "Nebula density"
+      },
+      "min": 0.2,
+      "max": 3,
+      "step": 0.05,
+      "default": 3,
+      "slot": 2,
+      "key": "N"
+    },
+    {
+      "variable": "coldColor",
+      "label": "青蓝星云颜色",
+      "aliases": {
+        "zh-CN": "青蓝星云颜色",
+        "en": "Cool nebula color"
+      },
+      "min": 0,
+      "max": 16777215,
+      "step": 1,
+      "default": 374015,
+      "type": "color",
+      "slot": 3,
+      "key": "S"
+    },
+    {
+      "variable": "hotColor",
+      "label": "玫红星云颜色",
+      "aliases": {
+        "zh-CN": "玫红星云颜色",
+        "en": "Warm nebula color"
+      },
+      "min": 0,
+      "max": 16777215,
+      "step": 1,
+      "default": 16717024,
+      "type": "color",
+      "slot": 4,
+      "key": "D"
+    },
+    {
+      "variable": "starDensity",
+      "label": "星尘强度",
+      "aliases": {
+        "zh-CN": "星尘强度",
+        "en": "Star intensity"
+      },
+      "min": 0,
+      "max": 2,
+      "step": 0.05,
+      "default": 0.45,
+      "slot": 5,
+      "key": "K"
+    }
+  ],
+  "defaults": [
+    2057,
+    2,
+    3,
+    374015,
+    16717024,
+    0.45,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "libraries": [
+        "math-v1"
+      ],
+      "inline": "return 0.;"
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "星云烟雾与恒星",
+    "en": "Nebula Smoke and Stars"
+  },
+  "generator": {
+    "schema": "momo.generator/v1",
+    "revision": 1,
+    "effect": "pipeline",
+    "scalar": "luminance",
+    "libraries": [
+      "generator-event-horizon-helpers-v1",
+      "generator-event-horizon-nebula-v1"
+    ],
+    "helpers": [
+      "generator-event-horizon-helpers-v1"
+    ],
+    "passes": [
+      {
+        "id": "nebula",
+        "inputs": [],
+        "scale": 1,
+        "program": "generator-event-horizon-nebula-v1"
+      }
+    ]
+  }
+}

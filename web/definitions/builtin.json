@@ -1,6 +1,6 @@
 {
   "schema": "momo.texture-index/v1",
-  "revision": 25,
+  "revision": 26,
   "abi": "momo-pattern/16-v1",
   "categories": [
     {
@@ -199,6 +199,18 @@
     },
     "generator-starcore-arcs-v1": {
       "file": "libraries/generator-starcore-arcs-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-event-horizon-helpers-v1": {
+      "file": "libraries/generator-event-horizon-helpers-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-event-horizon-nebula-v1": {
+      "file": "libraries/generator-event-horizon-nebula-v1.glsl",
+      "abi": "momo-pattern/16-v1"
+    },
+    "generator-event-horizon-black-hole-v1": {
+      "file": "libraries/generator-event-horizon-black-hole-v1.glsl",
       "abi": "momo-pattern/16-v1"
     }
   },
@@ -1422,6 +1434,14 @@
     {
       "id": "StarcoreArcs",
       "file": "patterns/StarcoreArcs/pattern.json"
+    },
+    {
+      "id": "EventHorizonNebula",
+      "file": "patterns/EventHorizonNebula/pattern.json"
+    },
+    {
+      "id": "EventHorizonBlackHole",
+      "file": "patterns/EventHorizonBlackHole/pattern.json"
     }
   ]
 }

@@ -16,6 +16,7 @@ export const POST_BINDINGS={
  scanline:{op:22,setup:'fxData[0]=float4(density,seconds*speed+phase,strength,0);fxColors[0]=color.rgb;'},
  kaleidoscope:{op:23,setup:'fxData[0].xy=float2(segments,rotation);'},
  mirror:{op:24,setup:'fxData[0].xy=float2(mirrorX,mirrorY);'},
+ gravitationalLens:{op:46,setup:'if(lensingStrength<=0.)return MF_texture(_MainTex,uv);fxData[0]=float4(lensingStrength,magnification,centerX,centerY);'},
  swirl:{op:25,setup:'fxData[0].xy=float2(strength,radius);'},
  edge:{op:26,setup:'contourStep=width*pixel;fxAmount=strength;fxColors[0]=color.rgb;'},
  tricolor:{op:27,setup:'fxColors[0]=shadow.rgb;fxColors[1]=midtone.rgb;fxColors[2]=highlight.rgb;'},

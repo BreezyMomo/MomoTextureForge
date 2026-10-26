@@ -5,7 +5,7 @@ import {project,sanitizeTree} from '../web/tree-model.js';
 import {LIBRARY_PRESETS,libraryVisible,libraryAliases,libraryVariants,libraryVariantNode} from '../web/library-policy.js';
 const removed=['DomeFalloff','Pyramid','Flipbook','Trail','RuneRing','MagicCircle','ChannelPack','ChevronStripe','Honeycomb','SDFRing','SquareGradient'];
 test('redundant built-ins are absent on disk and in the registry; current indices are contiguous',async()=>{
- assert.equal(CATALOG.length,305);assert.equal(CATALOG.filter(p=>libraryVisible(p.id)).length,305);
+ assert.equal(CATALOG.length,307);assert.equal(CATALOG.filter(p=>libraryVisible(p.id)).length,307);
  for(const id of removed){assert.equal(BY_ID.has(id),false);await assert.rejects(access(new URL(`../web/definitions/patterns/${id}`,import.meta.url)));}
  CATALOG.forEach((p,i)=>{assert.equal(BY_ID.get(p.id).index,i);assert.equal(p.definition.order,i);});
  assert.equal(libraryVisible('asset_custom'),true);

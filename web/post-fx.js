@@ -1,3 +1,4 @@
+import {GRAVITATIONAL_LENS_GLSL} from './gravitational-lens.js';
 import {CONTENT_FX_GLSL,contentEffectActive} from './content-effects.js';
 import {boundsSize} from './render-bounds.js';
 import {hasChannelCurves} from './channel-curves.js';
@@ -23,8 +24,10 @@ float fxHeight(vec2 p){if(repeatNode==1)p=fract(p);if(any(lessThan(p,vec2(0)))||
 ${CREATIVE_FX_GLSL}
 ${NOISE_WARP_GLSL}
 ${CONTENT_FX_GLSL}
+${GRAVITATIONAL_LENS_GLSL}
 void applyFx(out vec4 c,out float h){
  c=texture(srcColor,uv);h=texture(srcHeight,uv).r;
+ if(operation==46){vec2 q=fxTexture(lensUV(fxPosition()));c=fxColor(q);h=fxHeight(q);}
  if(operation==10){c=vec4(0);h=0.;float sum=0.;for(int i=-8;i<=8;i++){float x=float(i)/8.,weight=exp(-x*x*3.);vec2 q=uv+contourStep*x;c+=fxColor(q)*weight;h+=fxHeight(q)*weight;sum+=weight;}c/=sum;h/=sum;}
  if(operation==11){float v=max(max(c.r,c.g),c.b)/max(c.a,.00001),weight=max(0.,v-fxThreshold)/max(v,.00001);c*=weight;h*=weight;}
  if(operation==12){vec4 base=texture(dstColor,uv);float bh=texture(dstHeight,uv).r;float a=clamp(base.a+c.a*fxAmount*(1.-base.a),0.,1.);c=vec4(base.rgb+c.rgb*fxAmount,a);h=bh+c.a*fxAmount;}
@@ -66,6 +69,7 @@ export function applyPostFx(renderer,source,node){
   if(id==='scanline')replace(pass(out,22,{fxData:[v.density,(renderer.formulaSeconds??0)*v.speed+v.phase,v.strength],fxColors:colors(v.color)}));
   if(id==='kaleidoscope')replace(pass(out,23,{fxData:[v.segments,v.rotation]}));
   if(id==='mirror')replace(pass(out,24,{fxData:[+v.mirrorX,+v.mirrorY]}));
+  if(id==='gravitationalLens'&&v.lensingStrength>0)replace(pass(out,46,{fxData:[v.lensingStrength,v.magnification,v.centerX,v.centerY]}));
   if(id==='swirl')replace(pass(out,25,{fxData:[v.strength,v.radius]}));
   if(id==='edge')replace(pass(out,26,{contourStep:[v.width*scale/out.w,v.width*scale/out.h],fxAmount:v.strength,fxColors:colors(v.color)}));
   if(id==='tricolor')replace(pass(out,27,{fxColors:colors(v.shadow,v.midtone,v.highlight)}));
@@ -106,6 +110,7 @@ export function specializeFxShader(source,operation){
  if(operation<32||operation>41)source=source.replace(CREATIVE_FX_GLSL,'').replace('if(operation>=32&&operation<=41)applyCreativeFx(c,h);','');
  if(operation!==42)source=source.replace(NOISE_WARP_GLSL,'').replace('if(operation==42)applyNoiseWarp(c,h);','');
  if(operation<43||operation>45)source=source.replace(CONTENT_FX_GLSL,'').replace('if(operation>=43&&operation<=45)applyContentFx(c,h);','');
- if(operation<32||operation>45)return source;
+ if(operation!==46)source=source.replace(GRAVITATIONAL_LENS_GLSL,'').replace('if(operation==46){vec2 q=fxTexture(lensUV(fxPosition()));c=fxColor(q);h=fxHeight(q);}','');
+ if(operation<32||operation>46)return source;
  return source.replace('blendMode,operation,recordCount','blendMode,recordCount').replace('#version 300 es','#version 300 es\n#define operation '+operation);
 }

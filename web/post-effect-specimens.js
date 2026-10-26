@@ -7,6 +7,7 @@ export const EFFECT_PREVIEWS={
  posterize:specimen('poster',{darkSteps:7,lightSteps:0}),pixelate:specimen('poster',{size:24}),
  vignette:specimen('poster',{strength:.65,range:1.4,color:'#122333'}),scanline:specimen('signal',{density:95,strength:.5,speed:.45},true),
  kaleidoscope:specimen('prism',{segments:7,rotation:18}),mirror:specimen('prism',{mirrorX:true,mirrorY:false}),
+ gravitationalLens:specimen('grid',{lensingStrength:.65,magnification:1}),
  swirl:specimen('grid',{strength:4,radius:.75}),edge:specimen('detail',{width:2,strength:1.6,color:'#95e1e4'}),
  tricolor:specimen('poster',{shadow:'#16243b',midtone:'#e97e79',highlight:'#ffe7bd'}),
  radialMask:specimen('poster',{radius:.43,feather:.22},false,true),unblack:specimen('matte',{strength:1},false,true),

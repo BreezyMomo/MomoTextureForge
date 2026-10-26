@@ -11,7 +11,7 @@ test('all ten creative effects extend old stacks without enabling themselves or 
  const old=['blur','bloom','sharpen','chromatic','posterize','pixelate','vignette','scanline','kaleidoscope','mirror','swirl','edge','tricolor','radialMask','unblack','normal','sketch'];
  const p=project();delete p.root.children[0].postEffects;delete p.root.children[0].effectOrder;
  const restored=sanitizeTree(p).root.children[0];assert.deepEqual(restored.effectOrder.slice(0,17),old);
- assert.equal(new Set(EFFECT_IDS).size,31);assert.equal(CREATIVE_EFFECTS.length,10);
+ assert.equal(new Set(EFFECT_IDS).size,32);assert.equal(CREATIVE_EFFECTS.length,10);
  for(const spec of CREATIVE_EFFECTS){assert.equal(restored.postEffects[spec.id].enabled,false);const a=effectDefaults(),b=effectDefaults();a[spec.id].mix=.4;assert.equal(b[spec.id].mix,1);}
  assert.deepEqual(effectOrder(['pixelSort','ascii','missing','pixelSort']).slice(0,2),['pixelSort','ascii']);
 });

@@ -1,0 +1,238 @@
+{
+  "schema": "momo.texture-pattern/v1",
+  "id": "EventHorizonBlackHole",
+  "revision": 1,
+  "abi": "momo-pattern/16-v1",
+  "name": "黑洞与吸积盘",
+  "category": "atmosphere",
+  "order": 306,
+  "variant": 17,
+  "parameters": [
+    {
+      "variable": "seed",
+      "label": "宇宙种子",
+      "aliases": {
+        "zh-CN": "宇宙种子",
+        "en": "Cosmic seed"
+      },
+      "min": 0,
+      "max": 9999,
+      "step": 1,
+      "default": 2057,
+      "slot": 0,
+      "key": "R"
+    },
+    {
+      "variable": "motionSpeed",
+      "label": "运动速度",
+      "aliases": {
+        "zh-CN": "运动速度",
+        "en": "Motion speed"
+      },
+      "min": 0,
+      "max": 2,
+      "step": 0.01,
+      "default": 2,
+      "slot": 1,
+      "key": "W"
+    },
+    {
+      "variable": "viewAngle",
+      "label": "观察仰角",
+      "aliases": {
+        "zh-CN": "观察仰角",
+        "en": "View angle"
+      },
+      "min": 5,
+      "max": 38,
+      "step": 0.5,
+      "default": 13.5,
+      "slot": 2,
+      "key": "N"
+    },
+    {
+      "variable": "diskTilt",
+      "label": "画面倾角",
+      "aliases": {
+        "zh-CN": "画面倾角",
+        "en": "Disk tilt"
+      },
+      "min": -40,
+      "max": 40,
+      "step": 1,
+      "default": 25,
+      "slot": 3,
+      "key": "S"
+    },
+    {
+      "variable": "magnification",
+      "label": "黑洞尺寸",
+      "aliases": {
+        "zh-CN": "黑洞尺寸",
+        "en": "Black hole size"
+      },
+      "min": 0.65,
+      "max": 1.3,
+      "step": 0.01,
+      "default": 0.7,
+      "slot": 4,
+      "key": "D"
+    },
+    {
+      "variable": "diskInner",
+      "label": "盘内缘 / 视界",
+      "aliases": {
+        "zh-CN": "盘内缘 / 视界",
+        "en": "Inner disk / horizon"
+      },
+      "min": 1.7,
+      "max": 4,
+      "step": 0.05,
+      "default": 2.95,
+      "slot": 5,
+      "key": "K"
+    },
+    {
+      "variable": "diskBrightness",
+      "label": "吸积盘亮度",
+      "aliases": {
+        "zh-CN": "吸积盘亮度",
+        "en": "Disk brightness"
+      },
+      "min": 0.35,
+      "max": 2.5,
+      "step": 0.05,
+      "default": 2.5,
+      "slot": 6,
+      "key": "H"
+    },
+    {
+      "variable": "diskHeat",
+      "label": "等离子体温度",
+      "aliases": {
+        "zh-CN": "等离子体温度",
+        "en": "Plasma temperature"
+      },
+      "min": -0.3,
+      "max": 0.5,
+      "step": 0.01,
+      "default": 0.38,
+      "slot": 7,
+      "key": "T"
+    },
+    {
+      "variable": "filamentStrength",
+      "label": "流动纤维亮度",
+      "aliases": {
+        "zh-CN": "流动纤维亮度",
+        "en": "Filament brightness"
+      },
+      "min": 0.4,
+      "max": 2,
+      "step": 0.05,
+      "default": 2,
+      "slot": 8,
+      "key": "A"
+    },
+    {
+      "variable": "exposure",
+      "label": "等离子体曝光",
+      "aliases": {
+        "zh-CN": "等离子体曝光",
+        "en": "Plasma exposure"
+      },
+      "min": 0.5,
+      "max": 2,
+      "step": 0.05,
+      "default": 2,
+      "slot": 9,
+      "key": "B"
+    },
+    {
+      "variable": "centerX",
+      "aliases": {
+        "zh-CN": "黑洞中心 X",
+        "en": "Center X"
+      },
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.54,
+      "label": "黑洞中心 X",
+      "slot": 10,
+      "key": "C"
+    },
+    {
+      "variable": "centerY",
+      "aliases": {
+        "zh-CN": "黑洞中心 Y",
+        "en": "Center Y"
+      },
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.53,
+      "label": "黑洞中心 Y",
+      "slot": 11,
+      "key": "E"
+    }
+  ],
+  "defaults": [
+    2057,
+    2,
+    13.5,
+    25,
+    0.7,
+    2.95,
+    2.5,
+    0.38,
+    2,
+    2,
+    0.54,
+    0.53,
+    0,
+    0,
+    0,
+    0
+  ],
+  "outputs": {
+    "scalar": {
+      "kind": "body",
+      "libraries": [
+        "math-v1"
+      ],
+      "inline": "return 0.;"
+    }
+  },
+  "seamless": {
+    "kind": "blend"
+  },
+  "editor": {
+    "kind": "parameters"
+  },
+  "aliases": {
+    "zh-CN": "黑洞与吸积盘",
+    "en": "Black Hole and Accretion Disk"
+  },
+  "generator": {
+    "schema": "momo.generator/v1",
+    "revision": 1,
+    "effect": "pipeline",
+    "scalar": "alpha",
+    "libraries": [
+      "generator-event-horizon-helpers-v1",
+      "generator-event-horizon-black-hole-v1"
+    ],
+    "helpers": [
+      "generator-event-horizon-helpers-v1"
+    ],
+    "passes": [
+      {
+        "id": "transparentBlackHole",
+        "inputs": [],
+        "scale": 1,
+        "program": "generator-event-horizon-black-hole-v1"
+      }
+    ]
+  }
+}
