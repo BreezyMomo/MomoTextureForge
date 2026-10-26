@@ -21,5 +21,9 @@ test('distributed skill and reference files match shared contract',async()=>{
  const root=new URL('../skills/texture-forge-author/',import.meta.url);
  assert.equal((await readFile(new URL('SKILL.md',root),'utf8')).trim(),AUTHORING_SKILL.trim());
  assert.equal((await readFile(new URL('references/authoring-guide.md',root),'utf8')).trim(),AUTHORING_GUIDE.trim());
- for(const name of ['references/engine-integration.md','references/engine-integration.en.md'])assert.equal(authoringRuntime[name],await readFile(new URL(name,root),'utf8'),name);
+ for(const [name,text] of Object.entries(authoringRuntime))assert.ok(!text.includes('\r\n'),`${name} must use portable LF line endings`);
+ for(const name of ['references/engine-integration.md','references/engine-integration.en.md']){
+  const source=await readFile(new URL(name,root),'utf8');
+  for(const checkout of [source.replace(/\r\n/g,'\n'),source.replace(/\r?\n/g,'\r\n')])assert.equal(authoringRuntime[name],checkout.replace(/\r\n/g,'\n'),name);
+ }
 });
