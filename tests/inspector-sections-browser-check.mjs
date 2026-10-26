@@ -62,6 +62,26 @@ try{
  await row('Custom A').click({modifiers:['Control']});await blending.getByRole('combobox',{name:'Batch Blend mode',exact:true}).selectOption('inverseMask');latest=JSON.parse(await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1')));assert.ok(latest.root.children.filter(n=>n.name.startsWith('Custom ')).every(n=>n.blend==='inverseMask'));assert.equal(await section('editor.contourProcessing').count(),1);
  assert.deepEqual(errors,[]);
  trace('inspector interactions checked');
+ // Nested headings have no reorder grip; their titles must not occupy its 24px column.
+ await row('Water').click();await page.locator('#inspector-tabs button').nth(1).click();await page.locator('#inspector select[aria-label="Arrangement"]').selectOption('8');
+ const layoutSaved=await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1'));
+ for(const language of ['zh-CN','en']){
+  await page.locator('#language-settings').selectOption(language);
+  for(const key of ['editor.advancedRandomnessPosition','editor.layoutVariationGradientFlow']){
+   const nested=section(key),summary=nested.locator(':scope>summary');
+   assert.equal(await summary.locator('.module-drag-handle').count(),0);
+   for(const width of [260,320,420]){
+    const metrics=await summary.evaluate((source,width)=>{
+     const fixture=document.createElement('details');fixture.className='inspector-module';fixture.style.cssText=`position:fixed;left:0;top:0;width:${width}px;z-index:9999`;fixture.append(source.cloneNode(true));document.body.append(fixture);
+     const heading=fixture.querySelector('.inspector-module-heading'),title=heading.querySelector('.inspector-module-title'),rect=title.getBoundingClientRect(),bounds=heading.getBoundingClientRect(),items=[...heading.children].map(e=>e.getBoundingClientRect());
+     const result={width:rect.width,height:bounds.height,inside:items.every(r=>r.left>=bounds.left&&r.right<=bounds.right+1),overlap:items.some((r,i)=>i&&r.left<items[i-1].right-1)};fixture.remove();return result;
+    },width);
+    assert.ok(metrics.width>100,`${language} ${key} at ${width}px: title width ${metrics.width}`);assert.ok(metrics.height<=64,JSON.stringify(metrics));assert.ok(metrics.inside);assert.equal(metrics.overlap,false);
+   }
+   await summary.click();const open=await nested.getAttribute('open');await summary.click();assert.notEqual(await nested.getAttribute('open'),open);
+  }
+ }
+ assert.equal(await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1')),layoutSaved);trace('nested heading layout checked');
  // Touch has no hover: tapping opens the same tip, tapping again dismisses it.
  const touchPage=await browser.newPage({viewport:{width:1450,height:1050},hasTouch:true});touchPage.setDefaultTimeout(15000);touchPage.on('pageerror',e=>errors.push(e.message));await touchPage.goto(address+'/#tree='+Buffer.from(JSON.stringify(project())).toString('base64'));await touchPage.waitForFunction(()=>document.documentElement.dataset.ready==='true',null,{timeout:30000});await touchPage.locator('#node-tree .tree-node-name').first().tap();trace('touch editor ready');
  const touchHelp=touchPage.locator('#inspector .inspector-module-help').first(),touchTip=touchPage.getByRole('tooltip');await touchHelp.tap();await touchTip.waitFor();await touchHelp.tap();await touchTip.waitFor({state:'detached'});await touchHelp.tap();await touchTip.waitFor();await touchPage.locator('#language-settings').selectOption('en');await touchTip.waitFor({state:'detached'});await touchHelp.tap();await touchTip.waitFor();assert.match(await touchTip.textContent(),/[A-Za-z]/);assert.doesNotMatch(await touchTip.textContent(),/[\u3400-\u9fff]/);await touchPage.close();assert.deepEqual(errors,[]);
