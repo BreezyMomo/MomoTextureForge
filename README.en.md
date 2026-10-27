@@ -114,6 +114,16 @@ Use **Help → GitHub repository ↗** for source and issue reports. **Gitee rep
 
 Public GLSL libraries retain their attribution and licenses. See [PSD-LICENSES.txt](web/vendor/PSD-LICENSES.txt) for the PSD encoder's notices, and [ROUGH-LICENSES.txt](web/vendor/ROUGH-LICENSES.txt) for Rough.js and its bundled dependencies used by hand-drawn post-processing.
 
+## Join the community
+
+Join the Momo Texture Forge QQ group to discuss texture creation, share your work and give feedback!
+
+**Group number: 1129955789** · **Join-question answer: 制作贴图** (enter this exact Chinese text, meaning “create textures”).
+
+Scan the QR code below with QQ, or search for the group number to request membership.
+
+<img src="docs/images/qq-group.jpg" alt="Momo Texture Forge QQ group QR code, group number 1129955789" width="280">
+
 ## Support the project
 
 If Momo Texture Forge saves you time, you are welcome to make a voluntary donation to support continued development and maintenance. Thank you!

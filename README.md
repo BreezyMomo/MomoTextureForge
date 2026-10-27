@@ -114,6 +114,16 @@ npm run build:pages       # 同步生成可部署的 site/index.html
 
 公共 GLSL 保留其署名和许可文本，PSD 编码器许可见 [PSD-LICENSES.txt](web/vendor/PSD-LICENSES.txt)，手绘后处理的Rough.js及依赖许可见 [ROUGH-LICENSES.txt](web/vendor/ROUGH-LICENSES.txt)。
 
+## 加入交流群
+
+欢迎加入 Momo Texture Forge QQ 群，交流贴图制作、分享作品与反馈建议！
+
+**群号：1129955789** · **入群问题答案：制作贴图**
+
+使用 QQ 扫描下方二维码，或搜索群号申请加入。
+
+<img src="docs/images/qq-group.jpg" alt="Momo Texture Forge QQ 群二维码，群号 1129955789" width="280">
+
 ## 支持项目
 
 如果 Momo Texture Forge 帮你节省了制作贴图的时间，欢迎自愿打赏，支持工具的持续开发与维护。感谢你的支持！
