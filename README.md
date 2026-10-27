@@ -6,11 +6,9 @@
 
 在浏览器中制作图形、纹理和动态特效：组合节点、调整参数、创建公式或生成器，再导出图片、法线贴图和序列帧。编辑和渲染在浏览器中完成，也可构建为离线 HTML。
 
-**[国内在线使用（WorkBuddy）](https://momo-texture-forge.app.workbuddy.host/?sharecode=M22BZOBQB4) · [在线使用（GitHub Pages）](https://breezymomo.github.io/MomoTextureForge/) · [图文操作手册](docs/README.md) · [快速上手](docs/01-quick-start.md) · [常见问题](docs/faq.md)**
+**[在线使用（GitHub Pages）](https://breezymomo.github.io/MomoTextureForge/) · [图文操作手册](docs/README.md) · [快速上手](docs/01-quick-start.md) · [常见问题](docs/faq.md)**
 
-国内用户可优先使用 WorkBuddy 入口，分享时请保留链接中的 `sharecode` 参数：已有访问记录的浏览器可能可直接打开根地址，但新访客仍可能需要完整链接。国内站通过 WorkBuddy 定时同步，版本可能晚于 GitHub Pages。
-
-两个正式在线入口使用百度统计记录基础访问量及导出完成次数（按格式/通道区分，复制图片另计），页面浏览地址排除画布分享参数及 `sharecode`，不主动上报作品内容，不开启自动点击采集。离线版、本地开发及其他域名部署不加载统计代码；实现与维护见[开发文档](docs/development.md#正式站点访问统计)。
+正式在线站点使用百度统计记录基础访问量及导出完成次数（按格式/通道区分，复制图片另计），页面浏览地址排除画布分享参数及 `sharecode`，不主动上报作品内容，不开启自动点击采集。离线版、本地开发及其他域名部署不加载统计代码；实现与维护见[开发文档](docs/development.md#正式站点访问统计)。
 
 源码与文档：[GitHub 主仓库](https://github.com/BreezyMomo/MomoTextureForge) · [Gitee 国内镜像](https://gitee.com/BreezyMomo/MomoTextureForge)。访问 GitHub 不便时，可通过 Gitee 阅读教程或下载仓库；两边使用相同的提交历史。
 
