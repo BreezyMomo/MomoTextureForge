@@ -10,6 +10,8 @@
   "aiTools.install": "选择目录并安装…",
   "aiTools.installHint": "选择目标目录后自动写入完整 Skill 文件，无需手动解压。",
   "aiTools.installing": "正在安装 Skill 文件…",
+  "aiTools.preparingDownload": "正在加载 Skill 文件并准备下载…",
+  "aiTools.downloadFailed": "下载未完成，请查看下方原因。",
   "aiTools.installed": "本次已将 {0} 个 Skill 安装到 {1}。",
   "aiTools.installedWithBackup": "本次已将 {0} 个 Skill 安装到 {1}。替换前的文件已备份到 Skill 内的 .momo-backups 目录，额外文件保持不变。",
   "aiTools.failed": "安装未完成，请查看下方原因。",

@@ -29,7 +29,7 @@ export function createLiveAuthoring({getProject,commitProject,commitGraphicsList
    return {sections:args.id?sections.filter(s=>s.id===args.id):sections,detailedGuide:'https://github.com/BreezyMomo/MomoTextureForge/blob/main/README'+(args.language==='zh-CN'?'':'.en')+'.md'};
   }
   if(operation==='skill-export'){
-   const {skillPackage}=await import('./skill-downloads.js'),{filename,bytes}=skillPackage(args.kind);if(!isActive())throw messageError('editorBridge.expired');let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));return {filename,zip:btoa(binary)};
+   const {skillPackage}=await import('./skill-downloads.js'),{filename,bytes}=await skillPackage(args.kind);if(!isActive())throw messageError('editorBridge.expired');let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));return {filename,zip:btoa(binary)};
   }
   if(['remote-state','remote-edit','remote-job'].includes(operation))return remote(operation,args,isActive);
   if(['component-state','component-edit','component-capture'].includes(operation))return componentSession(operation,args,isActive);

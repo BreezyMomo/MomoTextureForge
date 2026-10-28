@@ -96,11 +96,15 @@ npm run build:standalone
 npm run build:pages
 ```
 
-该命令先构建离线 HTML，再同步到可提交的 `site/index.html`，保留 `.nojekyll`。部署 `site/` 即可，不需要 Node.js 服务，兼容 GitHub Pages 仓库子路径。`dist/` 不提交，`site/` 随源码更新。
+该命令保留离线 HTML 构建，再独立生成可提交的 `site/index.html` 与 `site/assets/`，保留 `.nojekyll`。部署时上传完整 `site/`，不需要 Node.js 服务，兼容 GitHub Pages 仓库子路径。在线首页不能单独离线打开；离线使用请选择 `dist/MomoTextureForge.html`。`dist/` 不提交，`site/` 随源码更新。
+
+`web/pages.js` 负责在线入口，继续支持 `?view=examples`、`?view=validate` 与画布分享链接。ES 模块和样式带内容哈希，可分别缓存；Skill 文件在安装或下载时加载，缩略图独立输出并延迟加载，导出 Worker 在开始导出时加载。Shader 实现单独缓存，仍同步提供给资源签名和项目依赖，保存与分享的原生项目不会丢失实现。源代码开发方式与离线单文件的使用流程不变。
+
+构建体积与模块依赖报告在 `test-results/pages-build.json`。其中 `bootstrapBytes` 只计算入口的静态依赖，不代表完成编辑器启动的下载量；`tests/pages-browser-check.mjs` 记录真实启动请求，验证按需加载、仓库子路径、三个视图、导出，以及离线 HTML 无网络下载 Skill 和 PNG。静态资源只清理生成目录中的旧文件。
 
 ### 正式站点访问统计
 
-`build:pages` 额外内嵌 `web/site-analytics.js`，并仅为统计脚本允许 `https://hm.baidu.com`。`build:standalone` 的离线 HTML/ZIP 不含统计代码。脚本按 HTTPS 域名和路径白名单选择两个独立的百度统计站点：GitHub Pages（站点 23623715）和 WorkBuddy（站点 23623719）。本地、其他部署域名、其他 GitHub 项目及验证视图不统计。
+`build:pages` 的在线入口加载 `web/site-analytics.js`，并仅为统计脚本允许 `https://hm.baidu.com`。`build:standalone` 的离线 HTML/ZIP 不含统计代码。脚本按 HTTPS 域名和路径白名单选择两个独立的百度统计站点：GitHub Pages（站点 23623715）和 WorkBuddy（站点 23623719）。本地、其他部署域名、其他 GitHub 项目及验证视图不统计。
 
 每次打开页面仅手动发送一次 PV：编辑器与组合示例分别使用固定路径；不将查询参数、`sharecode` 或画布 `#tree` 放入 PV 地址，来源只保留域名。关闭自动 PV 和自动点击采集，统计脚本使用 `referrerPolicy=origin`，Referer 仅发送站点来源（协议和域名），不含路径、查询参数或画布数据。不能设为 `no-referrer`：百度会返回 HTTP 200 的空脚本，导致没有访问上报。仅在导出文件生成并触发下载、或图片写入剪贴板成功后添加固定行为事件；不统计参数编辑，也不主动上报画布名称、文件名、图片或节点内容。百度服务仍会处理访问统计所需的网络/浏览器信息和访客标识；不能将其描述为完全无数据采集。
 
@@ -255,7 +259,7 @@ node tools/capture-docs.mjs --language en post-effects
 - 镜像使用专用的 GitHub fine-grained token，仅选择本仓库，权限为 Contents/Metadata 只读和 Webhooks 读写；不要把令牌写入代码、日志或文档。
 - 当前同步令牌于 **2027-01-19** 到期。到期前更新凭据，并复查 Webhook 投递结果与镜像同步状态；撤销或到期会中断自动同步。
 
-仓库同步不会自动生成国内在线站点。在线编辑器由 GitHub Pages 和 WorkBuddy 各自部署更新；也可从 Gitee 下载仓库中的 `site/index.html`，用 Chrome / Edge 离线打开。
+仓库同步不会自动生成国内在线站点。在线编辑器由 GitHub Pages 和 WorkBuddy 各自部署更新。自行部署需完整复制 `site/`；离线使用需构建或获取 `dist/MomoTextureForge.html`，不能单独下载在线首页。
 
 ## 仓库结构与深入资料
 

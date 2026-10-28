@@ -1,3 +1,4 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 import assert from 'node:assert/strict';
 import {readFile,writeFile,mkdir,mkdtemp} from 'node:fs/promises';
 import {createServer} from 'node:http';
@@ -52,7 +53,7 @@ const componentRecipe=resolve(out,'component.json');await writeFile(componentRec
 await run('catalog','--from',component,'--output',resolve(out,'imported-catalog.json'));assert.equal(JSON.parse(await readFile(resolve(out,'imported-catalog.json'),'utf8')).components[0].root.children[0].children.length,2);
 await writeFile(resolve(out,'bad.json'),JSON.stringify({schema:RECIPE_SCHEMA,operations:[{op:'set-parameter',node:'circle',parameter:'wrong-variable',value:0}]}));let failed=false;const bad=resolve(out,'failed.zip');try{await run('edit',edited,'--operations',resolve(out,'bad.json'),'--output',bad);}catch{failed=true;}assert.equal(failed,true);assert.equal(JSON.parse(await readFile(resolve(out,'failed.report.json'),'utf8')).ok,false);
 
-const server=createServer(async(req,res)=>{try{const pathname=new URL(req.url,'http://localhost').pathname,file=resolve(root,pathname==='/built.html'?'site/index.html':'web/'+(pathname==='/'?'index.html':decodeURIComponent(pathname).slice(1)));if(!file.startsWith(root+sep)){res.writeHead(403).end();return;}res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.svg':'image/svg+xml','.glsl':'text/plain'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));}catch{res.writeHead(404).end();}});
+const server=createServer(withPagesAssets(async(req,res)=>{try{const pathname=new URL(req.url,'http://localhost').pathname,file=resolve(root,pathname==='/built.html'?'site/index.html':'web/'+(pathname==='/'?'index.html':decodeURIComponent(pathname).slice(1)));if(!file.startsWith(root+sep)){res.writeHead(403).end();return;}res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.svg':'image/svg+xml','.glsl':'text/plain'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));}catch{res.writeHead(404).end();}}));
 await new Promise(done=>server.listen(0,'127.0.0.1',done));const origin='http://127.0.0.1:'+server.address().port;let browser;const gui=[];
 try{
  browser=await chromium.launch({headless:true});

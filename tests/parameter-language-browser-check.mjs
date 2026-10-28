@@ -1,3 +1,4 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 // Exercise real editor controls and WebGL; no third-party account/browser state.
 import http from 'node:http';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
@@ -9,10 +10,10 @@ import {project,node} from '../web/tree-model.js';
 const root=fileURLToPath(new URL('../web/',import.meta.url));
 const types={'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.glsl':'text/plain','.svg':'image/svg+xml'};
 const built=process.argv.includes('--built'),html=built?await readFile(new URL('../site/index.html',import.meta.url)):null;
-const server=http.createServer(async(req,res)=>{try{const pathname=new URL(req.url,'http://localhost').pathname;
+const server=http.createServer(withPagesAssets(async(req,res)=>{try{const pathname=new URL(req.url,'http://localhost').pathname;
  if(built){if(pathname!=='/MomoTextureForge/'&&pathname!=='/MomoTextureForge/index.html')throw Error('Not found');res.setHeader('Content-Type','text/html');res.end(html);return;}
  const file=path.resolve(root,'.'+(pathname==='/'?'/index.html':pathname));if(!file.startsWith(root)||!types[path.extname(file)])throw Error('Not found');res.setHeader('Content-Type',types[path.extname(file)]);res.end(await readFile(file));
-}catch{res.writeHead(404);res.end();}});
+}catch{res.writeHead(404);res.end();}}));
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));let browser;
 try{
  browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-webgl','--ignore-gpu-blocklist']});

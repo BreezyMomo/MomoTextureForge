@@ -35,9 +35,14 @@ export function installAITools({button,getProject,onOperation,onCatalog}){
    const handle=await showDirectoryPicker({id:'momo-skills-'+agent,mode:'readwrite'});
    if(handle.requestPermission&&await handle.requestPermission({mode:'readwrite'})!=='granted')throw messageError('aiTools.permissionDenied');
    const root=await installRoot(handle,agent,'personal',{create:true});let backups=0;
-   for(const kind of choices){const result=await installSkill(root,skillFiles(kind),{agent});if(result.backup)backups++;}
+   for(const kind of choices){const result=await installSkill(root,await skillFiles(kind),{agent});if(result.backup)backups++;}
    message={key:backups?'aiTools.installedWithBackup':'aiTools.installed',values:[choices.length,[handle.name,...skillDirectoryParts(agent,'personal',handle.name)].join('/')]};
   }catch(error){if(error.name==='AbortError')message=null;else message={key:'aiTools.failed',values:[],error};}
+  finally{locked=false;render();}
+ }
+ async function download(kind){
+  if(locked)return;locked=true;message={key:'aiTools.preparingDownload',values:[]};render();
+  try{await downloadSkill(kind);message=null;}catch(error){message={key:'aiTools.downloadFailed',values:[],error};}
   finally{locked=false;render();}
  }
  const close=()=>{if(!locked)dialog.close();};
@@ -52,7 +57,7 @@ export function installAITools({button,getProject,onOperation,onCatalog}){
   view.install.onclick=install;
   view.startCopy.onclick=async()=>{const current=view;try{await navigator.clipboard.writeText(current.startPrompt.value);if(view!==current)return;copyFeedback='aiTools.startCopied';}catch{if(view!==current)return;current.startPrompt.focus();current.startPrompt.select();copyFeedback='aiTools.startCopyManually';}render();};
   for(const check of Object.values(view.checks))check.onchange=render;
-  q('#download-author-skill').onclick=()=>downloadSkill('author');q('#download-effects-skill').onclick=()=>downloadSkill('effects');
+  q('#download-author-skill').onclick=()=>download('author');q('#download-effects-skill').onclick=()=>download('effects');
   view.catalog.onclick=()=>{if(locked)return;close();onCatalog();};view.configure.onclick=()=>{if(locked)return;close();bridge.open();};q('[data-close]').onclick=close;
   dialog.addEventListener('cancel',event=>{if(locked)event.preventDefault();});
   document.body.append(dialog);const dispose=localizeApplicationMarkup(dialog);dialog.addEventListener('close',()=>{dispose();dialog.remove();dialog=null;view=null;message=null;copyFeedback=null;button.focus();},{once:true});render();prepareDialogLayout(dialog);dialog.showModal();makeDialogMovable(dialog);

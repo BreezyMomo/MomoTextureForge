@@ -5,7 +5,7 @@ import {resolve,extname,sep} from 'node:path';
 import {chromium} from 'playwright';
 import {decodeZIP} from '../web/resource-zip.js';
 const root=resolve('.'),out=resolve('test-results/ai-tools');await mkdir(out,{recursive:true});
-const server=createServer(async(req,res)=>{try{const path=new URL(req.url,'http://localhost').pathname,file=resolve(root,path==='/built.html'?'site/index.html':'web/'+(path==='/'?'index.html':decodeURIComponent(path).slice(1)));if(!file.startsWith(root+sep))throw Error();res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.svg':'image/svg+xml','.glsl':'text/plain'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));}catch{res.writeHead(404).end();}});
+const server=createServer(async(req,res)=>{try{const path=new URL(req.url,'http://localhost').pathname,file=resolve(root,path==='/built.html'?'site/index.html':(path.startsWith('/assets/')?'site/':'web/')+(path==='/'?'index.html':decodeURIComponent(path).slice(1)));if(!file.startsWith(root+sep))throw Error();res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.svg':'image/svg+xml','.glsl':'text/plain'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));}catch{res.writeHead(404).end();}});
 await new Promise(done=>server.listen(0,'127.0.0.1',done));const origin='http://127.0.0.1:'+server.address().port;let browser;const checks=[];
 try{
  browser=await chromium.launch({headless:true});
@@ -18,8 +18,16 @@ try{
   const saved=await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1'));
   assert.equal(await page.locator('.header-help #download-author-skill').count(),0);await page.locator('#ai-tools').click();const dialog=page.locator('.ai-tools-dialog');await dialog.waitFor();
   assert.equal(await dialog.locator('#ai-tools-agent').inputValue(),'codex');assert.equal(await dialog.locator('[data-project],[data-personal],[data-directory],[data-installer],[data-runtime]').count(),0);assert.equal(await dialog.locator('[data-step=install] .ai-tools-actions button').count(),1);assert.match(await dialog.locator('[data-directory-hint]').innerText(),/~\/.agents\/skills/);assert.equal(await dialog.locator('[data-state],.ai-tools-path').count(),0);assert.equal(await dialog.locator('[data-progress]').innerText(),'');assert.equal(await page.locator('#save-project').count(),1);assert.equal(await dialog.locator('[data-project-export]').count(),0);await page.waitForFunction(async()=>!(await indexedDB.databases()).some(db=>db.name==='momo-ai-install:v1'));
-  // Use real directory/file handles in a disposable OPFS root; only the OS picker
-  // is substituted, so installation never touches the user's Agent directories.
+  // Delay the hosted Skill chunk to verify real on-demand loading and operation locking.
+  if(built){
+   const build=JSON.parse(await readFile('test-results/pages-build.json','utf8')),chunk=Object.entries(build.chunks).find(([,v])=>v.entryPoint==='web/authoring-kit-runtime.js')[0];
+   let release,started;const gate=new Promise(r=>release=r),requested=new Promise(r=>started=r),pattern='**/'+chunk;
+   await page.route(pattern,async route=>{started();await gate;await route.continue();});
+   const download=page.waitForEvent('download');await dialog.locator('#download-author-skill').click();await requested;
+   assert.equal(await dialog.locator('[data-install]').isDisabled(),true);assert.equal(await dialog.locator('[data-close]').isDisabled(),true);assert.match(await dialog.locator('[data-progress]').innerText(),/Loading Skill files/);
+   release();assert.equal(await(await download).failure(),null);await page.unroute(pattern);await page.waitForFunction(()=>!document.querySelector('.ai-tools-dialog [data-close]').disabled);
+  }
+  // Use real handles in disposable OPFS; only the picker is substituted, never Agent directories.
   await page.evaluate(()=>{globalThis.installDestination='personal';globalThis.installPickerCount=0;globalThis.showDirectoryPicker=async()=>{globalThis.installPickerCount++;if(globalThis.cancelInstallPicker)throw new DOMException('Cancelled','AbortError');const root=await navigator.storage.getDirectory();const selected=await root.getDirectoryHandle('test-'+(globalThis.installDestination==='final'?'personal':globalThis.installDestination),{create:true});return globalThis.installDestination==='final'?await(await selected.getDirectoryHandle('.agents')).getDirectoryHandle('skills'):selected;};});
   await dialog.locator('[data-install]').click();await page.waitForFunction(()=>/^Installed/.test(document.querySelector('.ai-tools-dialog [data-progress]').textContent)&&!document.querySelector('.ai-tools-dialog [data-install]').disabled);
   const files=await page.evaluate(async()=>{const root=await(await navigator.storage.getDirectory()).getDirectoryHandle('test-personal'),skills=await(await root.getDirectoryHandle('.agents')).getDirectoryHandle('skills'),author=await skills.getDirectoryHandle('texture-forge-author'),effects=await skills.getDirectoryHandle('texture-forge-effects');return {author:await(await(await author.getFileHandle('SKILL.md')).getFile()).text(),effects:await(await(await effects.getFileHandle('SKILL.md')).getFile()).text(),runtime:await(await(await author.getFileHandle('package.json')).getFile()).text()};});

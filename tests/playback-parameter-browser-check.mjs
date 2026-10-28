@@ -1,3 +1,4 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 // Isolated browser regression: editing parameters must not interrupt playback.
 import {createServer} from 'node:http';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
@@ -7,11 +8,11 @@ import {chromium} from 'playwright';
 import {project,node} from '../web/tree-model.js';
 
 const built=process.argv.includes('--built'),root=resolve('web');
-const server=createServer(async(req,res)=>{try{
+const server=createServer(withPagesAssets(async(req,res)=>{try{
  const name=new URL(req.url,'http://local').pathname,file=name==='/built.html'?resolve('site/index.html'):resolve(root,'.'+(name==='/'?'/index.html':name));
  if(name!=='/built.html'&&!file.startsWith(root+sep))throw Error();
  res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.json':'application/json','.glsl':'text/plain'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));
-}catch{res.writeHead(404);res.end();}});
+}catch{res.writeHead(404);res.end();}}));
 await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
 try{
  browser=await chromium.launch({channel:'msedge',headless:true});

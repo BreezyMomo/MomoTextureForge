@@ -1,12 +1,13 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 import {chromium} from 'playwright';
 import {createServer} from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
 import assert from 'node:assert/strict';
 import {project,node} from '../web/tree-model.js';
-const standalone=process.argv.includes('--standalone'),root=resolve('web'),server=createServer(async(req,res)=>{
+const standalone=process.argv.includes('--standalone'),root=resolve('web'),server=createServer(withPagesAssets(async(req,res)=>{
  try{const file=resolve(root,'.'+(new URL(req.url,'http://local').pathname==='/'?'/index.html':new URL(req.url,'http://local').pathname));if(!file.startsWith(root+sep))throw Error();res.setHeader('Content-Type',standalone?'text/html':({'.html':'text/html','.js':'text/javascript','.json':'application/json','.glsl':'text/plain','.css':'text/css'})[extname(file)]??'application/octet-stream');res.end(await readFile(standalone?'site/index.html':file));}catch{res.writeHead(404);res.end();}
-});await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
+}));await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
 try{
  browser=await chromium.launch({channel:'msedge',headless:true});const page=await browser.newPage({viewport:{width:1600,height:1050}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  const p=project(),parent=node('group'),star=node('shape','Star');parent.name='青色组合';parent.color={mode:'own',fill:'gradient',low:'#000000',high:'#80dfff'};star.name='测试星形';parent.children=[star];p.root.children=[parent];

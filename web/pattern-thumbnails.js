@@ -24,6 +24,8 @@ export function patternThumbnails(root){
  }
  function use(job,src,origin){
   if(!current(job))return;job.origin=origin;job.src=src;remember(job.memoryKey,src);
+  // Local PNGs must decode immediately, including corrupt-cache errors that trigger fallback.
+  job.img.loading=/^(?:data:|blob:)/.test(src)?'eager':'lazy';
   if(job.img.src===src&&job.img.complete&&job.img.naturalWidth)setState(job.img,'ready');else job.img.src=src;
  }
  function placeholder(img,job){

@@ -2,7 +2,7 @@ export function isStandalone() {
   return document.documentElement.dataset.distribution === "standalone";
 }
 export function pageHref(view = "editor", hash = "") {
-  if (isStandalone()) {
+  if (isStandalone() || document.documentElement.dataset.distribution === 'pages') {
     const url = new URL(location.href);
     url.search = view === "editor" ? "" : `?view=${view}`;
     url.hash = hash;

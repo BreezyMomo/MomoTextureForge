@@ -1,3 +1,4 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 import http from 'node:http';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
@@ -6,7 +7,7 @@ import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {project,node} from '../web/tree-model.js';
 const root=fileURLToPath(new URL('..',import.meta.url)),out=resolve(root,'test-results/puzzle');await mkdir(out,{recursive:true});
-const server=http.createServer(async(req,res)=>{try{const path=new URL(req.url,'http://localhost').pathname,file=path==='/built.html'?resolve(root,'site/index.html'):resolve(root,'web','.'+(path==='/'?'/index.html':path));if(path!=='/built.html'&&!file.startsWith(resolve(root,'web')+sep))throw Error();res.setHeader('Content-Type',({'.js':'text/javascript','.json':'application/json','.html':'text/html','.glsl':'text/plain','.css':'text/css'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));}catch{res.writeHead(404);res.end();}});await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
+const server=http.createServer(withPagesAssets(async(req,res)=>{try{const path=new URL(req.url,'http://localhost').pathname,file=path==='/built.html'?resolve(root,'site/index.html'):resolve(root,'web','.'+(path==='/'?'/index.html':path));if(path!=='/built.html'&&!file.startsWith(resolve(root,'web')+sep))throw Error();res.setHeader('Content-Type',({'.js':'text/javascript','.json':'application/json','.html':'text/html','.glsl':'text/plain','.css':'text/css'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));}catch{res.writeHead(404);res.end();}}));await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
 try{
  browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-webgl','--ignore-gpu-blocklist']});const page=await browser.newPage({viewport:{width:1300,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:'+server.address().port+'/authoring-render.html');
  const report=await page.evaluate(async()=>{

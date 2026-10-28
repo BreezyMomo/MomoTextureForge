@@ -1,3 +1,4 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 import {chromium} from 'playwright';
 import {createServer} from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
@@ -7,9 +8,9 @@ import {project,node} from '../web/tree-model.js';
 import {LAYOUT_KEY} from '../web/dock-layout.js';
 
 const standalone=process.argv.includes('--standalone'),root=resolve('web');
-const server=createServer(async(req,res)=>{
+const server=createServer(withPagesAssets(async(req,res)=>{
  try{const path=new URL(req.url,'http://localhost').pathname,file=resolve(root,'.'+(path==='/'?'/index.html':path));if(!file.startsWith(root+sep))throw Error('Invalid path');res.setHeader('Content-Type',standalone?'text/html':({'.html':'text/html','.js':'text/javascript','.json':'application/json','.glsl':'text/plain','.css':'text/css'})[extname(file)]??'application/octet-stream');res.end(await readFile(standalone?'site/index.html':file));}catch{res.writeHead(404);res.end();}
-});
+}));
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));let browser;
 try{
  browser=await chromium.launch({channel:'msedge',headless:true});const page=await browser.newPage({viewport:{width:1600,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));

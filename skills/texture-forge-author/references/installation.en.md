@@ -8,6 +8,8 @@ Open **AI tools → Install Skills**, select an agent and Skills, then click **C
 
 ## Recommended directories
 
+The hosted static version, including GitHub Pages, fetches each Skill only when installation or download starts, so the first operation needs network access. Install/download buttons are temporarily disabled while loading, and failures show an error. For fully offline use, open the complete `MomoTextureForge.html` offline distribution. The online entry page must be deployed with `assets/`; saving it alone does not create an offline version. Both distributions deliver the same Skill contents.
+
 - Codex: personal `~/.agents/skills`; project-relative `.agents/skills`.
 - Claude Code: personal `~/.claude/skills`; project-relative `.claude/skills`.
 - Cursor: personal `~/.cursor/skills`; project-relative `.cursor/skills`.

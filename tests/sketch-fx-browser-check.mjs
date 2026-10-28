@@ -1,10 +1,11 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 import {createServer} from 'node:http';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
 import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
 import {project,node} from '../web/tree-model.js';
-const built=process.argv.includes('--built'),root=resolve('web'),server=createServer(async(req,res)=>{try{const path=new URL(req.url,'http://local').pathname,file=path==='/built.html'?resolve('site/index.html'):resolve(root,'.'+(path==='/'?'/index.html':path));if(path!=='/built.html'&&!file.startsWith(root+sep))throw Error();res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json','.css':'text/css','.glsl':'text/plain'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));}catch{res.writeHead(404);res.end();}});
+const built=process.argv.includes('--built'),root=resolve('web'),server=createServer(withPagesAssets(async(req,res)=>{try{const path=new URL(req.url,'http://local').pathname,file=path==='/built.html'?resolve('site/index.html'):resolve(root,'.'+(path==='/'?'/index.html':path));if(path!=='/built.html'&&!file.startsWith(root+sep))throw Error();res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json','.css':'text/css','.glsl':'text/plain'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));}catch{res.writeHead(404);res.end();}}));
 await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
 try{
  browser=await chromium.launch({channel:'msedge',headless:true});const page=await browser.newPage({viewport:{width:1500,height:1100}}),errors=[];page.on('pageerror',error=>errors.push(error.message));const origin='http://127.0.0.1:'+server.address().port;await page.goto(origin+'/authoring-render.html'+(process.argv.includes('--preview')?'?preview=1':''));

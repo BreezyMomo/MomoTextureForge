@@ -8,6 +8,8 @@
 
 ## 推荐目录
 
+在线静态版（包括 GitHub Pages）在安装或下载时才获取对应 Skill 文件，因此首次操作需要网络；等待期间安装和下载按钮暂时禁用，加载失败会显示错误。需要完全离线使用时，请打开完整的 `MomoTextureForge.html` 离线版；在线首页必须与 `assets/` 一起部署，不能仅保存首页代替离线版。两种版本交付相同的 Skill 内容。
+
 - Codex：个人目录 `~/.agents/skills`；工程根目录下为 `.agents/skills`。
 - Claude Code：个人目录 `~/.claude/skills`；工程根目录下为 `.claude/skills`。
 - Cursor：个人目录 `~/.cursor/skills`；工程根目录下为 `.cursor/skills`。

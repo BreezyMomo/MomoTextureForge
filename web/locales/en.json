@@ -10,6 +10,8 @@
   "aiTools.install": "Choose directory and install…",
   "aiTools.installHint": "Choose a destination to write complete Skill files without extracting a ZIP manually.",
   "aiTools.installing": "Installing Skill files…",
+  "aiTools.preparingDownload": "Loading Skill files and preparing the download…",
+  "aiTools.downloadFailed": "Download did not finish. See the reason below.",
   "aiTools.installed": "Installed {0} Skills to {1}.",
   "aiTools.installedWithBackup": "Installed {0} Skills to {1}. Replaced files were backed up in the Skill’s .momo-backups directory; additional files are preserved.",
   "aiTools.failed": "Installation did not finish. See the reason below.",

@@ -20,7 +20,7 @@ export async function buildAuthoringKit(){
  await buildEffectsKit(registry);
  const plugin={name:'embedded-definitions',setup(b){b.onLoad({filter:/definition-runtime\.js$/},()=>({contents:`export const BUILTIN=${JSON.stringify(registry)};export const formulaText=spec=>spec.inline??BUILTIN.sources[spec.file];`,loader:'js'}));}};
  const workerBuild=await build({absWorkingDir:root,entryPoints:['web/export-worker.js'],bundle:true,write:false,format:'iife',platform:'browser',target:'es2022',minify:true,plugins:[plugin]});
- const workerPlugin={name:'embedded-export-worker',setup(b){b.onLoad({filter:/export-worker-source\.js$/},()=>({contents:'export default '+JSON.stringify(workerBuild.outputFiles[0].text),loader:'js'}));}};
+ const workerPlugin={name:'embedded-export-worker',setup(b){b.onLoad({filter:/export-worker-source\.js$/},()=>({contents:'export const workerURL=null;export default '+JSON.stringify(workerBuild.outputFiles[0].text),loader:'js'}));}};
  const bundle=async(file,platform)=>{const r=await build({absWorkingDir:root,entryPoints:[file],bundle:true,write:false,format:'esm',platform,target:'es2022',minify:true,external:platform==='node'?['playwright','@modelcontextprotocol/sdk','zod']:[],plugins:[plugin,...(platform==='browser'?[workerPlugin]:[])]});return r.outputFiles[0].text;};
  const pkg=JSON.parse(await readFile(resolve(root,'package.json'),'utf8'));
  const runtime={

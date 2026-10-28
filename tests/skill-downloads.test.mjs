@@ -7,7 +7,7 @@ const text=bytes=>new TextDecoder().decode(bytes);
 const normalized=value=>value.replace(/\r\n?/g,'\n');
 test('both downloadable skills have their own entrypoint and all reference links resolve',async()=>{
  for(const [kind,folder] of [['author','texture-forge-author'],['effects','texture-forge-effects']]){
-  const pack=skillPackage(kind),files=await decodeZIP(pack.bytes),entry=text(files.get(folder+'/SKILL.md'));
+  const pack=await skillPackage(kind),files=await decodeZIP(pack.bytes),entry=text(files.get(folder+'/SKILL.md'));
   assert.ok(entry.includes('name: '+folder));
   assert.ok(files.has(folder+'/SKILL.en.md'),'English Skill entry is bundled');
   assert.ok(text(files.get(folder+'/SKILL.en.md')).includes('name: '+folder));
@@ -18,11 +18,11 @@ test('both downloadable skills have their own entrypoint and all reference links
   if(kind==='author')assert.ok(files.has(folder+'/scripts/texforge.mjs'));
   else assert.ok([...files.keys()].every(name=>name.endsWith('.md')));
  }
- assert.throws(()=>skillPackage('unknown'),/未知Skill/);
+ await assert.rejects(()=>skillPackage('unknown'),/未知Skill/);
 });
 test('both Skill downloads match maintained bilingual instructions and effects use dynamic catalog context',async()=>{
  for(const kind of ['author','effects']){
-  const files=await decodeZIP(skillPackage(kind).bytes);
+  const files=await decodeZIP((await skillPackage(kind)).bytes);
   for(const [name,bytes]of files)if(name.endsWith('.md'))assert.equal(normalized(text(bytes)).trimEnd(),normalized(await readFile(new URL('../skills/'+name,import.meta.url),'utf8')).trimEnd(),name);
   if(kind==='effects'){
    assert.ok(!files.has('texture-forge-effects/references/patterns.md'));

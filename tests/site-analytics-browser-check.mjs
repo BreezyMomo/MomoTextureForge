@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {chromium} from 'playwright';
+import {pagesAsset} from './helpers/pages-assets.mjs';
 
 const html=await readFile('site/index.html','utf8'),offline=await readFile('dist/MomoTextureForge.html','utf8');
 const realSDK=process.argv.includes('--real-sdk');
-assert.ok(html.includes("script-src 'unsafe-inline' https://hm.baidu.com;"));
+assert.ok(html.includes("script-src 'self' 'unsafe-inline' https://hm.baidu.com;"));
 assert.ok(!offline.includes('hm.baidu.com'));
 const browser=await chromium.launch({channel:'msedge',headless:true});
 try{
@@ -32,6 +33,7 @@ try{
     return route.fulfill({contentType:'text/javascript',body:'window.__capturedAnalytics=JSON.parse(JSON.stringify(window._hmt));'});
    }
    if(request.isNavigationRequest())return route.fulfill({contentType:'text/html',body:html});
+   const asset=await pagesAsset(request.url());if(asset)return route.fulfill(asset);
    return route.abort();
   });
   await page.goto(url);
@@ -58,7 +60,7 @@ try{
   await page.close();
  }
  const blocked=await browser.newPage();
- await blocked.route('**/*',route=>route.request().isNavigationRequest()?route.fulfill({contentType:'text/html',body:html}):route.abort());
+ await blocked.route('**/*',async route=>{if(route.request().isNavigationRequest())return route.fulfill({contentType:'text/html',body:html});const asset=await pagesAsset(route.request().url());return asset?route.fulfill(asset):route.abort();});
  await blocked.goto('https://momo-texture-forge.app.workbuddy.host/');
  await blocked.waitForFunction(()=>document.documentElement.dataset.ready==='true');
  assert.equal(await blocked.locator('#open-graphics-library').count(),1);

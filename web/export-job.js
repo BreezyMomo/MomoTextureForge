@@ -1,6 +1,6 @@
 import {messageError,serializeMessageError,restoreMessageError} from './message-catalog.js';
 import {BY_ID} from './catalog.js';
-import source from './export-worker-source.js';
+import source,{workerURL} from './export-worker-source.js';
 // One worker per export: termination also interrupts synchronous fitting/quantization.
 export function runExportWorker(kind,project,options,{render,stage=()=>{},signal}={}){
  return new Promise((resolve,reject)=>{
@@ -12,7 +12,7 @@ export function runExportWorker(kind,project,options,{render,stage=()=>{},signal
    if(source)url=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));
    // Standalone embeds an IIFE. A classic Blob worker also works from file://,
    // where Chromium can reject a module worker with an opaque origin.
-   worker=new Worker(url??new URL('./export-worker.js',import.meta.url),{type:source?'classic':'module'});
+   worker=new Worker(url??workerURL,{type:source?'classic':'module'});
    signal?.addEventListener('abort',abort,{once:true});
    worker.onerror=event=>{event.preventDefault();finish(Error(event.message||'后台导出失败，请重试'));};
    worker.onmessageerror=()=>finish(Error('后台导出数据传输失败，请重试'));

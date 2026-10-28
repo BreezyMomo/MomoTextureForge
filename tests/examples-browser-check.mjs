@@ -1,3 +1,4 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 import http from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
@@ -10,13 +11,13 @@ const sampleCount=treeSamples().length;
 const editableNames=process.argv.includes('--effects-only')?new Set(effectSamples().map(s=>s.name)):null;
 
 const standalone=process.argv.includes('--standalone'),root=resolve('web');
-const server=http.createServer(async(req,res)=>{
+const server=http.createServer(withPagesAssets(async(req,res)=>{
  try{
   const path=new URL(req.url,'http://localhost').pathname,file=standalone?resolve('site/index.html'):resolve(root,'.'+(path==='/'?'/index.html':path));
   if(!standalone&&!file.startsWith(root+sep))throw Error('Invalid path');
   res.setHeader('Content-Type',standalone?'text/html':({'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.glsl':'text/plain'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));
  }catch{res.writeHead(404);res.end();}
-});
+}));
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 let browser;
 try{

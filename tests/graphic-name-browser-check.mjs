@@ -1,3 +1,4 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 import {encodePNG} from '../web/encoders.js';
 import {decodeZIP} from '../web/resource-zip.js';
 // Real metadata editing, persistence, insertion and remote subscription in an isolated browser.
@@ -15,11 +16,11 @@ const built=process.argv.includes('--built'),root=fileURLToPath(new URL('../web/
 const meta={resourceId:crypto.randomUUID(),versionId:1,personalRevision:0,name:'远程默认名',aliases:{'zh-CN':'远程冰霜',en:'Remote Frost'},kind:'formula'};
 const remote=await buildRemoteLibrary([await encodeResourcePack({schema:PRESET_SCHEMA,name:meta.name,root:node(),graphicResource:meta})]);
 const types={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.json':'application/json','.css':'text/css','.glsl':'text/plain','.svg':'image/svg+xml'};
-const server=http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://localhost').pathname;
+const server=http.createServer(withPagesAssets(async(req,res)=>{try{const url=new URL(req.url,'http://localhost').pathname;
  if(url.startsWith('/remote/')){const bytes=remote.files.get(url.slice(8));if(!bytes)throw Error();res.setHeader('Content-Type',url.endsWith('.json')?'application/json':'application/zip');res.end(bytes);return;}
  if(built){if(url!=='/MomoTextureForge/')throw Error();res.setHeader('Content-Type','text/html');res.end(html);return;}
  const file=path.resolve(root,'.'+(url==='/'?'/index.html':url));if(!file.startsWith(root)||!types[path.extname(file)])throw Error();res.setHeader('Content-Type',types[path.extname(file)]);res.end(await readFile(file));
-}catch{res.writeHead(404);res.end();}});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));let browser;
+}catch{res.writeHead(404);res.end();}}));await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));let browser;
 try{
  browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-webgl','--ignore-gpu-blocklist']});const page=await browser.newPage({viewport:{width:1600,height:1050}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  const origin=`http://127.0.0.1:${server.address().port}`,address=origin+(built?'/MomoTextureForge/':'/');await page.goto(address);await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('#language-settings').selectOption('en');

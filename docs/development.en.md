@@ -96,11 +96,15 @@ Share saved project files separately. Browser storage is not a portable project 
 npm run build:pages
 ```
 
-This builds offline HTML, then updates tracked `site/index.html` and retains `.nojekyll`. Deploy `site/` without a Node server. GitHub Pages repository subpaths are supported. `dist/` is ignored; `site/` travels with source changes.
+This preserves the offline HTML build, then independently generates tracked `site/index.html` and `site/assets/`, retaining `.nojekyll`. Deploy the complete `site/` without a Node server; GitHub Pages repository subpaths are supported. The online entry page cannot run offline by itself; use `dist/MomoTextureForge.html` for that. `dist/` is ignored; `site/` travels with source changes.
+
+`web/pages.js` handles the hosted entry, retaining `?view=examples`, `?view=validate` and canvas share links. ES modules and styles have content hashes for independent caching. Skill payloads load on installation/download, thumbnails are separate lazy-loaded images, and the export Worker loads when an export starts. Shader implementations are cached separately and remain synchronously available for resource signatures and project dependencies; saved/shared native projects retain their implementations. Source development and the offline single-file workflow remain unchanged.
+
+Build sizes and module dependencies are recorded in `test-results/pages-build.json`. `bootstrapBytes` counts only static entry dependencies, not the full editor startup transfer. `tests/pages-browser-check.mjs` records actual startup requests and verifies deferred loading, repository subpaths, all three views, export and offline Skill/PNG downloads without network requests. Cleanup only removes obsolete files in the generated asset directory.
 
 ### Official-site analytics
 
-`build:pages` embeds `web/site-analytics.js` and permits `https://hm.baidu.com` for analytics scripts. Offline HTML/ZIP does not contain it. An HTTPS host/path allowlist selects separate Baidu sites for GitHub Pages (23623715) and WorkBuddy (23623719). Local/other domains, other GitHub projects and validation views do not collect traffic.
+`build:pages` loads `web/site-analytics.js` from the hosted entry and permits `https://hm.baidu.com` for analytics scripts. Offline HTML/ZIP does not contain it. An HTTPS host/path allowlist selects separate Baidu sites for GitHub Pages (23623715) and WorkBuddy (23623719). Local/other domains, other GitHub projects and validation views do not collect traffic.
 
 One manual pageview is sent per page load using fixed editor/example paths. Query strings, `sharecode` and canvas `#tree` are excluded; referrers are reduced to origin. Automatic PV/click capture is disabled and script requests use `referrerPolicy=origin ` to send only the site origin, excluding paths, query strings and canvas data. Do not use `no-referrer`: Baidu responds with an empty HTTP 200 script, preventing pageview reporting. Only completed file generation followed by download initiation, or a successful clipboard image write, emits an explicit event. Parameter edits, canvas names, filenames and image/node content are not actively reported. Baidu still processes network/browser data and visitor identifiers needed for analytics; do not describe this as no data collection.
 
@@ -253,7 +257,7 @@ Capture honors reduced motion and waits for real controls and previews before an
 - The dedicated fine-grained GitHub token selects only this repository, with read-only Contents/Metadata and read/write Webhooks. Keep credentials out of code/logs/docs.
 - The current token expires **2027-01-19**. Renew before then and inspect Webhook delivery/mirror status. Revocation/expiry stops synchronization.
 
-Git synchronization does not publish an editor deployment. GitHub Pages and WorkBuddy have their own deployment/update processes. You can also download `site/index.html` from Gitee and open it offline in Chrome/Edge.
+Git synchronization does not publish an editor deployment. GitHub Pages and WorkBuddy have their own deployment/update processes. Self-hosting requires the complete `site/` directory. For offline use, build or obtain `dist/MomoTextureForge.html` rather than downloading the online entry page alone.
 
 ## Repository structure and references
 

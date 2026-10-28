@@ -7,7 +7,7 @@ import {chromium} from 'playwright';
 const root=resolve('web'),server=createServer(async(req,res)=>{
  try{
   const path=new URL(req.url,'http://local').pathname;
-  const standalone=path==='/standalone',file=standalone?resolve('site/index.html'):resolve(root,'.'+(path==='/'?'/index.html':path));
+  const standalone=path==='/standalone',file=standalone?resolve('dist/MomoTextureForge.html'):resolve(root,'.'+(path==='/'?'/index.html':path));
   if(!standalone&&!file.startsWith(root+sep))throw Error('Invalid path');
   res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript','.json':'application/json','.glsl':'text/plain','.css':'text/css'})[extname(file)]??'application/octet-stream');
   res.end(await readFile(file));

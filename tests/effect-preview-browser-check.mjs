@@ -1,12 +1,13 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 import {createServer} from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {project,node} from '../web/tree-model.js';
-const standalone=process.argv.includes('--standalone'),root=resolve('web'),server=createServer(async(req,res)=>{
+const standalone=process.argv.includes('--standalone'),root=resolve('web'),server=createServer(withPagesAssets(async(req,res)=>{
  try{const path=new URL(req.url,'http://local').pathname,file=resolve(root,'.'+(path==='/'?'/index.html':path));if(!file.startsWith(root+sep))throw Error();res.setHeader('Content-Type',standalone?'text/html; charset=utf-8':({'.html':'text/html; charset=utf-8','.js':'text/javascript','.json':'application/json','.glsl':'text/plain','.css':'text/css'})[extname(file)]??'application/octet-stream');res.end(await readFile(standalone?'site/index.html':file));}catch{res.writeHead(404);res.end();}
-});await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
+}));await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
 try{
  await mkdir('test-results/effect-preview',{recursive:true});browser=await chromium.launch({channel:'msedge',headless:true});const page=await browser.newPage({viewport:{width:1600,height:1050}}),errors=[];page.setDefaultTimeout(60000);page.on('pageerror',e=>errors.push(e.message));const origin='http://127.0.0.1:'+server.address().port;
  if(!standalone){

@@ -1,3 +1,4 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
@@ -11,7 +12,7 @@ import {GRAPHIC_LIST_KEY,serializeGraphicList} from '../web/persistent-graphic-l
 
 const built=process.argv.includes('--built'),root=fileURLToPath(new URL('../',import.meta.url));
 const types={'.js':'text/javascript','.html':'text/html','.css':'text/css','.json':'application/json','.glsl':'text/plain'};
-const server=http.createServer(async(req,res)=>{try{const pathname=new URL(req.url,'http://local').pathname,file=path.resolve(root,pathname==='/built.html'?'site/index.html':'web/.'+(pathname==='/'?'/index.html':pathname));if(!file.startsWith(root)||!types[path.extname(file)])throw Error();res.setHeader('Content-Type',types[path.extname(file)]);res.end(await readFile(file));}catch{res.writeHead(404);res.end();}});
+const server=http.createServer(withPagesAssets(async(req,res)=>{try{const pathname=new URL(req.url,'http://local').pathname,file=path.resolve(root,pathname==='/built.html'?'site/index.html':'web/.'+(pathname==='/'?'/index.html':pathname));if(!file.startsWith(root)||!types[path.extname(file)])throw Error();res.setHeader('Content-Type',types[path.extname(file)]);res.end(await readFile(file));}catch{res.writeHead(404);res.end();}}));
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const origin='http://127.0.0.1:'+server.address().port;let browser;
 try{
  browser=await chromium.launch({channel:'msedge',headless:true});

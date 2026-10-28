@@ -1,3 +1,4 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 import http from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
@@ -6,7 +7,7 @@ import {chromium} from 'playwright';
 import {project,node} from '../web/tree-model.js';
 const root=resolve('.'),built=process.argv.includes('--built');
 await mkdir('test-results/dialog-scroll',{recursive:true});
-const server=http.createServer(async(req,res)=>{try{const path=new URL(req.url,'http://localhost').pathname,file=resolve(root,built?'site/index.html':'web/'+(path==='/'?'index.html':path.slice(1)));if(!file.startsWith(root+sep))throw Error();res.setHeader('Content-Type',built?'text/html':({'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.glsl':'text/plain','.svg':'image/svg+xml'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));}catch{res.writeHead(404).end();}});
+const server=http.createServer(withPagesAssets(async(req,res)=>{try{const path=new URL(req.url,'http://localhost').pathname,file=resolve(root,built?'site/index.html':'web/'+(path==='/'?'index.html':path.slice(1)));if(!file.startsWith(root+sep))throw Error();res.setHeader('Content-Type',built?'text/html':({'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.glsl':'text/plain','.svg':'image/svg+xml'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));}catch{res.writeHead(404).end();}}));
 await new Promise(r=>server.listen(0,'127.0.0.1',r));const browser=await chromium.launch({channel:'msedge',headless:true}),checks=[];
 try{
  const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));

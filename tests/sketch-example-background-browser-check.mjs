@@ -1,3 +1,4 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 import {createServer} from 'node:http';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
@@ -10,11 +11,11 @@ import {GRAPHIC_LIST_KEY,serializeGraphicList} from '../web/persistent-graphic-l
 import {GRAPHIC_LIST_DEFAULTS_KEY} from '../web/graphic-list-defaults.js';
 
 const built=process.argv.includes('--built'),root=resolve('web');
-const server=createServer(async(req,res)=>{try{
+const server=createServer(withPagesAssets(async(req,res)=>{try{
  const pathname=new URL(req.url,'http://local').pathname,file=pathname==='/built.html'?resolve('site/index.html'):resolve(root,'.'+(pathname==='/'?'/index.html':pathname));
  if(pathname!=='/built.html'&&!file.startsWith(root+sep))throw Error();
  res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.json':'application/json','.glsl':'text/plain'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));
-}catch{res.writeHead(404);res.end();}});
+}catch{res.writeHead(404);res.end();}}));
 await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
 try{
  browser=await chromium.launch({channel:'msedge',headless:true});const page=await browser.newPage({viewport:{width:1500,height:1050}}),errors=[],origin='http://127.0.0.1:'+server.address().port;

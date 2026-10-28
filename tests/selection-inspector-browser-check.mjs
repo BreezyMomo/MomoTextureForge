@@ -1,3 +1,4 @@
+import {withPagesAssets} from './helpers/pages-assets.mjs';
 import {GRAPHIC_LIST_DEFAULTS_KEY} from '../web/graphic-list-defaults.js';
 import {createServer} from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
@@ -7,9 +8,9 @@ import {chromium} from 'playwright';
 import {project,node} from '../web/tree-model.js';
 import {selectionRegions} from '../web/tree-view.js';
 import {bounds} from '../web/canvas-transform.js';
-const standalone=process.argv.includes('--standalone'),root=resolve('web'),server=createServer(async(req,res)=>{
+const standalone=process.argv.includes('--standalone'),root=resolve('web'),server=createServer(withPagesAssets(async(req,res)=>{
  try{const path=new URL(req.url,'http://local').pathname,file=resolve(root,'.'+(path==='/'?'/index.html':path));if(!file.startsWith(root+sep))throw Error();res.setHeader('Content-Type',standalone?'text/html; charset=utf-8':({'.html':'text/html; charset=utf-8','.js':'text/javascript','.json':'application/json','.glsl':'text/plain','.css':'text/css'})[extname(file)]??'application/octet-stream');res.end(await readFile(standalone?'site/index.html':file));}catch{res.writeHead(404);res.end();}
-});await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
+}));await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
 try{
  await mkdir('test-results/selection-editing',{recursive:true});browser=await chromium.launch({channel:'msedge',headless:true});
  const page=await browser.newPage({viewport:{width:1600,height:1200}}),errors=[];page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(30000);await page.addInitScript(key=>localStorage.setItem(key,'1'),GRAPHIC_LIST_DEFAULTS_KEY);

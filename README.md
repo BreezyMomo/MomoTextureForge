@@ -89,8 +89,10 @@ npm start
 
 ```sh
 npm run build:standalone  # dist/MomoTextureForge.html 与离线 ZIP
-npm run build:pages       # 同步生成可部署的 site/index.html
+npm run build:pages       # 生成可部署的 site/ 多文件静态网站
 ```
+
+GitHub Pages 部署需上传完整 `site/` 目录，包含首页及 `assets/`，无需后端服务。在线版按需加载 Skill、图库图片和导出 Worker；下载离线使用时请选择 `dist/MomoTextureForge.html`，不要单独保存在线首页。
 
 使用构建好的离线 HTML 无需 Node.js。浏览器数据按访问地址隔离；在线版、本地端口和离线文件不自动共享图库与草稿，请保存项目和资源包做备份。
 

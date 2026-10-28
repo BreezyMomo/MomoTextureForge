@@ -97,15 +97,15 @@ import {installEditorDocking} from './dock-workspace.js';
 import {installWorkspaceWorkflow} from './workspace-workflow.js';
 import {colorContext,colorBackground,independentColor,normalizeHex} from './inspector-color.js';
 const $=id=>document.getElementById(id),el=(tag,props={},children=[])=>{const e=document.createElement(tag);for(const [k,v]of Object.entries(props)){if(k==='text')e.textContent=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else if(k==='value')e.value=v;else if(k==='checked')e.checked=v;else e.setAttribute(k,v);}for(const c of children)e.append(c);return e;};
-const css=el('link',{rel:'stylesheet',href:'tree.css'});if(!document.querySelector('style[data-tree-style]'))document.head.append(css);
-if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'graphics-workspace.css'}));
-if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'dock-workspace.css'}));
-if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'inspector-color.css'}));
-if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'editor-surfaces.css'}));
-if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'creative-skins.css'}));
-if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'tab-styles.css'}));
-if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'palette-roles.css'}));
-if(document.documentElement.dataset.distribution!=='standalone')document.head.append(el('link',{rel:'stylesheet',href:'workspace-workflow.css'}));
+const css=el('link',{rel:'stylesheet',href:'tree.css'});if(!document.querySelector('[data-tree-style]'))document.head.append(css);
+if(!['standalone','pages'].includes(document.documentElement.dataset.distribution))document.head.append(el('link',{rel:'stylesheet',href:'graphics-workspace.css'}));
+if(!['standalone','pages'].includes(document.documentElement.dataset.distribution))document.head.append(el('link',{rel:'stylesheet',href:'dock-workspace.css'}));
+if(!['standalone','pages'].includes(document.documentElement.dataset.distribution))document.head.append(el('link',{rel:'stylesheet',href:'inspector-color.css'}));
+if(!['standalone','pages'].includes(document.documentElement.dataset.distribution))document.head.append(el('link',{rel:'stylesheet',href:'editor-surfaces.css'}));
+if(!['standalone','pages'].includes(document.documentElement.dataset.distribution))document.head.append(el('link',{rel:'stylesheet',href:'creative-skins.css'}));
+if(!['standalone','pages'].includes(document.documentElement.dataset.distribution))document.head.append(el('link',{rel:'stylesheet',href:'tab-styles.css'}));
+if(!['standalone','pages'].includes(document.documentElement.dataset.distribution))document.head.append(el('link',{rel:'stylesheet',href:'palette-roles.css'}));
+if(!['standalone','pages'].includes(document.documentElement.dataset.distribution))document.head.append(el('link',{rel:'stylesheet',href:'workspace-workflow.css'}));
 document.body.className='tree-editor';mountStartupContent(`
 <header class="tree-header">
 <div class="tree-brand"><strong>MOMO <span>TEXTURE FORGE</span></strong><input id="project-name" aria-label="画布名称" data-i18n-aria-label="editor.canvasName" title="画布名称" data-i18n-title="editor.canvasName"></div>

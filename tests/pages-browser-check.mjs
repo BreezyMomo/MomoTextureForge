@@ -1,4 +1,4 @@
-// Run after npm run build:pages. Serve only the built HTML under a Pages-style prefix.
+// Run after npm run build:pages. Serve the complete static directory under a Pages prefix.
 import http from 'node:http';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
@@ -7,25 +7,32 @@ import {BUILTIN} from '../web/definition-runtime.js';
 import {GENERATOR_EXAMPLE} from '../web/generator-authoring.js';
 import {project,node} from '../web/tree-model.js';
 import {treeSamples} from '../web/tree-samples.js';
+import {resolve,extname,sep} from 'node:path';
+import {pathToFileURL} from 'node:url';
 
 const html=await readFile(new URL('../site/index.html',import.meta.url));
+const buildReport=JSON.parse(await readFile('test-results/pages-build.json','utf8')),site=resolve('site');
 const prefix='/MomoTextureForge/';
-const server=http.createServer((request,response)=>{
- const path=new URL(request.url,'http://localhost').pathname;
- if(path!==prefix&&path!==prefix+'index.html'){response.writeHead(404);response.end();return;}
- response.setHeader('Content-Type','text/html; charset=utf-8');response.end(html);
+const server=http.createServer(async(request,response)=>{
+ try{const path=new URL(request.url,'http://localhost').pathname;if(!path.startsWith(prefix))throw Error();const file=resolve(site,decodeURIComponent(path.slice(prefix.length)||'index.html'));if(!file.startsWith(site+sep))throw Error();const bytes=await readFile(file);response.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp'})[extname(file)]??'application/octet-stream');response.setHeader('Content-Length',bytes.length);response.end(bytes);}catch{response.writeHead(404);response.end();}
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 let browser;
 try{
  browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-webgl','--ignore-gpu-blocklist']});
- const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[],requests=[],workers=[];
+ const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[],requests=[],workers=[];let transferred=0;
+ page.on('response',response=>{transferred+=Number(response.headers()['content-length']||0);});
  page.on('pageerror',error=>errors.push(error.message));
  page.on('request',request=>{if(/^https?:/.test(request.url()))requests.push({url:request.url(),type:request.resourceType()});});
  page.on('worker',worker=>workers.push(worker.url()));
  const address='http://127.0.0.1:'+server.address().port+prefix;
  const ready=async()=>{await page.waitForFunction(()=>document.documentElement.dataset.ready==='true',null,{timeout:120000});};
  await page.goto(address);await ready();
+ const initialBytes=transferred,initialRequests=requests.length;
+ assert.ok(html.length<16384,'HTML must be a small static entry');assert.ok(initialBytes<10*1024*1024,'editor must not preload optional Skill/worker/thumbnail payloads: '+JSON.stringify({initialBytes,requests}));
+ const authorChunk=Object.entries(buildReport.chunks).find(([,value])=>value.entryPoint==='web/authoring-kit-runtime.js')?.[0];assert.ok(authorChunk);
+ assert.ok(!requests.some(r=>r.url.includes(authorChunk)||r.url.includes(buildReport.worker)));
+ assert.ok(requests.filter(r=>r.url.includes('/thumbnail-')).length<BUILTIN.catalog.length/2,'off-screen thumbnails must remain deferred');
  assert.equal(await page.locator('[role="treeitem"]').count(),0,'first visit starts with an empty canvas');
  await page.locator('#open-graphics-library').click();
  await page.waitForFunction(count=>document.querySelectorAll('.graphics-card[data-origin="builtin"]').length===count,BUILTIN.catalog.length,{timeout:30000});
@@ -59,7 +66,7 @@ try{
  assert.equal(await download.failure(),null);
  const png=await readFile(await download.path());
  assert.deepEqual([...png.subarray(0,8)],[137,80,78,71,13,10,26,10]);
- assert.ok(workers.some(url=>url.startsWith('blob:')),'export must work with the embedded worker');
+ assert.ok(workers.some(url=>url.endsWith('/'+buildReport.worker)),'online export must load its independent worker');
  const materialProject=project();materialProject.root.children=[node('shape','VolumeSmoke')];materialProject.root.children[0].postFx[1]=.3;materialProject.output.normalAlgorithm='scharr';materialProject.output.normalFlipY=true;
  await page.goto(address+'#tree='+Buffer.from(JSON.stringify(materialProject)).toString('base64'));await page.reload();await ready();
  const beforeChannel=await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1'));
@@ -93,8 +100,12 @@ try{
  assert.equal(await page.locator('a[href]').first().getAttribute('href'),address);
  assert.ok(await page.locator('#composite').count());
  assert.deepEqual(errors,[]);
- assert.ok(requests.every(request=>request.type==='document'&&new URL(request.url).pathname===prefix),JSON.stringify(requests));
- const report={builtins:BUILTIN.catalog.length,views:['editor','examples','validate'],emptyNewProject:true,undoNewProject:true,pngExport:png.length,embeddedWorker:true,embeddedGenerator:true,dynamicGenerator:true,materialPreview:true,customGenerator:true,customPixels,generatorColors,externalAssets:0,errors};
+ assert.ok(requests.every(request=>new URL(request.url).pathname.startsWith(prefix)),JSON.stringify(requests));
+ const offline=await browser.newPage();offline.on('pageerror',e=>errors.push(e.message));const offlineNetwork=[];offline.on('request',r=>{if(/^https?:/.test(r.url()))offlineNetwork.push(r.url());});
+ await offline.goto(pathToFileURL(resolve('dist/MomoTextureForge.html')).href);await offline.waitForFunction(()=>document.documentElement.dataset.ready==='true');
+ await offline.locator('#ai-tools').click();const offlineDownload=offline.waitForEvent('download');await offline.locator('#download-author-skill').click();assert.equal(await(await offlineDownload).failure(),null);await offline.locator('.ai-tools-dialog [data-close]').click();
+ await offline.locator('#export-now').click();const offlinePNG=offline.waitForEvent('download');await offline.locator('#confirm-export').click();assert.equal(await(await offlinePNG).failure(),null);assert.deepEqual(offlineNetwork,[]);await offline.close();assert.deepEqual(errors,[]);
+ const report={builtins:BUILTIN.catalog.length,views:['editor','examples','validate'],htmlBytes:html.length,initialBytes,initialRequests,emptyNewProject:true,undoNewProject:true,pngExport:png.length,separateWorker:true,offlineSkillAndPNG:true,embeddedGenerator:true,dynamicGenerator:true,materialPreview:true,customGenerator:true,customPixels,generatorColors,errors};
  await mkdir(new URL('../test-results/pages/',import.meta.url),{recursive:true});
  await writeFile(new URL('../test-results/pages/report.json',import.meta.url),JSON.stringify(report,null,2));
  console.log(JSON.stringify(report,null,2));
