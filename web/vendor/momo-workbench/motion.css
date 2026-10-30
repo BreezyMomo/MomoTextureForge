@@ -1,0 +1,23 @@
+/* Opt-in UI feedback. Authored canvases, renderers and document state remain independent. */
+[data-momo-motion]{--ui-motion-fast:100ms;--ui-motion-normal:160ms;--ui-motion-fade:120ms;--ui-motion-thumbnail:140ms;--ui-motion-ease:cubic-bezier(.2,.75,.25,1)}
+[data-momo-motion] :is(button,select,summary,input:not([type=range]):not([type=color]),.segmented-choice-option){transition:background-color var(--ui-motion-fast) ease,border-color var(--ui-motion-fast) ease,color var(--ui-motion-fast) ease,box-shadow var(--ui-motion-fast) ease}
+[data-momo-motion] .momo-disclosure-arrow{transition:transform var(--ui-motion-normal) var(--ui-motion-ease)}
+[data-momo-motion] .momo-disclosure:not([open])>.momo-disclosure-body,[data-momo-motion] .momo-disclosure-body[inert]{pointer-events:none}
+@supports(interpolate-size:allow-keywords){
+ [data-momo-motion] .momo-disclosure{interpolate-size:allow-keywords}
+ [data-momo-motion] .momo-disclosure::details-content{block-size:0;overflow:clip;transition:block-size var(--ui-motion-normal) var(--ui-motion-ease),content-visibility var(--ui-motion-normal) allow-discrete}
+ [data-momo-motion] .momo-disclosure[open]::details-content{block-size:auto}
+}
+[data-momo-motion] :is(.header-dropdown[open]>.header-dropdown-panel,.momo-menu[open]>.momo-menu-panel,.component-more-panel:popover-open,[popover]:popover-open,dialog[open]){animation:editor-fade-in var(--ui-motion-fade) ease-out}
+[data-momo-motion] dialog[open]::backdrop{animation:editor-fade-in var(--ui-motion-fade) ease-out}
+[data-momo-motion] .momo-reorder-placeholder{transition:top var(--ui-motion-normal) var(--ui-motion-ease)}
+[data-momo-motion] .dock-drop-preview{transition:left var(--ui-motion-fade) var(--ui-motion-ease),top var(--ui-motion-fade) var(--ui-motion-ease),width var(--ui-motion-fade) var(--ui-motion-ease),height var(--ui-motion-fade) var(--ui-motion-ease);animation:editor-fade-in var(--ui-motion-fast) ease-out}
+[data-momo-motion] .dock-motion :is(.dock-split,.dock-branch){overflow:visible}
+@keyframes editor-fade-in{from{opacity:0}to{opacity:1}}
+@keyframes editor-thumbnail-in{from{opacity:.4}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){
+ [data-momo-motion]{--ui-motion-fast:0ms;--ui-motion-normal:0ms;--ui-motion-fade:0ms;--ui-motion-thumbnail:0ms}
+ [data-momo-motion] :is(button,select,summary,input,.segmented-choice-option,.momo-disclosure-arrow,.header-dropdown-panel,.momo-menu-panel,[popover],dialog,.dock-drop-preview,.momo-reorder-placeholder){animation-duration:0s!important;animation-delay:0s!important;transition-duration:0s!important;transition-delay:0s!important}
+ [data-momo-motion] .momo-disclosure::details-content{transition-duration:0s!important;transition-delay:0s!important}
+ [data-momo-motion] dialog::backdrop{animation-duration:0s!important;animation-delay:0s!important}
+}

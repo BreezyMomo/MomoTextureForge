@@ -1,0 +1,41 @@
+/* Shared docking chrome; product-specific panel CSS belongs to consumers. */
+.dock-workspace{display:block;position:relative;min-width:0;min-height:0;overflow:hidden;background:var(--ui-bg,#141515);padding:3px}
+/* Workspace state is independent from the authored canvas and its export bounds. */
+.dock-split{display:flex;width:100%;height:100%;min-width:0;min-height:0;overflow:hidden}
+.dock-split-x{flex-direction:row}.dock-split-y{flex-direction:column}
+.dock-branch{min-width:0;min-height:0;overflow:hidden}
+.dock-splitter{flex:0 0 6px;background:var(--ui-inset);position:relative;touch-action:none;outline:none}
+.dock-split-x>.dock-splitter{cursor:col-resize}.dock-split-y>.dock-splitter{cursor:row-resize}
+.dock-splitter:hover,.dock-splitter:focus-visible{background:var(--ui-hover)}
+.dock-stack{display:flex;flex-direction:column;width:100%;height:100%;min-width:0;min-height:0;border:1px solid var(--ui-line);border-radius:var(--ui-pane-radius,3px);background:var(--ui-panel);overflow:hidden}
+.dock-stack-header{flex:none;display:flex;align-items:stretch;min-width:0;height:var(--ui-tab-height,30px);background:var(--ui-inset);border-bottom:1px solid var(--ui-line);gap:2px}
+.dock-tabs{display:flex;min-width:0;flex:1;overflow:auto;scrollbar-width:thin;align-items:stretch}
+.dock-stack-actions{display:flex;flex:none;align-items:center;padding-right:2px;gap:1px}
+.dock-panel-body{flex:1;min-height:0;min-width:0;overflow:hidden;position:relative}
+.dock-panel-body[hidden]{display:none!important}
+.dock-workspace #breadcrumbs{margin-bottom:6px}
+.dock-animation-content{height:100%;min-height:0}
+.dock-floating{position:absolute;display:flex;flex-direction:column;min-width:0;min-height:0;box-shadow:0 14px 40px var(--ui-shadow);border:1px solid var(--ui-line-strong);border-radius:var(--ui-window-radius);overflow:hidden;background:var(--ui-panel)}
+.dock-floating>:is(.dock-stack,.dock-split){flex:1;min-height:0;height:auto}
+.dock-floating>.dock-stack{border:0;border-radius:0}
+.dock-window-footer{display:flex;justify-content:flex-end;flex:0 0 24px;min-height:24px;border-top:1px solid var(--ui-line);background:var(--ui-inset)}
+.dock-is-dragging,.dock-is-dragging *{user-select:none!important}
+.dock-drag-ghost{position:fixed;z-index:10000;pointer-events:none;padding:7px 14px;background:var(--ui-hover);border:1px solid var(--ui-line-strong);border-radius:var(--ui-control-radius);color:var(--ui-text);font-size:13px;box-shadow:0 4px 15px var(--ui-shadow)}
+.dock-drop-preview{position:absolute;z-index:1000;pointer-events:none;border:2px solid var(--ui-line-strong);background:var(--ui-selected);color:var(--ui-text);display:grid;place-items:center;font-size:14px;font-weight:600;box-sizing:border-box}
+.dock-empty{height:100%;display:grid;place-items:center;text-align:center;color:var(--ui-muted);padding:30px}
+.dock-layout-menu>.header-dropdown-panel{left:auto;right:0;width:280px;max-width:calc(100vw - 12px);max-height:calc(100dvh - 90px);overflow:auto}
+.dock-menu-tip{margin:6px 4px;color:var(--ui-muted);font-size:11px;line-height:1.7;white-space:normal}
+.dock-panel-toggles{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:8px 4px}
+.dock-panel-toggles label{display:flex;align-items:center;gap:7px;color:var(--ui-text);font-size:12px}
+.dock-save-form{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0}
+.dock-layout-menu select{width:100%;min-width:0;margin:4px 0}
+.dock-saved-actions{display:flex;gap:4px}
+@media(max-width:850px){
+ .dock-tab{max-width:140px;overflow:hidden;text-overflow:ellipsis}
+}
+
+.dock-tab{flex-shrink:0;border:0;border-radius:0;padding:5px 11px;background:transparent;color:var(--ui-muted);font-size:12px;cursor:grab;white-space:nowrap;touch-action:none}
+.dock-tab[aria-selected=true]{background:var(--ui-panel);color:var(--ui-text)}
+.dock-layout-menu{position:relative}.dock-layout-menu>summary{cursor:pointer;list-style:none}.dock-layout-menu>.header-dropdown-panel{position:absolute;z-index:1100;background:var(--ui-panel);border:1px solid var(--ui-line);padding:10px;color:var(--ui-text)}
+.dock-layout-menu:not([open])>.header-dropdown-panel{display:none}.dock-layout-menu button{font:inherit;cursor:pointer}.dock-layout-menu input,.dock-layout-menu select{font:inherit;box-sizing:border-box}
+.dock-panel-toggles input{width:auto;max-width:none;flex:none}.dock-save-form input{width:100%;max-width:none;min-width:0;flex:1 1 100%}

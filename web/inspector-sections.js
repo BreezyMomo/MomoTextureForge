@@ -36,8 +36,8 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false,sh
  const doc=host.ownerDocument,make=(tag,className)=>{const element=doc.createElement(tag);element.className=className;return element;};
  const scope=key=>key==='modules.shapeParameters'?key+':'+(graphic?.id??'selection'):key;
  function decorate(details,key,title,defaultOpen=true){
-  details.classList.remove('arrangement-advanced');details.classList.add('inspector-module');details.dataset.module=key;const id=scope(key),summary=details.querySelector(':scope>summary'),label=make('span','inspector-module-title');label.textContent=title;label.title=title;
-  const body=make('div','inspector-module-body');for(const child of [...details.childNodes])if(child!==summary)body.append(child);
+  details.classList.remove('arrangement-advanced');details.classList.add('inspector-module','momo-disclosure');details.dataset.module=key;const id=scope(key),summary=details.querySelector(':scope>summary'),label=make('span','inspector-module-title');label.textContent=title;label.title=title;
+  const body=make('div','inspector-module-body momo-disclosure-body');for(const child of [...details.childNodes])if(child!==summary)body.append(child);
   const secondary=[...body.querySelectorAll('[data-parameter-action]')];
   if(secondary.length){
    const footer=make('div','inspector-secondary-actions');
@@ -45,7 +45,7 @@ export function groupInspectorSections(host,{tab,graphic,state,multiple=false,sh
    body.append(footer);
   }
   for(const heading of body.querySelectorAll(':scope>h3[data-inspector-section]'))if(heading.dataset.inspectorSection===key)heading.remove();
-  const help=make('span','tree-note inspector-module-description'),heading=make('span','inspector-module-heading'),button=make('button','inspector-module-help'),arrow=make('span','inspector-module-arrow');arrow.setAttribute('aria-hidden','true');arrow.append(editorIcon('chevron',doc));
+  const help=make('span','tree-note inspector-module-description'),heading=make('span','inspector-module-heading'),button=make('button','inspector-module-help'),arrow=make('span','inspector-module-arrow momo-disclosure-arrow');arrow.setAttribute('aria-hidden','true');arrow.append(editorIcon('chevron',doc));
   const notes=[...body.querySelectorAll(':scope>p[data-inspector-help]')];if(notes.length){help.textContent=notes.map(note=>note.textContent).join('\n');notes.forEach(note=>note.remove());}else help.textContent=uiText(descriptions[key]??'modules.sectionHelp');help.hidden=true;button.type='button';button.append(editorIcon('help',doc));button.setAttribute('aria-label',uiFormat('modules.helpTitle',title));hoverHelp(button,help.textContent);
   heading.append(label,button);if(shortcuts&&SHORTCUT_MODULES.includes(key))heading.append(shortcutControls(doc,{key,pinned:shortcuts.keys.includes(key),onToggle:shortcuts.toggle,global:shortcuts.global(key),onToggleAll:shortcuts.toggleAll}));heading.append(arrow);summary.replaceChildren(heading,help);summary.setAttribute('aria-label',title);details.append(body);details.open=state.open(id,defaultOpen);summary.setAttribute('aria-expanded',String(details.open));
   body.inert=!details.open;

@@ -1,0 +1,39 @@
+/* Shared semantic tokens extracted from MomoTextureForge.
+ * Opt in per root with data-momo-workbench; product controls keep their own CSS. */
+[data-momo-workbench]{
+ --ui-control-radius:5px;--ui-module-radius:7px;--ui-card-radius:6px;--ui-pane-radius:4px;--ui-window-radius:10px;
+ --ui-control-pad-y:6px;--ui-control-pad-x:8px;--ui-field-gap:10px;--ui-module-padding:9px;--ui-module-gap:9px;--ui-heading-padding:8px 10px;--ui-pane-padding:10px;--ui-tab-height:32px;--ui-node-padding:5px;--ui-card-padding:10px;--ui-card-gap:8px;
+ --ui-bg:#101010;--ui-inset:#181818;--ui-panel:#222222;--ui-surface:#2c2c2c;--ui-hover:#393939;
+ --ui-line:#454545;--ui-line-strong:#858585;--ui-text:#ededeb;--ui-muted:#bcbcb8;--ui-subtle:#a6a6a1;
+ --ui-accent:#c5a36a;--ui-on-accent:#000000;--ui-accent-text:#c5a36a;--ui-selected:#433e33;--ui-accent-hover:#cbac79;
+ --ui-info:#9bc9e7;--ui-info-bg:#253542;--ui-success:#a4d7be;--ui-success-bg:#263e34;--ui-danger:#ffb1b8;--ui-danger-bg:#442a31;
+ --ui-motion:var(--ui-success);--ui-motion-bg:var(--ui-success-bg);--ui-artwork-motion:#a6efc1;--ui-artwork-icon:#eef4f1;--ui-artwork-favorite:#f5cf7b;--ui-time:#b4d9ff;--ui-time-bg:#243e59;--ui-time-line:#6595c7;--ui-time-handle:#477ba9;--ui-key:#f5c66f;--ui-key-selected:#ffe5a3;--ui-playhead:#f4f7fb;
+ --ui-warning:#edc489;--ui-warning-bg:#403526;--ui-purple:#d0b9ed;--ui-purple-bg:#392f49;--ui-overlay:#0009;--ui-shadow:#0005;
+}
+[data-momo-workbench][data-interface-style=minimal]{--ui-control-radius:2px;--ui-module-radius:0px;--ui-card-radius:2px;--ui-pane-radius:0px;--ui-window-radius:4px}
+[data-momo-workbench][data-interface-style=soft]{--ui-control-radius:8px;--ui-module-radius:12px;--ui-card-radius:10px;--ui-pane-radius:8px;--ui-window-radius:14px}
+[data-momo-workbench][data-density=comfortable]{--ui-control-pad-y:9px;--ui-control-pad-x:10px;--ui-field-gap:14px;--ui-module-padding:14px;--ui-module-gap:14px;--ui-heading-padding:11px 12px;--ui-pane-padding:14px;--ui-tab-height:38px;--ui-node-padding:8px;--ui-card-padding:14px;--ui-card-gap:12px}
+[data-momo-workbench][data-theme=light]{
+ --ui-bg:#e9edf1;--ui-inset:#f0f3f6;--ui-panel:#ffffff;--ui-surface:#f4f6f8;--ui-hover:#e3e9f0;
+ --ui-line:#cdd5de;--ui-line-strong:#7f8c9e;--ui-text:#242b35;--ui-muted:#526174;--ui-subtle:#607087;
+ --ui-info:#245a80;--ui-info-bg:#e6f0f8;--ui-success:#256245;--ui-success-bg:#e6f3ec;--ui-danger:#a43046;--ui-danger-bg:#fbe9ed;
+ --ui-time:#245a80;--ui-time-bg:#dcebf9;--ui-time-line:#477ca8;--ui-time-handle:#79a8d1;--ui-key:#8c580d;--ui-key-selected:#6f4000;--ui-playhead:#253247;
+ --ui-warning:#795018;--ui-warning-bg:#faf0df;--ui-purple:#6a4792;--ui-purple-bg:#efe9f7;--ui-overlay:#17233566;--ui-shadow:#1c2b3d22;
+}
+[data-momo-workbench]:is([data-interface-style=refined],[data-interface-style=airy],[data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=cinema],[data-interface-style=candy]){
+ --ui-control-radius:6px;--ui-module-radius:10px;--ui-card-radius:8px;--ui-pane-radius:8px;--ui-window-radius:14px;
+ --ui-line-soft:color-mix(in srgb,var(--ui-line) 62%,var(--ui-panel));
+ --ui-edge-highlight:#ffffff07;--ui-control-shadow:inset 0 1px 0 var(--ui-edge-highlight),0 1px 2px #00000012;
+ --ui-pane-shadow:0 2px 7px #00000018;--ui-module-shadow:0 1px 2px #0000000b;
+ --ui-floating-shadow:0 20px 60px #0000004d,0 4px 14px #00000033,inset 0 1px 0 var(--ui-edge-highlight);
+ --ui-selection-surface:color-mix(in srgb,var(--ui-accent) 12%,var(--ui-panel));
+ --ui-selection-line:color-mix(in srgb,var(--ui-accent) 38%,var(--ui-line));
+ --ui-module-bg:color-mix(in srgb,var(--ui-surface) 12%,var(--ui-panel));
+ --ui-module-heading:color-mix(in srgb,var(--ui-surface) 42%,var(--ui-panel));
+ --ui-field-bg:color-mix(in srgb,var(--ui-inset) 48%,var(--ui-panel));
+}
+[data-momo-workbench][data-theme=light]:is([data-interface-style=refined],[data-interface-style=airy],[data-interface-style=aurora],[data-interface-style=pulse],[data-interface-style=cinema],[data-interface-style=candy]){
+ --ui-edge-highlight:#ffffffb3;--ui-control-shadow:inset 0 1px 0 var(--ui-edge-highlight),0 1px 2px #1c2b3d08;
+ --ui-pane-shadow:0 2px 7px #1c2b3d0a;--ui-module-shadow:0 1px 2px #1c2b3d05;
+ --ui-floating-shadow:0 20px 60px #1c2b3d24,0 4px 14px #1c2b3d14,inset 0 1px 0 var(--ui-edge-highlight);
+}

@@ -27,6 +27,16 @@ Browser storage is not automatically shared between online/offline origins, port
 
 Startup markup/styles in `web/index.html` display before scripts finish downloading. `web/startup.js` drives real loading stages, transition and retry for source and standalone builds. There are no invented percentages or artificial minimum waits. Failures retain details and reload controls without clearing drafts/resources.
 
+## Shared workbench
+
+Layout algorithms, docking interactions, appearance control, interface-language primitives and UI motion come from `@momo/workbench`, maintained in the separate MomoWorkbench repository. TextureForge retains panel registrations, default compositions, UI catalogs, resource-parameter aliases and product styles. `web/appearance.js`, `web/language.js`, `web/message-catalog.js`, `web/editor-motion.js` and the layout modules are compatibility adapters; existing preference storage keys remain unchanged.
+
+The dependency is pinned to the checked-in `vendor/momo-workbench-0.2.0.tgz`. After `npm ci`, a generated release snapshot in `web/vendor/momo-workbench/` lets native-module source pages and static/offline builds use the same version without a sibling checkout or external CDN. Its manifest and file hashes are verified against the installed package. Do not edit generated files: change framework sources, create a new package, then update this repository's archive, lockfile and snapshot.
+
+Run `npm run workbench:sync` to refresh the snapshot and `npm run workbench:check` to verify it. Theme and docking styles import the snapshot; `tools/workbench-styles.mjs` expands these imports during builds, keeping offline HTML independent of external framework files. Artwork data, undo, rendering, Shaders and project formats remain owned by TextureForge.
+
+UI motion uses a dedicated `createMotion({view})` instance owned by the product adapter, which also supplies inspector DOM selectors. Docking reuses the same instance. `web/tree.css` imports shared `motion.css` for control feedback, menu/dialog entrances, disclosure expansion, layout settling and reduced-motion preferences; product-specific tree placeholders and thumbnails bind to shared timing tokens. The controller can cancel animations and scrolling frames and release its preference listener. This presentation layer does not write artwork, undo history or exports, and does not control artwork timelines, Shader animation or playback.
+
 ## Code and documentation entry points
 
 | Change | Implementation and maintained source | Rules and usage |

@@ -7,6 +7,7 @@ import {fileURLToPath} from 'node:url';
 
 import {loadDefinitionURL} from './web/definition-loader.js';
 import thumbnails from './web/builtin-thumbnails.js';
+import {readEditorStyle} from './tools/workbench-styles.mjs';
 
 const root=dirname(fileURLToPath(import.meta.url)),web=join(root,'web'),output=join(root,'site'),assets=join(output,'assets');
 // Preserve the complete file:// distribution separately from the hosted build.
@@ -39,11 +40,11 @@ for(const file of result.outputFiles)add(relative(output,file.path).replaceAll('
 const entry=Object.entries(result.metafile.outputs).find(([,value])=>value.entryPoint==='web/pages.js')?.[0];if(!entry)throw Error('Pages entry missing');
 const entryFile=relative(output,join(root,entry)).replaceAll('\\','/');
 const styles=['theme-tokens','style','tree','graphics-workspace','dock-workspace','inspector-color','editor-surfaces','creative-skins','tab-styles','palette-roles','workspace-workflow'];
-const css=await build({...common,stdin:{contents:(await Promise.all(styles.map(name=>readFile(join(web,name+'.css'),'utf8')))).join('\n'),loader:'css',resolveDir:web}});
+const css=await build({...common,stdin:{contents:(await Promise.all(styles.map(name=>readEditorStyle(name+'.css')))).join('\n'),loader:'css',resolveDir:web}});
 const cssFile=named('editor','css',css.outputFiles[0].contents);
 const policy="default-src 'none'; script-src 'self' 'unsafe-inline' https://hm.baidu.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https: http:; connect-src https: http:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'";
 let html=(await readFile(join(web,'index.html'),'utf8'))
- .replace('<html lang="zh-CN">','<html lang="zh-CN" data-distribution="pages">')
+ .replace('<html lang="zh-CN" data-momo-workbench="true">','<html lang="zh-CN" data-momo-workbench="true" data-distribution="pages">')
  .replace('<link rel="stylesheet" href="theme-tokens.css" />',()=>`<meta http-equiv="Content-Security-Policy" content="${policy}"><link rel="stylesheet" href="./${cssFile}" data-tree-style>`)
  .replace('<link rel="stylesheet" href="style.css" />','')
  .replace('<script type="module" src="bootstrap.js"></script>',()=>`<script type="module" src="./${entryFile}"></script>`);

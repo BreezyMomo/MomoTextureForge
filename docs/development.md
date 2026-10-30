@@ -27,6 +27,16 @@ npm start -- --port 8799
 
 启动页的布局与首屏样式在 `web/index.html`，无需等待脚本下载即可显示。`web/startup.js` 负责真实阶段提示、界面切换与失败重试；源码入口和单文件构建共用这套逻辑，不显示虚构百分比，也不设置最短等待时间。初始化失败时保留错误详情与重新加载入口，不清除本地草稿或资源。
 
+## 共享工作台
+
+布局算法、停靠交互、外观控制、界面语言与 UI 动效基础逻辑由 `@momo/workbench` 提供，源码在独立的 MomoWorkbench 仓库。TextureForge 保留面板注册、默认布局、界面词库、资源参数别名和产品样式；`web/appearance.js`、`web/language.js`、`web/message-catalog.js`、`web/editor-motion.js` 与布局模块是兼容旧 API 的薄适配层。已有外观、语言和布局存储 key 保持不变。
+
+依赖锁定为仓库内的 `vendor/momo-workbench-0.2.0.tgz`。`npm ci` 后会自动生成 `web/vendor/momo-workbench/` 发布快照，使原生模块源码页与静态/离线构建使用同一版本，无需访问相邻仓库或外部 CDN。该目录通过生成的清单与文件哈希校验，禁止直接修改；通用逻辑应在框架仓库修改并重新打包，然后更新本仓库归档、锁文件和快照。
+
+运行 `npm run workbench:sync` 更新快照，`npm run workbench:check` 验证快照与安装包一致。应用主题和停靠 CSS 引用快照；构建通过 `tools/workbench-styles.mjs` 展开这些引用，离线 HTML 不依赖外部框架文件。作品数据、撤销、渲染、Shader 和项目格式仍属于 TextureForge，未迁入共享框架。
+
+UI 动效使用独立的 `createMotion({view})` 实例，产品适配层维护实例与 inspector 的 DOM 选择器，停靠模块复用同一实例。`web/tree.css` 引用共享 `motion.css`，统一控件反馈、菜单/弹窗淡入、模块展开、布局落位与减少动态偏好；树节点拖动占位和缩略图等产品规则只绑定共享节奏变量。控制器可取消动画、滚动帧并释放偏好监听。上述动效不写入作品、项目撤销或导出，也不接管作品的时间轴、Shader 动画与播放。
+
 ## 代码与文档入口
 
 | 修改内容 | 实现与维护源 | 规范与操作说明 |

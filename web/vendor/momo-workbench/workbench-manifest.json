@@ -1,0 +1,25 @@
+{
+  "package": "@momo/workbench",
+  "version": "0.2.0",
+  "files": {
+    "appearance.d.ts": "057d86b7e68080d99ba8c6f7e7af864f2d77c8793305e36019fb1570b5e1df73",
+    "appearance.js": "3ae2e305baaa9a657037fb2f2c1bc657a9eb919f61947d29c08152925723a124",
+    "dock-resize.d.ts": "2f8cd4d9149e31568c8850892075747cd059d0a5dc1b4fa63aa4c65265e3c8d1",
+    "dock-resize.js": "2923ef97e6f5c8e4bcfefc21c97946af602b77f5cd35d9ac0266c73b4b083cf7",
+    "dock-workspace.d.ts": "3b7b06e181c2c55246f0f5c26c13487ae48e42f2713a948a73b02b3a350edbd6",
+    "dock-workspace.js": "4ed3c9169dd83a119810acf98c6142285a4335e1d89cdb841cf0686c4f970001",
+    "dock.css": "4f557cb58db1efb1fe598a9ae440abef7f409aeb45419f373956fc1229fa375b",
+    "i18n.d.ts": "4040dedeaeef0ec1abb036ef16602e53760629b5bec7d3640cd8f5508b30a802",
+    "i18n.js": "aecdf41a704bc2636ea437b34c38e20955e61679f78498bd693d86d088582e11",
+    "index.d.ts": "4b62d48d6fb6db648c6d78c334669e1014be3e9a77a067645afdad8ead26ba1e",
+    "index.js": "b1a7a41d7b1f922a9dc25c28ba7fa7073916c7bdca74512d48e8c2a26b33a77c",
+    "layout.d.ts": "9e303dfda49851f8e1af293d5ed8fca809ac96f39ee60deb9aeed06983bfca68",
+    "layout.js": "3c36c1b1645f9efb394961b07ddc87abbe1349b91e83a6153731d695b1dbb1ce",
+    "locales.d.ts": "12c2ecf18e0418df421a7375c6a28f6f8919ccf5f851b143f2fbf694bf2a49e7",
+    "locales.js": "8e968044ed46ef2d4b52e0c385b2857658435f2ebc4dc664012b1c55a3444ce6",
+    "motion.css": "0383cad643ae82aa64d9a580c7976eaf2791830e33a6ea8617fb1d4f679fd387",
+    "motion.d.ts": "e42915653393116862f79e1e0c2f117f8a14682926a720c60ba3de7de4f8c5f6",
+    "motion.js": "32e4f03ffbddb91e31c2c00e8d9a04b152a5c17a27ed75e8e881b10ddae03cd1",
+    "theme-tokens.css": "05fa1048ea0a85084dabe0f71620a50777cb9cd03d942af0ba14ff3f8eb47822"
+  }
+}

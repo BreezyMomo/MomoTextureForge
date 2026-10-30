@@ -8,6 +8,7 @@ import {createHash} from "node:crypto";
 import {build} from "esbuild";
 import {loadDefinitionURL} from "./web/definition-loader.js";
 import {encodeZIP} from "./web/encoders.js";
+import {readEditorStyle} from './tools/workbench-styles.mjs';
 
 const toolRoot=dirname(fileURLToPath(import.meta.url)),webRoot=join(toolRoot,"web");
 const args=process.argv.slice(2);
@@ -20,7 +21,7 @@ const appreciationCode=await readFile(join(toolRoot,'docs/images/wechat-apprecia
 await writeFile(join(webRoot,'appreciation-code.js'),'// Generated from docs/images/wechat-appreciation.png by build-standalone.mjs.\nexport default '+JSON.stringify('data:image/png;base64,'+appreciationCode.toString('base64'))+';\n');
 const registry=await loadDefinitionURL(new URL("./web/definitions/builtin.json",import.meta.url));
 const read=name=>readFile(join(webRoot,name),"utf8");
-const [indexHTML,examplesHTML,validationHTML,css]=await Promise.all([read("index.html"),read("examples.html"),read("validate.html"),Promise.all([read("theme-tokens.css"),read("style.css"),read("tree.css"),read("graphics-workspace.css"),read("dock-workspace.css"),read("inspector-color.css"),read("editor-surfaces.css"),read("creative-skins.css"),read("tab-styles.css"),read("palette-roles.css"),read("workspace-workflow.css")]).then(parts=>parts.join("\n"))]);
+const [indexHTML,examplesHTML,validationHTML,css]=await Promise.all([read("index.html"),read("examples.html"),read("validate.html"),Promise.all(["theme-tokens.css","style.css","tree.css","graphics-workspace.css","dock-workspace.css","inspector-color.css","editor-surfaces.css","creative-skins.css","tab-styles.css","palette-roles.css","workspace-workflow.css"].map(readEditorStyle)).then(parts=>parts.join("\n"))]);
 const body=html=>{
   const content=html.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1];
   if(!content)throw new Error("Page body missing");
@@ -69,7 +70,7 @@ if(Object.keys(result.metafile.inputs).some(file=>/[\\/]definition-loader\.js$/.
 if(/<\/script/i.test(javascript))throw new Error("Unsafe inline script terminator");
 if(/<\/style/i.test(css))throw new Error("Unsafe inline style terminator");
 const policy="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob: https: http:; connect-src https: http:; worker-src blob:; object-src 'none'; base-uri 'none'";
-let html=indexHTML.replace('<html lang="zh-CN">','<html lang="zh-CN" data-distribution="standalone">')
+let html=indexHTML.replace('<html lang="zh-CN" data-momo-workbench="true">','<html lang="zh-CN" data-momo-workbench="true" data-distribution="standalone">')
   .replace('<link rel="stylesheet" href="theme-tokens.css" />','')
   .replace('<link rel="stylesheet" href="style.css" />',()=>`<meta http-equiv="Content-Security-Policy" content="${policy}"><style>${css}</style>`)
   .replace('<script type="module" src="bootstrap.js"></script>',()=>`<script>${javascript}</script>`)
