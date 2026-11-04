@@ -37,3 +37,15 @@
  --ui-pane-shadow:0 2px 7px #1c2b3d0a;--ui-module-shadow:0 1px 2px #1c2b3d05;
  --ui-floating-shadow:0 20px 60px #1c2b3d24,0 4px 14px #1c2b3d14,inset 0 1px 0 var(--ui-edge-highlight);
 }
+
+/* Control geometry belongs to the shared style, independent of product content. */
+[data-momo-workbench][data-interface-style=aurora]{--ui-control-radius:9px;--ui-module-radius:12px;--ui-card-radius:10px;--ui-pane-radius:12px;--ui-window-radius:18px;--ui-module-heading:transparent;--ui-module-bg:color-mix(in srgb,var(--ui-surface) 18%,var(--ui-panel))}
+[data-momo-workbench][data-interface-style=pulse]{--ui-control-radius:10px;--ui-module-radius:14px;--ui-card-radius:12px;--ui-pane-radius:14px;--ui-window-radius:20px;--ui-module-shadow:none;--ui-pane-shadow:none;--ui-module-bg:var(--ui-panel);--ui-control-shadow:none}
+[data-momo-workbench][data-theme=light]:is([data-interface-style=pulse],[data-interface-style=cinema]){--ui-control-shadow:none;--ui-module-shadow:none;--ui-pane-shadow:none}
+[data-momo-workbench][data-interface-style=cinema]{--ui-control-radius:6px;--ui-module-radius:0px;--ui-card-radius:6px;--ui-pane-radius:6px;--ui-window-radius:12px;--ui-pane-shadow:none;--ui-module-shadow:none;--ui-module-bg:transparent;--ui-module-heading:transparent;--ui-control-shadow:none}
+[data-momo-workbench][data-interface-style=candy]{--ui-control-radius:10px;--ui-module-radius:15px;--ui-card-radius:12px;--ui-pane-radius:16px;--ui-window-radius:22px;--ui-module-bg:var(--ui-panel);--ui-module-shadow:0 3px 12px color-mix(in srgb,var(--ui-accent) 5%,transparent)}
+[data-momo-workbench][data-interface-style=airy]{--ui-module-bg:transparent;--ui-module-heading:transparent;--ui-module-shadow:none;--ui-pane-shadow:0 2px 7px #00000018}
+[data-momo-workbench][data-palette-roles=true]{--ui-module-bg:var(--ui-panel);--ui-module-heading:var(--ui-section);--ui-field-bg:var(--ui-surface);--ui-tab-active-bg:var(--ui-navigation-bg);--ui-tab-active-fg:var(--ui-navigation);--ui-focus-ring:var(--ui-navigation)}
+[data-momo-workbench][data-palette-roles=true][data-theme=light]{--ui-line-soft:var(--ui-line);--ui-edge-highlight:transparent;--ui-control-shadow:none}
+[data-momo-workbench]{--ui-module-border:1px solid var(--ui-line);--ui-module-border-top:1px solid var(--ui-line)}
+[data-momo-workbench]:is([data-interface-style=minimal],[data-interface-style=airy],[data-interface-style=cinema]){--ui-module-border:0;--ui-module-border-top:1px solid var(--ui-line);--ui-module-radius:0px;--ui-module-bg:transparent;--ui-module-heading:transparent}

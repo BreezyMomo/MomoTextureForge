@@ -60,18 +60,31 @@ export function createAppearance({storage,root,storageKey,appId}={}){
  const key=storageKey??(appId?`${appId}:appearance:v1`:APPEARANCE_KEY);
  let preferences;try{preferences=normalizeAppearance(JSON.parse(storage?.getItem(key)??'null'));}catch{preferences=normalizeAppearance(null);}
  const listeners=new Set();
+ const datasetKeys=['momoWorkbench','theme','appearanceTheme','paletteRoles','interfaceStyle','density','tabStyle','tabOverride'];
+ const baselineData=Object.fromEntries(datasetKeys.map(key=>[key,root?.dataset[key]])),baselineStyle=new Map();
+ function setToken(key,value){
+  if(!baselineStyle.has(key))baselineStyle.set(key,{value:root.style.getPropertyValue?.(key)??'',priority:root.style.getPropertyPriority?.(key)??''});
+  root.style.setProperty(key,value);
+ }
+ const originalColorScheme=root?.style.colorScheme??'';
+ function restoreRoot(){
+  if(!root)return;
+  for(const key of datasetKeys){if(baselineData[key]===undefined)delete root.dataset[key];else root.dataset[key]=baselineData[key];}
+  for(const [key,{value,priority}]of baselineStyle){if(value)root.style.setProperty(key,value,priority);else root.style.removeProperty?.(key);}
+  root.style.colorScheme=originalColorScheme;
+ }
  function render(){
   const palette=appearancePalette(preferences);
   if(root){root.dataset.momoWorkbench='true';root.dataset.theme=palette.theme;root.dataset.appearanceTheme=palette.id;root.dataset.paletteRoles='true';root.dataset.interfaceStyle=preferences.style;root.dataset.density=preferences.density;root.dataset.tabStyle=preferences.tabs;root.dataset.tabOverride='true';root.style.colorScheme=palette.theme==='light'?'light':'dark';
-   for(const key of surfaceKeys){if(palette.surfaces)root.style.setProperty('--ui-'+key,palette.surfaces[key]);else root.style.removeProperty?.('--ui-'+key);}
-   for(const [key,value]of Object.entries({accent:palette.accent,'on-accent':palette.onAccent,'accent-text':palette.accentText,selected:palette.selected,'accent-hover':palette.hover}))root.style.setProperty('--ui-'+key,value);
+   for(const key of surfaceKeys)setToken('--ui-'+key,palette.surfaces[key]);
+   for(const [key,value]of Object.entries({accent:palette.accent,'on-accent':palette.onAccent,'accent-text':palette.accentText,selected:palette.selected,'accent-hover':palette.hover}))setToken('--ui-'+key,value);
    const roles=palette.roles,roleTokens=roles?{...roles,'on-navigation':onColor(roles.navigation),'on-control':onColor(roles.control),'on-selection':onColor(roles.selection),'navigation-bg':palette.roleSurfaces.navigation,'control-bg':palette.roleSurfaces.control,'selection-surface':palette.selected,'selection-line':mix(palette.surfaces.panel,roles.selection,.55)}:{};
-   for(const key of ['selection','navigation','control','header','stage','header-text','header-muted','header-navigation','header-navigation-bg','section','on-navigation','on-control','on-selection','navigation-bg','control-bg','selection-surface','selection-line']){if(roles)root.style.setProperty('--ui-'+key,roleTokens[key]);else root.style.removeProperty?.('--ui-'+key);}
+   for(const [key,value]of Object.entries(roleTokens))setToken('--ui-'+key,value);
   }
   for(const listener of listeners)listener(copyPreferences(preferences),palette);
  }
  function preview(value){preferences=normalizeAppearance(value);render();}
  function save(value){preview(value);try{if(!storage)return false;storage.setItem(key,JSON.stringify(preferences));return true;}catch{return false;}}
  render();
- return {get:()=>copyPreferences(preferences),palette:()=>appearancePalette(preferences),preview,save,subscribe(fn){listeners.add(fn);return ()=>{listeners.delete(fn);};},dispose(){listeners.clear();}};
+ return {get:()=>copyPreferences(preferences),palette:()=>appearancePalette(preferences),preview,save,subscribe(fn){listeners.add(fn);return ()=>{listeners.delete(fn);};},dispose(){listeners.clear();restoreRoot();}};
 }

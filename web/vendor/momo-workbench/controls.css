@@ -1,0 +1,24 @@
+/* Opt-in recipes. Products own values and commands; these classes own presentation. */
+[data-momo-workbench] :is(.momo-button,.momo-tabs>button),
+.momo-appearance-dialog[data-momo-workbench] :is(button,input,select){font:inherit;box-sizing:border-box}
+[data-momo-workbench] .momo-button,.momo-appearance-dialog[data-momo-workbench] button{
+ cursor:pointer;min-height:30px;padding:var(--ui-control-pad-y) var(--ui-control-pad-x);border:1px solid var(--ui-line);border-radius:var(--ui-control-radius);background:var(--ui-surface);color:var(--ui-text);line-height:1.4
+}
+[data-momo-workbench] .momo-button:hover,.momo-appearance-dialog[data-momo-workbench] button:hover{background:var(--ui-hover);border-color:var(--ui-line-strong)}
+[data-momo-workbench] .momo-button[data-variant=primary],.momo-appearance-dialog[data-momo-workbench] button[data-variant=primary]{background:var(--ui-accent);color:var(--ui-on-accent);border-color:var(--ui-accent-text);font-weight:600}
+[data-momo-workbench] .momo-button[data-variant=primary]:hover,.momo-appearance-dialog[data-momo-workbench] button[data-variant=primary]:hover{background:var(--ui-accent-hover)}
+[data-momo-workbench] :is(.momo-button,.momo-tabs>button):disabled,.momo-appearance-dialog[data-momo-workbench] :is(button,input,select):disabled{cursor:default;opacity:.5}
+[data-momo-workbench] .momo-field{display:grid;gap:var(--ui-field-gap);min-width:0;font-size:12px;color:var(--ui-text)}
+[data-momo-workbench] .momo-field :is(input:not([type=range]):not([type=checkbox]),select),.momo-appearance-dialog[data-momo-workbench] :is(input:not([type=range]):not([type=checkbox]),select){
+ min-width:0;max-width:100%;min-height:32px;padding:var(--ui-control-pad-y) var(--ui-control-pad-x);border:1px solid var(--ui-line-strong);border-radius:var(--ui-control-radius);background:var(--ui-field-bg,var(--ui-surface));color:var(--ui-text);font:inherit;line-height:1.4
+}
+[data-momo-workbench] .momo-field input[type=range],.momo-appearance-dialog[data-momo-workbench] input[type=range]{accent-color:var(--ui-control,var(--ui-accent-text));min-width:0;max-width:100%;width:100%;height:16px;padding:0}
+[data-momo-workbench] .momo-field input[type=range],.momo-appearance-dialog[data-momo-workbench] input[type=range]{appearance:none;margin:0;border:0;background:transparent}
+[data-momo-workbench] .momo-field input[type=range]::-webkit-slider-runnable-track,.momo-appearance-dialog[data-momo-workbench] input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:var(--ui-line-strong)}
+[data-momo-workbench] .momo-field input[type=range]::-webkit-slider-thumb,.momo-appearance-dialog[data-momo-workbench] input[type=range]::-webkit-slider-thumb{appearance:none;width:12px;height:12px;margin-top:-4px;border:0;border-radius:50%;background:var(--ui-control,var(--ui-accent-text))}
+.momo-appearance-dialog[data-momo-workbench] select:not([multiple]):not([size]){appearance:auto;background-image:none}
+[data-momo-workbench] .momo-module{border:var(--ui-module-border,1px solid var(--ui-line));border-top:var(--ui-module-border-top,1px solid var(--ui-line));border-radius:var(--ui-module-radius);overflow:hidden;background:var(--ui-module-bg,var(--ui-panel))}
+[data-momo-workbench] .momo-module>h3{margin:0;padding:var(--ui-heading-padding);font-size:13px;font-weight:600;background:var(--ui-module-heading,var(--ui-surface));color:var(--ui-text)}
+[data-momo-workbench] .momo-module-body{display:grid;gap:var(--ui-field-gap);padding:var(--ui-module-padding)}
+[data-momo-workbench] :is(.momo-button,.momo-field input,.momo-field select,.momo-tabs>button):focus-visible,
+.momo-appearance-dialog[data-momo-workbench] :is(button,input,select,summary):focus-visible{outline:2px solid var(--ui-navigation,var(--ui-accent-text));outline-offset:2px}

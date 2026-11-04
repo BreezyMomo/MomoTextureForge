@@ -1,0 +1,24 @@
+/* One header control and menu for every product. Native select keeps keyboard and AT behavior. */
+select.momo-language-selector[data-momo-language-selector]{
+ box-sizing:border-box;display:inline-flex;align-items:center;gap:10px;flex:none;min-width:104px;max-width:160px;min-height:32px;margin:0;
+ padding:var(--ui-control-pad-y) var(--ui-control-pad-x);border:1px solid var(--ui-line-strong);border-radius:var(--ui-control-radius);
+ background:var(--ui-surface);color:var(--ui-text);font:12px/1.4 Inter,"Segoe UI","Microsoft YaHei",sans-serif;text-align:start;text-transform:none;letter-spacing:normal;color-scheme:inherit;cursor:pointer
+}
+select.momo-language-selector[data-momo-language-selector]:not([multiple]):not([size]){appearance:auto;background-image:none}
+select.momo-language-selector[data-momo-language-selector]:hover{background:var(--ui-hover);border-color:var(--ui-navigation)}
+select.momo-language-selector[data-momo-language-selector]:focus-visible{outline:2px solid var(--ui-navigation);outline-offset:2px}
+select.momo-language-selector[data-momo-language-selector]:disabled{cursor:default;opacity:.5}
+select.momo-language-selector[data-momo-language-selector] option{background:var(--ui-panel);color:var(--ui-text);font:12px/1.5 Inter,"Segoe UI","Microsoft YaHei",sans-serif}
+@supports (appearance:base-select){
+ select.momo-language-selector[data-momo-language-selector]:not([multiple]):not([size]){appearance:base-select}
+ select.momo-language-selector[data-momo-language-selector]::picker(select){
+  appearance:base-select;box-sizing:border-box;min-width:104px;padding:4px;border:1px solid var(--ui-line-strong);border-radius:var(--ui-control-radius);
+  background:var(--ui-panel);color:var(--ui-text);box-shadow:0 8px 24px var(--ui-shadow);font:12px/1.5 Inter,"Segoe UI","Microsoft YaHei",sans-serif
+ }
+ select.momo-language-selector[data-momo-language-selector]::picker-icon{color:var(--ui-muted)}
+ select.momo-language-selector[data-momo-language-selector] option{display:flex;align-items:center;gap:10px;min-height:32px;padding:6px 10px;border:0;border-radius:var(--ui-control-radius);white-space:nowrap;font-weight:400}
+ select.momo-language-selector[data-momo-language-selector] option:checked{background:var(--ui-navigation-bg);color:var(--ui-navigation);font-weight:600}
+ select.momo-language-selector[data-momo-language-selector] option:hover{background:var(--ui-hover);color:var(--ui-text)}
+ select.momo-language-selector[data-momo-language-selector] option:focus-visible{outline:2px solid var(--ui-navigation);outline-offset:-2px}
+ select.momo-language-selector[data-momo-language-selector] option::checkmark{color:var(--ui-navigation)}
+}

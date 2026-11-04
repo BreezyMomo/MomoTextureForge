@@ -1,4 +1,6 @@
 @import './vendor/momo-workbench/theme-tokens.css';
+@import './vendor/momo-workbench/appearance-settings.css';
+@import './vendor/momo-workbench/language-selector.css';
 /* Shared semantic theme tokens. Artwork, swatches and canvas guides have their own colors. */
 /* Flatten containers only: inputs, focus rings and docking separators remain visible. */
 :root[data-interface-style=minimal] .tree-editor .inspector-module{border:0;border-top:1px solid var(--ui-line);background:transparent;border-radius:0}
@@ -10,54 +12,8 @@
 :root[data-interface-style=minimal] .graphics-dialog .graphics-card{border-color:transparent;border-bottom-color:var(--ui-line);border-radius:0;background:transparent}
 :root[data-interface-style=minimal] #shape-library .tree-pattern-card.picked{border-color:var(--ui-accent-text);background:var(--ui-selected)}
 /* Workspace chrome follows the complete theme; artwork keeps independent colors. */
-.tree-editor .appearance-trigger{display:flex;align-items:center;gap:6px}
 .tree-editor button.primary:hover{background:var(--ui-accent-hover);color:var(--ui-on-accent)}
-.appearance-trigger::before{content:'';width:10px;height:10px;border-radius:50%;background:var(--ui-accent);border:1px solid var(--ui-accent-text)}
-.tree-editor .appearance-dialog{width:min(780px,calc(100vw - 32px));max-width:calc(100vw - 32px);max-height:90dvh;padding:0;overflow:auto;background:var(--ui-panel);color:var(--ui-text);border:1px solid var(--ui-line-strong);border-radius:var(--ui-window-radius);box-shadow:0 18px 65px var(--ui-shadow)}
-.appearance-dialog::backdrop{background:var(--ui-overlay)}
-.appearance-dialog>header{display:flex;gap:14px;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--ui-line)}
-.appearance-dialog h2{font-size:18px;margin:0;font-weight:600}
-.appearance-dialog .appearance-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-.appearance-settings,.appearance-preview{padding:22px;min-width:0}
-.appearance-settings{border-right:1px solid var(--ui-line)}
-.appearance-settings>label{display:block;margin-bottom:8px;font-weight:500}
-.appearance-settings>select{width:100%;margin-bottom:22px}
-.appearance-settings .appearance-theme-description{margin:-12px 0 20px;color:var(--ui-muted);font-size:12px;line-height:1.6}
-.appearance-layout-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.appearance-layout-options label{display:block;margin-bottom:8px;font-weight:500}
-.appearance-layout-options select{width:100%;min-width:0}
-.appearance-settings .appearance-style-description{margin:10px 0 20px;min-height:38px;color:var(--ui-muted);font-size:12px}
-.appearance-settings .appearance-accent-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.appearance-settings input[type=color]{flex:none;width:45px;height:36px;padding:3px}
-.appearance-accent-row input[type=text]{min-width:0;width:110px;font:13px ui-monospace,monospace}
-.appearance-swatches{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
-.tree-editor .appearance-swatches button{width:30px;height:30px;padding:0;background:var(--swatch);border:3px solid var(--ui-panel);border-radius:50%;outline:1px solid var(--ui-line-strong);box-shadow:none}
-.tree-editor .appearance-swatches button[aria-pressed=true]{outline:2px solid var(--ui-text)}
-.appearance-preview{background:var(--ui-inset)}
-.appearance-preview>p{margin:0 0 18px;color:var(--ui-muted);font-size:12px}
-.appearance-preview .appearance-preview-node{padding:var(--ui-node-padding) 11px;border-left:3px solid var(--ui-accent-text);background:var(--ui-selected);border-radius:var(--ui-control-radius);margin-bottom:20px}
-.appearance-preview-tabs{display:flex;gap:16px;margin-bottom:20px;border-bottom:1px solid var(--ui-line);color:var(--ui-muted)}
-.appearance-preview-tabs span{padding-bottom:8px}
-.appearance-preview-tabs span:first-child{border-bottom:2px solid var(--ui-accent-text);color:var(--ui-text)}
-.appearance-preview strong{display:block;font-size:13px;margin-bottom:14px}
-.appearance-preview-module{border:1px solid var(--ui-line);border-radius:var(--ui-module-radius);overflow:hidden;background:var(--ui-panel);margin-bottom:20px}
-.appearance-preview-module>strong{margin:0;padding:var(--ui-heading-padding);background:var(--ui-surface)}
-.appearance-preview-module-body{padding:var(--ui-module-padding)}
-:root[data-interface-style=minimal] .appearance-preview-module{border:0;border-top:1px solid var(--ui-line);background:transparent}
-:root[data-interface-style=minimal] .appearance-preview-module>strong{background:transparent}
-.appearance-preview label{display:block;color:var(--ui-muted);font-size:12px}
-.appearance-preview .appearance-preview-value{display:flex;align-items:center;gap:12px;margin:7px 0 18px}
-.appearance-preview-value progress{accent-color:var(--ui-accent-text);width:100%;height:9px}
-.appearance-preview-value output{padding:var(--ui-control-pad-y) 12px;border:1px solid var(--ui-line);border-radius:var(--ui-control-radius);background:var(--ui-surface)}
-.appearance-preview-actions{display:flex;gap:6px;flex-wrap:wrap}
-.appearance-dialog>footer{position:sticky;bottom:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 22px;border-top:1px solid var(--ui-line);background:var(--ui-panel)}
-.appearance-dialog footer>p{margin:0;flex:1 1 220px;font-size:12px;color:var(--ui-muted)}
-.appearance-dialog footer>div{display:flex;gap:8px;flex:none}
-.appearance-dialog .appearance-storage-status{padding:0 22px;color:var(--ui-danger);font-size:12px}
-.appearance-storage-status:empty{display:none}
 .tree-editor .graphics-dialog .graphics-card .graphics-insert{background:var(--ui-surface);border-color:var(--ui-line-strong);color:var(--ui-text);font-weight:500}
 .tree-editor .graphics-dialog .graphics-card .graphics-insert:hover{background:var(--ui-selected);border-color:var(--ui-accent-text);color:var(--ui-accent-text)}
-@media(max-width:550px){.appearance-dialog .appearance-body{grid-template-columns:1fr}.appearance-settings{border-right:0;border-bottom:1px solid var(--ui-line)}.appearance-settings,.appearance-preview{padding:16px}.appearance-dialog>header,.appearance-dialog>footer{padding:14px 16px}}
-@media(max-width:380px){.appearance-layout-options{grid-template-columns:1fr}}
 
 /* Refined is opt-in for existing preferences; original themes retain their tokens. */

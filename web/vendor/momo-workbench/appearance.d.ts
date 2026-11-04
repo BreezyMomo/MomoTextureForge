@@ -16,10 +16,10 @@ export interface AppearancePalette {
  id:ThemeId;theme:'classic'|'light';accent:string;onAccent:string;accentText:string;selected:string;hover:string;
  surfaces:Record<string,string>;roles:Record<string,string>;roleSurfaces:Record<'selection'|'navigation'|'control',string>;colors:Record<ColorRole,string>;
 }
-export interface PreferenceStorage {getItem(key:string):string|null|undefined;setItem(key:string,value:string):unknown}
+export interface PreferenceStorage {getItem(key:string):string|null|undefined;setItem(key:string,value:string):unknown;removeItem?(key:string):unknown}
 export interface ThemeRoot {
  dataset:Record<string,string|undefined>;
- style:{colorScheme:string;setProperty(key:string,value:string):unknown;removeProperty?(key:string):unknown};
+ style:{colorScheme:string;setProperty(key:string,value:string,priority?:string):unknown;removeProperty?(key:string):unknown;getPropertyValue?(key:string):string;getPropertyPriority?(key:string):string};
 }
 export interface AppearanceController {
  get():AppearancePreferences;palette():AppearancePalette;preview(value:unknown):void;save(value:unknown):boolean;

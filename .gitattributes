@@ -1,3 +1,5 @@
+* text=auto eol=lf
+
 # Release snapshots are byte-for-byte copies verified by the Workbench manifest.
 /web/vendor/momo-workbench/** -text
 /vendor/*.tgz binary

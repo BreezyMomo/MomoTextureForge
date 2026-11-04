@@ -1,0 +1,30 @@
+/* Root-owned variant variables keep nested workbenches independent. */
+[data-momo-workbench]{
+ --momo-tabs-padding:4px;--momo-tabs-gap:4px;--momo-tabs-border:1px solid var(--ui-line);--momo-tabs-radius:9px;--momo-tabs-bg:var(--ui-inset);
+ --momo-tab-padding:7px 8px;--momo-tab-border:1px solid transparent;--momo-tab-radius:6px;--momo-tab-bg:transparent;
+ --momo-tab-active-bg:var(--ui-navigation-bg);--momo-tab-active-fg:var(--ui-navigation);--momo-tab-active-border:var(--ui-line);--momo-tab-active-shadow:var(--ui-control-shadow,none);--momo-tab-active-weight:500;
+ --momo-dock-height:calc(var(--ui-tab-height) + 8px);--momo-dock-padding:4px 5px;--momo-dock-align:center;--momo-dock-gap:4px;--momo-dock-tabs-padding:2px;--momo-dock-tab-height:var(--ui-tab-height);--momo-dock-tab-padding:4px 12px;
+ --momo-dock-active-bg:var(--ui-header-navigation-bg);--momo-dock-active-fg:var(--ui-header-navigation);--momo-dock-active-shadow:var(--ui-control-shadow,none)
+}
+[data-momo-workbench][data-tab-style=classic]{
+ --momo-tabs-padding:0 0 12px;--momo-tabs-gap:3px;--momo-tabs-border:0;--momo-tabs-radius:0;--momo-tabs-bg:transparent;
+ --momo-tab-padding:6px 8px;--momo-tab-border:1px solid var(--ui-line);--momo-tab-radius:4px;--momo-tab-bg:var(--ui-surface);--momo-tab-active-border:var(--ui-navigation);--momo-tab-active-shadow:none;
+ --momo-dock-height:var(--ui-tab-height);--momo-dock-padding:0;--momo-dock-align:stretch;--momo-dock-gap:2px;--momo-dock-tabs-padding:0;--momo-dock-tab-height:auto;--momo-dock-active-shadow:inset 0 2px var(--ui-header-navigation)
+}
+[data-momo-workbench][data-tab-style=pill]{
+ --momo-tabs-radius:999px;--momo-tabs-border:0;--momo-tab-radius:999px;--momo-tab-active-bg:var(--ui-navigation);--momo-tab-active-fg:var(--ui-on-navigation);--momo-tab-active-border:transparent;--momo-tab-active-shadow:none;--momo-tab-active-weight:600;
+ --momo-dock-tabs-padding:0;--momo-dock-active-bg:var(--ui-header-navigation);--momo-dock-active-fg:var(--ui-on-navigation);--momo-dock-active-shadow:none
+}
+[data-momo-workbench][data-tab-style=underline]{
+ --momo-tabs-padding:0;--momo-tabs-gap:8px;--momo-tabs-border:0;--momo-tabs-radius:0;--momo-tabs-bg:transparent;
+ --momo-tab-padding:8px 2px;--momo-tab-border:0;--momo-tab-radius:0;--momo-tab-active-bg:transparent;--momo-tab-active-border:transparent;--momo-tab-active-shadow:inset 0 -2px var(--ui-navigation);
+ --momo-dock-height:calc(var(--ui-tab-height) + 4px);--momo-dock-padding:2px 6px;--momo-dock-tabs-padding:0;--momo-dock-tab-padding:5px 8px;--momo-dock-active-bg:transparent;--momo-dock-active-shadow:inset 0 -2px var(--ui-header-navigation)
+}
+[data-momo-workbench][data-tab-override=true] .momo-tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;gap:var(--momo-tabs-gap);margin:6px 0 14px;padding:var(--momo-tabs-padding);border:var(--momo-tabs-border);border-radius:var(--momo-tabs-radius);background:var(--momo-tabs-bg);box-shadow:none}
+[data-momo-workbench][data-tab-override=true] .momo-tabs>button{flex:1 0 auto;min-width:64px;min-height:var(--ui-tab-height);white-space:nowrap;padding:var(--momo-tab-padding);border:var(--momo-tab-border);border-radius:var(--momo-tab-radius);background:var(--momo-tab-bg);color:var(--ui-muted);box-shadow:none;font-size:12px;font-weight:500}
+[data-momo-workbench][data-tab-override=true] .momo-tabs>button:is(.active,[aria-pressed=true]){background:var(--momo-tab-active-bg);color:var(--momo-tab-active-fg);border-color:var(--momo-tab-active-border);box-shadow:var(--momo-tab-active-shadow);font-weight:var(--momo-tab-active-weight)}
+[data-momo-workbench][data-tab-override=true] .momo-tabs>button:focus-visible{outline:2px solid var(--ui-navigation);outline-offset:1px}
+[data-momo-workbench][data-tab-override=true] .dock-stack-header{height:var(--momo-dock-height);padding:var(--momo-dock-padding);align-items:var(--momo-dock-align);background:var(--ui-header);border-bottom:1px solid var(--ui-line);--ui-text:var(--ui-header-text);--ui-muted:var(--ui-header-muted)}
+[data-momo-workbench][data-tab-override=true] .dock-tabs{align-items:var(--momo-dock-align);gap:var(--momo-dock-gap);padding:var(--momo-dock-tabs-padding);border:1px solid transparent;border-radius:var(--momo-tabs-radius);background:transparent}
+[data-momo-workbench][data-tab-override=true] .dock-tab{height:var(--momo-dock-tab-height);padding:var(--momo-dock-tab-padding);border:1px solid transparent;border-radius:var(--momo-tab-radius);background:transparent;color:var(--ui-muted);box-shadow:none;font-size:12px;letter-spacing:0;font-weight:500}
+[data-momo-workbench][data-tab-override=true] .dock-tab[aria-selected=true]{background:var(--momo-dock-active-bg);color:var(--momo-dock-active-fg);border-color:var(--momo-tab-active-border);box-shadow:var(--momo-dock-active-shadow);font-weight:var(--momo-tab-active-weight)}

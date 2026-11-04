@@ -75,8 +75,6 @@
 .dock-workspace .preview-actions button{font-size:12px;padding:6px 9px}
 #inspector-layout-menu{margin:0 0 10px;width:fit-content;max-width:100%}
 #inspector-layout-menu>summary{padding:3px 6px;border-color:transparent;font-size:11px}
-:root[data-tab-override=true] .tree-editor #inspector-tabs{display:flex;flex-wrap:nowrap;gap:4px;overflow-x:auto;scrollbar-width:thin}
-.tree-editor #inspector-tabs>button{flex:1 0 auto;white-space:nowrap;min-width:64px;min-height:30px;font-size:12px;padding:5px 9px}
 .tree-editor .inspector-module{margin-block:0 12px;border-color:var(--ui-line-soft,var(--ui-line))}
 .tree-editor .inspector-module>summary{padding:0}
 .tree-editor .inspector-module-heading{display:grid;grid-template-columns:24px minmax(0,1fr) 24px auto 24px;gap:4px;padding:7px;min-height:40px}
@@ -183,8 +181,8 @@
 .tree-editor #node-tree+.selection-tools{margin-top:12px;gap:8px}
 
 /* Keep the chosen outer module style; nested settings read as sections. */
-:root:is([data-interface-style=airy],[data-interface-style=cinema],[data-interface-style=minimal]) .tree-editor :is(#inspector .inspector-module,.appearance-preview-module){border:0;border-top:1px solid var(--ui-line-soft,var(--ui-line));border-radius:0;background:transparent;box-shadow:none}
-:root:is([data-interface-style=airy],[data-interface-style=cinema],[data-interface-style=minimal]) .tree-editor :is(#inspector .inspector-module>summary,.appearance-preview-module>strong){background:transparent;border-bottom:0}
+:root:is([data-interface-style=airy],[data-interface-style=cinema],[data-interface-style=minimal]) .tree-editor :is(#inspector .inspector-module){border:0;border-top:1px solid var(--ui-line-soft,var(--ui-line));border-radius:0;background:transparent;box-shadow:none}
+:root:is([data-interface-style=airy],[data-interface-style=cinema],[data-interface-style=minimal]) .tree-editor :is(#inspector .inspector-module>summary){background:transparent;border-bottom:0}
 :root:is([data-interface-style=airy],[data-interface-style=cinema],[data-interface-style=minimal]) .tree-editor #inspector .inspector-module>summary:hover{background:var(--ui-hover)}
 .tree-editor #inspector .inspector-module-body .inspector-module{border-inline:0;border-bottom:0;border-radius:0;background:transparent;box-shadow:none;margin-block:14px 0}
 .tree-editor #inspector .inspector-module-body .inspector-module>summary{background:transparent;border-bottom:0}

@@ -25,7 +25,7 @@
     "node": ">=22"
   },
   "dependencies": {
-    "@momo/workbench": "file:vendor/momo-workbench-0.2.0.tgz"
+    "@momo/workbench": "file:vendor/momo-workbench-0.4.0.tgz"
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "1.32.2",

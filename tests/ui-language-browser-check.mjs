@@ -6,7 +6,7 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {project,node} from '../web/tree-model.js';
-const built=process.argv.includes('--built'),root=fileURLToPath(new URL(built?'../site/':'../web/',import.meta.url));
+const built=process.argv.includes('--built'),standalone=process.argv.includes('--standalone'),root=fileURLToPath(new URL(standalone?'../dist/':built?'../site/':'../web/',import.meta.url));
 const types={'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.glsl':'text/plain','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp'};
 const server=http.createServer(async(req,res)=>{try{let url=new URL(req.url,'http://localhost').pathname;if(built)url=url.replace(/^\/MomoTextureForge\//,'/');const file=path.resolve(root,'.'+(url==='/'?'/index.html':url));if(!file.startsWith(root)||!types[path.extname(file)])throw Error();res.setHeader('Content-Type',types[path.extname(file)]);res.end(await readFile(file));}catch{res.writeHead(404);res.end();}});
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));let browser,page;
@@ -14,7 +14,7 @@ const report={},errors=[];
 try{
  browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-webgl','--ignore-gpu-blocklist']});
  const context=await browser.newContext({viewport:{width:1400,height:1000}});page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
- const address=`http://127.0.0.1:${server.address().port}${built?'/MomoTextureForge/':'/'}`;
+ const address=`http://127.0.0.1:${server.address().port}${standalone?'/MomoTextureForge.html':built?'/MomoTextureForge/':'/'}`;
  const draft=project();if(process.argv.includes('--exports-only'))Object.assign(draft.output,{width:32,height:32,seconds:.3,exportSeconds:.6,fps:10});draft.name='文件';draft.root.name='画布';draft.root.children=[node('shape','Circle'),node('shape','Circle')];draft.root.children[0].name='颜色';draft.root.children[1].name='保存';
  draft.root.children[0].tracks['params.0']={mode:'absolute',ease:'linear',keys:[[0,.3],[1,.8]]};
  await page.goto(address+'#tree='+Buffer.from(JSON.stringify(draft)).toString('base64'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('[role=treeitem]').first().click();
@@ -90,18 +90,18 @@ try{
      await menu.locator('summary').click();await alignedHeader();await menu.locator('summary').click();
     }
     if(locale==='zh-CN'&&width===1600&&!process.argv.includes('--no-screenshots')){
-     const box=await page.locator('.tree-header').boundingBox();await page.screenshot({path:fileURLToPath(new URL(`../test-results/languages/${built?'built':'source'}-toolbar-${density}.png`,import.meta.url)),clip:box});
+     const box=await page.locator('.tree-header').boundingBox();await page.screenshot({path:fileURLToPath(new URL(`../test-results/languages/${standalone?'standalone':built?'built':'source'}-toolbar-${density}.png`,import.meta.url)),clip:box});
     }
    }
   }
  }
  await language('en');
- for(const width of [1600,1100,768]){await page.setViewportSize({width,height:1000});const boxes=await page.locator('.tree-brand,.tree-canvas-actions,.tree-tool-actions').evaluateAll(els=>els.map(e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom};}));for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++)assert.ok(Math.min(boxes[i].right,boxes[j].right)-Math.max(boxes[i].x,boxes[j].x)<1||Math.min(boxes[i].bottom,boxes[j].bottom)-Math.max(boxes[i].y,boxes[j].y)<1,'header overlap at '+width);assert.equal(await page.locator('#inspector-color-quick').count(),0);if(!process.argv.includes('--no-screenshots'))await page.screenshot({path:fileURLToPath(new URL(`../test-results/languages/${built?'built':'source'}-english-${width}.png`,import.meta.url))});}
- const examples=page;await examples.setViewportSize({width:1400,height:1000});await examples.goto(address+(built?'?view=examples':'examples.html'));await examples.waitForFunction(()=>document.querySelector('#samples')?.children.length>20&&/generated/.test(document.querySelector('#status').textContent),null,{timeout:180000});const texts=await examples.locator('body').innerText();assert.ok(!/[\u3400-\u9fff]/.test(texts),texts.slice(0,500));assert.ok(!/\b(?:examples|presets|ui|editor)\.[A-Za-z][A-Za-z0-9.]*/.test(texts),'Example message IDs must resolve');for(const title of await examples.locator('#samples h2').allTextContents())assert.ok(title.trim(),'Every example has a localized title');assert.ok(await examples.locator('#samples a').count()>20);await examples.close();
+ for(const width of [1600,1100,768]){await page.setViewportSize({width,height:1000});const boxes=await page.locator('.tree-brand,.tree-canvas-actions,.tree-tool-actions').evaluateAll(els=>els.map(e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom};}));for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++)assert.ok(Math.min(boxes[i].right,boxes[j].right)-Math.max(boxes[i].x,boxes[j].x)<1||Math.min(boxes[i].bottom,boxes[j].bottom)-Math.max(boxes[i].y,boxes[j].y)<1,'header overlap at '+width);assert.equal(await page.locator('#inspector-color-quick').count(),0);if(!process.argv.includes('--no-screenshots'))await page.screenshot({path:fileURLToPath(new URL(`../test-results/languages/${standalone?'standalone':built?'built':'source'}-english-${width}.png`,import.meta.url))});}
+ const examples=page;await examples.setViewportSize({width:1400,height:1000});await examples.goto(address+((built||standalone)?'?view=examples':'examples.html'));await examples.waitForFunction(()=>document.querySelector('#samples')?.children.length>20&&/generated/.test(document.querySelector('#status').textContent),null,{timeout:180000});const texts=await examples.locator('body').innerText();assert.ok(!/[\u3400-\u9fff]/.test(texts),texts.slice(0,500));assert.ok(!/\b(?:examples|presets|ui|editor)\.[A-Za-z][A-Za-z0-9.]*/.test(texts),'Example message IDs must resolve');for(const title of await examples.locator('#samples h2').allTextContents())assert.ok(title.trim(),'Every example has a localized title');assert.ok(await examples.locator('#samples a').count()>20);await examples.close();
  }
- assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,views:Object.keys(report),errors}));
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({built,standalone,pass:true,views:Object.keys(report),errors}));
 }catch(error){
  const state=page&&!page.isClosed()?{url:page.url().split('#')[0],viewport:page.viewportSize(),body:await page.locator('body').innerText({timeout:3000}).then(text=>text.slice(0,2200)).catch(()=>null)}:null;
- await mkdir(new URL('../test-results/languages/',import.meta.url),{recursive:true});await writeFile(new URL('../test-results/languages/ui-coverage-failure.json',import.meta.url),JSON.stringify({built,report,error:String(error),page:state},null,2));throw error;
+ await mkdir(new URL('../test-results/languages/',import.meta.url),{recursive:true});await writeFile(new URL('../test-results/languages/ui-coverage-failure.json',import.meta.url),JSON.stringify({built,standalone,report,error:String(error),page:state},null,2));throw error;
 }
 finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}
