@@ -1054,6 +1054,8 @@
   "help.found": "Found ",
   "help.helpArticle": "Help article",
   "help.helpContents": "Help contents",
+  "help.licensing": "Licensing",
+  "help.licensing.body": "# Licensing\n\n## Program: GPL-3.0-only\nCommercial use is allowed. Distributing modified versions or builds requires GPL compliance, including Corresponding Source and copyright and license notices.\n\n## Momo-authored output: MIT\nOriginal creative output, accompanying shaders, Unity importers, runtime components and helper code that we have authority to license are additionally offered under MIT. Commercial use, modification and closed-source integration are allowed; preserve MIT copyright and permission notices with copies or substantial portions.\n\n## User and third-party content\nUsers retain their own content and rights. Third-party code, images, fonts and libraries retain their own licenses and attribution requirements. The tool does not automatically make third-party content MIT or require an entire game or application to be open source.\n\nSee LICENSE, OUTPUT-LICENSE.en.md and licenses/MIT.txt in the repository for the full scope.",
   "help.inspectAllPatterns": "Inspect all patterns",
   "help.noMatchingChaptersTryAnotherKeyword": "No matching chapters. Try another keyword.",
   "help.quickStart": "Quick start",

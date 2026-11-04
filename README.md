@@ -108,6 +108,12 @@ GitHub Pages 部署需上传完整 `site/` 目录，包含首页及 `assets/`，
 
 [操作教程](docs/10-ai-and-help.md) · [命令行创作与验证](AI_AUTHORING_CLI.md) · [生成器格式](skills/texture-forge-author/references/generator-guide.md)
 
+## 授权
+
+Copyright (c) 2026 BreezyMomo and contributors。主程序采用 [GPL-3.0-only](LICENSE)；允许商用，分发修改版或构建产物时须按 GPL 提供对应源码并保留许可声明。
+
+我们有权授权的原创创作产出及随产出交付的原创 Shader、导入器、运行组件和辅助脚本另授 [MIT](licenses/MIT.txt)，便于集成到商业项目。用户内容归相应权利人；第三方代码、模型、动作与素材继续遵守原许可。详见[产出授权](OUTPUT-LICENSE.md)。编辑器、完整离线编辑器 HTML、CLI 与 MCP 服务属于 GPL 程序。
+
 ## 深入资料与反馈
 
 [开发入口与验证](docs/development.md) · [Shader扩展规范](skills/texture-forge-author/references/shader-architecture.md) · [图形定义](PATTERN_DEFINITIONS.md) · [本地图形库](LOCAL_GRAPHICS_LIBRARY.md) · [资源包格式](RESOURCE-PACK.md) · [远程图库技术说明](REMOTE_LIBRARIES.md)

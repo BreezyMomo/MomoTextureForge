@@ -11,11 +11,12 @@ export const HELP_SECTIONS=[
  ['layout',"help.arrangementCompositing",manual['references/layout-compositing.md']],
  ['animation',"help.animationExport",manual['references/animation-export.md']],
  ['image',"help.creatingResourcesImageProcessing",manual['references/image-editor.md']],
- ['recipes',"help.effectRecipesTroubleshooting",manual['references/recipes.md']]
+ ['recipes',"help.effectRecipesTroubleshooting",manual['references/recipes.md']],
+ ['license','help.licensing','help.licensing.body']
 ].map(([id,title,body])=>({id,title,body}));
 export function helpSections(language=interfaceLanguage()){
  if(!['zh-CN','en'].includes(language))throw Error('Unsupported help language');
- return HELP_SECTIONS.map(s=>({...s,title:messageText(s.title,language),body:s.id==='start'?messageText(s.body,language):language==='en'?(englishHelp[s.id]??s.body):s.body}));
+ return HELP_SECTIONS.map(s=>({...s,title:messageText(s.title,language),body:['start','license'].includes(s.id)?messageText(s.body,language):language==='en'?(englishHelp[s.id]??s.body):s.body}));
 }
 // Render only the small Markdown subset used by our bundled manual. All text
 // goes through textContent; no HTML from documentation is executed.
@@ -36,7 +37,7 @@ function renderManual(host,text){
   list=null;host.append(el('p',line));
  }
 }
-export function openUserHelp({onValidate}={}){
+export function openUserHelp({onValidate,section='start'}={}){
  const existing=document.querySelector('.user-help-dialog');if(existing){existing.focus();return;}
  const dialog=el('dialog'),header=el('header'),title=el('h2',uiText("editor.quickGuide")),close=el('button',uiText("common.close")),search=el('input'),layout=el('div'),nav=el('nav'),article=el('article'),status=el('p');
  dialog.className='user-help-dialog';dialog.setAttribute('aria-labelledby','user-help-title');title.id='user-help-title';
@@ -44,7 +45,7 @@ export function openUserHelp({onValidate}={}){
  header.append(title);if(onValidate){const validate=el('button',uiText("help.inspectAllPatterns"));validate.onclick=onValidate;header.append(validate);}header.append(close);
  search.type='search';search.placeholder=uiText("help.searchFeaturesParametersOrIssuesEGMaskLoopSVG");search.setAttribute('aria-label',uiText("help.searchHelp"));
  layout.className='user-help-layout';nav.setAttribute('aria-label',uiText("help.helpContents"));article.tabIndex=0;article.setAttribute('aria-label',uiText("help.helpArticle"));status.setAttribute('role','status');
- layout.append(nav,article);dialog.append(header,search,status,layout);document.body.append(dialog);let selected='start';
+ layout.append(nav,article);dialog.append(header,search,status,layout);document.body.append(dialog);let selected=section;
  function show(section){selected=section.id;renderManual(article,section.body);article.scrollTop=0;for(const b of nav.children)b.setAttribute('aria-pressed',String(b.dataset.section===selected));}
  function filter(){const q=search.value.trim().toLocaleLowerCase(),matches=helpSections().filter(s=>(s.title+' '+s.body).toLocaleLowerCase().includes(q));nav.replaceChildren();status.textContent=(q ? (matches.length ? ((uiText("help.found") + matches.length) + uiText("help.relatedChapters")) : uiText("help.noMatchingChaptersTryAnotherKeyword")) : '');status.hidden=!q;
   for(const section of matches){const b=el('button',section.title);b.dataset.section=section.id;b.onclick=()=>show(section);nav.append(b);}

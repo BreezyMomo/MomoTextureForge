@@ -1054,6 +1054,8 @@
   "help.found": "找到 ",
   "help.helpArticle": "使用说明正文",
   "help.helpContents": "使用说明目录",
+  "help.licensing": "授权说明",
+  "help.licensing.body": "# 授权说明\n\n## 程序：GPL-3.0-only\n允许商用。分发修改版或构建产物时，须按 GPL 提供对应源码，并保留版权和许可声明。\n\n## Momo 原创产出：MIT\n我们有权授权的原创创作产出，以及随产出交付的原创 Shader、Unity 导入器、运行组件和辅助代码另授 MIT。可商用、修改和闭源集成；分发其副本或实质部分时保留 MIT 版权及许可声明。\n\n## 用户与第三方内容\n用户自己的内容及权利仍归相应权利人。第三方代码、图片、字体和图库内容继续适用原许可及署名要求。工具不会自动把第三方内容变为 MIT，也不强制用户的整个游戏或应用开源。\n\n完整范围见仓库 LICENSE、OUTPUT-LICENSE.md 和 licenses/MIT.txt。",
   "help.inspectAllPatterns": "检查全部图案",
   "help.noMatchingChaptersTryAnotherKeyword": "没有匹配的章节，请换个关键词。",
   "help.quickStart": "快速上手",

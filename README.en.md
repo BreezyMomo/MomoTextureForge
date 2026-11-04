@@ -108,6 +108,12 @@ First use follows **Install Skill → Ask AI to start MCP → Configure MCP**. A
 
 [Workflow](docs/10-ai-and-help.en.md) · [CLI authoring and validation](AI_AUTHORING_CLI.en.md) · [Generator format](skills/texture-forge-author/references/generator-guide.en.md)
 
+## License
+
+Copyright (c) 2026 BreezyMomo and contributors. The application is [GPL-3.0-only](LICENSE): commercial use is allowed; distributing modified versions or builds requires GPL compliance, including Corresponding Source and license notices.
+
+Momo-authored creative output and accompanying original shaders, importers, runtime components and helper scripts that we have authority to license are additionally offered under [MIT](licenses/MIT.txt) for integration into commercial projects. User content remains with its owners; third-party code, models, animations and assets retain their own terms. See [Output licensing](OUTPUT-LICENSE.en.md). The editor, complete offline editor HTML, CLI and MCP server remain GPL programs.
+
 ## Technical references and feedback
 
 [Development entry points and checks](docs/development.en.md) · [Shader extension rules](skills/texture-forge-author/references/shader-architecture.en.md) · [Pattern definitions](PATTERN_DEFINITIONS.en.md) · [Local graphics library](LOCAL_GRAPHICS_LIBRARY.en.md) · [Resource-pack format](RESOURCE-PACK.en.md) · [Remote-library implementation](REMOTE_LIBRARIES.en.md)
