@@ -62,5 +62,5 @@ export function installAITools({button,getProject,onOperation,onCatalog}){
   dialog.addEventListener('cancel',event=>{if(locked)event.preventDefault();});
   document.body.append(dialog);const dispose=localizeApplicationMarkup(dialog);dialog.addEventListener('close',()=>{dispose();dialog.remove();dialog=null;view=null;message=null;copyFeedback=null;button.focus();},{once:true});render();prepareDialogLayout(dialog);dialog.showModal();makeDialogMovable(dialog);
  };
- button.onclick=open;onLanguageChange(render);render();return {open,connection:bridge};
+ onLanguageChange(render);render();return {open,connection:bridge};
 }

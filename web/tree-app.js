@@ -695,7 +695,7 @@ const liveAuthoring=createLiveAuthoring({getTimeline:liveTimeline,controlTimelin
  for(const id of new Set(usedComponents))if(state.projectResources.some(e=>e.id===id))remember('preset:'+id);if(usedComponents.length)library();
  notify(uiText('editorBridge.editApplied'));
 }});
-installAITools({button:aiToolsButton,getProject:liveProject,onOperation:liveAuthoring,onCatalog:()=>graphicsLibrary.open({aiCatalog:true})});
+editorHandlers('ai-tools').click=installAITools({button:aiToolsButton,getProject:liveProject,onOperation:liveAuthoring,onCatalog:()=>graphicsLibrary.open({aiCatalog:true})}).open;
 let shaderExportBusy=false;
 document.addEventListener('momo-download-postprocess-module',async event=>{
  const target=find(animationPreviewProject().root,event.detail?.nodeId)?.node;if(shaderExportBusy||!target)return;shaderExportBusy=true;
