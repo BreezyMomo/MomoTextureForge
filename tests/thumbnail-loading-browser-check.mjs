@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -35,7 +36,7 @@ try{
  await page.locator('.tree-library-search summary[data-i18n="workspace.viewOptions"]').click();await page.locator('#shape-library-view').selectOption('list');await page.keyboard.press('Escape');assert.equal(await first.getAttribute('data-state'),'ready');assert.equal(await first.evaluate(e=>e.getBoundingClientRect().width),40);
  // Force an actual image decode error, not just a synthesized error event.
  await firstImage.evaluate(img=>img.src='data:image/png;base64,invalid');await page.waitForFunction(id=>document.querySelector('#shape-library img[data-pattern="'+id+'"]')?.parentElement.dataset.state==='error',readyId);assert.equal(await firstImage.evaluate(e=>getComputedStyle(e).opacity),'0');
- await page.locator('#language-settings').selectOption('en');assert.match(await first.getAttribute('aria-label'),/Preview unavailable/);assert.match(await first.getAttribute('title'),/Thumbnail could not be loaded/);
+ await chooseWorkbench(page,'language-settings','en');assert.match(await first.getAttribute('aria-label'),/Preview unavailable/);assert.match(await first.getAttribute('title'),/Thumbnail could not be loaded/);
  await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await first.locator('.tree-thumbnail-indicator').evaluate(e=>getComputedStyle(e).animationName),'none');
  assert.deepEqual(errors,[]);const report={built,pass:true,checks:['pending spinner without broken image','detached pending preview resumes','real PNG load','render failure fallback','add despite preview failure','cache reuse','40px list preview','real PNG decode failure','localized failure without reload','reduced motion']};await writeFile('test-results/thumbnail-loading/'+(built?'built':'source')+'.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {readFile,mkdir} from 'node:fs/promises';
@@ -31,13 +32,13 @@ try{
  await page.locator('#play').click();assert.equal(await page.locator('#play').getAttribute('aria-pressed'),'true');assert.equal(await page.locator('#play svg').count(),1);await page.locator('#play').click();
  await page.locator('#add-shape').click();await page.locator('.graphics-library-dialog').waitFor();await page.locator('.graphics-library-dialog header .graphics-close').click();
  await page.locator('#appearance-settings').click();let checks=0;
- for(const theme of ['shuimo','xuanhei','yuebai','qingci','qinghua','mineral','ouhe']){await page.locator('#appearance-theme').selectOption(theme);for(const style of STYLE_IDS){await page.locator('.appearance-style-card[data-style='+style+']').click();
+ for(const theme of ['shuimo','xuanhei','yuebai','qingci','qinghua','mineral','ouhe']){await chooseWorkbench(page,'appearance-theme',theme);for(const style of STYLE_IDS){await page.locator('.appearance-style-card[data-style='+style+']').click();
   const result=await page.evaluate(()=>{const css=s=>getComputedStyle(document.querySelector(s));return {primary:css('#add-shape').backgroundColor,fg:css('#add-shape').color,secondary:css('#add-group').backgroundColor,quiet:css('#duplicate').backgroundColor,mode:css('[data-animation-view=keys]').backgroundColor,inactive:css('[data-animation-view=curves]').backgroundColor};});
   const hex=rgb=>'#'+rgb.match(/\d+/g).slice(0,3).map(v=>(+v).toString(16).padStart(2,'0')).join('');
   assert.equal(result.quiet,'rgba(0, 0, 0, 0)');assert.equal(result.secondary,'rgba(0, 0, 0, 0)');assert.notEqual(result.mode,result.inactive);assert.ok(colorContrast(hex(result.fg),hex(result.primary))>=4.5);checks++;
  }}await page.locator('[data-cancel]').click();
- await page.locator('#language-settings').selectOption('en');await page.setViewportSize({width:1100,height:1000});assert.ok(await page.locator('.node-action-toolbar').evaluate(e=>e.scrollWidth<=e.clientWidth+1));
+ await chooseWorkbench(page,'language-settings','en');await page.setViewportSize({width:1100,height:1000});assert.ok(await page.locator('.node-action-toolbar').evaluate(e=>e.scrollWidth<=e.clientWidth+1));
  await mkdir('test-results/button-hierarchy',{recursive:true});await page.screenshot({path:'test-results/button-hierarchy/'+(built?'built':'source')+'-english.png'});
- await page.setViewportSize({width:1700,height:1200});await page.locator('#language-settings').selectOption('zh-CN');await page.screenshot({path:'test-results/button-hierarchy/'+(built?'built':'source')+'.png'});
+ await page.setViewportSize({width:1700,height:1200});await chooseWorkbench(page,'language-settings','zh-CN');await page.screenshot({path:'test-results/button-hierarchy/'+(built?'built':'source')+'.png'});
  assert.deepEqual(errors,[]);console.log({built,checks,clipboardAndUndo:true,modeStates:true,playback:true,creation:true,englishNarrow:true,errors});
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

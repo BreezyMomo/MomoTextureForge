@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -46,7 +47,7 @@ try{
  await page.locator('#zoom').selectOption('1.5');assert.equal(await saved(),viewBefore);
  const mode=page.locator('#library-filter button[data-value=animated]');await mode.click();const cards=page.locator('#shape-library .tree-pattern-card'),count=await cards.count();assert.ok(count>0);
  const clear=page.locator('#clear-shape-search');assert.equal(await clear.isVisible(),false);await page.locator('#shape-search').fill('no-such-graphic-xyz');assert.equal(await cards.count(),0);assert.equal(await clear.isVisible(),true);await clear.click();assert.equal(await cards.count(),count);assert.equal(await mode.getAttribute('aria-pressed'),'true');assert.equal(await page.locator('#shape-search').evaluate(e=>e===document.activeElement),true);assert.equal(await saved(),viewBefore);
- await page.locator('#language-settings').selectOption('en');assert.equal(await ratio.locator('option[value=custom]').textContent(),'Custom…');assert.equal(await page.locator('#canvas-transform').getAttribute('aria-label'),'Select / transform');assert.equal(await page.locator('#canvas-transform svg').count(),1);
+ await chooseWorkbench(page,'language-settings','en');assert.equal(await ratio.locator('option[value=custom]').textContent(),'Custom…');assert.equal(await page.locator('#canvas-transform').getAttribute('aria-label'),'Select / transform');assert.equal(await page.locator('#canvas-transform svg').count(),1);
  await quick.getByRole('button',{name:'Edit custom ratio',exact:true}).click();await page.keyboard.press('Escape');assert.equal(await quick.locator('[role=dialog]').isVisible(),false);assert.equal(await ratio.inputValue(),'current-custom');
  for(const width of [1600,1100,768]){await page.setViewportSize({width,height:1050});for(const density of ['compact','comfortable']){
   await page.evaluate(density=>document.documentElement.dataset.density=density,density);const bounds=await page.locator('#preview-2d-toolbar').evaluate(e=>({w:e.clientWidth,scroll:e.scrollWidth}));assert.ok(bounds.scroll<=bounds.w+1,JSON.stringify({width,density,...bounds}));

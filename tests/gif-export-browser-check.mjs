@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import {decodeZIP} from '../web/resource-zip.js';
 // Real editor exports, workers, downloads and decoding. No UI screenshots.
 import http from 'node:http';
@@ -30,7 +31,7 @@ try{
  await page.goto(address+'#tree='+Buffer.from(JSON.stringify(p)).toString('base64'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');
  await page.locator('#export-now').click();
  // Labels are selected from the semantic catalog, independent of test OS language.
- await page.locator('#language-settings').selectOption('en');
+ await chooseWorkbench(page,'language-settings','en');
  const select=page.locator('#global-controls select').first();await select.selectOption('gif');
  assert.equal(await page.locator('#global-controls select[aria-label="PNG precision"]').count(),0);
  assert.equal(await page.getByRole('combobox',{name:'GIF color limit',exact:true}).inputValue(),'256');
@@ -85,7 +86,7 @@ try{
 
  assert.equal(await page.locator('#global-controls input:disabled,#global-controls select:disabled').count(),0);assert.equal(downloads.length,beforePreview);
  assert.equal(await page.getByRole('spinbutton',{name:'Pixel width',exact:true}).inputValue(),'512');
- await page.locator('#language-settings').selectOption('zh-CN');assert.equal(await page.locator('#generate-export-preview').innerText(),'更新预览');report.atlasPreview=[1024,1536];
+ await chooseWorkbench(page,'language-settings','zh-CN');assert.equal(await page.locator('#generate-export-preview').innerText(),'更新预览');report.atlasPreview=[1024,1536];
  assert.deepEqual(errors,[]);report.pass=true;report.downloads=downloads.length;report.errors=errors;
  await writeFile(new URL((offline?'file':built?'built':'source')+'-report.json',directory),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}

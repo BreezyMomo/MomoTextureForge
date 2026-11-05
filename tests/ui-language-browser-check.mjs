@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 // Check rendered UI text and interactions, including the distributed static site.
 import http from 'node:http';
 import path from 'node:path';
@@ -23,7 +24,7 @@ try{
  await eye.click();assert.equal(await eye.getAttribute('aria-pressed'),'false');assert.equal(await eye.locator('svg path').count(),2);assert.equal(await eye.getAttribute('title'),'显示 颜色');
  await eye.click();assert.equal(await eye.getAttribute('aria-pressed'),'true');assert.equal(await eye.locator('svg path').count(),1);
  const initial=await page.evaluate(()=>({saved:localStorage.getItem('momo-texture-tree:draft:v1'),undo:document.querySelector('#undo').disabled,hash:location.hash}));
- async function language(first){if(process.argv.includes('--trace'))console.log('language',first,page.viewportSize().width,new URL(page.url()).pathname+new URL(page.url()).search);const select=page.locator('#language-settings');assert.deepEqual(await select.locator('option').evaluateAll(options=>options.map(o=>({code:o.value,name:o.textContent}))),[{code:'zh-CN',name:'简体中文'},{code:'en',name:'English'}]);await select.selectOption(first);assert.equal(await page.locator('#detailed-help').getAttribute('href'),'https://github.com/BreezyMomo/MomoTextureForge/blob/main/'+(first==='zh-CN'?'README.md':'README.en.md'));for(const [id,host]of [['github-repository','github.com'],['gitee-repository','gitee.com']])assert.equal(await page.locator('#'+id).getAttribute('href'),'https://'+host+'/BreezyMomo/MomoTextureForge'+(first==='zh-CN'?'':'/blob/main/README.en.md'));assert.equal(await page.locator('.language-dialog').count(),0);}
+ async function language(first){if(process.argv.includes('--trace'))console.log('language',first,page.viewportSize().width,new URL(page.url()).pathname+new URL(page.url()).search);await chooseWorkbench(page,'language-settings',first);await page.locator('#header-help-menu').click();assert.equal(await page.locator('#detailed-help').getAttribute('href'),'https://github.com/BreezyMomo/MomoTextureForge/blob/main/'+(first==='zh-CN'?'README.md':'README.en.md'));for(const [id,host]of [['github-repository','github.com'],['gitee-repository','gitee.com']])assert.equal(await page.locator('#'+id).getAttribute('href'),'https://'+host+'/BreezyMomo/MomoTextureForge'+(first==='zh-CN'?'':'/blob/main/README.en.md'));assert.equal(await page.locator('.language-dialog').count(),0);await page.keyboard.press('Escape');}
  await language('en');assert.equal(await page.locator('#project-name').inputValue(),'文件');assert.equal(await eye.getAttribute('title'),'Hide 颜色');assert.equal(await eye.getAttribute('aria-label'),'Node visibility: 颜色');assert.deepEqual(await page.locator('#node-tree .tree-node .tree-node-name').allTextContents(),['颜色','保存']);
  assert.deepEqual(await page.evaluate(()=>({saved:localStorage.getItem('momo-texture-tree:draft:v1'),undo:document.querySelector('#undo').disabled,hash:location.hash})),initial);
  async function english(label,scope='body'){
@@ -57,20 +58,20 @@ try{
  await page.locator('#preview-mode').selectOption('effect');await english('effect');
  await language('zh-CN');assert.equal(await page.locator('#open-graphics-library').innerText(),'图形库');assert.ok((await page.locator('#effect-preview-controls').innerText()).includes('预览亮度'));
  await language('en');await english('effect-after-language-switch');await page.locator('#preview-mode').selectOption('material');await english('material-after-language-switch');await page.locator('#preview-mode').selectOption('canvas');
- await page.locator('#workspace-layout-menu summary').click();await english('layout');await page.locator('#workspace-layout-menu summary').click();
+ await page.locator('#workspace-layout-menu').click();await english('layout');await page.locator('#workspace-layout-menu').click();
  await page.locator('#open-graphics-library').click();await page.locator('.graphics-card').last().waitFor();await english('graphics-library');
  const library=page.locator('.graphics-library-dialog');const filter=library.locator('.graphics-browse-controls > select').first();await filter.selectOption('image');assert.equal(await filter.inputValue(),'image');await page.waitForFunction(()=>document.querySelectorAll('.graphics-library-dialog .graphics-card').length===0);await filter.selectOption('all');await page.waitForFunction(()=>document.querySelectorAll('.graphics-library-dialog .graphics-card').length>200);
  await library.locator('.graphics-management>summary').click();await library.getByRole('button',{name:'Create resource',exact:true}).click();const creator=page.locator('.resource-create-dialog');await english('create-image', '.resource-create-dialog');
  for(const [index,tab]of [[1,'file'],[2,'formula'],[3,'generator']]){await creator.getByRole('tab').nth(index).click();await page.waitForTimeout(350);await english('create-'+tab,'.resource-create-dialog');}
  await creator.locator('.graphics-close').click();await library.locator('.graphics-close').click();
- await page.locator('.header-help summary').click();await page.locator('#tool-help').click();for(const b of await page.locator('.user-help-dialog nav button').all()){await b.click();await english('help-'+await b.getAttribute('data-section'),'.user-help-dialog');}await page.locator('.user-help-dialog header button').last().click();
+ await page.locator('#header-help-menu').click();await page.locator('#tool-help').click();for(const b of await page.locator('.user-help-dialog nav button').all()){await b.click();await english('help-'+await b.getAttribute('data-section'),'.user-help-dialog');}await page.locator('.user-help-dialog header button').last().click();
  await page.locator('#support-project').click();await english('support','.support-dialog');await page.locator('.support-dialog button').click();
  await mkdir(new URL('../test-results/languages/',import.meta.url),{recursive:true});
  // Dropdown labels must stay centered like adjacent buttons at either density.
  for(const locale of ['zh-CN','en']){
   await language(locale);
   for(const density of ['compact','comfortable']){
-   await page.locator('#appearance-settings').click();await page.locator('#appearance-density').selectOption(density);await page.locator('.appearance-dialog [data-save]').click();
+   await page.locator('#appearance-settings').click();await chooseWorkbench(page,'appearance-density',density);await page.locator('.momo-appearance-react [data-save]').click();
    for(const width of [1600,1100,768]){
     await page.setViewportSize({width,height:1000});
     async function alignedHeader(){
@@ -86,8 +87,8 @@ try{
      }
     }
     await alignedHeader();
-    for(const menu of await page.locator('.tree-header .header-dropdown').all())if(await menu.isVisible()){
-     await menu.locator('summary').click();await alignedHeader();await menu.locator('summary').click();
+    for(const menu of await page.locator('.tree-header [aria-haspopup=menu]').all())if(await menu.isVisible()){
+     await menu.click();await alignedHeader();await page.keyboard.press('Escape');
     }
     if(locale==='zh-CN'&&width===1600&&!process.argv.includes('--no-screenshots')){
      const box=await page.locator('.tree-header').boundingBox();await page.screenshot({path:fileURLToPath(new URL(`../test-results/languages/${standalone?'standalone':built?'built':'source'}-toolbar-${density}.png`,import.meta.url)),clip:box});

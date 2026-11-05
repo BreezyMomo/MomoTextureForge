@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -27,7 +28,7 @@ try{
   const cardSize=await cards.first().evaluate(e=>{const card=e.getBoundingClientRect(),preview=e.querySelector('.tree-thumbnail-preview').getBoundingClientRect(),image=e.querySelector('img').getBoundingClientRect();return {width:card.width,height:card.height,previewWidth:preview.width,previewHeight:preview.height,imageWidth:image.width,overflow:e.scrollWidth>e.clientWidth+1};});
   assert.ok(cardSize.previewWidth>=cardSize.width-2,'Grid artwork fills the card width');assert.ok(Math.abs(cardSize.previewWidth-cardSize.previewHeight)<1,'Grid preview stays square');assert.ok(cardSize.previewHeight/cardSize.height>.6,'Artwork occupies most of the card');assert.equal(cardSize.imageWidth,cardSize.previewWidth);assert.equal(cardSize.overflow,false);
   for(const locale of ['en','zh-CN']){
-   await page.locator('#language-settings').selectOption(locale);
+   await chooseWorkbench(page,'language-settings',locale);
    const card=cards.first(),summary=card.locator('.component-more>summary'),add=card.locator('.component-add'),before={add:await add.boundingBox(),summary:await summary.boundingBox()},nodes=await page.locator('#node-tree [role=treeitem]').count();
    const geometry=()=>cards.evaluateAll(els=>els.map(e=>{const r=e.getBoundingClientRect();return [r.x,r.y,r.width,r.height];})),beforeGrid=await geometry();
    await summary.click();
@@ -52,6 +53,6 @@ try{
  // Existing users receive missing defaults once, without replacing custom work.
  const custom=createProjectResource(node(),{name:'Custom preserved'});custom.root.opacity=.37;
  await page.evaluate(([key,text,marker])=>{localStorage.setItem(key,text);localStorage.removeItem(marker);},[GRAPHIC_LIST_KEY,serializeGraphicList([custom]),GRAPHIC_LIST_DEFAULTS_KEY]);await page.reload();await ready();const migrated=await read();assert.equal(migrated.length,CATALOG.length+1);assert.equal(migrated[0].id,custom.id);assert.equal(migrated[0].root.opacity,.37);
- await page.locator('#language-settings').selectOption('en');const headings=await page.locator('#shape-library>details>summary').allTextContents();assert.ok(headings.filter(t=>/[\u3400-\u9fff]/.test(t)).length<=1,'Only a user-owned category may remain untranslated');
+ await chooseWorkbench(page,'language-settings','en');const headings=await page.locator('#shape-library>details>summary').allTextContents();assert.ok(headings.filter(t=>/[\u3400-\u9fff]/.test(t)).length<=1,'Only a user-owned category may remain untranslated');
  assert.deepEqual(errors,[]);report.count=first.length;report.checks=['first visit','stable IDs','responsive grid','single-column list','removal stays removed','intentional empty list','existing custom list migration','English categories'];await writeFile('test-results/graphic-list-defaults/'+(built?'built':'source')+'.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

@@ -27,7 +27,7 @@
     "node": ">=22"
   },
   "dependencies": {
-    "@momo/workbench": "file:vendor/momo-workbench-0.4.1.tgz",
+    "@momo/workbench": "file:vendor/momo-workbench-0.5.0.tgz",
     "react": "19.1.1",
     "react-dom": "19.1.1"
   },

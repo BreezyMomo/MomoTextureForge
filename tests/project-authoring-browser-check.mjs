@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import {withPagesAssets} from './helpers/pages-assets.mjs';
 import assert from 'node:assert/strict';
 import {readFile,writeFile,mkdir,mkdtemp} from 'node:fs/promises';
@@ -64,7 +65,7 @@ try{
   await page.waitForFunction(()=>document.querySelector('#node-tree [data-node-id="circle"]'));
   await page.locator('#node-tree [data-node-id="circle"] .tree-node-name').first().click();
   // A real inspector control edit, followed by the editor's own File > Save.
-  await page.locator('#language-settings').selectOption('en');
+  await chooseWorkbench(page,'language-settings','en');
   const shapeTab=page.locator('#inspector-tabs').getByRole('button',{name:'Shape',exact:true});await shapeTab.click();
   const input=page.locator('#inspector input[type="number"][data-animation-path="params.0"]');
   await input.fill('.42');await input.press('Tab');

@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -41,7 +42,7 @@ try{
  assert.equal(await page.evaluate(()=>window.galleryImages.every((img,i)=>img===document.querySelectorAll('#shape-library img')[i])),true);
  // Metadata and language changes update labels and callbacks, without invalidating pixels.
  const beforeRename=await stats();await first.locator('.component-more summary').click();await first.getByRole('button',{name:'重命名 Test circle',exact:true}).click();const dialog=page.locator('dialog').last();await dialog.getByRole('textbox',{name:'图形列表名称',exact:true}).fill('Renamed circle');await dialog.getByRole('button',{name:'保存',exact:true}).click();
- await page.waitForFunction(()=>document.querySelector('#shape-library .tree-pattern-text')?.textContent==='Renamed circle');assert.equal(await first.locator('.tree-pattern-text').textContent(),'Renamed circle');await page.locator('#language-settings').selectOption('en');assert.equal(await first.locator('.graphic-favorite').getAttribute('title'),'Unfavorite Renamed circle');assert.deepEqual(await stats(),beforeRename);
+ await page.waitForFunction(()=>document.querySelector('#shape-library .tree-pattern-text')?.textContent==='Renamed circle');assert.equal(await first.locator('.tree-pattern-text').textContent(),'Renamed circle');await chooseWorkbench(page,'language-settings','en');assert.equal(await first.locator('.graphic-favorite').getAttribute('title'),'Unfavorite Renamed circle');assert.deepEqual(await stats(),beforeRename);
  // Filter/view changes reattach existing cards; their ready images never reload.
  await page.locator('#library-filter [data-value=favorites]').click();assert.equal(await cards.count(),1);await page.locator('#library-filter [data-value=all]').click();await page.locator('#shape-search').fill('Test ring');assert.equal(await cards.count(),1);await page.locator('#shape-search').fill('');await page.locator('.tree-library-search summary[data-i18n="workspace.viewOptions"]').click();await page.locator('#shape-library-view').selectOption('list');await page.locator('#shape-library-view').selectOption('grid');await page.keyboard.press('Escape');assert.deepEqual(await stats(),beforeRename);
  // Reused buttons must insert the latest renamed resource and its saved parameters.

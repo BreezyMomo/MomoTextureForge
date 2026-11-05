@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
@@ -44,13 +45,13 @@ try{
  await page.locator('#node-tree .tree-node-name').first().click();
  const slider=await page.locator('#inspector input[type=range]').first().boundingBox();assert.ok(slider.width>140,'narrow panels give sliders their own row');
  assert.equal(await page.locator('#inspector').evaluate(e=>e.scrollWidth<=e.clientWidth+1),true);
- await page.locator('#language-settings').selectOption('en');await settle();
- const tabRows=await page.locator('#inspector-tabs>button').evaluateAll(es=>es.map(e=>e.getBoundingClientRect().y));assert.equal(new Set(tabRows).size,1,'narrow English tabs stay on one row');await page.locator('#inspector-tabs>button').last().focus();assert.ok(await page.locator('#inspector-tabs').evaluate(e=>{const tab=e.lastElementChild.getBoundingClientRect(),r=e.getBoundingClientRect();return tab.right<=r.right+2&&tab.left>=r.left-2;}),'keyboard-focused tab scrolls into view');await page.locator('#language-settings').selectOption('zh-CN');
+ await chooseWorkbench(page,'language-settings','en');await settle();
+ const tabRows=await page.locator('#inspector-tabs>button').evaluateAll(es=>es.map(e=>e.getBoundingClientRect().y));assert.equal(new Set(tabRows).size,1,'narrow English tabs stay on one row');await page.locator('#inspector-tabs>button').last().focus();assert.ok(await page.locator('#inspector-tabs').evaluate(e=>{const tab=e.lastElementChild.getBoundingClientRect(),r=e.getBoundingClientRect();return tab.right<=r.right+2&&tab.left>=r.left-2;}),'keyboard-focused tab scrolls into view');await chooseWorkbench(page,'language-settings','zh-CN');
  await page.screenshot({path:path.join(output,(built?'built':'source')+'-narrow-inspector.png')});
  report.checks.push('merged tab keyboard activation','bottom library scroll area','narrow floating inspector');
  await floating.evaluate(e=>e.style.width='760px');await settle();
  for(const language of ['en','zh-CN']){
-  await page.locator('#language-settings').selectOption(language);await floating.evaluate(e=>e.style.width='760px');await settle();
+  await chooseWorkbench(page,'language-settings',language);await floating.evaluate(e=>e.style.width='760px');await settle();
   const row=page.locator('#inspector .tree-number-field:has(>input[type=range])').first();
   const label=await row.locator('label').boundingBox(),range=await row.locator('input[type=range]').boundingBox(),value=await row.locator('input[type=number]').boundingBox();
   assert.ok(label.x+label.width<=range.x&&range.x+range.width<=value.x,'wide inspector keeps label, slider and value in separate columns');
@@ -61,31 +62,31 @@ try{
  report.checks.push('wide floating inspector aligns Chinese and English parameters');
  await page.locator('#appearance-settings').click();
  for(const style of ['classic','segmented','pill','underline']){
-  await page.locator('#appearance-tabs').selectOption(style);await settle();
+  await chooseWorkbench(page,'appearance-tabs',style);await settle();
   const grip=await floating.locator('.dock-window-move').boundingBox(),tabs=await floating.locator('.dock-tabs').boundingBox(),body=await floating.locator('.dock-panel-body:not([hidden])').boundingBox(),corner=await floating.locator('.dock-window-resize').boundingBox();
   assert.ok(grip.x+grip.width<=tabs.x,style+' keeps window movement separate from tabs');
   assert.ok(body.y+body.height<=corner.y,style+' keeps resizing below content');
  }
- await page.locator('.appearance-dialog [data-cancel]').click();
+ await page.locator('.momo-appearance-react [data-cancel]').click();
  report.checks.push('floating handles stay separate in all four tab styles');
  await drag('inspector',stack('canvas'),.9,.5);
  await page.locator('#shape-library .component-inspect').first().click();assert.equal(await page.locator('.resource-editing-note').isVisible(),true);assert.equal(await page.locator('#save-project').isDisabled(),true);assert.equal(await page.locator('#preview-update').isVisible(),true);
  await page.locator('#resource-actions-menu>summary').click();await page.keyboard.press('Escape');assert.equal(await page.locator('.resource-editing-note').isVisible(),true,'Escape closes the menu without leaving the resource session');
- await page.locator('#language-settings').selectOption('en');assert.equal(await page.locator('#play').innerText(),'Play');await page.locator('#return-work').click();assert.equal(await page.locator('.resource-editing-note').isVisible(),false);assert.deepEqual(await snapshot(),initial);
+ await chooseWorkbench(page,'language-settings','en');assert.equal(await page.locator('#play').innerText(),'Play');await page.locator('#return-work').click();assert.equal(await page.locator('.resource-editing-note').isVisible(),false);assert.deepEqual(await snapshot(),initial);
  report.checks.push('resource scope and saving affordances','playback translation after trial edit','view changes preserve project and undo');
- await page.locator('#workspace-layout-menu>summary').click();await page.getByRole('button',{name:'Resource browsing layout',exact:true}).click();await settle();const savedLayout=await page.evaluate(()=>localStorage.getItem('momo-texture-forge:workspace-layouts:v1'));await page.reload();await settle();assert.equal(await page.evaluate(()=>localStorage.getItem('momo-texture-forge:workspace-layouts:v1')),savedLayout);
+ await page.locator('#workspace-layout-menu').click();await page.getByRole('button',{name:'Resource browsing layout',exact:true}).click();await settle();const savedLayout=await page.evaluate(()=>localStorage.getItem('momo-texture-forge:workspace-layouts:v1'));await page.reload();await settle();assert.equal(await page.evaluate(()=>localStorage.getItem('momo-texture-forge:workspace-layouts:v1')),savedLayout);
  await page.locator('#node-tree .tree-node-name').first().click();await page.setViewportSize({width:1280,height:900});await settle();await page.screenshot({path:path.join(output,(built?'built':'source')+'-english-browse.png')});
  // Measure actual backgrounds, including theme-specific component overrides.
  await page.locator('#appearance-settings').click();
  for(const theme of PRESET_THEME_IDS){const scheme=theme;
-  await page.locator('#appearance-theme').selectOption(theme);
+  await chooseWorkbench(page,'appearance-theme',theme);
   const colors=await page.evaluate(()=>{
    const hex=color=>{const c=document.createElement('canvas').getContext('2d');c.fillStyle=color;c.fillRect(0,0,1,1);return '#'+[...c.getImageData(0,0,1,1).data].slice(0,3).map(v=>v.toString(16).padStart(2,'0')).join('');};
    const e=document.querySelector('#shape-search'),b=document.querySelector('#library-filter [aria-pressed=true]');return {placeholder:hex(getComputedStyle(e,'::placeholder').color),field:hex(getComputedStyle(e).backgroundColor),fg:hex(getComputedStyle(b).color),bg:hex(getComputedStyle(b).backgroundColor)};
   });
   const placeholder=colorContrast(colors.placeholder,colors.field),filter=colorContrast(colors.fg,colors.bg);report.contrasts.push({theme,scheme,placeholder,filter});assert.ok(placeholder>=4.5,theme+'/'+scheme+' placeholder '+placeholder);assert.ok(filter>=4.5,theme+'/'+scheme+' filter '+filter);
  }
- await page.locator('#appearance-theme').selectOption('yuebai');await page.locator('[data-save]').click();await page.screenshot({path:path.join(output,(built?'built':'source')+'-light.png')});
+ await chooseWorkbench(page,'appearance-theme','yuebai');await page.locator('[data-save]').click();await page.screenshot({path:path.join(output,(built?'built':'source')+'-light.png')});
  await page.locator('#open-graphics-library').click();await page.locator('.graphics-card').first().waitFor();assert.equal(await page.locator('.graphics-browse-controls input').isVisible(),true);const firstCard=page.locator('.graphics-card').first();assert.equal(await firstCard.locator(':scope>button:visible').count(),1,'only Add to canvas is a direct card action');assert.equal(await firstCard.locator('.graphics-card-details .graphics-list-action').count(),1,'list insertion remains in details');assert.equal(await firstCard.locator('.graphics-added-state').isVisible(),true);await page.locator('.graphics-card-details').first().locator('summary').click();assert.ok(await page.locator('.graphics-card-details').first().getByRole('button').count()>0);await page.screenshot({path:path.join(output,(built?'built':'source')+'-library.png')});
  report.checks.push('custom workspace persistence','English browsing preset',`${PRESET_THEME_IDS.length} theme/palette contrast combinations`,'resource library browsing and management');
  assert.deepEqual(errors,[]);await writeFile(path.join(output,(built?'built':'source')+'.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({built,checks:report.checks,contrasts:report.contrasts.length,errors}));

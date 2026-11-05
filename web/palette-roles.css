@@ -33,5 +33,6 @@
    Keep borders for outer sections and fields; nested sections remain flat. */
 :root[data-palette-roles=true][data-theme=light] .dock-stack{border-color:var(--ui-line);box-shadow:none}
 :root[data-palette-roles=true][data-theme=light] .tree-editor :is(.inspector-module){border-color:var(--ui-line)}
+:root[data-palette-roles=true][data-theme=light] .tree-editor :is(.tree-number-field,.selection-number-field)>input[type=number]{border-color:var(--ui-line-strong)}
 
 /* The preview uses the real tab and state classes and a neutral sample artwork. */

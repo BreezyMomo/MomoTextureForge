@@ -14,6 +14,7 @@ async function options(development) {
       ),
     ),
   );
+  licenses.push(await readFile(join(root,'node_modules/@momo/workbench/dist/THIRD-PARTY-NOTICES.txt'),'utf8'));
   return {
     absWorkingDir: root,
     entryPoints: ["web/editor-react.tsx"],
@@ -53,6 +54,7 @@ async function options(development) {
 async function save(result) {
   for (const file of result.outputFiles)
     await writeGenerated(file.path, file.contents);
+  await writeGenerated(join(web,'generated/workbench-react.css'), await readFile(join(root,'node_modules/@momo/workbench/dist/react.css')));
 }
 export async function buildReactUI({ development = false } = {}) {
   const result = await build(await options(development));

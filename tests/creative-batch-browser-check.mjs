@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import {withPagesAssets} from './helpers/pages-assets.mjs';
 import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
@@ -10,7 +11,7 @@ const server=createServer(withPagesAssets(async(req,res)=>{try{const path=new UR
 await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
 try{
  browser=await chromium.launch({channel:'msedge',headless:true});const page=await browser.newPage({viewport:{width:1500,height:1100}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto('http://127.0.0.1:'+server.address().port+(built?'/built.html':'/')+'#tree='+Buffer.from(JSON.stringify(p)).toString('base64'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('#language-settings').selectOption('en');
+ await page.goto('http://127.0.0.1:'+server.address().port+(built?'/built.html':'/')+'#tree='+Buffer.from(JSON.stringify(p)).toString('base64'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await chooseWorkbench(page,'language-settings','en');
  await page.locator('[role=treeitem]').first().click();await page.locator('[role=treeitem]').nth(1).click({modifiers:['Control']});await page.locator('#inspector-tabs').getByRole('button',{name:'Composite',exact:true}).click();
  const panel=page.locator('#inspector details[data-module="modules.imageFilters"]');if(await panel.getAttribute('open')===null)await panel.locator(':scope>summary .inspector-module-title').click();
  const effect=panel.locator('[data-effect=dither]');if(await effect.locator('details').getAttribute('open')===null)await effect.locator('.post-effect-title').click();

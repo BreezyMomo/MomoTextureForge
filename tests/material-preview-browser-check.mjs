@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 // Cover hardware ANGLE/D3D11 as well as the software backend used by Edge CI.
 import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
@@ -41,10 +42,10 @@ for(const channel of ['chrome','msedge']){
   assert.deepEqual(await dialog.locator('.material-control-value').allTextContents(),['0.75','0.42']);
   await page.locator('#preview-mode').selectOption('canvas');await page.locator('#preview-mode').selectOption('material');
   assert.equal(await ambient().inputValue(),'0.42');assert.equal(await mainLight().inputValue(),'0.75');
-  await page.locator('#language-settings').selectOption('en');await page.setViewportSize({width:768,height:900});
+  await chooseWorkbench(page,'language-settings','en');await page.setViewportSize({width:768,height:900});
   assert.equal(await dialog.getByRole('slider',{name:'Ambient light intensity',exact:true}).inputValue(),'0.42');assert.equal(await dialog.getByRole('slider',{name:'Main light intensity',exact:true}).inputValue(),'0.75');
   assert.equal(await page.locator('#material-preview-controls').evaluate(e=>e.scrollWidth<=e.clientWidth+1),true,channel+' English lighting controls must wrap in a narrow panel');
-  await page.locator('#language-settings').selectOption('zh-CN');await page.setViewportSize({width:1440,height:1000});
+  await chooseWorkbench(page,'language-settings','zh-CN');await page.setViewportSize({width:1440,height:1000});
   await ambient().fill('0.18');await mainLight().fill('1');
   assert.equal(await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1')),lightingDraft,channel+' preview lighting must not change the saved project');
   const flat=await canvas.screenshot({path:'test-results/material-preview/'+artifact+'-flat.png'});

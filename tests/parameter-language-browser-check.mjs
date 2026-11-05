@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import {withPagesAssets} from './helpers/pages-assets.mjs';
 // Exercise real editor controls and WebGL; no third-party account/browser state.
 import http from 'node:http';
@@ -25,7 +26,7 @@ try{
  await page.locator('[data-parameter-variable=radius]').waitFor();
  assert.equal(await page.locator('[data-parameter-variable=radius] label').innerText(),'半径');
  const initial=await page.evaluate(()=>({saved:localStorage.getItem('momo-texture-tree:draft:v1'),image:document.querySelector('#tree-canvas').toDataURL(),undo:document.querySelector('#undo').disabled}));
- await page.locator('#language-settings').selectOption('en');
+ await chooseWorkbench(page,'language-settings','en');
  assert.equal(await page.locator('.language-dialog').count(),0);
  assert.equal(await page.locator('[data-parameter-variable=radius] label').innerText(),'Radius');
  assert.equal(await page.locator('[data-parameter-variable=radius]').getAttribute('title'),'radius');
@@ -61,7 +62,7 @@ try{
  await mkdir(new URL('../test-results/languages/',import.meta.url),{recursive:true});
  await page.screenshot({path:fileURLToPath(new URL(`../test-results/languages/${built?'built':'source'}-alias-editor.png`,import.meta.url))});
  await page.locator('dialog[open] .graphics-close').last().click();await page.locator('dialog[open] .graphics-close').last().click();
- await page.locator('#language-settings').selectOption('en');
+ await chooseWorkbench(page,'language-settings','en');
  await page.screenshot({path:fileURLToPath(new URL(`../test-results/languages/${built?'built':'source'}-english-inspector.png`,import.meta.url))});
  const puzzle=project();puzzle.root.children=[node('shape','PuzzlePiece')];await page.goto(address+'#tree='+Buffer.from(JSON.stringify(puzzle)).toString('base64'));await page.reload();await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('[role=treeitem]').first().click();
  assert.deepEqual(await page.locator('[data-parameter-variable=topEdge] option').allTextContents(),['Socket','Flat edge','Tab']);
@@ -69,7 +70,7 @@ try{
  const batch=project();batch.root.children=[node('shape','Circle'),node('shape','Circle')];batch.root.children[0].name='A';batch.root.children[1].name='B';
  await page.goto(address+'#tree='+Buffer.from(JSON.stringify(batch)).toString('base64'));await page.reload();await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('[role=treeitem]').first().click();await page.locator('[role=treeitem]').nth(1).click({modifiers:['Control']});
  assert.equal(await page.locator('[data-parameter-variable=radius] > span').first().innerText(),'Radius');
- await page.locator('#language-settings').selectOption('zh-CN');assert.equal(await page.locator('[data-parameter-variable=radius] > span').first().innerText(),'半径');
+ await chooseWorkbench(page,'language-settings','zh-CN');assert.equal(await page.locator('[data-parameter-variable=radius] > span').first().innerText(),'半径');
  if(!built){const retained=await page.evaluate(async()=>{const {createAliasEditor}=await import('./alias-editor.js');const aliases={en:'Seed',ja:'種'},editor=createAliasEditor({variable:'seed',aliases});const before=JSON.stringify(editor.read()),options=[...editor.element.querySelector('select').options].map(option=>option.value);const input=editor.element.querySelector('input');input.value='Edited seed';input.dispatchEvent(new Event('input'));return {before,options,after:editor.read()};});assert.equal(retained.before,JSON.stringify({en:'Seed',ja:'種'}));assert.deepEqual(retained.options,['zh-CN','en']);assert.deepEqual(retained.after,{en:'Edited seed',ja:'種'});}
  assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,checks:['configured language choices','persistent settings','invalid choice rejection','unchanged canvas/project/undo','user names','alias editor/export','option aliases','multiselect'],errors}));
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

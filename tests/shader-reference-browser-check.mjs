@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import {withPagesAssets} from './helpers/pages-assets.mjs';
 import http from 'node:http';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
@@ -28,7 +29,7 @@ try{
  const stats=await page.evaluate(async entries=>{const result={};for(const [name,bytes]of entries){const bitmap=await createImageBitmap(new Blob([new Uint8Array(bytes)],{type:'image/png'})),c=document.createElement('canvas');c.width=bitmap.width;c.height=bitmap.height;const ctx=c.getContext('2d');ctx.drawImage(bitmap,0,0);bitmap.close();const data=ctx.getImageData(0,0,c.width,c.height).data;let white=0,black=0,clear=0,covered=0;for(let i=0;i<data.length;i+=4){if(data[i]>200)white++;if(data[i]<10)black++;if(data[i+3]===0)clear++;if(data[i+3]>20)covered++;}result[name]={white,black,clear,covered};}return result;},['mask.png','reference-preview.png'].map(name=>[name,[...files.get(name)]]));
  assert.ok(stats['mask.png'].white>100);assert.ok(stats['mask.png'].black>100);assert.equal(stats['mask.png'].clear,0);assert.ok(stats['reference-preview.png'].covered>100);assert.ok(stats['reference-preview.png'].clear>100);
  assert.deepEqual(await page.evaluate(()=>({draft:localStorage.getItem('momo-texture-tree:draft:v1'),hash:location.hash,undo:document.querySelector('#undo').disabled})),initial);
- await page.locator('#language-settings').selectOption('en');const english=effects.getByRole('button',{name:'Download handdrawn shader reference',exact:true});await english.waitFor();assert.equal(await page.locator('.shader-workbench').count(),0);
+ await chooseWorkbench(page,'language-settings','en');const english=effects.getByRole('button',{name:'Download handdrawn shader reference',exact:true});await english.waitFor();assert.equal(await page.locator('.shader-workbench').count(),0);
  await page.setViewportSize({width:768,height:1000});assert.equal(await english.count(),1);
  // No-fill exports actual outline coverage instead of failing or substituting a fill.
  const style=effects.locator('[data-effect="sketch"] select').first();await style.selectOption('4');const outlineDownload=page.waitForEvent('download',{timeout:120000});await english.click();const outlineFiles=await decodeZIP(await readFile(await(await outlineDownload).path())),outlineManifest=JSON.parse(new TextDecoder().decode(outlineFiles.get('parameters.json')));assert.equal(outlineManifest.sourceEffect.values.fillStyle,4);assert.equal(outlineManifest.parameters.inkOpacity,0);assert.equal(outlineManifest.mapping,undefined);assert.equal(outlineManifest.sourceEffect.mapping.inkOpacity,'0 (no fill)');assert.ok(outlineFiles.has('stroke-mask.png'));

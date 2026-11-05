@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
@@ -63,7 +64,7 @@ try{
  const after=(await saved()).root.children[0].curves;assert.equal(after.enabled,true);assert.ok(after.alpha.some(p=>p[1]>.7&&p[1]<.9));await page.locator('#undo').click();assert.equal((await saved()).root.children[0].curves.alpha[1][1],.7);await page.locator('#redo').click();assert.deepEqual((await saved()).root.children[0].curves,after);
  await mkdir('test-results/channel-tools',{recursive:true});if(!process.argv.includes('--no-screenshots'))await page.screenshot({path:'test-results/channel-tools/curves-zh.png'});
  await page.locator('#preview-channel').selectOption('rgba');await page.getByRole('combobox',{name:'R · 来源',exact:true}).selectOption(n.id);await page.getByRole('combobox',{name:'R · 写入内容',exact:true}).selectOption('alpha');assert.equal((await saved()).output.channelSources[0].nodeId,n.id);
- await page.locator('#language-settings').selectOption('en');assert.equal(await page.getByRole('combobox',{name:'R · Source',exact:true}).count(),1);if(!process.argv.includes('--no-screenshots'))await page.screenshot({path:'test-results/channel-tools/packing-en.png'});
+ await chooseWorkbench(page,'language-settings','en');assert.equal(await page.getByRole('combobox',{name:'R · Source',exact:true}).count(),1);if(!process.argv.includes('--no-screenshots'))await page.screenshot({path:'test-results/channel-tools/packing-en.png'});
  // Exercise the actual export action; preview mode alone must not change the
  // separately selected export output mode.
  await page.locator('#export-now').click();await page.getByRole('combobox',{name:'Output channel',exact:true}).selectOption('rgba');

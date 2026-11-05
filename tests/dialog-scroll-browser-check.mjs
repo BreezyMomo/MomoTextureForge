@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import {withPagesAssets} from './helpers/pages-assets.mjs';
 import http from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
@@ -23,7 +24,7 @@ try{
  }
  for(const [width,height,language]of [[1440,900,'zh-CN'],[390,650,'en'],[900,400,'zh-CN']]){
   const open=async selector=>{await page.setViewportSize({width:1440,height:900});await page.locator(selector).click();await page.setViewportSize({width,height});};
-  await page.setViewportSize({width:1440,height:900});await page.goto('http://127.0.0.1:'+server.address().port+'/');await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('#language-settings').selectOption(language);
+  await page.setViewportSize({width:1440,height:900});await page.goto('http://127.0.0.1:'+server.address().port+'/');await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await chooseWorkbench(page,'language-settings',language);
   await open('#export-now');await page.locator('#global-controls select').first().selectOption('gif');
   const panel=page.locator('#global-panel>section');await verify(panel,page.locator('#global-controls'),'export '+width);
   const button=await page.locator('#confirm-export').boundingBox(),footer=await page.locator('#global-actions').boundingBox();assert.ok(button.y>=footer.y&&button.y+button.height<=footer.y+footer.height+1);
@@ -31,13 +32,13 @@ try{
   await open('#project-settings');await verify(panel,page.locator('#global-controls'),'canvas settings '+width);assert.equal(await page.locator('#global-actions').isVisible(),false);await page.locator('#close-global').click();
   await open('#ai-tools');await verify(page.locator('.ai-tools-dialog'),page.locator('.ai-tools-dialog>.dialog-scroll-body'),'AI tools '+width);
   await page.locator('.ai-tools-dialog [data-connection-open]').click();await verify(page.locator('.editor-ai-dialog'),page.locator('.editor-ai-dialog>.dialog-scroll-body'),'MCP '+width);await page.locator('.editor-ai-dialog [data-close]').click();
-  await open('#appearance-settings');await verify(page.locator('.appearance-dialog'),page.locator('.appearance-dialog>.dialog-scroll-body'),'appearance '+width);await page.locator('.appearance-dialog [data-cancel]').click();
+  await open('#appearance-settings');const appearance=page.locator('.momo-appearance-react');await appearance.locator('[data-save]').scrollIntoViewIfNeeded();const saveBounds=await appearance.locator('[data-save]').boundingBox();assert.ok(saveBounds.y>=0&&saveBounds.y+saveBounds.height<=height,'appearance save stays reachable '+width);assert.ok(await appearance.evaluate(e=>e.scrollWidth<=e.clientWidth+1),'appearance fits width '+width);checks.push('appearance '+width);await appearance.locator('[data-cancel]').click();
   await open('#support-project');await verify(page.locator('.support-dialog'),page.locator('.support-dialog>.dialog-scroll-body'),'support '+width);await page.locator('.support-dialog>header button').click();
   const words=JSON.parse(await readFile('web/locales/'+language+'.json','utf8'));
   await open('#open-graphics-library');await page.locator('.graphics-management>summary').click();await page.locator('.graphics-library-dialog').getByRole('button',{name:words['library.remoteLibraries'],exact:true}).click();
   await verify(page.locator('.remote-library-dialog'),page.locator('.remote-library-dialog>.graphics-body'),'subscriptions '+width);await page.locator('.remote-library-dialog .graphics-close').click();
   await page.locator('.graphics-library-dialog').getByRole('button',{name:words['library.createResource'],exact:true}).click();await verify(page.locator('.resource-create-dialog'),page.locator('.resource-create-dialog>.graphics-body'),'resource editor '+width);await page.locator('.resource-create-dialog .graphics-close').click();await page.locator('.graphics-library-dialog .graphics-close').click();
  }
- await page.goto('about:blank');const draft=project();draft.root.children=[node('shape','BezierRibbon')];await page.setViewportSize({width:1440,height:900});await page.goto('http://127.0.0.1:'+server.address().port+'/#tree='+Buffer.from(JSON.stringify(draft)).toString('base64'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('#language-settings').selectOption('zh-CN');await page.locator('[role=treeitem]').first().click();await page.locator('#inspector').getByRole('button',{name:'放大编辑',exact:true}).click();await page.setViewportSize({width:900,height:400});await verify(page.locator('.bezier-editor-dialog'),page.locator('.bezier-editor-dialog>.bezier-editor-panel'),'Bezier editor');await page.locator('.bezier-editor-dialog>header button').click();
+ await page.goto('about:blank');const draft=project();draft.root.children=[node('shape','BezierRibbon')];await page.setViewportSize({width:1440,height:900});await page.goto('http://127.0.0.1:'+server.address().port+'/#tree='+Buffer.from(JSON.stringify(draft)).toString('base64'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await chooseWorkbench(page,'language-settings','zh-CN');await page.locator('[role=treeitem]').first().click();await page.locator('#inspector').getByRole('button',{name:'放大编辑',exact:true}).click();await page.setViewportSize({width:900,height:400});await verify(page.locator('.bezier-editor-dialog'),page.locator('.bezier-editor-dialog>.bezier-editor-panel'),'Bezier editor');await page.locator('.bezier-editor-dialog>header button').click();
  assert.deepEqual(errors,[]);console.log(JSON.stringify({built,checks,errors}));
 }finally{await browser.close();await new Promise(r=>server.close(r));}

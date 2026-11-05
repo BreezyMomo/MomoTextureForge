@@ -988,7 +988,7 @@ function renderColorAdjustments(n){
  heading('modules.invert');animatedCheck(uiText('editor.invertPattern'),'invert');
 }
 
-editorHandlers("share-project").click=async()=>{try{const portable=canvasProject(state);if(location.protocol==='file:'||JSON.stringify(portable).includes('asset_')){$('save-project').click();return;}const data=new TextEncoder().encode(JSON.stringify(portable));if(data.length>100000)throw messageError("editor.projectIsTooLargeForALinkShareASavedProject");const hash='#tree='+btoa(Array.from(data,b=>String.fromCharCode(b)).join(''));await navigator.clipboard.writeText(location.origin+location.pathname+hash);notify(uiText("editor.configurationLinkCopiedRecipientsMayUseTheirOwnEditorURLRetaining"));}catch(e){notifyError(uiError(e));}};
+editorHandlers("share-project").click=async()=>{try{const portable=canvasProject(state);if(location.protocol==='file:'||JSON.stringify(portable).includes('asset_')){editorHandlers('save-project').click();return;}const data=new TextEncoder().encode(JSON.stringify(portable));if(data.length>100000)throw messageError("editor.projectIsTooLargeForALinkShareASavedProject");const hash='#tree='+btoa(Array.from(data,b=>String.fromCharCode(b)).join(''));await navigator.clipboard.writeText(location.origin+location.pathname+hash);notify(uiText("editor.configurationLinkCopiedRecipientsMayUseTheirOwnEditorURLRetaining"));}catch(e){notifyError(uiError(e));}};
 editorHandlers("support-project").click=openSupportDialog;
 editorHandlers("tool-help").click=()=>openUserHelp({onValidate:()=>window.open(pageHref('validate'),'_blank','noopener')});
 editorHandlers("license-help").click=()=>openUserHelp({section:'license'});

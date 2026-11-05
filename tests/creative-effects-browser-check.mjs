@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import {withPagesAssets} from './helpers/pages-assets.mjs';
 import {EFFECT_IDS} from '../web/post-effect-specs.js';
 import {createServer} from 'node:http';
@@ -54,7 +55,7 @@ try{
  await effect('pixelSort').locator('.post-effect-grip').focus();await effect('pixelSort').locator('.post-effect-grip').press('ArrowUp');const order=(await save()).root.children[0].effectOrder;assert.equal(order.indexOf('pixelSort'),order.indexOf('ascii')-1);
  await page.reload();await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');assert.deepEqual((await save()).root.children[0].effectOrder,order);
  await page.locator('[role=treeitem]').first().click();await page.locator('#inspector-tabs').getByRole('button',{name:'合成',exact:true}).click();
- const beforeLanguage=await save();await page.locator('#language-settings').selectOption('en');assert.deepEqual(await save(),beforeLanguage);
+ const beforeLanguage=await save();await chooseWorkbench(page,'language-settings','en');assert.deepEqual(await save(),beforeLanguage);
  for(const section of await panel.locator('.post-effect').all()){const details=section.locator(':scope>details');if(await details.getAttribute('open')===null)await details.locator(':scope>summary .post-effect-title').click();}
  assert.ok(!/[\u3400-\u9fff]/.test(await panel.innerText()),'Creative parameters must translate');assert.ok(!/fx\.(param|effect|option|help)\./.test(await panel.innerText()),'No unresolved creative message keys');
  assert.deepEqual(errors,[]);await mkdir('test-results/creative-effects',{recursive:true});await writeFile('test-results/creative-effects/'+(built?'built':process.argv.includes('--ui-only')?'source-ui':'source')+'.json',JSON.stringify({...report,rendered,ui:true,english:true},null,2));console.log({built,...report,rendered,ui:true,english:true});

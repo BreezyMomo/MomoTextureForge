@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -26,7 +27,7 @@ try{
  const downloadPromise=page.waitForEvent('download');await warning.getByRole('button',{name:'下载原始备份'}).click();const download=await downloadPromise,backup=JSON.parse(await readFile(await download.path(),'utf8'));assert.equal(backup.snapshots[0].text,text);assert.equal(backup.assets[0][0],assetId);
  await page.getByRole('button',{name:'添加 My circle',exact:true}).click();assert.equal((await read()).projectResources.length,1);
  const stored=await page.evaluate(()=>new Promise((resolve,reject)=>{const r=indexedDB.open('momo-texture-resources',1);r.onsuccess=()=>{const db=r.result,q=db.transaction('resources').objectStore('resources').get('snapshot');q.onsuccess=()=>{db.close();resolve(q.result);};q.onerror=()=>reject(q.error);};}));assert.ok(stored.some(([id])=>id===assetId),'Quarantined custom dependencies remain saved');
- await page.locator('#language-settings').selectOption('en');assert.match(await warning.textContent(),/Graphics list recovered/);assert.match(await warning.locator('pre').textContent(),/Unknown graphic/);
+ await chooseWorkbench(page,'language-settings','en');assert.match(await warning.textContent(),/Graphics list recovered/);assert.match(await warning.locator('pre').textContent(),/Unknown graphic/);
  await page.setViewportSize({width:768,height:900});const narrow=await warning.boundingBox();assert.ok(narrow.x>=0&&narrow.x+narrow.width<=768);
  // An archived recovery is not a fresh failure. Clean reloads retain the list
  // and backup without showing the old warning, even after manual dismissal.

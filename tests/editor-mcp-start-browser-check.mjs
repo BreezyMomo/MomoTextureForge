@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
 import {createServer} from 'node:http';
@@ -23,7 +24,7 @@ try{
  }
  assert.equal(await health(),null);checks.push('service stays off until an allowed local page explicitly requests startup');
  browser=await chromium.launch({headless:true});const context=await browser.newContext(),page=await context.newPage(),errors=[];page.on('pageerror',error=>errors.push(error.message));
- await page.goto(origin);await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('#language-settings').selectOption('en');
+ await page.goto(origin);await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await chooseWorkbench(page,'language-settings','en');
  await page.locator('#ai-tools').click();await page.locator('[data-connection-open]').click();
  const dialog=page.locator('.editor-ai-dialog');await dialog.locator('[data-connect]').click();await page.waitForFunction(()=>document.querySelector('#ai-tools').dataset.connected==='true');
  assert.equal((await health()).protocol,EDITOR_BRIDGE_PROTOCOL);

@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -36,7 +37,7 @@ try{
  report.responsiveFrames=await page.evaluate(()=>window.batchBeats);assert.ok(report.responsiveFrames>10);
  await dialog.locator('.graphics-close').click();await page.locator('#undo').click();assert.equal((await read()).length,report.canceledCount);await page.locator('#undo').click();assert.equal((await read()).length,0);
  await page.reload();await ready();assert.equal((await read()).length,0);
- await page.evaluate(()=>window.batchWrites=0);await page.locator('#language-settings').selectOption('en');await open();await select();await batch.click();await progress.waitFor({state:'visible'});
+ await page.evaluate(()=>window.batchWrites=0);await chooseWorkbench(page,'language-settings','en');await open();await select();await batch.click();await progress.waitFor({state:'visible'});
  assert.match(await progress.textContent(),/Processing \d+ \/ 298/);await finished();assert.equal((await read()).length,CATALOG.length);assert.equal(await page.evaluate(()=>window.batchWrites),1);
  await dialog.locator('.graphics-close').click();await page.reload();await ready();assert.equal((await read()).length,CATALOG.length);
  assert.deepEqual(errors,[]);report.checks=['298-item progress and responsive frames','cancel preserves prefix','retry adds remaining','one save per batch','duplicate selection skips without saving','one undo per batch','English progress','reload persists'];await writeFile('test-results/library-batch/'+(built?'built':'source')+'.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));

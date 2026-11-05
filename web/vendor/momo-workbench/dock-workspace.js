@@ -7,7 +7,7 @@ const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 const splitPercent=ratio=>String(Math.round(ratio*10000)/100);
 
 // Move the existing elements: controls, canvas contexts, selection and animation retain their owners.
-export function createDockWorkspace({host,menuHost,panels,model,ui={},motion,menuPresets=[{id:'default',title:'layout.restoreDefaultLayout'}],storage,storageKey,idPrefix,onChange=()=>{},onMessage=()=>{},onVisibility=()=>{}}){
+export function createDockWorkspace({host,menuHost,panels,model,renderMenu,ui={},motion,menuPresets=[{id:'default',title:'layout.restoreDefaultLayout'}],storage,storageKey,idPrefix,onChange=()=>{},onMessage=()=>{},onVisibility=()=>{}}){
  if(!host||!menuHost||!model)throw new TypeError('A host, menu host and layout model are required');
  const doc=host.ownerDocument;
  const {PANEL_IDS,PANEL_TITLES,layoutPreset,sanitizeLayoutSettings,panelStack,findLayoutNode,closePanel,activatePanel,dockPanel,floatPanel,showPanel,workspaceActions}=model;
@@ -32,21 +32,17 @@ export function createDockWorkspace({host,menuHost,panels,model,ui={},motion,men
  const shells=new Map();for(const id of PANEL_IDS){
   const body=element('div','dock-panel-body');body.id=contentId(id);body.setAttribute('role','tabpanel');body.setAttribute('aria-label',uiText(PANEL_TITLES[id]));body.append(panels[id]);shells.set(id,body);
  }
- const menu=element('details','header-dropdown dock-layout-menu');menu.id=idPrefix+'workspace-layout-menu';menu.append(element('summary','', uiText("menu.layout")));
- const menuBody=element('div','header-dropdown-panel');menu.append(menuBody);menuHost.append(menu);
- const tip=element('p','dock-menu-tip',uiText("layout.dragPanelTabsToDockAltDragToFloat"));menuBody.append(tip);
  const button=(text,fn)=>{const b=element('button','',text);b.type='button';b.onclick=fn;return b;};
- for(const {id,title}of menuPresets)menuBody.append(button(uiText(title),()=>{apply(layoutPreset(id));menu.open=false;}));
- menuBody.append(element('hr'));const visibility=element('div','dock-panel-toggles');menuBody.append(visibility);
- const checks=new Map();for(const id of PANEL_IDS){const label=element('label'),input=element('input');input.type='checkbox';input.setAttribute('aria-label',uiFormat("layout.showPanel",uiText(PANEL_TITLES[id])));input.onchange=()=>input.checked?show(id):apply(closePanel(layout,id));label.append(input,doc.createTextNode(uiText(PANEL_TITLES[id])));visibility.append(label);checks.set(id,input);}
- menuBody.append(element('hr'));
- const saveForm=element('form','dock-save-form'),name=element('input');name.placeholder=uiText("layout.eGMyTwoColumnLayout");name.maxLength=32;name.setAttribute('aria-label',uiText("layout.layoutName"));const save=element('button','',uiText("layout.saveCurrentLayout"));save.type='submit';saveForm.append(name,save);menuBody.append(saveForm);
- const named=element('select');named.setAttribute('aria-label',uiText("layout.savedLayouts"));menuBody.append(named);
- const actions=element('div','dock-saved-actions'),load=button(uiText("layout.applyLayout"),()=>{const saved=settings.named.find(s=>s.name===named.value);if(saved)apply(structuredClone(saved.layout));}),remove=button(uiText("layout.deleteSavedLayout"),()=>{settings.named=settings.named.filter(s=>s.name!==named.value);persist();updateMenu();});actions.append(load,remove);menuBody.append(actions);
- const status=element('p','dock-menu-tip',uiText("layout.layoutIsSavedInThisBrowserSeparatelyFromTheCanvasProject"));status.setAttribute('role','status');menuBody.append(status);
- saveForm.onsubmit=e=>{e.preventDefault();const title=name.value.trim();if(!title){status.textContent=uiText("layout.enterALayoutName");name.focus();return;}const existing=settings.named.find(s=>s.name===title);if(!existing&&settings.named.length>=12){status.textContent=uiText("layout.upToLayoutsDeleteAnUnusedLayoutFirst");return;}const item={name:title,layout:structuredClone(layout)};if(existing)settings.named[settings.named.indexOf(existing)]=item;else settings.named.push(item);const saved=persist();updateMenu(title);if(saved)status.textContent=(uiText("layout.layoutSaved") + title);};
- function updateMenu(selected=named.value){for(const id of PANEL_IDS)checks.get(id).checked=!!panelStack(layout,id);named.replaceChildren();if(!settings.named.length){const o=element('option','',uiText("layout.noSavedLayouts"));o.value='';named.append(o);}else for(const item of settings.named){const o=element('option');o.textContent=item.name;o.value=item.name;named.append(o);}if(settings.named.some(n=>n.name===selected))named.value=selected;load.disabled=remove.disabled=!settings.named.length;}
- function persist(){settings.current=layout;try{if(!storage)throw new Error('Storage unavailable');storage.setItem(LAYOUT_KEY,JSON.stringify(settings));return true;}catch{status.textContent=uiText("layout.couldNotSaveTheLayoutCurrentLayoutIsStillUsable");return false;}}
+ let statusKey='',statusValues=[];
+ const menu=renderMenu?.({host:menuHost,id:idPrefix+'workspace-layout-menu',ui,panels:PANEL_IDS.map(id=>({id,title:PANEL_TITLES[id]})),presets:menuPresets,
+  preset:id=>apply(layoutPreset(id)),toggle:(id,visible)=>visible?show(id):apply(closePanel(layout,id)),
+  save(value){const title=value.trim();if(!title){setStatus('layout.enterALayoutName');return;}const existing=settings.named.find(s=>s.name===title);if(!existing&&settings.named.length>=12){setStatus('layout.upToLayoutsDeleteAnUnusedLayoutFirst');return;}const item={name:title,layout:structuredClone(layout)};if(existing)settings.named[settings.named.indexOf(existing)]=item;else settings.named.push(item);if(persist())setStatus('layout.layoutSaved',[title]);updateMenu();},
+  load(name){const saved=settings.named.find(s=>s.name===name);if(saved)apply(structuredClone(saved.layout));},
+  remove(name){settings.named=settings.named.filter(s=>s.name!==name);persist();updateMenu();}
+ })??{update(){},dispose(){}};
+ function updateMenu(){menu.update({visible:PANEL_IDS.filter(id=>!!panelStack(layout,id)),named:structuredClone(settings.named),status:statusKey,values:statusValues});}
+ function setStatus(key,values=[]){statusKey=key;statusValues=values;updateMenu();}
+ function persist(){settings.current=layout;try{if(!storage)throw new Error('Storage unavailable');storage.setItem(LAYOUT_KEY,JSON.stringify(settings));return true;}catch{setStatus('layout.couldNotSaveTheLayoutCurrentLayoutIsStillUsable');return false;}}
  let motionTimer,clickTimer;let pendingClick=null;
  const stackKey=element=>element.querySelector('.dock-tab[aria-selected=true]')?.dataset.panelTab;
  function apply(next,{focus=null,motion=true}={}){if(disposed)return;const before=motion?layoutRects(host.querySelectorAll('.dock-stack'),stackKey):null;layout=next;render();persist();if(before&&animateLayout(host.querySelectorAll('.dock-stack'),before,{key:stackKey,resize:true,duration:200})){clearTimeout(motionTimer);host.classList.add('dock-motion');motionTimer=setTimeout(()=>host.classList.remove('dock-motion'),220);}if(focus)host.querySelector(`[data-panel-tab="${focus}"]`)?.focus();}
@@ -129,12 +125,12 @@ export function createDockWorkspace({host,menuHost,panels,model,ui={},motion,men
    pendingClick=suppress;doc.addEventListener('click',suppress,{once:true,capture:true});clickTimer=setTimeout(()=>{doc.removeEventListener('click',suppress,true);pendingClick=null;},0);
   },()=>clearDrag(true));
  }
- const unsubscribe=onLanguageChange(()=>{menu.querySelector('summary').textContent=uiText("menu.layout");tip.textContent=uiText("layout.dragPanelTabsToDockAltDragToFloat");for(const [i,{title}]of menuPresets.entries())menuBody.querySelectorAll(':scope > button')[i].textContent=uiText(title);for(const id of PANEL_IDS){const input=checks.get(id);input.nextSibling.nodeValue=uiText(PANEL_TITLES[id]);input.setAttribute('aria-label',uiFormat("layout.showPanel",uiText(PANEL_TITLES[id])));shells.get(id).setAttribute('aria-label',uiText(PANEL_TITLES[id]));}name.placeholder=uiText("layout.eGMyTwoColumnLayout");name.setAttribute('aria-label',uiText("layout.layoutName"));named.setAttribute('aria-label',uiText("layout.savedLayouts"));status.textContent=uiText("layout.layoutIsSavedInThisBrowserSeparatelyFromTheCanvasProject");save.textContent=uiText("layout.saveCurrentLayout");load.textContent=uiText("layout.applyLayout");remove.textContent=uiText("layout.deleteSavedLayout");render();});
+ const unsubscribe=onLanguageChange(()=>{for(const id of PANEL_IDS)shells.get(id).setAttribute('aria-label',uiText(PANEL_TITLES[id]));render();});
  render();return {state:()=>structuredClone({...settings,current:layout}),control(operations){if(disposed||cancelGesture||drag||restoring)throw Error('Workspace is busy');const next=workspaceActions({...settings,current:layout},operations);settings=next;apply(next.current,{motion:false});updateMenu();return this.state();},show,hide:id=>apply(closePanel(layout,id)),toggle:id=>panelStack(layout,id)?apply(closePanel(layout,id)):show(id),active,has:id=>!!panelStack(layout,id),isRestoring:()=>restoring,dispose(){
   if(disposed)return;disposed=true;cancelGesture?.();unsubscribe?.();ownedMotion?.dispose();clearTimeout(motionTimer);clearTimeout(clickTimer);if(pendingClick)doc.removeEventListener('click',pendingClick,true);clearDrag();
   for(const id of PANEL_IDS)panels[id].remove();
   host.replaceChildren(...originalHostChildren);
   for(const id of PANEL_IDS){const panel=panels[id],origin=originals.get(id);if(origin.anchor?.parentNode)origin.anchor.parentNode.insertBefore(panel,origin.anchor);origin.anchor?.remove();}
-  parking.remove();menu.remove();host.classList.remove('dock-motion');if(!previousHostClass)host.classList.remove('dock-workspace');
+  parking.remove();menu.dispose();host.classList.remove('dock-motion');if(!previousHostClass)host.classList.remove('dock-workspace');
  }};
 }

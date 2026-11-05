@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -46,7 +47,7 @@ try{
  trace('keyboard help checked');
  await parameters.locator(':scope>summary .inspector-module-title').click();assert.equal(await parameters.getAttribute('open'),'');await helpButton.hover();await tip.waitFor();assert.match(await tip.textContent(),/羽化/);trace('expanded hover checked');await row('Water').click();await tip.waitFor({state:'detached'});await row('Custom A').click();trace('node switch checked');
  await section('editor.shapeUV').locator(':scope>summary').focus();await page.keyboard.press('Space');assert.equal(await section('editor.shapeUV').getAttribute('open'),null);assert.equal(await page.locator('#play').textContent(),'播放');
- await page.locator('#inspector-tabs').getByRole('button',{name:'变换/排列',exact:true}).click();await section('editor.nodeRegion').locator(':scope>summary .inspector-module-title').click();await row('Water').click();assert.equal(await section('editor.nodeRegion').getAttribute('open'),null);await page.locator('#language-settings').selectOption('en');assert.equal(await section('editor.nodeRegion').getAttribute('open'),null);assert.equal(await section('editor.nodeRegion').locator(':scope>summary .inspector-module-title').textContent(),'Node region');
+ await page.locator('#inspector-tabs').getByRole('button',{name:'变换/排列',exact:true}).click();await section('editor.nodeRegion').locator(':scope>summary .inspector-module-title').click();await row('Water').click();assert.equal(await section('editor.nodeRegion').getAttribute('open'),null);await chooseWorkbench(page,'language-settings','en');assert.equal(await section('editor.nodeRegion').getAttribute('open'),null);assert.equal(await section('editor.nodeRegion').locator(':scope>summary .inspector-module-title').textContent(),'Node region');
  assert.equal(await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1')),saved);
  await section('editor.nodeRegion').locator(':scope>summary .inspector-module-title').click();const x=page.getByRole('spinbutton',{name:'Position X',exact:true});await x.fill('0.6');await x.press('Tab');assert.equal(await section('editor.nodeRegion').getAttribute('open'),'');assert.equal(await page.getByRole('spinbutton',{name:'Position X',exact:true}).inputValue(),'0.6');await page.locator('#undo').click();assert.equal(await page.getByRole('spinbutton',{name:'Position X',exact:true}).inputValue(),'0.5');assert.equal(await section('editor.nodeRegion').getAttribute('open'),'');
  // The same module presentation is used for compatible batch parameters.
@@ -66,7 +67,7 @@ try{
  await row('Water').click();await page.locator('#inspector-tabs button').nth(1).click();await page.locator('#inspector select[aria-label="Arrangement"]').selectOption('8');
  const layoutSaved=await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1'));
  for(const language of ['zh-CN','en']){
-  await page.locator('#language-settings').selectOption(language);
+  await chooseWorkbench(page,'language-settings',language);
   for(const key of ['editor.advancedRandomnessPosition','editor.layoutVariationGradientFlow']){
    const nested=section(key),summary=nested.locator(':scope>summary');
    assert.equal(await summary.locator('.module-drag-handle').count(),0);

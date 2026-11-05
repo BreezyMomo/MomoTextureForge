@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
@@ -19,7 +20,7 @@ try{
  browser=await chromium.launch({channel:'msedge',headless:true});const page=await browser.newPage({viewport:{width:1600,height:1100}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.addInitScript(key=>localStorage.setItem(key,'1'),GRAPHIC_LIST_DEFAULTS_KEY);
  await page.goto('http://127.0.0.1:'+server.address().port+'/#tree='+Buffer.from(JSON.stringify(draft)).toString('base64'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');
- await page.locator('#language-settings').selectOption('en');await page.locator('[role=treeitem]').first().click();
+ await chooseWorkbench(page,'language-settings','en');await page.locator('[role=treeitem]').first().click();
  const saved=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('momo-texture-tree:draft:v1'))),first=async()=>(await saved()).root.children[0];
  const change=async(label,value)=>{const input=page.getByRole('spinbutton',{name:label,exact:true});await input.fill(String(value));await input.press('Tab');};
  const endX=page.getByRole('spinbutton',{name:'End X',exact:true}),endY=page.getByRole('spinbutton',{name:'End Y',exact:true});
@@ -37,7 +38,7 @@ try{
  await page.locator('#inspector-tabs button').nth(0).click();await page.locator('[role=treeitem]').nth(1).click({modifiers:['Control']});await change('Batch End X',.59);
  const both=(await saved()).root.children;assert.equal(both[0].bezier.shape[10],.59);assert.equal(both[1].params[6],.59);assert.deepEqual(both[0].params.slice(0,8),a.params.slice(0,8));
  await page.locator('#undo').click();assert.equal((await first()).bezier.shape[10],.8);
- await page.locator('[role=treeitem]').first().click();await page.locator('#language-settings').selectOption('zh-CN');assert.equal(await page.getByRole('spinbutton',{name:'终点X',exact:true}).getAttribute('data-animation-path'),'bezier.shape.10');
+ await page.locator('[role=treeitem]').first().click();await chooseWorkbench(page,'language-settings','zh-CN');assert.equal(await page.getByRole('spinbutton',{name:'终点X',exact:true}).getAttribute('data-animation-path'),'bezier.shape.10');
  assert.deepEqual(errors,[]);await mkdir('test-results/bezier-endpoint',{recursive:true});
  const report={built,pass:true,checks:['final anchor on three spans','intermediate anchors unchanged','undo/redo','endpoint reset','endpoint keyframe and lock','layout endpoint','mixed-topology batch edit','language switch']};await writeFile('test-results/bezier-endpoint/'+(built?'built':'source')+'.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -42,6 +43,6 @@ try{
  // Hit testing and node handles still use artwork coordinates after view pan.
  await page.locator('#canvas-transform').click();await page.locator('#canvas-snap').click();box=await rect();const center=[box.x+box.width/2,box.y+box.height/2];await page.mouse.move(...center);await page.mouse.down();await page.mouse.move(center[0]+30,center[1],{steps:8});await page.mouse.up();
  const changed=JSON.parse(await storage());close(changed.root.children[0].transform.x*box.width,.5*box.width+30,'node drag after pan');close(changed.root.children[0].transform.y*box.height,.5*box.height,'node y after pan');
- await page.locator('#language-settings').selectOption('en');assert.equal(await reset.getAttribute('aria-label'),'Reset view (fit and center)');assert.equal(await pan.getAttribute('aria-label'),'Pan view');assert.deepEqual(errors,[]);
+ await chooseWorkbench(page,'language-settings','en');assert.equal(await reset.getAttribute('aria-label'),'Reset view (fit and center)');assert.equal(await pan.getAttribute('aria-label'),'Pan view');assert.deepEqual(errors,[]);
  console.log({built,pass:true,checks:['free pan at fit and reduced zoom, including empty margins','grab cursor and offscreen recovery','pointer anchored wheel zoom','temporary Space pan restores editing','per-session view offsets','unchanged project/history/export dimensions','node hit testing after pan','English labels'],errors});
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

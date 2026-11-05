@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {readFile,mkdir} from 'node:fs/promises';
@@ -31,7 +32,7 @@ try{
  await page.locator('#appearance-settings').click();
  let checks=0;
  for(const theme of ['shuimo','xuanhei','yuebai','qingci','qinghua','mineral','ouhe']){
-  await page.locator('#appearance-theme').selectOption(theme);
+  await chooseWorkbench(page,'appearance-theme',theme);
   for(const style of STYLE_IDS){
    await page.locator('.appearance-style-card[data-style='+style+']').click();await check('none');
    const preview=await page.locator('.appearance-preview-value .appearance-preview-icon').last().evaluate(e=>getComputedStyle(e).color);assert.equal(preview,(await read())[0].color);

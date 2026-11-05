@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import {language,captureSections,label,inLanguage,demoName,localizeFixture} from './docs-language.mjs';
 import {mkdir,writeFile,readFile,mkdtemp} from 'node:fs/promises';
 import {spawn} from 'node:child_process';
@@ -34,7 +35,7 @@ try{
  let page=await context.newPage();page.setDefaultTimeout(30000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const ready=async()=>{await page.locator('#render-status').waitFor();await page.waitForFunction(()=>{const s=document.querySelector('#render-status');return document.documentElement.dataset.ready==='true'&&s?.textContent.trim()&&!s.textContent.includes('加载')&&!s.textContent.includes('Loading');},null,{timeout:120000});};
  const load=async p=>{p=localizeFixture(p);console.log('loading '+p.name);await page.goto(url+'#tree='+Buffer.from(JSON.stringify(p)).toString('base64'));await page.reload();await ready();};
- const shot=async(name,locator=null,clip=null,keepPointer=false)=>{if(!keepPointer)await page.mouse.move(3,3);await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));if(await page.locator('#preview-error').isVisible().catch(()=>false))throw Error(await page.locator('#preview-error').innerText());const dialog=page.locator('dialog[open]').last(),modal=page.locator('#global-panel > section');const target=locator??(await dialog.isVisible()?dialog:await modal.isVisible()?modal:null);const clear=await markScreenshot(page,name,clip??(target?await target.boundingBox():null),language);try{await (target??page).screenshot({path:resolve(output,name+'.png'),animations:'disabled',caret:'hide',...(clip?{clip}:{})});}finally{await clear();}captured.add(name);console.log('captured '+name);};
+ const shot=async(name,locator=null,clip=null,keepPointer=false)=>{if(!keepPointer)await page.mouse.move(3,3);await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));if(await page.locator('#preview-error').isVisible().catch(()=>false))throw Error(await page.locator('#preview-error').innerText());const dialog=page.locator('dialog[open],[data-slot=dialog-content][data-open]').last(),modal=page.locator('#global-panel > section');const target=locator??(await dialog.isVisible()?dialog:await modal.isVisible()?modal:null);const clear=await markScreenshot(page,name,clip??(target?await target.boundingBox():null),language);try{await (target??page).screenshot({path:resolve(output,name+'.png'),animations:'disabled',caret:'hide',...(clip?{clip}:{})});}finally{await clear();}captured.add(name);console.log('captured '+name);};
  const run=async(name,fn)=>{if(!only.size||only.has(name)){console.log('section '+name);await fn();}};
  const showModules=async keys=>{for(const module of await page.locator('#inspector>details.inspector-module').all()){const open=keys.includes(await module.getAttribute('data-module'));if((await module.getAttribute('open')!==null)!==open)await module.locator(':scope>summary .inspector-module-title').click();}};
  const changeNumber=async(label,value,scope=page)=>{const input=scope.getByRole('spinbutton',{name:label,exact:true});await input.fill(String(value));await input.press('Tab');};
@@ -56,7 +57,7 @@ try{
  };
  const library=async()=>{await page.locator('#open-graphics-library').click();await page.getByPlaceholder(label('library.searchNamesCategoriesOrTags')).waitFor();};
  const editorReady=async()=>{const d=page.locator('dialog').last();await d.getByRole('status').filter({hasText:label('library.previewReady').trim()}).first().waitFor();return d;};
- const fileMenuShot=async()=>{await page.locator('details.header-dropdown > summary').filter({hasText:label('menu.file')}).click();const boxes=await Promise.all(['#open-project','#save-project','#export-now'].map(selector=>page.locator(selector).boundingBox()));const x=Math.max(0,Math.floor(Math.min(...boxes.map(box=>box.x))-25)),right=Math.min(page.viewportSize().width,Math.ceil(Math.max(...boxes.map(box=>box.x+box.width))+300));await shot('project-files',null,{x,y:0,width:right-x,height:520});};
+ const fileMenuShot=async()=>{await page.locator('#header-file-menu').click();const boxes=await Promise.all(['#open-project','#save-project','#export-now'].map(selector=>page.locator(selector).boundingBox()));const x=Math.max(0,Math.floor(Math.min(...boxes.map(box=>box.x))-25)),right=Math.min(page.viewportSize().width,Math.ceil(Math.max(...boxes.map(box=>box.x+box.width))+300));await shot('project-files',null,{x,y:0,width:right-x,height:520});};
  if(only.has('project-files'))await run('project-files',async()=>{await load(spell);await fileMenuShot();});
  await run('overflow',async()=>{
   await page.setViewportSize({width:1600,height:1300});const p=project();p.name='内容边界对照';p.root.children=[treeSamples().find(s=>s.name===p.name).root];await load(p);
@@ -144,15 +145,15 @@ try{
   await d.getByRole('tab',{name:label('library.importFiles'),exact:true}).click();await shot('resource-import');await d.locator('header .graphics-close').click();
  });
  await run('animation',async()=>{
-  await page.setViewportSize({width:1600,height:1350});await load(animated);await page.getByRole('button',{name:label('editor.select')+demoName('呼吸星形'),exact:true}).click();await page.getByRole('button',{name:label('inspector.transformLayout'),exact:true}).click();await page.locator('#workspace-layout-menu > summary').click();await page.getByRole('button',{name:label('layout.animationLayout'),exact:true}).click();
+  await page.setViewportSize({width:1600,height:1350});await load(animated);await page.getByRole('button',{name:label('editor.select')+demoName('呼吸星形'),exact:true}).click();await page.getByRole('button',{name:label('inspector.transformLayout'),exact:true}).click();await page.locator('#workspace-layout-menu').click();await page.getByRole('button',{name:label('layout.animationLayout'),exact:true}).click();
   const timelineSplit=page.locator('.dock-split-y').filter({has:page.locator('[data-panel-tab="timeline"]')}).locator(':scope > .dock-splitter'),splitBox=await timelineSplit.boundingBox();await page.mouse.move(splitBox.x+splitBox.width/2,splitBox.y+3);await page.mouse.down();await page.mouse.move(splitBox.x+splitBox.width/2,650,{steps:10});await page.mouse.up();
   await page.getByRole('button',{name:label('editor.parameterMode')+label('editor.record'),exact:true}).click();await changeNumber(label('editor.regionWidth'),.35);await page.getByRole('slider',{name:label('editor.scopeProgressSlider'),exact:true}).fill('0.5');await changeNumber(label('editor.regionWidth'),.8);await page.getByRole('slider',{name:label('editor.scopeProgressSlider'),exact:true}).fill('1');await changeNumber(label('editor.regionWidth'),.35);await page.getByRole('button',{name:label('editor.parameterMode')+label('editor.record'),exact:true}).click();await page.getByRole('slider',{name:label('editor.scopeProgressSlider'),exact:true}).fill('0.5');await page.locator('#reset-canvas-view').click();await ready();await shot('animation-keyframes');
-  await page.locator('#node-animation-editor').getByRole('button',{name:label('timeline.curves'),exact:true}).click();await shot('animation-curves');await page.locator('#workspace-layout-menu > summary').click();await page.getByRole('button',{name:label('layout.restoreDefaultLayout'),exact:true}).click();await page.setViewportSize({width:1600,height:1050});
+  await page.locator('#node-animation-editor').getByRole('button',{name:label('timeline.curves'),exact:true}).click();await shot('animation-curves');await page.locator('#workspace-layout-menu').click();await page.getByRole('button',{name:label('layout.restoreDefaultLayout'),exact:true}).click();await page.setViewportSize({width:1600,height:1050});
  });
  await run('docking',async()=>{
   await load(spell);await page.getByRole('button',{name:label('editor.select')+demoName('环形星光'),exact:true}).click();await shot('workspace-docking');
   await page.getByRole('button',{name:inLanguage('悬浮参数面板','Float Inspector'),exact:true}).click();await shot('workspace-floating');
-  await page.locator('#workspace-layout-menu > summary').click();await page.getByRole('textbox',{name:label('layout.layoutName'),exact:true}).fill(inLanguage('我的特效布局','My VFX layout'));await shot('workspace-layout-menu');
+  await page.locator('#workspace-layout-menu').click();await page.getByRole('textbox',{name:label('layout.layoutName'),exact:true}).fill(inLanguage('我的特效布局','My VFX layout'));await shot('workspace-layout-menu');
   await page.getByRole('button',{name:label('layout.restoreDefaultLayout'),exact:true}).click();
  });
  await run('colors',async()=>{
@@ -192,7 +193,7 @@ try{
   await load(spell);await page.locator('#startup-screen').waitFor({state:'detached'});
   await page.locator('#support-project').click();await page.getByRole('dialog',{name:label('menu.support'),exact:true}).waitFor();await page.getByRole('button',{name:label('ui.closeSupportDialog'),exact:true}).click();
   if(!await page.locator('#support-project').evaluate(e=>e===document.activeElement))throw Error('Support button focus not restored');
-  await page.locator('.header-help > summary').click();await shot('help-menu',null,{x:950,y:0,width:650,height:400});
+  await page.locator('#header-help-menu').click();await shot('help-menu',null,{x:950,y:0,width:650,height:400});
  });
  await run('shortcuts',async()=>{
   const p=project(),circle=node('shape','Circle');circle.name=inLanguage('圆形装饰','Circle decoration');circle.transform.width=circle.transform.height=.65;circle.color={mode:'own',fill:'solid',low:'#80dfff',high:'#80dfff'};p.name=circle.name;p.root.children=[circle];await load(cleanIds(p));await page.locator('#node-tree .tree-node-name').click();
@@ -209,7 +210,7 @@ try{
   if(language==='zh-CN')await writeFile(resolve(root,'docs/examples/ribbon-trails.json'),JSON.stringify(p,null,2)+'\n');
  });
  await run('appearance',async()=>{
-  await load(spell);await page.locator('#appearance-settings').click();await page.locator('#appearance-theme').selectOption('ouhe');await page.locator('.appearance-style-card[data-style=airy]').click();await page.locator('#appearance-tabs').selectOption('pill');await page.locator('#appearance-density').selectOption('compact');await shot('appearance-settings');await page.locator('.appearance-dialog [data-cancel]').click();
+  await load(spell);await page.locator('#appearance-settings').click();await chooseWorkbench(page,'appearance-theme','ouhe');await page.locator('.appearance-style-card[data-style=airy]').click();await chooseWorkbench(page,'appearance-tabs','pill');await chooseWorkbench(page,'appearance-density','compact');await shot('appearance-settings');await page.locator('.momo-appearance-react [data-cancel]').click();
  });
  await run('canvas-view',async()=>{
   await load(spell);await page.locator('#pan-preview').click();

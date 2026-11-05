@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 // Verify functional states remain recognizable across skins and personal accents.
 import http from 'node:http';
 import path from 'node:path';
@@ -25,7 +26,7 @@ try{
  await page.goto(`http://127.0.0.1:${server.address().port}/#tree=`+Buffer.from(JSON.stringify(draft)).toString('base64'));
  await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('#startup-screen').waitFor({state:'detached'});
  await page.locator('[role=treeitem]').first().click();
- await page.locator('#workspace-layout-menu>summary').click();await page.getByRole('button',{name:en['layout.animationLayout'],exact:true}).click();
+ await page.locator('#workspace-layout-menu').click();await page.getByRole('button',{name:en['layout.animationLayout'],exact:true}).click();
  await page.getByRole('button',{name:en['editor.parameterMode']+en['editor.record'],exact:true}).click();
  await page.locator('#shape-library .graphic-favorite').click();
  await page.locator('#node-animation-editor .animation-key[data-time="0.5"]').click();
@@ -36,19 +37,17 @@ try{
  const read=()=>page.evaluate(()=>{
   const css=s=>getComputedStyle(document.querySelector(s)),read=s=>{const c=css(s);return {color:c.color,bg:c.backgroundColor,border:c.borderTopColor};};
   const actual={badge:read('#shape-library .graphic-animated'),interval:read('#node-animation-editor .animation-interval:not(.context):not(.readonly)'),key:read('#node-animation-editor button.animation-key[aria-pressed=true]'),record:read('#inspector .inspector-animation-mode button.recording'),playhead:read('#node-animation-editor .animation-playhead'),favorite:read('#shape-library .graphic-favorite[aria-pressed=true]')};
-  const preview={badge:read('.appearance-preview .graphic-animated'),interval:read('.appearance-preview .animation-interval'),key:read('.appearance-preview .animation-key'),record:read('.appearance-preview .recording'),playhead:read('.appearance-preview .animation-playhead')};
-  return {actual,preview,inset:getComputedStyle(document.documentElement).getPropertyValue('--ui-inset').trim()};
+  return {actual,inset:getComputedStyle(document.documentElement).getPropertyValue('--ui-inset').trim()};
  });
  const hex=rgb=>'#'+rgb.match(/\d+/g).slice(0,3).map(v=>(+v).toString(16).padStart(2,'0')).join('');
  const baselines=new Map();
  for(const scheme of PRESET_THEME_IDS){const theme=appearancePalette({theme:scheme}).theme;
-  await page.locator('#appearance-theme').selectOption(scheme);
+  await chooseWorkbench(page,'appearance-theme',scheme);
   for(const style of STYLE_IDS){
    await page.locator('.appearance-style-card[data-style='+style+']').click();
    for(const accent of ['#000000','#FF00FF']){
     await page.locator('#appearance-hex').fill(accent);await page.locator('#appearance-hex').dispatchEvent('input');
     const v=await read(),context=scheme+' '+theme+' '+style+' '+accent;
-    for(const role of ['badge','interval','key','record','playhead'])assert.deepEqual(v.preview[role],v.actual[role],role+' preview matches real controls: '+context);
     for(const role of ['badge','interval','record'])assert.ok(colorContrast(hex(v.actual[role].color),hex(v.actual[role].bg))>=4.5,role+' contrast: '+context);
     assert.ok(colorContrast(hex(v.actual.key.color),v.inset)>=3,'key contrast: '+context);
     assert.ok(colorContrast(hex(v.actual.playhead.bg),hex(v.actual.interval.bg))>=3,'playhead above interval: '+context);
@@ -60,21 +59,20 @@ try{
   }
  }
  for(const id of PRESET_THEME_IDS){const theme=appearancePalette({theme:id}).theme;
-  await page.locator('#appearance-theme').selectOption(id);
+  await chooseWorkbench(page,'appearance-theme',id);
   for(const role of ['selection','navigation','control'])for(const color of ['#000000','#FFFFFF']){
    const input=page.locator('#appearance-hex-'+role);await input.fill(color);await input.dispatchEvent('input');
    const v=await read();assert.deepEqual(v.actual,baselines.get(theme),'functional colors remain independent of custom '+role);
-   for(const key of ['badge','interval','key','record','playhead'])assert.deepEqual(v.preview[key],v.actual[key]);
   }
  }
  for(const scheme of PRESET_THEME_IDS){const theme=appearancePalette({theme:scheme}).theme;
-  await page.locator('#appearance-theme').selectOption(scheme);await page.locator('.appearance-style-card[data-style=refined]').click();await page.locator('#appearance-tabs').selectOption('pill');
-  await page.locator('.appearance-dialog').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-'+scheme+'-'+theme+'.png',output))});
+  await chooseWorkbench(page,'appearance-theme',scheme);await page.locator('.appearance-style-card[data-style=refined]').click();await chooseWorkbench(page,'appearance-tabs','pill');
+  await page.locator('.momo-appearance-react').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-'+scheme+'-'+theme+'.png',output))});
  }
- await page.locator('#appearance-theme').selectOption('shuimo');
+ await chooseWorkbench(page,'appearance-theme','shuimo');
  assert.deepEqual(await unchanged(),before,'color settings do not edit artwork or history');
  await page.locator('.appearance-style-card[data-style=aurora]').click();
- await page.locator('.appearance-dialog').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-preview.png',output))});
+ await page.locator('.momo-appearance-react').screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-preview.png',output))});
  await page.locator('[data-save]').click();
  await page.screenshot({path:fileURLToPath(new URL((built?'built':'source')+'-editor.png',output))});
  await page.locator('#node-animation-editor').getByRole('button',{name:en['timeline.curves'],exact:true}).click();
@@ -82,5 +80,5 @@ try{
  for(const key of curve.keys){const [r,g,b]=key.match(/\d+/g).map(Number);assert.ok(r>g&&g>b,'curve keyframes stay gold');assert.ok(colorContrast(hex(key),hex(curve.bg))>=3);}
  const [cr,cg,cb]=curve.line.match(/\d+/g).map(Number);assert.ok(cb>cr&&cb>cg,'curve stays blue');
 
- assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,combinations:PRESET_THEME_IDS.length*STYLE_IDS.length*2,checks:['functional colors independent from scheme, accent and skin','recording beats selected-button rules','real/preview fidelity','dark/light contrast','visible playhead over interval','unchanged artwork and history'],errors}));
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({built,pass:true,combinations:PRESET_THEME_IDS.length*STYLE_IDS.length*2,checks:['functional colors independent from scheme, accent and skin','recording beats selected-button rules','dark/light contrast','visible playhead over interval','unchanged artwork and history'],errors}));
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

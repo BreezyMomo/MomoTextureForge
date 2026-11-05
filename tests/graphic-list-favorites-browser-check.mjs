@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import http from 'node:http';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -19,7 +20,7 @@ try{
  await page.waitForFunction(()=>document.querySelector('#library-filter button[data-value=favorites]').textContent==='收藏（1）');const saved=await page.evaluate(k=>localStorage.getItem(k),GRAPHIC_LIST_KEY);
  assert.equal(await cards.first().locator('.graphic-favorite').getAttribute('aria-pressed'),'true');await star.click();assert.equal(await filter.textContent(),'收藏（2）');
  await filter.click();assert.equal(await cards.count(),2);await page.locator('#shape-search').fill('Team');assert.equal(await cards.count(),1);await page.locator('#shape-search').fill('');
- await page.locator('#language-settings').selectOption('en');assert.equal(await filter.textContent(),'Favorites (2)');assert.equal(await cards.last().locator('.graphic-favorite').getAttribute('title'),'Unfavorite Team graphic');
+ await chooseWorkbench(page,'language-settings','en');assert.equal(await filter.textContent(),'Favorites (2)');assert.equal(await cards.last().locator('.graphic-favorite').getAttribute('title'),'Unfavorite Team graphic');
  const customStar=cards.last().locator('.graphic-favorite');await customStar.focus();await page.keyboard.press('Space');assert.equal(await cards.count(),1);assert.equal(await filter.evaluate(e=>e===document.activeElement),true);
  await cards.first().locator('.graphic-favorite').click();assert.equal(await cards.count(),0);assert.match(await page.locator('#shape-library').textContent(),/No matching favorites/);await page.locator('#library-filter button[data-value=all]').click();assert.equal(await cards.count(),3);
  await page.locator('#shape-library-view').selectOption('list');await cards.last().locator('.graphic-favorite').click();assert.equal(await filter.textContent(),'Favorites (1)');

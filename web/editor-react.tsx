@@ -7,10 +7,37 @@ import {
   dispatchEditorEvent,
   useViewStore,
 } from "./editor-react-state.ts";
-import { uiText } from "./ui-language.js";
-import { interfaceLanguage, onLanguageChange } from "./language.js";
-import { installLanguageSelector } from "./language-settings.js";
-import { installAppearanceTrigger } from "./appearance-settings.js";
+import { uiFormat, uiError, uiText } from "./ui-language.js";
+import {
+  controller as languageController,
+  interfaceLanguage,
+  onLanguageChange,
+} from "./language.js";
+import { appearance } from "./appearance.js";
+import {
+  WorkbenchProvider,
+  WorkbenchAppearance,
+  WorkbenchLanguageSelect,
+  Button,
+  Input,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  mountDockMenu as mountSharedDockMenu,
+  ChevronDown, Undo2, Redo2, Heart, MoreHorizontal,
+} from "@momo/workbench/react";
+import type { ReactNode } from "react";
+export const mountDockMenu = (
+  options: Parameters<typeof mountSharedDockMenu>[0],
+) =>
+  mountSharedDockMenu({
+    ...options,
+    appearance: appearance!,
+    language: languageController,
+  });
 import { documentationURL, repositoryURL } from "./documentation-links.js";
 export { editorHandlers } from "./editor-react-state.ts";
 export { treeView } from "./editor-react-tree.tsx";
@@ -32,7 +59,7 @@ function ProjectName() {
   const [value, setValue] = useState(projectName);
   useLayoutEffect(() => setValue(projectName), [projectName]);
   return (
-    <input
+    <Input
       id="project-name"
       value={value}
       onChange={(event) => setValue(event.target.value)}
@@ -45,35 +72,48 @@ function ProjectName() {
   );
 }
 
-function WorkbenchHeaderControls() {
-  const language = useRef<HTMLSelectElement>(null),
-    appearance = useRef<HTMLButtonElement>(null);
-  useLayoutEffect(() => {
-    const selector = installLanguageSelector(language.current, {
-      notify: (text: string) =>
-        window.dispatchEvent(
-          new CustomEvent("momo-editor-notify", { detail: text }),
-        ),
-    });
-    const trigger = installAppearanceTrigger(appearance.current);
-    return () => {
-      selector.dispose();
-      trigger.dispose();
-    };
-  }, []);
+function HeaderMenu({
+  id,
+  label,
+  children,
+  align = "start",
+}: {
+  id: string;
+  label: ReactNode;
+  children: ReactNode;
+  align?: "start" | "end";
+}) {
   return (
-    <>
-      <button
-        id="appearance-settings"
-        ref={appearance}
-        type="button"
-        className="appearance-trigger"
-      />
-      <select id="language-settings" ref={language} />
-    </>
+    <DropdownMenu>
+      <DropdownMenuTrigger id={id} render={<Button variant="outline" />}>
+        {label}
+        <ChevronDown data-icon="inline-end" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align={align} id={id + "-content"}>
+        <DropdownMenuGroup>{children}</DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
-
+function CommandItem({
+  id,
+  children,
+  disabled,
+}: {
+  id: string;
+  children: ReactNode;
+  disabled?: boolean;
+}) {
+  return (
+    <DropdownMenuItem
+      id={id}
+      disabled={disabled}
+      onClick={(event) => dispatchEditorEvent(id, "click", event.nativeEvent)}
+    >
+      {children}
+    </DropdownMenuItem>
+  );
+}
 function EditorHeader() {
   const state = useViewStore(headerView),
     media = useRef(window.matchMedia("(max-width:1100px)"));
@@ -91,22 +131,19 @@ function EditorHeader() {
     const id = movedFocus.current;
     movedFocus.current = null;
     if (id !== "project-settings" && id !== "tree-examples") return;
-    const selector = compact
-      ? id === "project-settings"
-        ? "#header-file-menu>summary"
-        : "#header-resource-menu>summary"
-      : "#" + id;
-    document.querySelector<HTMLElement>(selector)?.focus();
+    document
+      .getElementById(
+        compact
+          ? id === "project-settings"
+            ? "header-file-menu"
+            : "header-resource-menu"
+          : id,
+      )
+      ?.focus();
   }, [compact]);
-  const settings = (
-    <button id="project-settings">{uiText("editor.canvasSettings")}</button>
-  );
-  const examples = (
-    <button id="tree-examples">{uiText("menu.examples")}</button>
-  );
   const language = interfaceLanguage();
   return (
-    <header className="tree-header">
+    <header className="tree-header" data-react-chrome="nova">
       <div className="tree-brand">
         <strong>
           MOMO <span>TEXTURE FORGE</span>
@@ -118,72 +155,82 @@ function EditorHeader() {
         role="group"
         aria-label={uiText("editor.canvasActions")}
       >
-        <details id="header-file-menu" className="header-dropdown">
-          <summary>{uiText("menu.file")}</summary>
-          <div className="header-dropdown-panel">
-            <button id="new-project">{uiText("editor.newCanvas")}</button>
-            <button id="open-project">{uiText("editor.openProject")}</button>
-            <button id="save-project" disabled={state.componentPreview}>
-              {uiText("editor.saveProject")}
-            </button>
-            <hr />
-            <button id="share-project" disabled={state.componentPreview}>
-              {uiText("editor.shareConfiguration")}
-            </button>
-            {compact && (
-              <>
-                <hr />
-                {settings}
-              </>
-            )}
-          </div>
-        </details>
+        <HeaderMenu id="header-file-menu" label={uiText("menu.file")}>
+          <CommandItem id="new-project">
+            {uiText("editor.newCanvas")}
+          </CommandItem>
+          <CommandItem id="open-project">
+            {uiText("editor.openProject")}
+          </CommandItem>
+          <CommandItem id="save-project" disabled={state.componentPreview}>
+            {uiText("editor.saveProject")}
+          </CommandItem>
+          <DropdownMenuSeparator />
+          <CommandItem id="share-project" disabled={state.componentPreview}>
+            {uiText("editor.shareConfiguration")}
+          </CommandItem>
+          {compact && (
+            <>
+              <DropdownMenuSeparator />
+              <CommandItem id="project-settings">
+                {uiText("editor.canvasSettings")}
+              </CommandItem>
+            </>
+          )}
+        </HeaderMenu>
         <span className="header-history">
-          <button
+          <Button
             id="undo"
+            variant="ghost"
+            size="icon"
             disabled={!state.canUndo}
-            className="header-icon-button"
             aria-label={uiText("common.undo")}
             title={uiText("header.undoShortcut")}
           >
-            <svg aria-hidden="true" viewBox="0 0 24 24">
-              <path d="M8 4 3 9l5 5M3 9h11a6 6 0 0 1 0 12h-3" />
-            </svg>
-          </button>
-          <button
+            <Undo2 />
+          </Button>
+          <Button
             id="redo"
+            variant="ghost"
+            size="icon"
             disabled={!state.canRedo}
-            className="header-icon-button"
             aria-label={uiText("common.redo")}
             title={uiText("header.redoShortcut")}
           >
-            <svg aria-hidden="true" viewBox="0 0 24 24">
-              <path d="m16 4 5 5-5 5m5-5H10a6 6 0 0 0 0 12h3" />
-            </svg>
-          </button>
+            <Redo2 />
+          </Button>
         </span>
-        {!compact && settings}
-        <button id="export-now" className="primary">
-          {uiText("editor.export")}
-        </button>
+        {!compact && (
+          <Button id="project-settings" variant="ghost">
+            {uiText("editor.canvasSettings")}
+          </Button>
+        )}
+        <Button id="export-now">{uiText("editor.export")}</Button>
       </div>
       <div
         className="tree-resource-actions"
         role="group"
         aria-label={uiText("header.resources")}
       >
-        <button id="open-graphics-library">
+        <Button id="open-graphics-library" variant="ghost">
           {uiText("menu.graphicsLibrary")}
-        </button>
-        {!compact && examples}
-        {compact && (
-          <details id="header-resource-menu" className="header-dropdown">
-            <summary
-              aria-label={uiText("header.moreResources")}
-              title={uiText("header.moreResources")}
-            />
-            <div className="header-dropdown-panel">{examples}</div>
-          </details>
+        </Button>
+        {compact ? (
+          <HeaderMenu
+            id="header-resource-menu"
+            label={
+              <MoreHorizontal aria-label={uiText("header.moreResources")} />
+            }
+            align="end"
+          >
+            <CommandItem id="tree-examples">
+              {uiText("menu.examples")}
+            </CommandItem>
+          </HeaderMenu>
+        ) : (
+          <Button id="tree-examples" variant="ghost">
+            {uiText("menu.examples")}
+          </Button>
         )}
       </div>
       <div
@@ -192,73 +239,88 @@ function EditorHeader() {
         aria-label={uiText("editor.tools")}
       >
         <span id="workspace-layout-slot" style={{ display: "contents" }} />
-        <WorkbenchHeaderControls />
-        <button id="ai-tools" type="button" />
-        <button
+        <WorkbenchAppearance id="appearance-settings" />
+        <WorkbenchLanguageSelect
+          id="language-settings"
+          onError={(error) =>
+            window.dispatchEvent(
+              new CustomEvent("momo-editor-notify", { detail: uiError(error) }),
+            )
+          }
+        />
+        <Button id="ai-tools" variant="ghost" />
+        <Button
           id="support-project"
+          variant="ghost"
           title={uiText("editor.scanWithWeChatToSupportContinuedDevelopment")}
         >
-          <svg
-            className="header-support-icon"
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-          >
-            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" />
-          </svg>
+          <Heart data-icon="inline-start" />
           {uiText("menu.support")}
-        </button>
-        <details id="header-help-menu" className="header-dropdown header-help">
-          <summary
-            className="momo-header-button"
-            data-momo-header-control="true"
+        </Button>
+        <HeaderMenu
+          id="header-help-menu"
+          label={uiText("header.help")}
+          align="end"
+        >
+          <CommandItem id="tool-help">
+            {uiText("editor.quickGuide")}
+          </CommandItem>
+          <CommandItem id="license-help">
+            {uiText("help.licensing")}
+          </CommandItem>
+          <DropdownMenuItem
+            id="detailed-help"
+            render={
+              <a
+                href={documentationURL("README.md", language)}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={uiText(
+                  "editor.openTheREADMEAndIllustratedTutorialsInANewTab",
+                )}
+              />
+            }
           >
-            <span className="momo-header-label">{uiText("header.help")}</span>
-          </summary>
-          <div className="header-dropdown-panel">
-            <button id="tool-help">{uiText("editor.quickGuide")}</button>
-            <button id="license-help">{uiText("help.licensing")}</button>
-            <a
-              id="detailed-help"
-              href={documentationURL("README.md", language)}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={uiText(
-                "editor.openTheREADMEAndIllustratedTutorialsInANewTab",
-              )}
-            >
-              {uiText("editor.detailedGuide")}
-            </a>
-            <hr />
-            <a
-              id="github-repository"
-              href={repositoryURL(
-                "https://github.com/BreezyMomo/MomoTextureForge",
-                language,
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={uiText(
-                "editor.viewTheSourceReportIssuesOrContributeOpensANewTab",
-              )}
-            >
-              {uiText("editor.githubRepository")}
-            </a>
-            <a
-              id="gitee-repository"
-              href={repositoryURL(
-                "https://gitee.com/BreezyMomo/MomoTextureForge",
-                language,
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={uiText(
-                "editor.openTheSourceMirrorAndDocumentationOpensANewTab",
-              )}
-            >
-              {uiText("editor.giteeRepository")}
-            </a>
-          </div>
-        </details>
+            {uiText("editor.detailedGuide")}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            id="github-repository"
+            render={
+              <a
+                href={repositoryURL(
+                  "https://github.com/BreezyMomo/MomoTextureForge",
+                  language,
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={uiText(
+                  "editor.viewTheSourceReportIssuesOrContributeOpensANewTab",
+                )}
+              />
+            }
+          >
+            {uiText("editor.githubRepository")}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            id="gitee-repository"
+            render={
+              <a
+                href={repositoryURL(
+                  "https://gitee.com/BreezyMomo/MomoTextureForge",
+                  language,
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={uiText(
+                  "editor.openTheSourceMirrorAndDocumentationOpensANewTab",
+                )}
+              />
+            }
+          >
+            {uiText("editor.giteeRepository")}
+          </DropdownMenuItem>
+        </HeaderMenu>
       </div>
       <input type="file" id="project-file" accept=".json,.zip" hidden />
       <input
@@ -284,56 +346,35 @@ function EditorApp({ panels }: { panels: EditorPanels }) {
       if (target.id && owns(target))
         dispatchEditorEvent(target.id, event.type, event);
     };
-    const dismiss = (event: MouseEvent) => {
-      for (const menu of document.querySelectorAll<HTMLDetailsElement>(
-        ".header-dropdown",
-      )) {
-        const target = event.target as HTMLElement;
-        if (
-          !menu.contains(target) ||
-          (target.closest("button") &&
-            !menu.classList.contains("dock-layout-menu"))
-        )
-          menu.open = false;
-      }
-    };
-    const escape = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      for (const menu of document.querySelectorAll<HTMLDetailsElement>(
-        ".header-dropdown[open]",
-      )) {
-        menu.open = false;
-        menu.querySelector("summary")?.focus();
-        event.preventDefault();
-      }
-    };
     document.addEventListener("change", change);
     document.addEventListener("input", change);
-    document.addEventListener("click", dismiss);
-    document.addEventListener("keydown", escape);
     return () => {
       document.removeEventListener("change", change);
       document.removeEventListener("input", change);
-      document.removeEventListener("click", dismiss);
-      document.removeEventListener("keydown", escape);
     };
   }, [panels]);
   return (
-    <div
-      ref={ref}
-      style={{ display: "contents" }}
-      onClick={(event) => {
-        const button = (event.target as HTMLElement).closest<HTMLButtonElement>(
-          "button[id]",
-        );
-        if (button && !button.disabled)
-          dispatchEditorEvent(button.id, "click", event.nativeEvent);
-      }}
+    <WorkbenchProvider
+      appearance={appearance!}
+      language={languageController}
+      ui={{ text: uiText, format: uiFormat, onLanguageChange }}
     >
-      <EditorHeader />
-      <main className="tree-workspace" style={{isolation: "isolate"}} />
-      <EditorPanelsView panels={panels} />
-    </div>
+      <div
+        ref={ref}
+        style={{ display: "contents" }}
+        onClick={(event) => {
+          const button = (
+            event.target as HTMLElement
+          ).closest<HTMLButtonElement>("button[id]");
+          if (button && !button.disabled)
+            dispatchEditorEvent(button.id, "click", event.nativeEvent);
+        }}
+      >
+        <EditorHeader />
+        <main className="tree-workspace" style={{ isolation: "isolate" }} />
+        <EditorPanelsView panels={panels} />
+      </div>
+    </WorkbenchProvider>
   );
 }
 

@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
 import {readFile,writeFile,mkdir,mkdtemp} from 'node:fs/promises';
@@ -50,7 +51,7 @@ try{
   }
   await page.goto(mode==='https'?'https://breezymomo.github.io/MomoTextureForge/':origin+(mode==='built'?'/built.html':'/'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');
   await page.locator('#project-file').setInputFiles({name:'Current work.zip',mimeType:'application/zip',buffer:Buffer.from(fixture)});await page.waitForFunction(()=>document.querySelector('#node-tree [data-node-id="heart"]'));
-  await page.locator('#language-settings').selectOption('en');const baseline=await saved(page);
+  await chooseWorkbench(page,'language-settings','en');const baseline=await saved(page);
   const openConnection=async()=>{await page.locator('#ai-tools').click();await page.locator('.ai-tools-dialog [data-connection-open]').click();};
   await openConnection();const dialog=page.locator('.editor-ai-dialog');assert.equal(await dialog.locator('input[type=password]').count(),0);
   // Closing the panel during registration must preserve the explicit enable action.

@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import {withPagesAssets} from './helpers/pages-assets.mjs';
 import http from 'node:http';
 import path from 'node:path';
@@ -34,7 +35,7 @@ try{
  await page.waitForFunction(async()=>{const db=await new Promise(r=>{const q=indexedDB.open('momo-texture-thumbnails-v1',1);q.onsuccess=()=>r(q.result);});const count=await new Promise(r=>{const q=db.transaction('images').objectStore('images').count();q.onsuccess=()=>r(q.result);});db.close();return count===2;});
  const firstSources=await page.locator('#shape-library img').evaluateAll(es=>es.map(e=>e.src));
  await page.reload();await ready();assert.equal(await page.evaluate(()=>window.thumbStats.renders),0,'reload reads persisted PNGs without executing held GPU work');assert.deepEqual(await page.locator('#shape-library img').evaluateAll(es=>es.map(e=>e.src)),firstSources);
- await page.locator('#language-settings').selectOption('en');await page.locator('#shape-search').fill('Custom');await page.locator('#shape-search').fill('');await ready();assert.equal(await page.evaluate(()=>window.thumbStats.renders),0);
+ await chooseWorkbench(page,'language-settings','en');await page.locator('#shape-search').fill('Custom');await page.locator('#shape-search').fill('');await ready();assert.equal(await page.evaluate(()=>window.thumbStats.renders),0);
  // Same resource/version ID with genuinely different pixels must miss the cache.
  await page.evaluate(key=>{const p=JSON.parse(localStorage.getItem(key));p.projectResources[0].root.opacity=.42;p.projectResources[0].personalRevision++;localStorage.setItem(key,JSON.stringify(p));},GRAPHIC_LIST_KEY);
  await page.reload();await page.waitForFunction(()=>document.querySelectorAll('#shape-library img[data-ready=true]').length===3&&window.thumbnailIdle.length>0);await drain();assert.equal(await page.evaluate(()=>window.thumbStats.renders),1);

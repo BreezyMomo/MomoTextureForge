@@ -479,6 +479,9 @@
 .tree-disclosure>.editor-icon{width:12px;height:12px;transition:transform var(--ui-motion-fast) ease}
 .tree-disclosure[aria-expanded=true]>.editor-icon{transform:rotate(90deg)}
 .tree-editor :is(.tree-header,.canvas-tool,.module-pin,.tree-visibility,.tree-node-delete) svg{stroke-width:1.7}
+/* React chrome is styled by Workbench's layers; domain editor styles stay local. */
+:root[data-momo-workbench] .tree-editor .tree-header[data-react-chrome=nova] [data-slot],
+:root[data-momo-workbench] .tree-editor .tree-header[data-react-chrome=nova] #export-now[data-slot]{all:revert-layer}
 .tree-editor .shortcut-scope .editor-icon{width:12px;height:12px}
 .tree-editor button[data-key-path]{color:var(--ui-muted)}
 .tree-editor button[data-key-path]:is([data-key-state=animated],[data-key-state=current]){color:var(--ui-key)}

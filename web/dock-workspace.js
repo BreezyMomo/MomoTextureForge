@@ -1,3 +1,4 @@
+import {mountDockMenu} from './generated/editor-react.js';
 import {createDockWorkspace as createWorkbenchDockWorkspace} from './vendor/momo-workbench/dock-workspace.js';
 import {layoutModel} from './dock-layout.js';
 import {onLanguageChange} from './language.js';
@@ -11,7 +12,7 @@ const menuPresets=[
  {id:'focus',title:'layout.focusCanvas'},
 ];
 export function createDockWorkspace(options){
- return createWorkbenchDockWorkspace({...options,idPrefix:'',model:layoutModel,ui:{text:uiText,format:uiFormat,onLanguageChange},motion:editorMotion,menuPresets});
+ return createWorkbenchDockWorkspace({...options,renderMenu:mountDockMenu,idPrefix:'',model:layoutModel,ui:{text:uiText,format:uiFormat,onLanguageChange},motion:editorMotion,menuPresets});
 }
 export function installEditorDocking({panels,onChange,onMessage}){
  const host=document.querySelector('.tree-workspace');

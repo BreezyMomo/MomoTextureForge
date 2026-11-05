@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
@@ -14,7 +15,7 @@ try{
   await page.goto(origin+'/language-config.json');
   await page.evaluate(async()=>{const handle=await(await navigator.storage.getDirectory()).getDirectoryHandle('old-install-cache',{create:true});const db=await new Promise((ok,fail)=>{const r=indexedDB.open('momo-ai-install:v1',1);r.onupgradeneeded=()=>r.result.createObjectStore('directories');r.onsuccess=()=>ok(r.result);r.onerror=()=>fail(r.error);});await new Promise((ok,fail)=>{const tx=db.transaction('directories','readwrite');tx.objectStore('directories').put(handle,'codex');tx.oncomplete=ok;tx.onerror=()=>fail(tx.error);});db.close();});
   await page.addInitScript(()=>{globalThis.installCacheReads=0;const open=indexedDB.open.bind(indexedDB);indexedDB.open=(name,...args)=>{if(name==='momo-ai-install:v1')globalThis.installCacheReads++;return open(name,...args);};});
-  await page.goto(origin+(built?'/built.html':'/'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('#language-settings').selectOption('en');
+  await page.goto(origin+(built?'/built.html':'/'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await chooseWorkbench(page,'language-settings','en');
   const saved=await page.evaluate(()=>localStorage.getItem('momo-texture-tree:draft:v1'));
   assert.equal(await page.locator('.header-help #download-author-skill').count(),0);await page.locator('#ai-tools').click();const dialog=page.locator('.ai-tools-dialog');await dialog.waitFor();
   assert.equal(await dialog.locator('#ai-tools-agent').inputValue(),'codex');assert.equal(await dialog.locator('[data-project],[data-personal],[data-directory],[data-installer],[data-runtime]').count(),0);assert.equal(await dialog.locator('[data-step=install] .ai-tools-actions button').count(),1);assert.match(await dialog.locator('[data-directory-hint]').innerText(),/~\/.agents\/skills/);assert.equal(await dialog.locator('[data-state],.ai-tools-path').count(),0);assert.equal(await dialog.locator('[data-progress]').innerText(),'');assert.equal(await page.locator('#save-project').count(),1);assert.equal(await dialog.locator('[data-project-export]').count(),0);await page.waitForFunction(async()=>!(await indexedDB.databases()).some(db=>db.name==='momo-ai-install:v1'));

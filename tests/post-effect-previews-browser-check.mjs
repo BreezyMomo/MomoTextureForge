@@ -1,3 +1,4 @@
+import {chooseWorkbench} from './workbench-browser.mjs';
 import {withPagesAssets} from './helpers/pages-assets.mjs';
 import http from 'node:http';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
@@ -45,7 +46,7 @@ try{
  await page.emulateMedia({reducedMotion:'reduce'});await card('dissolve').locator('.post-effect-choice-image').hover();assert.equal(await card('dissolve').locator('.post-effect-choice-image').getAttribute('data-animating'),'false');
  assert.deepEqual(await page.evaluate(()=>({draft:localStorage.getItem('momo-texture-tree:draft:v1'),hash:location.hash,undo:document.querySelector('#undo').disabled})),before);
  await picker.getByRole('searchbox').fill('glitch');await card('glitch').getByRole('button').click();const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('momo-texture-tree:draft:v1')));assert.equal(saved.root.children[0].postEffects.glitch.displacement,99);await picker.getByRole('button',{name:'关闭',exact:true}).click();
- await page.locator('#language-settings').selectOption('en');await panel.locator('.post-effects-add').click();await picker.getByRole('searchbox').fill('blur');await card('blur').locator('input:enabled').waitFor();assert.equal(await card('blur').getByRole('slider',{name:'Compare before and after Gaussian blur',exact:true}).count(),1);assert.ok(!/[\u3400-\u9fff]/.test(await picker.innerText()));
+ await chooseWorkbench(page,'language-settings','en');await panel.locator('.post-effects-add').click();await picker.getByRole('searchbox').fill('blur');await card('blur').locator('input:enabled').waitFor();assert.equal(await card('blur').getByRole('slider',{name:'Compare before and after Gaussian blur',exact:true}).count(),1);assert.ok(!/[\u3400-\u9fff]/.test(await picker.innerText()));
  await page.setViewportSize({width:320,height:900});await page.waitForFunction(()=>{const e=document.querySelector('.post-effect-picker');return e&&e.getBoundingClientRect().right<=innerWidth;});assert.equal(await picker.evaluate(e=>e.scrollWidth<=e.clientWidth+1),true);await page.keyboard.press('Escape');await picker.waitFor({state:'detached'});assert.deepEqual(errors,[]);
  console.log({built,pass:true,comparison:true,pointer:true,motion:true,reducedMotion:true,isolated:true,settingsPreserved:true,english:true,narrow:true});
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

@@ -1,6 +1,5 @@
 @import './vendor/momo-workbench/theme-tokens.css';
-@import './vendor/momo-workbench/appearance-settings.css';
-@import './vendor/momo-workbench/language-selector.css';
+@import './generated/workbench-react.css';
 /* Shared semantic theme tokens. Artwork, swatches and canvas guides have their own colors. */
 /* Flatten containers only: inputs, focus rings and docking separators remain visible. */
 :root[data-interface-style=minimal] .tree-editor .inspector-module{border:0;border-top:1px solid var(--ui-line);background:transparent;border-radius:0}
