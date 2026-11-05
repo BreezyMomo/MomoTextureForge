@@ -2,6 +2,7 @@ import http from "node:http";
 import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {watchReactUI} from './tools/build-react-ui.mjs';
 import { EDITOR_BRIDGE_ORIGIN, EDITOR_BRIDGE_PROTOCOL } from './web/editor-bridge-protocol.js';
 let mcp, startingMCP;
 async function ensureMCP() {
@@ -25,6 +26,7 @@ const portIndex = args.indexOf("--port");
 const port = portIndex < 0 ? 8787 : Number(args[portIndex + 1]);
 if (!Number.isInteger(port) || port < 1024 || port > 65535)
   throw new Error("Port must be 1024–65535");
+const editorBuild=await watchReactUI();
 const types = {
   ".html": "text/html",
   ".js": "text/javascript",
@@ -84,9 +86,10 @@ const server = http.createServer(async (req, res) => {
 server.on("error", (error) => {
   console.error(error.message);
   process.exitCode = 1;
+  void editorBuild.dispose();
 });
 server.listen(port, "127.0.0.1", () =>
   console.log(`Momo Texture Forge: http://127.0.0.1:${port}`),
 );
 for (const signal of ["SIGINT", "SIGTERM"])
-  process.on(signal, () => { server.close(); void mcp?.close(); });
+  process.on(signal, () => { server.close(); void editorBuild.dispose(); void mcp?.close(); });

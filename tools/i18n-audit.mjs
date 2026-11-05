@@ -1,5 +1,6 @@
 // Audit explicit message IDs, never infer IDs from display text.
 import {parse} from 'acorn';
+import {transform} from 'esbuild';
 import {readFile,writeFile,mkdir,readdir} from 'node:fs/promises';
 import {UI_CATALOGS} from '../web/locales/catalogs.js';
 import config from '../web/language-config.json' with {type:'json'};
@@ -9,9 +10,9 @@ export async function collectMessages(){
  const add=(key,file)=>{if(!found.has(key))found.set(key,[]);if(!found.get(key).includes(file))found.get(key).push(file);};
  const markup=(source,file)=>{for(const match of source.matchAll(/data-i18n(?:-title|-aria-label|-placeholder|-alt)?=["']([^"']+)["']/g))add(match[1],file);};
  for(const name of [...await readdir(new URL('../web/',import.meta.url)),'../build-standalone.mjs','../library-manager/index.html','../library-manager/app.js']){
-  if(!/\.(?:m?js|html)$/.test(name)||/vendor|kit-runtime/.test(name))continue;
+  if(!/\.(?:m?js|tsx?|html)$/.test(name)||/vendor|kit-runtime/.test(name))continue;
   const source=await readFile(new URL('../web/'+name,import.meta.url),'utf8');markup(source,name);for(const match of source.matchAll(/uiText\(['"]([a-z][A-Za-z0-9.]*)['"]\)/g))add(match[1],name);
-  if(/\.m?js$/.test(name))visit(parse(source,{ecmaVersion:'latest',sourceType:'module'}),node=>{
+  if(/\.(?:m?js|tsx?)$/.test(name))visit(parse(/\.tsx?$/.test(name)?(await transform(source,{loader:name.endsWith('.tsx')?'tsx':'ts',jsx:'automatic'})).code:source,{ecmaVersion:'latest',sourceType:'module'}),node=>{
    if(node.type==='Literal'&&typeof node.value==='string')markup(node.value,name);
    if(node.type==='Literal'&&typeof node.value==='string'&&/^[a-z][A-Za-z0-9]*(?:\.[A-Za-z][A-Za-z0-9]*)+$/.test(node.value)&&namespaces.has(node.value.split('.')[0])&&!['animation.duration','animation.pingpong','canvas.ratio','library.json','examples.html'].includes(node.value))add(node.value,name);
    if(node.type==='CallExpression'&&['uiText','uiFormat','uiOption','messageError'].includes(node.callee.name))visit(node.arguments[0],arg=>{if(arg.type==='Literal'&&typeof arg.value==='string'&&/[\u3400-\u9fff]/.test(arg.value))throw Error('Display text used as a message key in '+name+': '+arg.value);});

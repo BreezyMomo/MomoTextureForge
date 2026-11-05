@@ -20,6 +20,7 @@ const paths={
  display:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Zm13 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0',
  tile:'M3 3h7v7H3Zm11 0h7v7h-7ZM3 14h7v7H3Zm11 0h7v7h-7Z',clear:'m6 6 12 12M6 18 18 6',edit:'m15 4 5 5M4 20l5-1L21 7a2 2 0 0 0-4-4L5 15Z',frame:'M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5'
 };
+export const editorIconPaths=paths;
 export function editorIcon(name,doc=globalThis.document){
  const svg=doc.createElementNS('http://www.w3.org/2000/svg','svg');
  for(const [key,value]of Object.entries({viewBox:'0 0 24 24',class:'editor-icon','aria-hidden':'true',focusable:'false',fill:'none',stroke:'currentColor','stroke-width':name==='drag'||name==='more'?'3':'1.7','stroke-linecap':'round','stroke-linejoin':'round'}))svg.setAttribute(key,value);

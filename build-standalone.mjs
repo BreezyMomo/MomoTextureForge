@@ -9,12 +9,14 @@ import {build} from "esbuild";
 import {loadDefinitionURL} from "./web/definition-loader.js";
 import {encodeZIP} from "./web/encoders.js";
 import {readEditorStyle} from './tools/workbench-styles.mjs';
+import {buildReactUI} from './tools/build-react-ui.mjs';
 
 const toolRoot=dirname(fileURLToPath(import.meta.url)),webRoot=join(toolRoot,"web");
 const args=process.argv.slice(2);
 if(args.length>1)throw new Error("Usage: node build-standalone.mjs [output-directory]");
 const output=resolve(args[0]||join(toolRoot,"dist"));
 await validateUICatalogs();
+await buildReactUI();
 await buildAuthoringKit();
 // Keep the support dialog offline-ready, using the same original as the docs.
 const appreciationCode=await readFile(join(toolRoot,'docs/images/wechat-appreciation.png'));
@@ -62,7 +64,7 @@ import {uiText} from './ui-language.js';
 })();`;
 const workerBuild=await build({entryPoints:[join(webRoot,'export-worker.js')],bundle:true,write:false,format:'iife',platform:'browser',target:'es2022',minify:true,plugins:[{name:'worker-definitions',setup(plugin){plugin.onLoad({filter:/[\\/]definition-runtime\.js$/},()=>({contents:runtime,loader:'js',resolveDir:webRoot}));}}]});
 const workerSource=workerBuild.outputFiles[0].text;
-const result=await build({stdin:{contents:entry,resolveDir:webRoot,sourcefile:"standalone-entry.js",loader:"js"},bundle:true,write:false,format:"iife",platform:"browser",target:"es2022",minify:true,charset:"utf8",legalComments:"inline",metafile:true,plugins:[{name:"embedded-definitions",setup(plugin){plugin.onLoad({filter:/[\\/]export-worker-source\.js$/},()=>({contents:"export const workerURL=null;export default "+serialize(workerSource),loader:"js"}));plugin.onLoad({filter:/[\\/]definition-runtime\.js$/},()=>({contents:runtime,loader:"js",resolveDir:webRoot}));}}]});
+const result=await build({jsx:'automatic',define:{'process.env.NODE_ENV':'\"production\"'},stdin:{contents:entry,resolveDir:webRoot,sourcefile:"standalone-entry.js",loader:"js"},bundle:true,write:false,format:"iife",platform:"browser",target:"es2022",minify:true,charset:"utf8",legalComments:"inline",metafile:true,plugins:[{name:"embedded-definitions",setup(plugin){plugin.onLoad({filter:/[\\/]export-worker-source\.js$/},()=>({contents:"export const workerURL=null;export default "+serialize(workerSource),loader:"js"}));plugin.onLoad({filter:/[\\/]definition-runtime\.js$/},()=>({contents:runtime,loader:"js",resolveDir:webRoot}));}}]});
 const javascript=result.outputFiles[0].text;
 const psdLicenses=await read('vendor/PSD-LICENSES.txt');
 if(Object.values(result.metafile.outputs).some(file=>file.imports.length))throw new Error("Standalone bundle still has external imports");

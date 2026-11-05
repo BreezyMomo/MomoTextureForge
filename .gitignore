@@ -1,6 +1,7 @@
 /node_modules/
 /dist/
 /test-results/
+/web/generated/
 
 /skills/texture-forge-author/scripts/
 /skills/texture-forge-author/package.json

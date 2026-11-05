@@ -4,12 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "postinstall": "npm run workbench:sync",
+    "postinstall": "npm run workbench:sync && npm run build:ui",
     "workbench:sync": "node node_modules/@momo/workbench/scripts/vendor.mjs --target web/vendor/momo-workbench",
     "workbench:check": "node node_modules/@momo/workbench/scripts/vendor.mjs --target web/vendor/momo-workbench --check",
-    "pretest": "npm run workbench:check",
-    "prebuild:standalone": "npm run workbench:check",
-    "prebuild:pages": "npm run workbench:check",
+    "pretest": "npm run workbench:check && npm run build:ui",
+    "prebuild:standalone": "npm run workbench:check && npm run check:types",
+    "prebuild:pages": "npm run workbench:check && npm run check:types",
     "start": "node serve.mjs",
     "test": "node --test tests/*.test.mjs",
     "validate:definitions": "node validate-definitions.mjs",
@@ -19,16 +19,22 @@
     "build:remote-library": "node build-remote-library.mjs",
     "build:library-manager": "node build-library-manager.mjs",
     "build:rough-vendor": "node build-rough-vendor.mjs",
-    "build:gif-vendor": "node build-gif-vendor.mjs"
+    "build:gif-vendor": "node build-gif-vendor.mjs",
+    "check:types": "tsc --noEmit",
+    "build:ui": "node tools/build-react-ui.mjs"
   },
   "engines": {
     "node": ">=22"
   },
   "dependencies": {
-    "@momo/workbench": "file:vendor/momo-workbench-0.4.1.tgz"
+    "@momo/workbench": "file:vendor/momo-workbench-0.4.1.tgz",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "1.32.2",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.9",
     "acorn": "^8.15.0",
     "ag-psd": "31.0.3",
     "esbuild": "0.28.2",
@@ -37,6 +43,7 @@
     "omggif": "1.0.10",
     "playwright": "^1.64.1",
     "roughjs": "4.6.6",
+    "typescript": "5.9.2",
     "zod": "4.6.7"
   }
 }

@@ -16,7 +16,7 @@ await mkdir(assets,{recursive:true});
 const files=new Map(),hash=bytes=>createHash('sha256').update(bytes).digest('hex').slice(0,16);
 const add=(name,bytes)=>{files.set(name,bytes);return name;};
 const named=(name,extension,bytes)=>add(`assets/${name}-${hash(bytes)}.${extension}`,bytes);
-const common={absWorkingDir:root,bundle:true,write:false,platform:'browser',target:'es2022',minify:true,charset:'utf8',legalComments:'inline'};
+const common={jsx:'automatic',define:{'process.env.NODE_ENV':'\"production\"'},absWorkingDir:root,bundle:true,write:false,platform:'browser',target:'es2022',minify:true,charset:'utf8',legalComments:'inline'};
 const registry=await loadDefinitionURL(new URL('./web/definitions/builtin.json',import.meta.url));
 const runtime=`export const BUILTIN=${JSON.stringify(registry).replaceAll('<','\\u003c')};export const formulaText=spec=>spec.inline??BUILTIN.sources[spec.file];`;
 const definitions={name:'pages-definitions',setup(b){b.onLoad({filter:/[\\/]definition-runtime\.js$/},()=>({contents:runtime,loader:'js',resolveDir:web}));}};
