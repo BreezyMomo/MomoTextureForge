@@ -260,7 +260,7 @@
 @media(max-width:550px){
  .tree-header{display:flex;flex-wrap:wrap;gap:6px 12px}
  .tree-header #workspace-layout-menu>.header-dropdown-panel{left:0;right:auto}
- .tree-brand{flex:1 1 100%}.tree-tool-actions{order:3;flex:1 1 100%;margin-left:0;justify-content:space-between;border-top:1px solid var(--ui-line);padding-top:6px}
+ .tree-brand{flex:1 1 100%}.tree-tool-actions{order:3;flex:1 1 100%;flex-wrap:wrap;gap:6px;margin-left:0;justify-content:flex-start;border-top:1px solid var(--ui-line);padding-top:6px}
  .tree-canvas-actions{flex:1 1 auto}.tree-resource-actions{flex:0 0 auto}
 }
 

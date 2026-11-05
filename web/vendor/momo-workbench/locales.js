@@ -139,6 +139,7 @@ export const WORKBENCH_CATALOGS=Object.freeze({
     "appearance.sampleValue": "数值",
     "appearance.sampleOption": "选项",
     "appearance.sampleDefault": "默认",
+    "header.help": "帮助",
     "language.interface": "界面语言",
     "language.switchInterface": "切换界面语言"
   },
@@ -281,6 +282,7 @@ export const WORKBENCH_CATALOGS=Object.freeze({
     "appearance.sampleValue": "Value",
     "appearance.sampleOption": "Option",
     "appearance.sampleDefault": "Default",
+    "header.help": "Help",
     "language.interface": "Interface language",
     "language.switchInterface": "Change interface language"
   }

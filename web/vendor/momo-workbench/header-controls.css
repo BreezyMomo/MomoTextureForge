@@ -1,0 +1,14 @@
+/* Header utilities share geometry across native DOM and framework adapters. */
+[data-momo-workbench] :is(button,summary).momo-header-button[data-momo-header-control]{
+ box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;
+ height:32px;min-height:32px;width:auto;min-width:0;margin:0;padding:0 10px;
+ border:1px solid var(--ui-line-strong);border-radius:var(--ui-control-radius);background:transparent;color:var(--ui-text);box-shadow:none;
+ font:400 12px/1 "Segoe UI","Microsoft YaHei",sans-serif;text-align:center;text-transform:none;letter-spacing:normal;white-space:nowrap;cursor:pointer;list-style:none
+}
+[data-momo-workbench] :is(button,summary).momo-header-button[data-momo-header-control]::before,:is(button,summary).momo-header-button[data-momo-header-control]::after{content:none}
+[data-momo-workbench] summary.momo-header-button[data-momo-header-control]::-webkit-details-marker{display:none}
+[data-momo-workbench] :is(button,summary).momo-header-button[data-momo-header-control]:hover{background:var(--ui-hover);border-color:var(--ui-navigation)}
+[data-momo-workbench] :is(button,summary).momo-header-button[data-momo-header-control]:focus-visible{outline:2px solid var(--ui-navigation);outline-offset:2px}
+[data-momo-workbench] button.momo-header-button[data-momo-header-control]:disabled{cursor:default;opacity:.5}
+[data-momo-workbench] .momo-header-button[data-momo-header-control]>.momo-header-label{display:block;line-height:1}
+[data-momo-workbench] .momo-header-button[data-momo-header-control]>.momo-appearance-swatch{display:block;width:7px;height:7px;flex:none;border-radius:50%;box-shadow:0 0 0 1px var(--ui-line-strong)}

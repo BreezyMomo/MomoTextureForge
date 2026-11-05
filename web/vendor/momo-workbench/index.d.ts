@@ -8,3 +8,4 @@ export {createMotion} from './motion.js';
 export type {MotionService,MotionView,ReorderPreview,ReorderOptions} from './motion.js';
 export {createAppearanceSettings} from './appearance-settings.js';
 export {createLanguageSelector} from './language-selector.js';
+export {createAppearanceTrigger} from './header-controls.js';

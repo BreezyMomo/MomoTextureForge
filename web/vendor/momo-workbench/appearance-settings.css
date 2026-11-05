@@ -1,4 +1,5 @@
 @import './controls.css';
+@import './header-controls.css';
 /* Scoped so all products display the same settings, including legacy themes. */
 dialog.momo-appearance-dialog[data-momo-workbench]{
  box-sizing:border-box;width:min(940px,calc(100vw - 32px));max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);padding:0;margin:auto;overflow:hidden;border:1px solid var(--ui-line-strong);border-radius:var(--ui-window-radius);background:var(--ui-panel);color:var(--ui-text);box-shadow:0 18px 65px var(--ui-shadow);font:13px/1.5 Inter,"Segoe UI","Microsoft YaHei",sans-serif;text-align:left
