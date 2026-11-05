@@ -1,6 +1,7 @@
 // Shared workbench chrome only; products supply their own content catalogs.
 export const WORKBENCH_CATALOGS=Object.freeze({
   "zh-CN": {
+    "common.close": "关闭",
     "appearance.aurora": "极光",
     "appearance.auroraDescription": "层叠面板、柔和光晕与圆润边框。只调整控件形态，保留配色与页签。",
     "appearance.candy": "糖果",
@@ -144,6 +145,7 @@ export const WORKBENCH_CATALOGS=Object.freeze({
     "language.switchInterface": "切换界面语言"
   },
   "en": {
+    "common.close": "Close",
     "appearance.aurora": "Aurora",
     "appearance.auroraDescription": "Layered panels, subtle glow and rounded frames. Colors and tabs stay independent.",
     "appearance.candy": "Candy",

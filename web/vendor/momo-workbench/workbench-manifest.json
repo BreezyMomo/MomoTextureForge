@@ -1,6 +1,6 @@
 {
   "package": "@momo/workbench",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "files": {
     "appearance.d.ts": "04fbb917d56f420818e6f78d48e33ddaf4cf1f7219f4e0481c24d5a3c39d67f7",
     "appearance.js": "f25454efab081f3c00139062304450e6cef304511a0ca563bea1f9e73603046e",
@@ -16,7 +16,7 @@
     "layout.d.ts": "9e303dfda49851f8e1af293d5ed8fca809ac96f39ee60deb9aeed06983bfca68",
     "layout.js": "3c36c1b1645f9efb394961b07ddc87abbe1349b91e83a6153731d695b1dbb1ce",
     "locales.d.ts": "12c2ecf18e0418df421a7375c6a28f6f8919ccf5f851b143f2fbf694bf2a49e7",
-    "locales.js": "aaace90586e1edd50f433f503ac9a57b3e595f46459cb935b59ba1bb0d1e3e9c",
+    "locales.js": "70b70531e90967c626eb13f84badd7b559815618b67190e15c10e24d4c007285",
     "motion.css": "0383cad643ae82aa64d9a580c7976eaf2791830e33a6ea8617fb1d4f679fd387",
     "motion.d.ts": "e42915653393116862f79e1e0c2f117f8a14682926a720c60ba3de7de4f8c5f6",
     "motion.js": "32e4f03ffbddb91e31c2c00e8d9a04b152a5c17a27ed75e8e881b10ddae03cd1",

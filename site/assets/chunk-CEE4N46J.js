@@ -1,4 +1,4 @@
-import{a as y}from"./chunk-EPYSEIS3.js";import{b as x,q as C,s}from"./chunk-KZ6PGF67.js";var S={workspace:`# Workspace and resources
+import{a as y}from"./chunk-EPYSEIS3.js";import{b as x,q as C,s}from"./chunk-ZGMOFDME.js";var S={workspace:`# Workspace and resources
 
 ## Panels and layout
 The default workspace has a node tree and graphics list on the left, a canvas in the middle, and an inspector on the right. Selecting a node opens Shape (including coloring), Transform / arrangement, Animation and Composite tabs.
