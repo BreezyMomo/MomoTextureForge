@@ -114,7 +114,7 @@ Share saved project files separately. Browser storage is not a portable project 
 npm run build:pages
 ```
 
-This preserves the offline HTML build, then independently generates tracked `site/index.html` and `site/assets/`, retaining `.nojekyll`. Deploy the complete `site/` without a Node server; GitHub Pages repository subpaths are supported. The online entry page cannot run offline by itself; use `dist/MomoTextureForge.html` for that. `dist/` is ignored; `site/` travels with source changes.
+This preserves the offline HTML build, then independently generates `site/index.html` and `site/assets/`, retaining `.nojekyll`. Deploy the complete `site/` without a Node server; GitHub Pages repository subpaths are supported. The online entry page cannot run offline by itself; use `dist/MomoTextureForge.html` for that. Both `site/` and `dist/` are generated and ignored by Git, so they are not committed with source changes.
 
 `web/pages.js` handles the hosted entry, retaining `?view=examples`, `?view=validate` and canvas share links. ES modules and styles have content hashes for independent caching. Skill payloads load on installation/download, thumbnails are separate lazy-loaded images, and the export Worker loads when an export starts. Shader implementations are cached separately and remain synchronously available for resource signatures and project dependencies; saved/shared native projects retain their implementations. Source development and the offline single-file workflow remain unchanged.
 
@@ -132,7 +132,7 @@ A frame ZIP or three-size ZIP counts once. Cancellation, failure, atlas-only pre
 
 Analytics failures do not block startup. Visit each official site and inspect its Baidu installation check and reports. New script/report data can lag; inserting a script alone does not prove receipt. After changes run `node --test tests/site-analytics.test.mjs` and `node tests/site-analytics-browser-check.mjs` for allowlists, CSP, request origins, bounded event fields and offline isolation. Add `--real-sdk` to use the actual Baidu SDK with all analytics beacons intercepted locally, without sending test traffic/events. Run `node tests/export-analytics-browser-check.mjs` for all ten actual formats, all four channels, clipboard/fallback and cancellation/failure/preview exclusions.
 
-`.github/workflows/pages.yml` validates, builds and deploys on pushes to `main `, with manual dispatch available. Initially select **Settings → Pages → Build and deployment → Source → GitHub Actions**. Actions results determine actual deployment status.
+On pushes to `main`, `.github/workflows/pages.yml` runs `npm ci`, `npm test`, `npm run validate:definitions` and `npm run build:pages`, uploads the complete `site/` with `actions/upload-pages-artifact`, then deploys it with `actions/deploy-pages` without committing build output back to the repository. Deployment artifacts are retained for 1 day; stopping Git tracking does not automatically remove build files from existing Git history. Initially select **Settings → Pages → Build and deployment → Source → GitHub Actions**. Manual dispatch is also available. Actions results determine actual deployment status.
 
 See [GitHub's Pages overview](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages) for service conditions. Visitors can access code/assets embedded in a deployed page. Personal libraries/drafts remain in each visitor's browser; remote libraries require separate deployment and CORS.
 
@@ -269,7 +269,7 @@ Capture honors reduced motion and waits for real controls and previews before an
 
 [GitHub](https://github.com/BreezyMomo/MomoTextureForge) is primary; [Gitee](https://gitee.com/BreezyMomo/MomoTextureForge) is the mainland mirror. Commit/merge on GitHub. Gitee mirror management uses Pull plus a GitHub push Webhook.
 
-- Git sync includes code, docs, screenshots, `site/`, branches and tags, not issues, PRs or release attachments.
+- Git sync includes code, docs, screenshots, branches and tags. It excludes generated `site/` and `dist/`, issues, PRs and release attachments.
 - Avoid independent commits to Gitee's main branch; mirror updates overwrite destination data.
 - Inspect Gitee mirror management request/completion times and retry updates as needed. Compare full `main ` SHAs.
 - The dedicated fine-grained GitHub token selects only this repository, with read-only Contents/Metadata and read/write Webhooks. Keep credentials out of code/logs/docs.

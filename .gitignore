@@ -1,5 +1,6 @@
 /node_modules/
 /dist/
+/site/
 /test-results/
 /web/generated/
 

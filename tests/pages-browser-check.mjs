@@ -85,7 +85,7 @@ try{
  await page.goto(exampleLink);await ready();
  if(exampleURL.searchParams.has('preview-time'))assert.equal(Number(await page.locator('#tree-time').inputValue()),Number(exampleURL.searchParams.get('preview-time')),'example opens at its authored preview time');
  const exampleNodes=await page.locator('[role="treeitem"]').count();assert.ok(exampleNodes>2);
- await page.locator('details.header-dropdown > summary').filter({hasText:'文件'}).click();
+ await page.locator('#header-file-menu').click();
  await page.locator('#new-project').click();
  assert.equal(await page.locator('[role="treeitem"]').count(),0,'new project has no default shape');
  await page.locator('#undo').click();

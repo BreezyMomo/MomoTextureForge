@@ -19,7 +19,7 @@
 - Skill 源文件在 skills/，修改后运行 node build-authoring-kit.mjs，同步生成文件。
 - 图形推荐上下文仅从图形库导出，不恢复选中节点上下文或固定图形清单。用户主动开启的 MCP 可读取主画布完整作品，并按用户创作要求原子编辑；修改使用新鲜 snapshotId 校验版本并支持撤销；先 forge_pages 确认目标，再以 pageId 捕获，页面不明确时询问用户。结构、资源与渲染使用同一 snapshotId，修改后重新捕获，不自动接入其他标签页或读取整个用户图库。
 - 安装：npm ci。验证：npm test、npm run validate:definitions。构建：npm run build:standalone。
-- 测试输出放在 test-results/，离线产物放在 dist/；npm run build:pages 将网页同步到可提交的 site/ 目录供静态部署。不提交依赖目录和浏览器用户数据。
+- 测试输出放在 test-results/，离线产物放在 dist/；npm run build:pages 生成忽略的 site/ 目录。GitHub Actions 构建并将 site/ 作为 Pages 产物上传部署，不提交构建产物、依赖目录和浏览器用户数据。
 - 提交、推送与发布按用户指令执行。
 
 - 固定界面文案用稳定语义 key 调用 `uiText(key)`，动态句子用 `uiFormat(key, ...values)`；各语言独立 JSON 在 `web/locales/`，由 `catalogs.js` 注册，禁止中文作 key 或运行时按文案反查。HTML 用显式 `data-i18n` 绑定，程序错误用 `messageError` 携带 key 与参数，界面通过 `uiError` 显示。修改措辞只改语言文件，构建校验所有语言同键与占位符一致；参数别名用 `parameterLabel`，用户命名与代码不得自动翻译。选项值、DOM选择器和判断条件不使用翻译结果。修改界面后检查 `tests/ui-language.test.mjs` 与源码/静态版 `tests/ui-language-browser-check.mjs`，保留英文窄屏顶栏可用性。

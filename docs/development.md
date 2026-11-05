@@ -114,7 +114,7 @@ npm run build:standalone
 npm run build:pages
 ```
 
-该命令保留离线 HTML 构建，再独立生成可提交的 `site/index.html` 与 `site/assets/`，保留 `.nojekyll`。部署时上传完整 `site/`，不需要 Node.js 服务，兼容 GitHub Pages 仓库子路径。在线首页不能单独离线打开；离线使用请选择 `dist/MomoTextureForge.html`。`dist/` 不提交，`site/` 随源码更新。
+该命令保留离线 HTML 构建，再独立生成 `site/index.html` 与 `site/assets/`，保留 `.nojekyll`。部署时上传完整 `site/`，不需要 Node.js 服务，兼容 GitHub Pages 仓库子路径。在线首页不能单独离线打开；离线使用请选择 `dist/MomoTextureForge.html`。`site/` 与 `dist/` 均由构建生成并被 Git 忽略，不随源码提交。
 
 `web/pages.js` 负责在线入口，继续支持 `?view=examples`、`?view=validate` 与画布分享链接。ES 模块和样式带内容哈希，可分别缓存；Skill 文件在安装或下载时加载，缩略图独立输出并延迟加载，导出 Worker 在开始导出时加载。Shader 实现单独缓存，仍同步提供给资源签名和项目依赖，保存与分享的原生项目不会丢失实现。源代码开发方式与离线单文件的使用流程不变。
 
@@ -132,7 +132,7 @@ npm run build:pages
 
 统计失败不阻塞编辑器启动。核验时分别访问两个正式站点，在百度统计对应网站的“代码安装检查”和访问报告中查看；新站点脚本及报表可能延迟生效，不能仅凭插入了 script 标签判定数据已入库。修改统计后运行 `node --test tests/site-analytics.test.mjs` 和 `node tests/site-analytics-browser-check.mjs`，后者检查静态包的白名单、CSP、请求来源、事件字段与离线隔离；加 `--real-sdk` 使用真实百度 SDK，并在本地拦截所有统计请求核验上报 URL，不发送测试访问/事件。运行 `node tests/export-analytics-browser-check.mjs` 验证实际十种格式下载、四种通道、复制/回退及取消/失败/预览不计数。
 
-`.github/workflows/pages.yml` 在推送 `main` 后执行检查、构建和 Pages 部署。首次配置在 GitHub 仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**；也可在 Actions 中手动运行部署。实际部署状态以 Actions 结果为准。
+`.github/workflows/pages.yml` 在推送 `main` 后执行 `npm ci`、`npm test`、`npm run validate:definitions` 与 `npm run build:pages`，再通过 `actions/upload-pages-artifact` 上传完整 `site/`，由 `actions/deploy-pages` 部署，不向仓库回写构建产物。部署产物保留 1 天；既有 Git 历史中的构建文件不会因停止跟踪而自动清除。首次配置在 GitHub 仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**；也可在 Actions 中手动运行部署。实际部署状态以 Actions 结果为准。
 
 [官方 Pages 说明](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages)提供服务条件与限制。部署后访问者能获取网页中嵌入的代码和资源。在线版的个人图库与草稿仍在访问者浏览器内，远程图库需另行部署并配置跨域。
 
@@ -271,7 +271,7 @@ node tools/capture-docs.mjs --language en post-effects
 
 [GitHub](https://github.com/BreezyMomo/MomoTextureForge) 为主仓库，[Gitee](https://gitee.com/BreezyMomo/MomoTextureForge) 为国内镜像。日常提交与合并在 GitHub 完成，Gitee 使用仓库镜像管理中的 **Pull** 方向和 GitHub 的 **push Webhook** 自动拉取更新。
 
-- 同步内容包含代码、文档、截图、`site/` 静态网页、分支与标签；Issue、Pull Request 和发行版附件不随 Git 镜像同步。
+- 同步内容包含代码、文档、截图、分支与标签；`site/` 与 `dist/` 构建产物、Issue、Pull Request 和发行版附件不随 Git 镜像同步。
 - 不直接向 Gitee 主分支提交独立修改，镜像更新会覆盖目标仓库的数据。
 - 查看 **Gitee → 管理 → 仓库镜像管理** 的最近请求/完成时间；需要时点“更新”重试。比较两边 `main` 的完整提交 SHA，确认版本一致。
 - 镜像使用专用的 GitHub fine-grained token，仅选择本仓库，权限为 Contents/Metadata 只读和 Webhooks 读写；不要把令牌写入代码、日志或文档。

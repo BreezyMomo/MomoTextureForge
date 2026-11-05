@@ -92,7 +92,7 @@ npm run build:standalone  # dist/MomoTextureForge.html and an offline ZIP
 npm run build:pages       # generates the deployable multi-file site/ directory
 ```
 
-Deploy the complete `site/` directory, including the entry page and `assets/`, to GitHub Pages; no backend is required. Skills, library images and the export Worker load on demand. For offline use, download `dist/MomoTextureForge.html` rather than saving the online entry page alone.
+After a push to `main`, GitHub Actions checks and builds the site, then uploads the complete `site/` directory, including the entry page and `assets/`, as a Pages deployment artifact; no backend is required. Git ignores both `site/` and `dist/`, and build output is not committed back to the repository. Skills, library images and the export Worker load on demand. For offline use, download `dist/MomoTextureForge.html` rather than saving the online entry page alone.
 
 The built offline HTML does not require Node.js. Browser storage is isolated by origin: the online site, local ports and offline files do not automatically share drafts or libraries. Save project files and resource packs as backups.
 
