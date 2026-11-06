@@ -12,10 +12,10 @@ Visit the [online editor](https://breezymomo.github.io/MomoTextureForge/). See [
 
 ![Nodes, canvas and inspector](images/en/workspace.png)
 
-> Callouts: 1 Open the graphics library; 2 Select a node; 3 Switch texture channel; 4 Edit the selected node.
+> Callouts: 1 Manage the graphics library; 2 Select a node; 3 Switch texture channel; 4 Edit the selected node.
 
-- **Toolbar:** canvas name, File, undo/redo, canvas settings, export, graphics and help. Narrow windows move Canvas settings into File and Examples into the menu beside Graphics library.
-- **Far left:** full-height sidebar library with reusable copies.
+- **Toolbar:** canvas name, File, undo/redo, canvas settings, export, Examples and help. Narrow windows move Canvas settings into File.
+- **Far left:** full-height sidebar library. **Manage**, after **View** beside the search field, opens resource management.
 - **Second column:** node tree. Select an instance or group to decide what the inspector edits.
 - **Center:** composite preview, texture channels, 2D/3D modes, canvas tools and playback.
 - **Right:** selected node's shape, color, transform/layout, animation and compositing. No node means no node parameters.
@@ -125,7 +125,7 @@ VFX thumbnails show roughly 30% progress; play the canvas to inspect the full mo
 
 UI backgrounds are static, tileable patterns with dark-background color PNG defaults. Select an arrangement group to change rows and columns, or its inner diamonds/lines/dots to edit colors and sizes. Choose Solid color canvas background to retain the background, or Transparent to export only the pattern for overlay. Check seams with **Tile preview** and use texture repetition in your project instead of stretching the whole image.
 
-The material-presets category contains acid splatter and curled celebration ribbons, both static and transparent by default. Edit droplets, bubbles, highlights, ribbon control points, widths and colors. Select the outer group and **Save selection to library** to reuse it.
+The material-presets category contains acid splatter and curled celebration ribbons, both static and transparent by default. Edit droplets, bubbles, highlights, ribbon control points, widths and colors. Use **Save current preview as resource** to keep an editable composition.
 
 ![Acid splatter and curled ribbon presets](images/en/vfx-presets.png)
 
@@ -133,7 +133,7 @@ The material-presets category contains acid splatter and curled celebration ribb
 
 See [Canvas and compositing](05-canvas-and-compositing.en.md) for arrangement instructions and limits.
 
-After editing, **Save canvas to library** preserves a reusable composition; **File → Save project** preserves the source canvas.
+After editing, **Save current preview as resource** preserves a reusable composition; **File → Save project** preserves the source canvas.
 
 ## Check your first result
 

@@ -20,7 +20,7 @@ Download writes to the bound directory, prompting for binding if needed. Switchi
 
 ## Subscribe and use
 
-1. Open Graphics library → Manage resources → Remote libraries.
+1. Select Manage in the sidebar Graphics library panel, then Manage resources → Remote libraries.
 2. Enter a name and direct `index.json` URL, such as `https://example.com/library/index.json` (format example only). Trailing slash appends the index. Repository homepages, ZIP links and `library.json` are not subscription indexes.
 3. After connection, close the dialog and filter by source. Multiple sources can be enabled, disabled, renamed, refreshed or removed.
 4. Resources appear directly in the sidebar and manager. Add to canvas reads the selected remote pack on demand without saving it to the library.

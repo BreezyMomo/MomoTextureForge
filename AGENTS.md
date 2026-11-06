@@ -18,6 +18,7 @@
 - 图形参数必须有稳定且图形内唯一的 variable，显示名称使用 aliases 语言映射与全局顺序回退；无匹配别名时显示变量名。行为判断用 role，不用中文 label。语言切换不得修改项目、关键帧或资源哈希；格式见 docs/12-language-and-aliases.md。
 - Skill 源文件在 skills/，修改后运行 node build-authoring-kit.mjs，同步生成文件。
 - 图形推荐上下文仅从图形库导出，不恢复选中节点上下文或固定图形清单。用户主动开启的 MCP 可读取主画布完整作品，并按用户创作要求原子编辑；修改使用新鲜 snapshotId 校验版本并支持撤销；先 forge_pages 确认目标，再以 pageId 捕获，页面不明确时询问用户。结构、资源与渲染使用同一 snapshotId，修改后重新捕获，不自动接入其他标签页或读取整个用户图库。
+- 个人图库以当前绑定的本地文件夹为唯一数据源；侧栏与管理窗口显示同一批资源，创建与保存先检查绑定及写权限。换绑不合并旧图库，保留画布实例；旧浏览器资源保存并回读校验成功后才清理。IndexedDB 只维护目录连接与可重建缓存，不恢复第二套浏览器图库。
 - 安装：npm ci。验证：npm test、npm run validate:definitions。构建：npm run build:standalone。
 - 测试输出放在 test-results/，离线产物放在 dist/；npm run build:pages 生成忽略的 site/ 目录。GitHub Actions 构建并将 site/ 作为 Pages 产物上传部署，不提交构建产物、依赖目录和浏览器用户数据。
 - 提交、推送与发布按用户指令执行。

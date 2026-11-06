@@ -10,6 +10,8 @@
 
 Search, category and source filters stay at the top. Expand **Manage resources** for creation, remote subscriptions, resource export and AI catalogs. Card editing/version actions are in details or More menus.
 
+Open management with **Manage**, immediately after **View** at the top of the sidebar **Graphics library** panel. Reopen a closed library panel from **Layout**.
+
 The sidebar and manager share the same built-in, local and subscribed remote resources. New resources appear immediately after saving or importing. Opening a canvas does not clear the library.
 
 Thumbnail grids automatically add or remove columns based on available panel width, with a minimum card width of about 120px. Widen the panel for three, four or more columns; narrow panels fall back to one. View → List remains a single column.
@@ -39,7 +41,7 @@ Use **☆ / ★** in the upper-right corner of a card to favorite or unfavorite 
 
 > Callouts: 1 Search resources; 2 Add directly to canvas; 3 Try editing a resource; 4 Expand details and resource management.
 
-1. Open **Graphics library** in the toolbar. Search names, categories or tags, such as “Smoke and fire”, “Water and caustics” or a specific graphic name.
+1. Select **Manage** in the sidebar **Graphics library** panel. Search names, categories or tags, such as “Smoke and fire”, “Water and caustics” or a specific graphic name.
 2. Filter by source and type to distinguish built-in, local and remote resources.
 3. Choose **Add directly to canvas**. The library closes and the inspector selects the new node. Formulas, generators, images and compositions share this entry point.
 4. The sidebar and manager show the same resources. Favorite resources or open Details and management for trial editing, editing and export. No add-to-list step is required.
@@ -60,19 +62,17 @@ If an older list contains retired graphics or missing dependencies, the editor b
 
 - A library card's **Edit [name]** opens the resource editor. Changes to built-in resources are normally saved as your own new resource.
 - Click a graphics-list **thumbnail** to trial-edit it. **Return to canvas** restores the original canvas; **Add to canvas** creates an instance.
-- **Save changes** publishes a personal resource version. **Save as new resource** keeps an independent result. Built-in and remote edits become personal copies. Existing canvas instances are unchanged.
+- **Save changes** publishes a personal resource version. **Save current preview as resource** keeps an independent result. Built-in and remote edits become personal copies. Existing canvas instances are unchanged.
 - **More → Rename resource** updates a personal resource; built-in and remote resources are saved as personal copies. Existing instance names remain unchanged.
 
 ## 3. Save a composition from the canvas
 
-Check the scope before choosing a save action above the preview:
+The **Save as resource** menu offers one **Save current preview as resource** action. Its scope follows the preview: the whole canvas normally, the edited resource during a trial, or the displayed object in solo preview. Selecting a node does not narrow a normal canvas save. Resources retain editable structure.
 
 | Action | Scope |
 | --- | --- |
-| Save selection to library | Selected node and its children as a reusable resource |
-| Save canvas to library | Entire canvas as one composition resource |
-| Save as new resource | A new independent library resource |
-| Save changes | A new personal resource version; existing instances are unchanged |
+| Save current preview as resource | A new independent resource containing the current preview |
+| Save changes | Publishes a new version when the displayed preview corresponds to an existing personal resource; existing instances are unchanged |
 | File → Save project | Current canvas and required resources |
 
 A saved composition can be added to other canvases like a basic shape. Use it for coordinated rings, stars or decorations.

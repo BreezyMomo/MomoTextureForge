@@ -1,3 +1,4 @@
+import {previewResourceRoot} from './preview-resource.js';
 import {createUnifiedLibraryBridge} from './editor-unified-library.js';
 import {unifiedGraphicsLibrary as unifiedLibrary} from './unified-graphics-library.js';
 import {libraryDestinationState} from './folder-library-manager.js';
@@ -130,7 +131,7 @@ function projectOwner(){return workSession?.state??state;}
 function originalPreset(){return componentPreview&&(unifiedLibrary.find(componentPreview.entryId??componentPreview.id.slice(7))??projectOwner().projectResources.find(p=>'preset:'+p.id===componentPreview.id));}
 const linkedResource=root=>unifiedLibrary.find(root?.resourceRef);
 let workspaceWorkflow=null,dockWorkspace=null;
-function previewButtons(){const linked=linkedResource(current());$('save-project-resource').textContent=(linked ? uiText("editor.saveAsGraphic") : uiText("editor.saveToGraphics"));$('save-project-resource').hidden=!!componentPreview;$('preview-update').textContent=uiText("editor.updateGraphic");$('preview-save').textContent=uiText("editor.saveAsGraphic");$('update-project-resource').hidden=!!componentPreview||!linked||!!linked.builtin||!!linked.remote||!!linked.legacy;$('preview-update').hidden=!originalPreset()||!!originalPreset()?.builtin||!!originalPreset()?.remote||!!originalPreset()?.legacy;$('preview-undo-update').hidden=true;$('solo').hidden=!!componentPreview;for(const id of ['return-work','preview-add','preview-reset','preview-save'])$(id).hidden=!componentPreview;$('preview-add').textContent=uiText("editor.addToCanvas");headerView.update({...headerView.getSnapshot(),componentPreview:!!componentPreview});workspaceWorkflow?.update();}
+function previewButtons(){const linked=linkedResource(solo?current():state.root);$('save-project-resource').hidden=$('preview-save').hidden=true;$('preview-update').textContent=uiText('workspace.saveResourceChanges');$('update-project-resource').hidden=!!componentPreview||!linked||!!linked.builtin||!!linked.remote||!!linked.legacy;$('preview-update').hidden=!originalPreset()||!!originalPreset()?.builtin||!!originalPreset()?.remote||!!originalPreset()?.legacy;$('preview-undo-update').hidden=true;$('solo').hidden=!!componentPreview;for(const id of ['return-work','preview-add','preview-reset'])$(id).hidden=!componentPreview;$('save-whole-library').disabled=!state.root.children.length;$('preview-add').textContent=uiText("editor.addToCanvas");headerView.update({...headerView.getSnapshot(),componentPreview:!!componentPreview});workspaceWorkflow?.update();}
 function browse(p){if(busy)return;cachePreview();if(!componentPreview)workSession=captureSession();let entry=previewSessions.get(p.id);if(!entry||entry.sourceSignature!==unifiedLibrary.signature(p.preset)){const draft=project();draft.name=p.name;draft.root.name='资源试编辑';draft.root.children=[cloneWithShortcuts(p.preset.root)];draft.root.children[0].name=graphicLabel(p.preset);draft.root.children[0].resourceRef=p.preset.id;entry={id:p.id,entryId:p.preset.id,sourceSignature:unifiedLibrary.signature(p.preset),name:p.name,original:structuredClone(draft),session:{...captureSession(),state:draft,selected:draft.root.children[0]?.id??draft.root.id,time:0,solo:false,tiled:false,history:[],future:[],localAnimationPreview:null}};previewSessions.set(p.id,entry);}entry.name=p.name;componentPreview=entry;restoreSession(entry.session);solo=false;remember(p.id);previewButtons();refresh();}
 function returnWork(){if(busy)return;if(componentPreview){cachePreview();componentPreview=null;restoreSession(workSession);workSession=null;previewButtons();refresh();}else requestRender();}
 function previewComponent(){if(!state.root.children.length)throw messageError("editor.addSomeContentNodesFirst");if(state.root.children.length===1)return cloneWithShortcuts(state.root.children[0]);const result=cloneWithShortcuts(state.root);result.name=componentPreview.name;return result;}
@@ -622,13 +623,14 @@ async function controlComponentSession(args){
   nodeShortcuts.copyTree(copy,find(result.project.root,id).node);returnWork();if(!edit(()=>{state=shelf.bind(result.project);selected=id;}))throw messageError('editorBridge.editFailed');return {inserted:id};
  }
  if(args.action==='save'){const copy=previewComponent(),entry=await saveUnifiedRoot(copy,{name:args.name??copy.name,aliases:args.aliases});return {saved:entry.id};}
- const existing=originalPreset();if(!existing)throw Error('Original list component no longer exists');
+ const existing=originalPreset();if(!existing)throw messageError('unified.resourceMissing');
+ if(existing.builtin||existing.remote||existing.legacy)throw messageError('unified.readOnlyResource');
  if(args.action==='update'){
   const previous={root:structuredClone(existing.root),forest:existing.forest===true,original:structuredClone(componentPreview.original)},replacement=previewComponent();replacement.name=existing.name;
   await storePresetReplacement(existing,replacement);componentPreview.previousUpdate=previous;componentPreview.original=structuredClone(state);previewButtons();return {updated:existing.id};
  }
  if(args.action==='undo-update'){
-  const previous=componentPreview.previousUpdate;if(!previous)throw Error('No component update to undo');storePresetReplacement(existing,previous.root);componentPreview.original=previous.original;delete componentPreview.previousUpdate;previewButtons();return {restored:existing.id};
+  const previous=componentPreview.previousUpdate;if(!previous)throw Error('No component update to undo');await storePresetReplacement(existing,previous.root);componentPreview.original=previous.original;delete componentPreview.previousUpdate;previewButtons();return {restored:existing.id};
  }
  throw Error('Unknown component session action');
 }
@@ -712,9 +714,9 @@ document.addEventListener('momo-download-handdrawn-postprocess',async event=>{
  try{notify(uiText('shader.packing'));const pack=await exportHanddrawnPostprocess(animationPreviewProject(),{nodeId:event.detail.nodeId,handdrawnInput:event.detail.handdrawnInput,times:[formulaSeconds],size:512});download(pack.bytes,'Momo-Handdrawn-postprocess.zip','application/zip');notify(uiText('shader.packageReady'));}catch(error){notifyError(uiError(error));}finally{shaderExportBusy=false;}
 });
 editorHandlers("open-graphics-library").click=()=>graphicsLibrary.open();
-editorHandlers("save-whole-library").click=()=>saveComponent(state.root);
+editorHandlers("save-whole-library").click=async()=>{try{const root=previewResourceRoot(state,{soloId:solo?selected:null,resourceEditing:!!componentPreview});await saveComponent(root);}catch(error){notifyError(uiError(error));}};
 editorHandlers("save-project-resource").click=()=>saveComponent(current());
-editorHandlers('update-project-resource').click=async()=>{if(!await requireGraphicsLibrary())return;const existing=linkedResource(current());if(!existing||existing.builtin||existing.remote)return saveComponent(current());try{await saveUnifiedRoot(current(),{existing,name:existing.name,aliases:existing.aliases});}catch(error){notifyError(uiError(error));}};
+editorHandlers('update-project-resource').click=async()=>{if(!await requireGraphicsLibrary())return;const root=solo?current():state.root,existing=linkedResource(root);if(!existing||existing.builtin||existing.remote)return $('save-whole-library').click();try{await saveUnifiedRoot(root,{existing,name:existing.name,aliases:existing.aliases});}catch(error){notifyError(uiError(error));}};
 let exportController=null,exportPreview=null,disposeExportPreview=()=>{},batchPreviewSize=128;
 function exportStage(message){const status=$('export-stage');if(status)status.textContent=message?.key?uiFormat(message.key,...message.values):uiText(message);}
 async function exportImage(kind,{preview=false}={}){
@@ -773,7 +775,7 @@ async function loadPackFile(file){if(file.size>64*1024*1024)throw messageError("
 function validatePackGraphics(pack){let test;try{if(pack.prepared.length){test=new TreeRenderer(document.createElement('canvas'));for(const [id]of pack.prepared){const p=project();p.root.children=[node('shape',id)];test.draw(p,32,32,{time:.25,quality:1});p.root.children[0].boundary='repeat';test.draw(p,32,32,{time:.25,quality:1});}}}finally{test?.destroy();}}
 editorHandlers("save-project").click=()=>exportPack(canvasProject(state),state.name);editorHandlers("open-project").click=()=>$('project-file').click();editorHandlers("project-file").change=async()=>{let pack;try{const file=$('project-file').files[0];if(!file)return;pack=await loadPackFile(file);pack.register();const p=sanitizeTree(pack.payload);validatePackGraphics(pack);await pack.persist();returnWork();edit(()=>{state=p;selected=p.root.id;animationEditMode='normal';localAnimationPreview=null;time=0;});library();}catch(e){pack?.rollback();notifyError(uiError(e));}finally{$('project-file').value='';}};
 editorHandlers("save-selected-component").click=()=>saveComponent(current());
-editorHandlers("export-now").click=()=>openGlobal('export');editorHandlers("project-settings").click=()=>openGlobal('project');editorHandlers("close-global").click=()=>{disposeExportPreview();disposeExportPreview=()=>{};exportPreview=null;$('global-controls').replaceChildren();globalPanel=null;$('global-panel').hidden=true;renderPreviewSettings();$('export-now').focus();};editorHandlers("solo").click=()=>{solo=!solo;if(solo)select(selected);$('solo').textContent=(solo ? uiText("editor.returnToComposite") : uiText("editor.soloPreview"));requestRender();};editorHandlers("shape-search").input=library;
+editorHandlers("export-now").click=()=>openGlobal('export');editorHandlers("project-settings").click=()=>openGlobal('project');editorHandlers("close-global").click=()=>{disposeExportPreview();disposeExportPreview=()=>{};exportPreview=null;$('global-controls').replaceChildren();globalPanel=null;$('global-panel').hidden=true;renderPreviewSettings();$('export-now').focus();};editorHandlers("solo").click=()=>{solo=!solo;if(solo)select(selected);$('solo').textContent=(solo ? uiText("editor.returnToComposite") : uiText("editor.soloPreview"));previewButtons();requestRender();};editorHandlers("shape-search").input=library;
 function positionPreview(){const surface=$('tree-preview-surface');surface.style.setProperty('--canvas-pan-x',viewPan[0]+'px');surface.style.setProperty('--canvas-pan-y',viewPan[1]+'px');}
 function sizePreview(){if(!canvasMode())return;const stage=$('canvas-stage'),surface=$('tree-preview-surface'),dims=previewDimensions(state.canvas.ratio,Math.max(64,(stage.clientWidth||512)-56),Math.max(64,(stage.clientHeight||512)-56),$('zoom').value==='fit'?1:Number($('zoom').value));surface.style.width=dims.displayWidth+'px';surface.style.height=dims.displayHeight+'px';surface.classList.toggle('tiled',tiled);positionPreview();}
 const PreviewObserver=globalThis.ResizeObserver??window.ResizeObserver;
@@ -1071,7 +1073,7 @@ requestRender();
 
 // Native disclosures retain keyboard navigation; dismiss before opening dialogs.
 dockWorkspace=installEditorDocking({panels:editorUI.panels,onChange:()=>{sizePreview();requestRender();},onMessage:notify});
-workspaceWorkflow=installWorkspaceWorkflow({resetModules:()=>{inspectorModules.resetOrder(section);inspector();notify(uiText('workspace.parameterOrderRestored'));},getScope:()=>({resource:componentPreview?.name,node:selected===state.root.id?null:current().name})});
+workspaceWorkflow=installWorkspaceWorkflow({resetModules:()=>{inspectorModules.resetOrder(section);inspector();notify(uiText('workspace.parameterOrderRestored'));},getScope:()=>({resource:componentPreview?.name,node:selected===state.root.id?null:current().name,solo:solo?current().name:null})});
 editorHandlers('open-docked-timeline').click=()=>dockWorkspace.toggle('timeline');
 onLanguageChange(()=>{syncPlaybackButton();groupSelected.textContent=uiText("editor.groupSelection");groupSelected.title=uiText("editor.ctrlCmdGGroupSelectedSiblings");["editor.showSelected","editor.hideSelected","editor.ctrlMultiselectShiftRangeSelectDragReorder"].forEach((label,i)=>selectionTools.children[i].textContent=uiText(label));refresh();animationEditor.update(true);});
 

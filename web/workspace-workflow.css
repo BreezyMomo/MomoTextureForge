@@ -35,7 +35,11 @@
 .dock-panel-body>.dock-library-content{display:flex;flex-direction:column;overflow:hidden;gap:10px}
 .library-browse-header{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;flex:none;min-width:0}
 .dock-library-content #shape-library{flex:1;min-height:0;overflow:auto;scrollbar-gutter:stable}
-.dock-library-content .tree-library-search{display:flex;align-items:center;gap:6px;margin:0}
+.dock-library-content .tree-library-search{display:flex;align-items:center;flex-wrap:nowrap;gap:6px;margin:0}
+.dock-library-content .tree-library-search .graphic-search-field{flex:1 1 0;min-width:0}
+.dock-library-content .tree-library-search>.workspace-menu,.dock-library-content .tree-library-search>#open-graphics-library{flex:none}
+.dock-library-content .tree-library-search>#open-graphics-library{white-space:nowrap;font-size:12px;padding:6px 8px}
+@container graphic-browser (max-width:160px){.dock-library-content .tree-library-search{flex-wrap:wrap;gap:4px}.dock-library-content .tree-library-search .graphic-search-field{flex-basis:100%}}
 .dock-library-content .tree-library-search .search-clear-wrap{flex:1;min-width:0}
 .dock-library-content #shape-search{margin:0;min-width:0;width:100%}
 .dock-library-content .tree-library-filters{display:contents}

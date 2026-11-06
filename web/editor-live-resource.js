@@ -86,7 +86,7 @@ export function createLiveResource({library,render=renderPreview,save=saveLibrar
    await check();if(!isActive())throw Error('Resource request expired');
    if(args.previewOnly)return {applied:false,previewOnly:true,previewTime,preview:thumbnail,metadata:meta,...(trace?{trace:{stats:trace.stats,warnings:trace.warnings}}:{}),scope:'Validated and rendered draft only; no library, list, canvas or persistent resource writes.'};
    const entry=await save(packed.entry,packed.bytes,{expectedDestination:destination,...(previous?{update:true,expectedLocal:{versionId:previous.versionId,hash:previous.hash}}:{})});
-   return {applied:true,key:graphicVariantKey(entry),entry,preview:thumbnail,...(trace?{trace:{stats:trace.stats,warnings:trace.warnings}}:{}),scope:'Local library original only; canvas and personal graphics list are unchanged.'};
+   return {applied:true,key:graphicVariantKey(entry),entry,preview:thumbnail,...(trace?{trace:{stats:trace.stats,warnings:trace.warnings}}:{}),scope:'Saved to the bound local library folder and visible in both library views; existing canvas instances are unchanged.'};
   }finally{
    // Registry indices are referenced by density fields. A concurrent native
    // import may append assets; keep this entry rather than shifting indices.

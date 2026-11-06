@@ -37,6 +37,6 @@ export function createLiveLibraryImport({library,readLocal=libraryEntries,save=s
   await check();
   if(!records.length)return {applied:false,entries:[],skipped};
   const entries=await save(records,{expectedEntries:before,isActive,expectedDestination:destination});
-  return {applied:true,entries:entries.map(entry=>({key:graphicVariantKey(entry),entry})),skipped,scope:'Local library only; canvas and personal list are unchanged.'};
+  return {applied:true,entries:entries.map(entry=>({key:graphicVariantKey(entry),entry})),skipped,scope:'Imported into the bound local library folder and visible in both library views; existing canvas instances are unchanged.'};
  };
 }

@@ -38,7 +38,7 @@ export function installWorkspaceWorkflow({resetModules,getScope}){
  document.addEventListener('scroll',event=>{for(const m of menus)if(!m.panel.contains(event.target))m.close();},true);
 
  const library=document.querySelector('.dock-library-content'),search=document.querySelector('.tree-library-search');
- const libraryTools=menu('workspace.viewOptions');libraryTools.panel.append(document.querySelector('.tree-library-view'),$('collapse-library'));search.append(libraryTools.details);
+ const libraryTools=menu('workspace.viewOptions');libraryTools.panel.append(document.querySelector('.tree-library-view'),$('collapse-library'));search.append(libraryTools.details,$('open-graphics-library'));
  const categories=make('details','library-category-disclosure'),categorySummary=make('summary'),categoryText=make('span');
  categories.id='library-category-disclosure';categorySummary.append(categoryText);categories.append(categorySummary,$('library-categories'));
  document.querySelector('.tree-library-filters').append(categories);
@@ -53,7 +53,8 @@ export function installWorkspaceWorkflow({resetModules,getScope}){
  const actions=document.querySelector('.preview-actions'),resources=menu('workspace.saveResource');resources.details.id='resource-actions-menu';
  function group(key,ids){const section=make('section','workspace-action-group'),title=make('strong','',key);section.append(title);for(const id of ids)section.append($(id));resources.panel.append(section);}
  const saveScope=make('p','workspace-scope-note');resources.panel.append(saveScope);
- group('workspace.graphicsLibrary',['save-project-resource','update-project-resource','preview-save','save-whole-library']);
+ group('workspace.graphicsLibrary',['save-whole-library','update-project-resource']);
+ $('save-project-resource').hidden=$('preview-save').hidden=true;
  $('save-selected-component').hidden=true;
  group('workspace.resourceSession',['preview-reset','preview-undo-update']);
  actions.insertBefore(resources.details,$('solo'));
@@ -73,7 +74,7 @@ export function installWorkspaceWorkflow({resetModules,getScope}){
  function update(){
   const scope=getScope();scopeNote.hidden=!scope.resource;
   document.querySelector('.tree-preview').classList.toggle('is-resource-editing',!!scope.resource);
-  saveScope.textContent=scope.resource?uiFormat('workspace.savingResource',scope.resource):scope.node?uiFormat('workspace.savingSelection',scope.node):uiText('workspace.savingCanvas');
+  saveScope.textContent=scope.solo?uiFormat('workspace.savingSelection',scope.solo):scope.resource?uiFormat('workspace.savingResource',scope.resource):uiText('workspace.savingCanvas');
   inspectorMenu.details.hidden=!scope.node;
   for(const group of resources.panel.querySelectorAll('.workspace-action-group'))group.hidden=![...group.querySelectorAll('button')].some(b=>!b.hidden);
  }

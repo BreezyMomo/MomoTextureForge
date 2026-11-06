@@ -14,7 +14,7 @@
     "Apply the ratio without changing node parameters"
   ],
   "workspace": [
-    "Open the graphics library",
+    "Manage the graphics library",
     "Select a node",
     "Switch texture channel",
     "Edit the selected node"

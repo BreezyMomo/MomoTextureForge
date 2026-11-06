@@ -1,6 +1,7 @@
 import {folderLibrary} from './folder-library.js';
 import {uiText,uiFormat,uiError} from './ui-language.js';
 import {manageFolderCleanup} from './folder-library-cleanup.js';
+import {onLibraryChange} from './library-events.js';
 
 export async function manageFolderLibrary({modal,el,button,labelled,onChange,legacyUpgrade,selectOnly=false,upgradeOnOpen=false}){
  const {d,body}=modal(uiText(upgradeOnOpen?'folder.upgradeTitle':'folder.title'));d.classList.add('folder-library-dialog');
@@ -44,7 +45,8 @@ export async function manageFolderLibrary({modal,el,button,labelled,onChange,leg
   await folderLibrary.importBrowserResources({signal:controller.signal,onProgress});if(controller.signal.aborted)return;
   await legacyUpgrade?.run();await render();await onChange();status.textContent=uiText('folder.legacyImported');
  }
- d.addEventListener('cancel',event=>{if(busy){event.preventDefault();controller?.abort();}});d.addEventListener('close',()=>controller?.abort(),{once:true});await render();if(upgradeOnOpen&&(await folderLibrary.status()).state==='ready')await action(importLegacy);return d;
+ let refreshTimer;const unlisten=onLibraryChange(()=>{clearTimeout(refreshTimer);refreshTimer=setTimeout(()=>{if(d.open&&!busy)render().catch(error=>{if(d.open)status.textContent=uiError(error);});},0);});
+ d.addEventListener('cancel',event=>{if(busy){event.preventDefault();controller?.abort();}});d.addEventListener('close',()=>{clearTimeout(refreshTimer);unlisten();controller?.abort();},{once:true});await render();if(upgradeOnOpen&&(await folderLibrary.status()).state==='ready')await action(importLegacy);return d;
 }
 
 export async function ensureFolderLibrary(options){

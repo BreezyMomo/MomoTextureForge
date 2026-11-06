@@ -56,7 +56,7 @@ Layouts store panel positions, proportions, tabs and visibility. Nodes, graphics
 - Expand **Categories** to filter the sidebar library; the collapsed summary retains the active selection. **View** switches between grid/list and collapses or expands graphic groups. Bottom-docked lists keep a separate scrolling thumbnail area.
 - The Shape tab starts with graphic parameters and node colors. Existing custom orders are retained. **Parameter layout → Reset module order for this tab** resets only that tab, preserving panel positions, section expansion and pinned controls.
 - Wide inspectors align labels, sliders, values and action buttons on one row. Narrower inspectors wrap the controls; very narrow inspectors place sliders on their own row, with values, reset and keyframe buttons below.
-- **Save as resource** groups graphics-list and graphics-library actions and identifies the current selection. Project saving remains in **File**. Trial editing explains how updates affect existing instances.
+- **Save as resource** saves the current preview, with a scope hint for canvas, trial or solo preview. Node selection alone does not narrow the save. Existing personal resources offer **Save changes**; project saving remains in **File**.
 - Play and scrubbing stay beneath the canvas; cycle duration, restart and node time are under **Playback settings**.
 
 ## 5. Themes, controls and density

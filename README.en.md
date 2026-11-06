@@ -14,7 +14,7 @@ Source and documentation: [GitHub primary repository](https://github.com/BreezyM
 
 ![Editor: summoning circle, node tree and inspector](docs/images/en/workspace.png)
 
-> Callouts: 1 Open the graphics library; 2 Select a node; 3 Switch texture channel; 4 Edit the selected node.
+> Callouts: 1 Manage the graphics library; 2 Select a node; 3 Switch texture channel; 4 Edit the selected node.
 
 ## What you can create
 
@@ -37,7 +37,7 @@ Source and documentation: [GitHub primary repository](https://github.com/BreezyM
 
 ## First use
 
-1. Open **Graphics library**, search for a resource and choose **Add directly to canvas**.
+1. Select **Manage** in the sidebar **Graphics library** panel, search for a resource and choose **Add directly to canvas**.
 2. The library closes and selects the new node. The same resources appear in the sidebar library; use **+ Add** directly without a separate add-to-list step.
 3. Edit the selected node's shape, color, transform/layout, animation and compositing in the inspector.
 4. **File → Save project** preserves editable content. **Export…** creates delivery files.

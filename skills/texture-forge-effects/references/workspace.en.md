@@ -6,13 +6,13 @@
 
 ## Main interface
 
-- The toolbar has the editable canvas name; File (new/open/save/share), undo/redo icons, Canvas settings and Export; Graphics library and Examples; then Layout, Appearance, language, Support and Help. Hover history icons for shortcuts. Narrow windows move Canvas settings into File and Examples into the menu beside Graphics library. Help includes quick/detailed guides, two Skill ZIP downloads, and GitHub/Gitee source links. Extract Skills for a compatible AI application.
+- The toolbar has the editable canvas name; File (new/open/save/share), undo/redo icons, Canvas settings and Export; Examples; then Layout, Appearance, language, Support and Help. Hover history icons for shortcuts. Narrow windows move Canvas settings into File while Examples stays visible. Resource management opens with Manage after View in the sidebar Graphics library panel. Help includes quick/detailed guides, two Skill ZIP downloads, and GitHub/Gitee source links. Extract Skills for a compatible AI application.
 - The default has four full-height columns: Graphics, Node tree, Canvas preview, and Inspector, using approximately 13%, 10%, 59%, and 18% of the width. The canvas column holds tools and playback. The inspector offers Shape (including coloring), Transform / Layout, Animation and Composite for single or batch editing; no selection means no node settings. Existing layouts are retained; Layout → Restore default layout adopts the four-column arrangement.
-- Preview actions save selection/canvas to the library, save/update list copies, and toggle solo. Similar names have different scopes.
+- Save current preview as resource saves the entire canvas, solo object or trial result with editable structure. Selection alone does not narrow a normal canvas save. Save changes publishes a personal-resource version; existing canvas instances stay unchanged.
 
 Errors remain in the upper-right notification area until dismissed; later success messages do not replace them. Older lists with retired graphics or missing dependencies are backed up, with unreadable entries set aside and other resources restored. The notification downloads original records and currently available dependencies. This backup is not a formal resource ZIP. Do not advise clearing browser storage or replacing unavailable graphics with unrelated ones. Only newly discovered unreadable entries trigger recovery notifications; retained historical backups do not repeat old warnings after reload.
 
-The sidebar library combines All / Favorites / Recent / Animated with search and multiselect category chips, without image/formula/group filters. Categories match any selected option; All or deselecting the last option clears category filtering. Categories come from built-in and personal list entries. Star buttons toggle favorites; play icons mark animated graphics. Language changes retain filters without modifying projects or resources.
+The sidebar library combines All / Favorites / Recent / Animated with search and multiselect category chips, without image/formula/group filters. Categories match any selected option; All or deselecting the last option clears category filtering. Categories come from unified-library resources. Star buttons toggle favorites; play icons mark animated graphics. Language changes retain filters without modifying projects or resources.
 
 Built-ins are categorized by appearance and use, with formulas and generators together. Add Animated when only moving resources are needed. Read categories from the current catalog; do not treat old Radial, Shapes, Sigils or VFX categories as separate permanent entries. Old built-in copies, including early copies without a builtin marker, follow current categories without clearing storage, deleting copies or adding them again. Custom/imported resources retain their own categories. The search × clears the query while retaining filters; favoriting, parameter edits and filtering reuse loaded previews.
 
@@ -36,11 +36,11 @@ Examples open editable independent canvases, with construction descriptions. Ini
 
 The sidebar is a compact view of the same resources managed in the library window. Built-in, local and subscribed remote resources appear directly, without an Add to sidebar library step. The first view shows all resources; later visits restore the last filter. Favorites and recent usage remain browser preferences. Remote use reads temporarily; Download persists resources for offline use.
 
-Library resources and canvas instances are two separate scopes. Use + Add or Add directly to canvas to create independent instances; a thumbnail or Try editing opens a trial. Save changes publishes a personal resource version. Save as new resource keeps a separate result. Built-in and remote edits become personal copies. Library saves, renames and deletions leave existing canvas instances unchanged.
+Library resources and canvas instances are two separate scopes. Use + Add or Add directly to canvas to create independent instances; a thumbnail or Try editing opens a trial. Save changes publishes a personal resource version. Save current preview as resource keeps a separate result. Built-in and remote edits become personal copies. Library saves, renames and deletions leave existing canvas instances unchanged.
 
 Create resource supports Image, Import files, Formula and Generator. Saved or imported resources appear in the sidebar immediately. Export selected resources as complete ZIPs with dependencies. Personal resources can be renamed or deleted; deletion removes their packages, thumbnails and historical versions while preserving files referenced by other entries. Library folder → Clean unused files previews leftovers before deletion, supports retries and leaves existing canvas copies unchanged. Canvas undo does not roll library versions back.
 
-On upgrade, unchanged legacy copies reuse their originals. Personal parameters, colors, effects, keys, compositions or renamed entries become independent resources with their source relationships and favorites. Failed entries remain available for preview and retry; original list data and dependencies are retained. No separate list is maintained after migration.
+On upgrade, unchanged legacy copies reuse their originals. Personal parameters, colors, effects, keys, compositions or renamed entries become independent resources with their source relationships and favorites. Failed entries retain preview, original records and dependencies for retry. Successfully saved and verified entries are removed from browser storage; no separate list is maintained.
 
 ## Nodes and canvas
 
@@ -81,11 +81,11 @@ Shape selects the current/basic graphic, name/visibility and exclusive parameter
 
 Save project writes a canvas ZIP with dependencies; Open project restores it. Autosave is not backup. Custom/offline configurations share as project files; simple built-in configurations can use links.
 
-The library is independent of the canvas: opening or creating projects does not change it. Project ZIPs include canvas dependencies; back up the complete library with resource ZIPs or a bound folder. Personal legacy-list changes migrate to independent resources and original records are retained. Nothing syncs across devices/origins automatically.
+The library is independent of the canvas: opening or creating projects does not change it. Project ZIPs include canvas dependencies; back up the complete library with resource ZIPs or a bound folder. Personal legacy-list changes migrate to independent resources; successfully verified browser records are removed. Nothing syncs across devices/origins automatically.
 
 Personal resources come only from the current local library folder. Rebinding updates the list without copying or merging the previous library. Creation and saving check binding and permission first. Legacy browser resources trigger a startup binding dialog, automatically save and verify packages, then remove migrated browser resources and the old list. Failures keep unmigrated originals for retry. Closing a library leaves disk files and canvases unchanged.
 
-Save canvas to library produces one reusable composition; selection save uses that subtree. PNG/SVG exports are delivery files, not fully editable project backups.
+Save current preview as resource saves the whole canvas, trial resource or solo object with editable structure. Selection alone does not narrow a normal canvas save. PNG/SVG exports are delivery files, not fully editable project backups.
 
 ## Multiple remote libraries
 

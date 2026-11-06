@@ -97,7 +97,7 @@ MCP 参数成员与数组元素总数最多 65,536，HTTP JSON 请求体上限 1
 
 排列密度图用 `set-density` 的 `parameters` 按 variable 或唯一 role 设置；省略 graphic 保留当前密度图。`forge_schema({pageId,nodeId})` 返回 currentNode.density 的资源 ID、参数路径和值，catalog 的参数也提供 densityPath。普通字段的枚举见 fields[path].options；例如 instanceContent 的 random-child/cycle-child 仅适用于组合。不要猜索引或自行缩写枚举。
 
-## 浏览器图库查询与导出
+## 统一图库查询与导出
 
 `forge_library({pageId,query?,source?,sourceId?,kind?,offset?,limit?})` 查询完整内置／本地图库及已缓存的远程目录与下载；source 为 all/builtin/local/remote/downloaded，kind 为 all/formula/generator/image/composition，limit 为1～100。保留同ID不同来源与版本的 key，并报告内容冲突。用返回的准确 key 调用 `forge_library({pageId,key})` 读取资源及依赖参数元数据。远程资源未下载时明确返回 detailsUnavailable，不猜参数。
 
@@ -105,9 +105,9 @@ MCP 参数成员与数组元素总数最多 65,536，HTTP JSON 请求体上限 1
 
 `forge_library({pageId,key,includeSource:true})` 额外返回可用资源的完整原生 asset、GLSL 和公共库文本，保留署名许可；图片数据可能较大。编辑已有资源前先读真实源码。
 
-`forge_library_create({pageId,inputFile,expectedLibraryRevision})` 从服务主机绝对路径读取公式／生成器创作JSON（2 MiB）或SVG/PNG/JPEG/WebP（16 MiB，另遵守原生图片限制），用原生解析、编译预览与打包器新建本地图形库资源。expectedLibraryRevision 来自刚查询的 forge_library.revision。只创建新原件，不覆盖旧资源、不修改画布和图形列表，不支持项目JSON或ZIP。失败校验不保存；成功返回准确key与预览。
+`forge_library_create({pageId,inputFile,expectedLibraryRevision})` 从服务主机绝对路径读取公式／生成器创作JSON（2 MiB）或SVG/PNG/JPEG/WebP（16 MiB，另遵守原生图片限制），用原生解析、编译预览与打包器新建个人资源。expectedLibraryRevision 来自刚查询的 forge_library.revision。持久保存前，目标网页必须已绑定本地图库文件夹并具有写权限；previewOnly:true 无需绑定，只验证、打包和返回预览。保存后资源立即出现在侧栏和管理窗口，不修改画布实例、不覆盖旧资源，不接受项目JSON或ZIP。
 
-`forge_library_delete({pageId,key,expectedLibraryRevision})` 删除明确要求的一个本地图形库原件及其包，事务内再次校验版本和hash。需要备份时先export。此操作不能撤销；仅用于用户要求删除的资源或明确授权的临时测试资源。现有画布实例和图形列表副本保留，不删除内置或远程资源。
+`forge_library_delete({pageId,key,expectedLibraryRevision})` 永久删除当前绑定图库中的指定资源及其 ZIP、缩略图和历史版本，要求写权限、准确 key 与最新图库 revision，写入时再次校验版本和 hash。检查返回的 diskCleanup.complete 和 diskCleanup.failed：移除目录条目不保证所有文件已清理，失败文件需要重试清理。需要备份时先 export；此操作不能通过画布撤销恢复。仅用于用户要求删除的资源或明确授权的临时测试资源。两处图库视图同步移除资源，已有画布实例保留自身数据；不能删除内置资源或远程服务器文件。
 
 ## 项目文件与编辑历史
 
@@ -137,13 +137,13 @@ MCP 参数成员与数组元素总数最多 65,536，HTTP JSON 请求体上限 1
 - `save-node` 保存节点或整画布为新资源；`replace-from-node` 发布个人资源的新版本。图库保存不改变画布。
 - `insert-list` / `insert-library` 按 entryId 或 libraryKey 克隆画布实例，可传 parentId/index/name，返回 nodeId。这类画布插入可撤销。
 
-`forge_library_update` 保留个人资源 resourceId 并发布下一版本；另存新资源使用 `forge_library_create`。`forge_library_save_node` 支持节点、组合或整画布，updateKey 指定更新个人原件。资源保存后立即出现在两处图库视图，已有实例保持原样；图库版本不能通过画布撤销回滚。
+`forge_library_update` 保留个人资源 resourceId 并发布下一版本；另存新资源使用 `forge_library_create`。`forge_library_save_node` 按明确 nodeId 保存节点、组合或 @root 整画布，updateKey 指定更新个人原件。持久保存要求网页已绑定图库文件夹并有写权限。GUI 的“保存当前预览为资源”按普通画布／单独预览／试编辑决定范围，MCP 按显式 nodeId 决定范围。保存后立即出现在两处图库视图，已有实例保持原样；图库版本不能通过画布撤销回滚。
 
 ## 图库批量文件与图片处理
 
 `forge_library_export_batch({pageId,keys})` 将1–1000个明确资源key导出为原生图库ZIP（library.json与内部资源ZIP）。先查询全部本地key即可备份本地原件；不自动下载远程资源。
 
-`forge_library_import({pageId,inputFiles,expectedLibraryRevision,conflict?})` 导入服务主机的绝对路径创作JSON、原生资源ZIP或上述备份ZIP。最多100个输入文件、1000个资源、总计64 MiB。所有条目先校验与预览，再用一次存储事务保存；相同内容跳过，ID冲突默认报错，显式 conflict: copy 才另存独立原件。恢复不删除或覆盖现有原件，不改变画布和个人列表。
+`forge_library_import({pageId,inputFiles,expectedLibraryRevision,conflict?})` 导入服务主机的绝对路径创作JSON、原生资源ZIP或上述备份ZIP。网页必须已绑定本地图库文件夹并具有写权限。最多100个输入文件、1000个资源、总计64 MiB。所有条目先校验与预览，验证资源文件写入成功后发布目录；相同内容跳过，ID冲突默认报错，显式 conflict: copy 才另存独立原件。导入不删除或覆盖现有原件；两处图库视图同步显示资源，画布实例保持原样。
 
 `forge_library_process_image({pageId,key,expectedLibraryRevision,update?,name?,processing?,transform?,color?})` 处理已有缓存图片，默认另存，update:true 更新本地原件版本。processing 提供 mode（none/color/black/extract）、color、tolerance、softness、connected、autoCenter、contour（enabled/threshold/softness）；transform 提供 scale（0.1–4）、rotation（-180–180）；color 提供 mode（none/tint/replace）、source、target、preserveAlpha、tolerance、softness。颜色为#RRGGBB，容差/柔化/阈值范围0–1。使用原生图片流程，位图按原尺寸烘焙，SVG保留原生处理语义。保存后导出并渲染验证，不将缩略图当成完整精度验证。
 
@@ -187,13 +187,13 @@ forge_edit 现有配方还支持以下原生动作，字段与枚举在 forge_sc
 
 ## 组件试编辑与真实预览图
 
-`forge_component({pageId})` 读试编辑会话及 revision，`forge_component_edit({pageId,expectedSessionRevision,action,...})` 支持 open（个人列表 entryId）、edit（原生 recipe）、reset、undo/redo、return、insert（返回主画布并插入）、save（另存个人列表）、update/undo-update（更新原列表项及撤销该更新）。已有画布实例保持独立。主画布、试编辑草稿和图库原件是不同对象；update 不发布到图库。
+`forge_component({pageId})` 读试编辑会话及 revision，`forge_component_edit({pageId,expectedSessionRevision,action,...})` 支持 open（统一图库 entryId）、edit（原生 recipe）、reset、undo/redo、return 和 insert（返回主画布并插入独立实例）。save 将试编辑结果另存为本地图库新资源；update 发布个人原件的下一版本；undo-update 将更新前的内容再次发布为新版本，保留磁盘上的已发布版本。save/update/undo-update 要求网页已绑定图库文件夹并具有写权限；内置或远程资源的修改使用 save 另存。普通 undo/redo 只改变试编辑草稿，不能回滚图库。已有画布实例保持独立。
 
 试编辑打开时默认 `forge_capture` 拒绝；使用 `forge_capture({pageId,context:'component'})` 取得草稿快照以 inspect/render/export/save。该快照不能授权主画布编辑，试编辑写入仍使用会话 revision。返回主画布后重新 capture。
 
 `forge_preview_capture({pageId})` 返回当前原生视图的实际 PNG：二维画面、三维相机和材质，或特效背景/透明与相加比较的最多四张图。返回设置、源作品版本及主机文件路径和 SHA。先用 editor_control 选择预览模式；捕获不更换模式，不写入作品。此入口适合视觉验收预览偏好；正式作品交付仍用 export。
 
-## 远程订阅与下载缓存
+## 远程订阅与本地下载
 
 `forge_remote({pageId})` 返回订阅配置、目录概况、当前文件夹中已保存的远程资源、destination 和独立 revision，不联网。资源列表仍用 forge_library。`forge_remote_edit` 使用 expectedRemoteRevision 和 add/update/remove/refresh/download/delete-cache；配置用 config。download 明确 sourceId/resourceId，先检查绑定与权限，再保存到当前图库文件夹。delete-cache 保留兼容名称，实际删除当前文件夹资源及其 ZIP、缩略图和历史版本；检查 diskCleanup.complete/failed，处理未完成清理。移除订阅保留磁盘资源，已有画布不变。新订阅默认 autoCheck/autoDownload 为 false；只有用户要求持续更新时启用，自动更新仅针对当前文件夹中已保存的同源资源。只访问用户要求的来源，不上传或删除远程服务器文件。
 
@@ -227,9 +227,9 @@ forge_timeline 返回原生时间轴 settings、轨道、进度和独立 revisio
 
 ## 资源草稿与批量加入
 
-forge_library_create/update/process_image 支持 previewOnly:true，仅验证、打包和渲染草稿，不保存图库；返回 PNG 路径与 SHA。previewTime 为公式累计秒（0..3600，默认0），可重复预览不同时间。metadata 可覆盖 name/category/description，图片同样支持。要取消草稿直接不保存；文件仍由 Agent 管理。
+forge_library_create/update/process_image 支持 previewOnly:true，无需绑定图库，仅验证、打包和渲染草稿，不持久保存；返回 PNG 路径与 SHA。previewTime 为公式累计秒（0..3600，默认0），可重复预览不同时间。metadata 可覆盖 name/category/description，图片同样支持。真正保存时先检查目标网页的文件夹绑定与写权限。要取消草稿直接不保存；文件仍由 Agent 管理。
 
-forge_library_edit_resource 对已缓存的单图形资源使用 key、expectedLibraryRevision、defaults（稳定变量到数值）、metadata、previewOnly、previewTime；默认另存本地原件，update:true 仅更新本地原件。内置程序式生成器无需转换为公式JSON，保留生成器元数据、参数与专用编辑器。不会覆盖内置资源或修改画布/列表。
+forge_library_edit_resource 对已有单图形资源使用 key、expectedLibraryRevision、defaults（稳定变量到数值）、metadata、previewOnly、previewTime；默认另存个人资源，update:true 仅更新个人原件。持久保存要求绑定本地图库并有写权限；previewOnly:true 无需绑定。内置程序式生成器保留生成器元数据、参数与专用编辑器，无需转换为公式JSON。不会覆盖内置资源或修改画布实例；保存结果同步显示在两处图库视图。
 
 forge_graphics_list_batch is a compatibility existence check: resources already belong to the unified library, so it returns a completed job with skipped keys and does not create copies.
 

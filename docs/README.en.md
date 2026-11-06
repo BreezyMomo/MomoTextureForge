@@ -18,7 +18,7 @@ Start with Quick start, then consult individual chapters as needed. Screenshots 
 
 ![Editor overview](images/en/workspace.png)
 
-> Callouts: 1 Open the graphics library; 2 Select a node; 3 Switch texture channel; 4 Edit the selected node.
+> Callouts: 1 Manage the graphics library; 2 Select a node; 3 Switch texture channel; 4 Edit the selected node.
 
 ## Find a workflow
 

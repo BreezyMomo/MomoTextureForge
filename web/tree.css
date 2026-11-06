@@ -246,9 +246,6 @@
 .tree-header #export-now{margin-left:6px;padding:7px 12px;font-weight:600;border-color:var(--ui-accent-text)}
 .tree-header #support-project{display:flex;align-items:center;gap:6px;color:var(--ui-accent-text)}
 .tree-header .header-support-icon{width:14px;height:14px;stroke:var(--ui-accent)}
-#header-resource-menu>summary{padding:7px 5px;min-width:24px;text-align:center}
-#header-resource-menu>summary::after{content:'▾'}
-#header-resource-menu>.header-dropdown-panel{left:auto;right:0}
 @media(max-width:1400px){.tree-brand strong span{display:none}.tree-header{gap:12px}.tree-resource-actions,.tree-tool-actions{padding-left:12px}.tree-brand{flex-basis:120px}}
 @media(max-width:1100px){.tree-header{gap:10px}.tree-header #project-name{flex-basis:110px}.tree-resource-actions{gap:0}.tree-resource-actions,.tree-tool-actions{padding-left:10px}}
 @media(max-width:1200px){

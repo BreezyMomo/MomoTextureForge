@@ -27,6 +27,7 @@ import {exportGraphicsLibrary} from './graphics-export.js';
 import {bindFormulaParameters,vectorParameterSlots} from './formula-parameters.js';
 import {libraryResourceStatus} from './project-resources.js';
 import {unifiedGraphicsLibrary} from './unified-graphics-library.js';
+import {onLibraryChange} from './library-events.js';
 import builtinThumbnails from './builtin-thumbnails.js';
 import {builtinAsset,assetFor,contentHash,prepareAsset,registerAsset,unregisterAsset,resources,ensureAssetImages} from './resource-assets.js';
 import {encodeResourcePack,readResourcePack,imageAsset,finalizeResourcePack} from './resource-pack.js';
@@ -155,7 +156,8 @@ export function createGraphicsLibrary({onLoad,onLoadBatch,onInsert,onBrowse,onCo
   render=async(...args)=>{destination.textContent=await libraryDestinationText();return renderLibrary(...args);};
   search.oninput=render;filter.onchange=render;sourceFilter.onchange=render;
   let syncing=false;async function syncRemote(force=false){if(syncing||locked||!d.open)return;syncing=true;try{const results=await refreshRemoteSources({force,signal:controller.signal});if(results.length&&d.open&&!locked){await render();const failures=results.flatMap(r=>r.status==='rejected'?[r.reason.message]:(r.value.errors??[]));if(results.length&&!locked)status.textContent=(failures.length ? (uiText("library.someRemoteRefreshesOrDownloadsFailedCachedResourcesRemainUsable") + failures.join('；')) : uiText("library.remoteCatalogsUpdated"));}}catch(e){if(d.open&&!locked)status.textContent=uiError(e);}finally{syncing=false;}}
-  const timer=setInterval(()=>syncRemote(),REMOTE_LIMITS.interval);d.addEventListener('close',()=>{clearInterval(timer);controller.abort();},{once:true});await render();if(options.aiCatalog&&d.open)exportAIContext();syncRemote();
+  let refreshTimer;const unlistenLibrary=onLibraryChange(()=>{clearTimeout(refreshTimer);refreshTimer=setTimeout(()=>{if(d.open)render().catch(error=>{if(d.open)status.textContent=uiError(error);});},0);});
+  const timer=setInterval(()=>syncRemote(),REMOTE_LIMITS.interval);d.addEventListener('close',()=>{clearInterval(timer);clearTimeout(refreshTimer);unlistenLibrary();controller.abort();},{once:true});await render();if(options.aiCatalog&&d.open)exportAIContext();syncRemote();
  }
  async function createResource(onSaved){
   if(!await requireGraphicsLibrary())return;

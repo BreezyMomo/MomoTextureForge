@@ -77,6 +77,16 @@ export function EditorPanelsView({ panels }: { panels: EditorPanels }) {
                 {uiText("editor.collapseAll")}
               </span>
             </button>
+            <button
+              id="open-graphics-library"
+              type="button"
+              title={uiText("unified.manage")}
+              data-i18n-title="unified.manage"
+              aria-label={uiText("unified.manage")}
+              data-i18n-aria-label="unified.manage"
+            >
+              <span data-i18n="library.manage">{uiText("library.manage")}</span>
+            </button>
           </div>
           <section className="tree-library-filters">
             <div
@@ -200,8 +210,8 @@ export function EditorPanelsView({ panels }: { panels: EditorPanels }) {
                 </span>
               </button>
               <button id="preview-update" hidden>
-                <span data-i18n="editor.updateComponent">
-                  {uiText("editor.updateComponent")}
+                <span data-i18n="workspace.saveResourceChanges">
+                  {uiText("workspace.saveResourceChanges")}
                 </span>
               </button>
               <button id="preview-undo-update" hidden>
@@ -222,11 +232,11 @@ export function EditorPanelsView({ panels }: { panels: EditorPanels }) {
               </button>
               <button
                 id="save-whole-library"
-                title={uiText("editor.saveEveryNodeOnTheCanvasAsAComposition")}
-                data-i18n-title="editor.saveEveryNodeOnTheCanvasAsAComposition"
+                title={uiText("workspace.savePreviewHint")}
+                data-i18n-title="workspace.savePreviewHint"
               >
-                <span data-i18n="editor.saveCanvasToLibrary">
-                  {uiText("editor.saveCanvasToLibrary")}
+                <span data-i18n="workspace.savePreviewResource">
+                  {uiText("workspace.savePreviewResource")}
                 </span>
               </button>
               <button id="save-project-resource">
@@ -235,8 +245,8 @@ export function EditorPanelsView({ panels }: { panels: EditorPanels }) {
                 </span>
               </button>
               <button id="update-project-resource">
-                <span data-i18n="editor.updateGraphic">
-                  {uiText("editor.updateGraphic")}
+                <span data-i18n="workspace.saveResourceChanges">
+                  {uiText("workspace.saveResourceChanges")}
                 </span>
               </button>
               <button id="solo" aria-pressed="false">

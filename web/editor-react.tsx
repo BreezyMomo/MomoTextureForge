@@ -27,7 +27,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   mountDockMenu as mountSharedDockMenu,
-  ChevronDown, Undo2, Redo2, Heart, MoreHorizontal,
+  ChevronDown, Undo2, Redo2, Heart,
 } from "@momo/workbench/react";
 import type { ReactNode } from "react";
 export const mountDockMenu = (
@@ -130,14 +130,10 @@ function EditorHeader() {
   useLayoutEffect(() => {
     const id = movedFocus.current;
     movedFocus.current = null;
-    if (id !== "project-settings" && id !== "tree-examples") return;
+    if (id !== "project-settings") return;
     document
       .getElementById(
-        compact
-          ? id === "project-settings"
-            ? "header-file-menu"
-            : "header-resource-menu"
-          : id,
+        compact ? "header-file-menu" : id,
       )
       ?.focus();
   }, [compact]);
@@ -212,26 +208,9 @@ function EditorHeader() {
         role="group"
         aria-label={uiText("header.resources")}
       >
-        <Button id="open-graphics-library" variant="ghost">
-          {uiText("menu.graphicsLibrary")}
+        <Button id="tree-examples" variant="ghost">
+          {uiText("menu.examples")}
         </Button>
-        {compact ? (
-          <HeaderMenu
-            id="header-resource-menu"
-            label={
-              <MoreHorizontal aria-label={uiText("header.moreResources")} />
-            }
-            align="end"
-          >
-            <CommandItem id="tree-examples">
-              {uiText("menu.examples")}
-            </CommandItem>
-          </HeaderMenu>
-        ) : (
-          <Button id="tree-examples" variant="ghost">
-            {uiText("menu.examples")}
-          </Button>
-        )}
       </div>
       <div
         className="tree-tool-actions"
