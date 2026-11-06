@@ -19,7 +19,7 @@ The **VFX** category contains four one-shots that appear from transparency and f
 
 Examples open paused at 30% so the effect is visible. This preview position does not modify project data or tracks. Play to inspect timing or restart from the transparent first frame, then select a child and open **Animation**. Use recording to change existing keyframes or base-value mode to edit the underlying state. Absolute tracks can overwrite changes made only to base values.
 
-One-shot sequences include transparent start/end frames and disable loop export. Saving a project retains the structure. Save the outer effect group to the graphics list to insert it as a component elsewhere; its animation uses the containing node's local progress. Change the outer time range, cycles or phase to schedule the effect without canvas-level processing.
+One-shot sequences include transparent start/end frames and disable loop export. Saving a project retains the structure. Save the outer effect group to the sidebar library to insert it as a component elsewhere; its animation uses the containing node's local progress. Change the outer time range, cycles or phase to schedule the effect without canvas-level processing.
 
 ## Replaceable-unit dot array
 

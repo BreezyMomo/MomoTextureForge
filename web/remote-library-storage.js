@@ -10,6 +10,10 @@ export const remoteBundle=item=>tx(['bundles'],'readonly',(t,done)=>{const r=t.o
 // Generation markers are separate keys, never resource bundles or exported assets.
 const epochKey=item=>'download-epoch:'+item.sourceId+':'+item.resourceId;
 export const remoteDownloadEpoch=item=>tx(['bundles'],'readonly',(t,done)=>{const r=t.objectStore('bundles').get(epochKey(item));r.onsuccess=()=>done(r.result??0);});
+export const invalidateRemoteDownload=item=>tx(['bundles'],'readwrite',(t,done)=>{const store=t.objectStore('bundles'),r=store.get(epochKey(item));r.onsuccess=()=>{const epoch=(r.result??0)+1;store.put(epoch,epochKey(item));done(epoch);};});
+// Upgrade-only access to ZIPs saved by older releases. New saves use the folder.
+export function legacyRemoteSnapshot(){return tx(['downloads','bundles'],'readonly',(t,done)=>{const r=t.objectStore('downloads').getAll();r.onsuccess=()=>{const downloads=r.result,records=downloads.map(entry=>({entry,bytes:null}));for(const record of records){const read=t.objectStore('bundles').get(record.entry.key??remoteBundleKey(record.entry));read.onsuccess=()=>record.bytes=read.result??null;}done({downloads,records});};});}
+export function clearLegacyRemoteDownloads(expected){return tx(['downloads','bundles'],'readwrite',(t,done,fail)=>{const r=t.objectStore('downloads').getAll();r.onsuccess=()=>{if(JSON.stringify(r.result)!==JSON.stringify(expected)){fail(Error('Remote downloads changed; retry migration'));return;}const invalidated=new Set();for(const entry of r.result){const bundles=t.objectStore('bundles'),key=epochKey(entry);if(!invalidated.has(key)){invalidated.add(key);const epoch=bundles.get(key);epoch.onsuccess=()=>bundles.put((epoch.result??0)+1,key);}t.objectStore('downloads').delete(entry.key??remoteBundleKey(entry));bundles.delete(entry.key??remoteBundleKey(entry));}done();};});}
 export function deleteRemoteDownload(item,{expectedDownloads}={}){
  if(!item?.sourceId||!item?.resourceId)throw Error('请选择已下载的远程资源');
  return tx(['downloads','bundles'],'readwrite',(t,done,fail)=>{

@@ -29,7 +29,7 @@ Startup markup/styles in `web/index.html` display before scripts finish download
 
 ## React views and builds
 
-The editor uses React 19 and TypeScript without a third-party component library. `web/editor-react.tsx` owns the root and header; `web/editor-react-panels.tsx` declares the five workspace panels. `web/editor-react-tree.tsx` and `web/editor-react-library.tsx` own the node tree and graphics list. `web/tree-app.js` retains document commands, undo and rendering, connected to React through view snapshots and command adapters. Parameter forms, curves, the timeline and resource-management dialogs currently retain their specialist editor adapters for subsequent migration.
+The editor uses React 19 and TypeScript without a third-party component library. `web/editor-react.tsx` owns the root and header; `web/editor-react-panels.tsx` declares the five workspace panels. `web/editor-react-tree.tsx` and `web/editor-react-library.tsx` own the node tree and sidebar library. `web/tree-app.js` retains document commands, undo and rendering, connected to React through view snapshots and command adapters. Parameter forms, curves, the timeline and resource-management dialogs currently retain their specialist editor adapters for subsequent migration.
 
 Stable containers and React Portals keep panels and graphics cards mounted. Workbench can move panels and filters can temporarily detach cards without discarding component state, focus or thumbnail images. Appearance and language continue to use the same Workbench controllers; preferences stay outside project data and undo history.
 

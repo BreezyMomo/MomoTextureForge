@@ -29,7 +29,7 @@ npm start -- --port 8799
 
 ## React 界面与构建
 
-编辑器界面采用 React 19 + TypeScript，暂不引入第三方组件库。`web/editor-react.tsx` 管理根组件与顶栏，`web/editor-react-panels.tsx` 声明五个工作台面板，`web/editor-react-tree.tsx` 与 `web/editor-react-library.tsx` 管理节点树和图形列表。`web/tree-app.js` 保留工程命令、撤销和渲染调度，通过视图快照与命令适配器连接 React。参数表单、曲线、时间轴和资源管理对话框目前保留专用编辑器适配，继续分批迁移。
+编辑器界面采用 React 19 + TypeScript，暂不引入第三方组件库。`web/editor-react.tsx` 管理根组件与顶栏，`web/editor-react-panels.tsx` 声明五个工作台面板，`web/editor-react-tree.tsx` 与 `web/editor-react-library.tsx` 管理节点树和左侧图库。`web/tree-app.js` 保留工程命令、撤销和渲染调度，通过视图快照与命令适配器连接 React。参数表单、曲线、时间轴和资源管理对话框目前保留专用编辑器适配，继续分批迁移。
 
 停靠面板与图形卡片通过稳定容器和 React Portal 挂载。Workbench 可以移动面板，筛选可以暂时移出卡片，React 仍持有原组件、输入和缩略图，不因重新挂载而丢失焦点或重复生成预览。外观和多语言继续使用同一份 Workbench 控制器，设置不进入工程或撤销历史。
 
@@ -243,7 +243,7 @@ node tools/capture-docs.mjs --language en post-effects
 | shortcuts | 节点快捷区、全部适用菜单和可移动通道曲线窗口 |
 | ribbons | 折叠线束的宽画布、风格预设与参数 |
 | appearance | 完整主题、颜色用途预览、控件样式、页签、密度与交互色 |
-| library | 图库、生成器参数、图形列表 |
+| library | 图库、生成器参数、左侧图库 |
 | library-filters | 全部/收藏/最近/动态、分类多选与动态标记 |
 | parameter-states | 动画控制状态与录制/基础值操作 |
 | selection-editing | 多选、批量改色、同类参数与对齐分布 |
@@ -308,7 +308,7 @@ PSD 编码器许可见 [PSD-LICENSES.txt](../web/vendor/PSD-LICENSES.txt)，需�
 
 `web/graphic-name.js` 校验名称别名并提供纯数据解析与全语言搜索，`graphic-label.js` 按当前语言顺序显示，`graphic-name-editor.js` 复用固定语言选择控件。内置与导入定义的顶层 `aliases` 表示图形名称，参数各自的 `aliases` 仍表示参数名称；默认 `name` 必须保留。界面词库中不再存储 graphics.<id>.name。
 
-名称元数据覆盖公式/生成器创作 JSON、图形定义、graphicResource、图形列表与远程目录；构造派生图片/新公式时不得继承 Circle 模板的名称别名。未提供的字段不补写，已导入资源不因语言切换被改写。版本更新必须保留 aliases；名称/别名编辑属于内容修改，语言切换只改变视图。创建画布节点时取当前显示名称，之后按节点自己的 name 保存。
+名称元数据覆盖公式/生成器创作 JSON、图形定义、graphicResource、左侧图库与远程目录；构造派生图片/新公式时不得继承 Circle 模板的名称别名。未提供的字段不补写，已导入资源不因语言切换被改写。版本更新必须保留 aliases；名称/别名编辑属于内容修改，语言切换只改变视图。创建画布节点时取当前显示名称，之后按节点自己的 name 保存。
 
 验证：`node --test tests/graphic-name.test.mjs`，`node tests/graphic-name-browser-check.mjs` 及构建后的 `--built`。浏览器检查覆盖名称编辑、JSON/ZIP、跨语言搜索、列表持久化、节点名隔离与真实远程订阅。
 

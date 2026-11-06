@@ -126,20 +126,18 @@ The returned native ZIP works with project handoff, shader-reference and offline
 
 Developer regressions: `node --test tests/editor-bridge.test.mjs`, `node tests/editor-mcp-start-browser-check.mjs` and `node tests/editor-mcp-browser-check.mjs --built`. They cover local-page startup, real HTTP SDK clients, multiple pages/agents, pinned snapshots/resources/rendering, disconnect/reconnect, bilingual narrow layouts and HTTPS-page-to-local-service access without screenshots.
 
-## Personal graphics list and original updates
+## Unified library compatibility endpoints
 
-`forge_graphics_list({pageId,query?,id?})` returns the personal list and revision; id reads the complete root. `forge_graphics_list_edit({snapshotId,expectedListRevision,action,...})` performs one native undoable transaction:
+The sidebar and manager share one library. Legacy list endpoint names remain for clients, but no independent resource copies exist.
 
-- `add-library` / `insert-library`: libraryKey adds to the list or inserts directly into the canvas. Cached resources only; no implicit download.
-- `update-library`: entryId plus a newer libraryKey with the same resourceId updates only the list copy.
-- `rename` / `remove`: entryId; rename also takes name and optional aliases. Existing canvas instances are unchanged.
-- `save-node`: nodeId (@root for the whole canvas), optional name/aliases, saves to the list and links the source node.
-- `replace-from-node`: entryId and nodeId replace the list copy from the node.
-- `insert-list`: entryId; both insert actions accept parentId/index/name and return a new nodeId.
+- `forge_graphics_list({pageId,query?,id?})` returns unified resources and a revision; id resolves a complete root on demand.
+- `forge_graphics_list_edit({snapshotId,expectedListRevision,action,...})` requires a fresh canvas snapshot and resource revision.
+- `add-library` only confirms existence without copying. `update-library` is retired; use the formal library update endpoint.
+- `rename` / `remove` edit the actual personal library resource and retain existing canvas instances.
+- `save-node` creates a resource from a node or canvas; `replace-from-node` publishes a personal resource version. Library saves do not edit the canvas.
+- `insert-list` / `insert-library` clone an independent canvas instance by entryId or libraryKey, accepting parentId/index/name and returning nodeId. Canvas insertions are undoable.
 
-`forge_library_update({pageId,key,inputFile,expectedLibraryRevision})` updates a local original from authoring JSON or an image, preserving resourceId and incrementing version. Storage checks the previous version/hash atomically. Use forge_library_create to save a separate original.
-
-`forge_library_save_node({snapshotId,nodeId,expectedLibraryRevision,name?,aliases?,category?,description?,updateKey?})` compiles/previews a node, group or whole canvas (@root) and saves a composition original. updateKey updates a local original; omitting it assigns a new ID. These library saves leave canvas, personal list and existing instances unchanged. Canvas undo does not undo library version updates; export first when the old version must be retained as a file.
+`forge_library_update` retains the personal resourceId and publishes the next version; use `forge_library_create` for a new identity. `forge_library_save_node` supports nodes, groups and whole canvases, with updateKey for personal originals. Saved resources immediately appear in both views. Existing instances are unchanged; canvas undo does not roll library versions back.
 
 ## Batch library files and image processing
 
@@ -197,7 +195,7 @@ Default `forge_capture` is blocked while a trial is open. Use `forge_capture({pa
 
 ## Remote subscriptions and download cache
 
-`forge_remote({pageId})` returns subscription configuration, catalog summaries, cached downloads and an independent revision without network access. Query resource entries with forge_library. `forge_remote_edit` uses expectedRemoteRevision with add/update/remove/refresh/download/delete-cache; config holds source settings, downloads require sourceId/resourceId, and cache deletion removes all downloaded versions for that source/resource. Removing a source retains downloads. Canvas, list copies and local originals remain unchanged. New sources default autoCheck/autoDownload to false; enable them only for a requested ongoing update. refresh/download explicitly access user-requested sources. This API never uploads or withdraws files from a remote server.
+`forge_remote({pageId})` returns subscriptions, catalog summaries, saved remote resources from the current folder, destination and an independent revision without network access. Query entries with forge_library. `forge_remote_edit` uses expectedRemoteRevision with add/update/remove/refresh/download/delete-cache; config holds settings. download requires sourceId/resourceId and saves to the current bound folder after checking binding and permission. delete-cache retains its compatibility name but physically removes that folder resource, ZIPs, thumbnails and historical versions; check diskCleanup.complete/failed for incomplete cleanup. Removing a source retains disk resources; canvas instances remain. New sources default autoCheck/autoDownload to false; enable only for requested ongoing updates, which affect same-source resources already saved in the current folder. Only contact user-requested sources. Never upload or delete remote-server files.
 
 For cancellable refresh/download pass background:true and poll forge_remote_job({pageId,jobId,action:'status'|'cancel'}). Cancellation aborts in-flight native network requests; previously committed catalogs/downloads are not rolled back. Aborting an ordinary SDK request is not business cancellation. Jobs have a 120-second queue/run lifetime and stop on page disconnect, with at most 4 pending jobs and 32 retained results. forge_graphics_list remains readable during component trials.
 
@@ -233,6 +231,6 @@ forge_library_create/update/process_image accept previewOnly:true to validate, p
 
 forge_library_edit_resource accepts a cached single graphic key, expectedLibraryRevision, defaults (stable variable to number), metadata, previewOnly and previewTime. Save-as creates a separate local original; update:true updates only local originals. Native procedural generators retain generator metadata, parameters and their specialized editor without conversion to formula JSON. Builtins, canvas and list copies are unchanged.
 
-forge_graphics_list_batch takes a fresh snapshotId, expectedListRevision, expectedLibraryRevision and 1..100 explicit keys, returning jobId. forge_graphics_list_job(pageId,jobId,action:status/cancel) reports progress or cancels. Native semantics skip existing versions, report newer versions requiring explicit updates, and report per-item failures. Cancellation commits the completed prefix in one undo step; saving cannot be canceled. Connection expiry or concurrent project/list/library changes reject uncommitted batches. At most four pending jobs and 32 retained results; cached resources only, no implicit downloads.
+forge_graphics_list_batch is a compatibility existence check: resources already belong to the unified library, so it returns a completed job with skipped keys and does not create copies.
 
 Delivered long operations retain the page connection until their request deadline. Unpolled queues cannot keep a dead page alive, and explicit disconnect still revokes immediately. A timeout, disconnect or cancellation after dispatch may leave an unknown outcome: reconnect and inspect the relevant library/list/project state to determine whether it committed before deciding to retry. Never blindly repeat imports or resource creation.

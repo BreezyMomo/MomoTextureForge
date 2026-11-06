@@ -6,6 +6,18 @@ import {readResourcePack,encodeResourcePack} from '../web/resource-pack.js';
 import {node,PRESET_SCHEMA} from '../web/tree-model.js';
 import {bytesHash} from '../web/graphics-library.js';
 
+test('folder deletion reports incomplete disk cleanup to API clients',async()=>{
+ const entry={resourceId:'11111111-1111-4111-8111-111111111111',versionId:1,personalRevision:0,name:'Fixture',kind:'formula',hash:'a'.repeat(64),folder:true,libraryId:'22222222-2222-4222-8222-222222222222'},diskCleanup={removed:true,complete:false,deleted:[],bytes:0,failed:[{path:'resources/file.zip',messageKey:'folder.fileDeleteFailed',messageValues:['resources/file.zip','Locked']}],plan:{id:'retry-plan'}};
+ const run=createLiveLibrary({getBuiltins:()=>[],readLocal:async()=>[entry],readSources:async()=>[],readCatalogs:async()=>[],readDownloads:async()=>[],readDestination:async()=>({token:'current',libraryId:entry.libraryId}),removeLocal:async(id,options)=>{assert.equal(id,entry.resourceId);assert.equal(options.expectedDestination,'current');return diskCleanup;}});
+ const list=await run('library-list'),result=await run('library-delete',{key:list.items[0].key,expectedLibraryRevision:list.revision});assert.equal(result.applied,true);assert.deepEqual(result.diskCleanup,diskCleanup);
+});
+
+test('the local storage variant exports the existing folder package without a remote read or another stored entry',async()=>{
+ const meta={resourceId:'11111111-1111-4111-8111-111111111111',versionId:1,personalRevision:0,name:'Downloaded',kind:'composition'},bytes=await encodeResourcePack({schema:PRESET_SCHEMA,root:node('group'),graphicResource:meta}),hash=await bytesHash(bytes),entry={...meta,hash,folder:true,libraryId:'current',remoteOrigin:{sourceId:'team',name:'Team',url:'https://example.test/index.json'}};let reads=0;
+ const run=createLiveLibrary({getBuiltins:()=>[],readLocal:async()=>[entry],readSources:async()=>[{id:'team',enabled:true,name:'Team'}],readCatalogs:async()=>[{sourceId:'team',entries:[{...meta,sha256:hash}]}],readDownloads:async()=>[],readLocalBundle:async()=>{reads++;return bytes;},readRemoteBundle:async()=>{throw Error('Unexpected remote read');},readDestination:async()=>({token:'current'})});
+ const list=await run('library-list');assert.equal(list.total,2);assert.equal(reads,0);const local=list.items.find(item=>item.folderVariant);assert.equal(local.key,'local:'+meta.resourceId+'@1');assert.equal(local.storage,'folder');assert.equal(local.source,'remote');const exported=await run('library-export',{key:local.key});assert.equal(exported.sha256,hash);assert.equal(reads,1);
+});
+
 test('full library separates local and remote variants, exposes conflicts and never downloads',async()=>{
  const resourceId='11111111-1111-4111-8111-111111111111',meta={resourceId,versionId:1,personalRevision:0,name:'Local shape',aliases:{en:'Local alias'},category:'Test',kind:'composition'},bytes=await encodeResourcePack({schema:PRESET_SCHEMA,root:node('group'),graphicResource:meta});
  const hash=await bytesHash(bytes);let bundleReads=0;
@@ -32,4 +44,11 @@ test('generator export retains its classification and optional source includes n
  const run=createLiveLibrary({getBuiltins:()=>[BY_ID.get('BallisticSparks')],readLocal:async()=>[],readSources:async()=>[],readCatalogs:async()=>[],readDownloads:async()=>[]});
  const {items}=await run('library-list'),detail=await run('library-detail',{key:items[0].key,includeSource:true});assert.equal(items[0].kind,'generator');assert.ok(detail.source.assets[0].asset.definition.generator);
  const exported=await run('library-export',{key:items[0].key}),pack=await readResourcePack(Buffer.from(exported.zip,'base64'));try{assert.equal(pack.payload.graphicResource.generator,true);}finally{pack.rollback();}
+});
+
+test('switching folder destinations invalidates library revisions even with identical or empty resources',async()=>{
+ let destination={token:'folder-a',libraryId:'a',name:'First folder'};
+ const run=createLiveLibrary({getBuiltins:()=>[],readLocal:async()=>[],readSources:async()=>[],readCatalogs:async()=>[],readDownloads:async()=>[],readDestination:async()=>destination});
+ const first=await run('library-list');assert.equal(first.destination.token,'folder-a');destination={token:'folder-b',libraryId:'b',name:'Second folder'};
+ const second=await run('library-list');assert.notEqual(first.revision,second.revision);assert.equal(second.destination.token,'folder-b');
 });

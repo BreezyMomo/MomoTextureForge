@@ -15,6 +15,6 @@ export function createComponentSession({getSession,operate,revision}){
   }
   if(operation!=='component-edit'||!operate)throw Error('Unsupported component session operation');
   if(args.expectedSessionRevision!==currentRevision)throw Error('Component session changed; read it again');
-  const result=operate(args);return {...await read(),result};
+  const result=await operate(args);return {...await read(),result};
  };
 }

@@ -12,7 +12,7 @@
 
 Errors remain in the upper-right notification area until dismissed; later success messages do not replace them. Older lists with retired graphics or missing dependencies are backed up, with unreadable entries set aside and other resources restored. The notification downloads original records and currently available dependencies. This backup is not a formal resource ZIP. Do not advise clearing browser storage or replacing unavailable graphics with unrelated ones. Only newly discovered unreadable entries trigger recovery notifications; retained historical backups do not repeat old warnings after reload.
 
-The graphics list combines All / Favorites / Recent / Animated with search and multiselect category chips, without image/formula/group filters. Categories match any selected option; All or deselecting the last option clears category filtering. Categories come from built-in and personal list entries. Star buttons toggle favorites; play icons mark animated graphics. Language changes retain filters without modifying projects or resources.
+The sidebar library combines All / Favorites / Recent / Animated with search and multiselect category chips, without image/formula/group filters. Categories match any selected option; All or deselecting the last option clears category filtering. Categories come from built-in and personal list entries. Star buttons toggle favorites; play icons mark animated graphics. Language changes retain filters without modifying projects or resources.
 
 Built-ins are categorized by appearance and use, with formulas and generators together. Add Animated when only moving resources are needed. Read categories from the current catalog; do not treat old Radial, Shapes, Sigils or VFX categories as separate permanent entries. Old built-in copies, including early copies without a builtin marker, follow current categories without clearing storage, deleting copies or adding them again. Custom/imported resources retain their own categories. The search × clears the query while retaining filters; favoriting, parameter edits and filtering reuse loaded previews.
 
@@ -22,7 +22,7 @@ With one node selected, module header pins place controls beneath that node in t
 
 ## Custom panel layouts
 
-Dock the node tree, graphics list, canvas, inspector and timeline independently. Drag a title tab to an edge for a split or center for merged tabs. Drag separators to resize.
+Dock the node tree, sidebar library, canvas, inspector and timeline independently. Drag a title tab to an edge for a split or center for merged tabs. Drag separators to resize.
 
 Use ↗ or Alt-drag to float inside the page. Move with the upper-left handle, resize with the lower-right, or drag the tab back to dock. Floating does not create browser windows. Esc cancels.
 
@@ -32,25 +32,15 @@ Current layouts autosave per browser/origin. Save up to 12 named layouts, replac
 
 Examples open editable independent canvases, with construction descriptions. Initial VFX cards show slashes, flashes, shock rings, vortices and dissolve masks. Thumbnails are static; play the opened canvas. One-shots omit loop export, vortices loop, dissolve defaults to opaque Height. Links retain duration/frames/channel/alpha. Four UI backgrounds use repeated grids and default opaque color PNGs. Edit rows/columns/colors/widths and inspect seams; enable alpha to deliver just the pattern.
 
-## Resource scopes and versions
+## Unified library and canvas instances
 
-| Scope | Purpose | Editing/deletion |
-| --- | --- | --- |
-| Library | Reusable formulas/images/compositions from built-in/local/remote sources | Remote is read-only static subscription; local-original deletion affects its stored entry |
-| Graphics list | Browser-persistent reusable copies across canvases | Added from library or saved manually; project changes do not clear/replace the list |
-| Canvas node | Actual drawn instance | Edits do not automatically change other instances/library; list updates are explicit |
+The sidebar is a compact view of the same resources managed in the library window. Built-in, local and subscribed remote resources appear directly, without an Add to sidebar library step. The first view shows all resources; later visits restore the last filter. Favorites and recent usage remain browser preferences. Remote use reads temporarily; Download persists resources for offline use.
 
-Add directly to canvas uses the card's selected version, creates an independent selected node and closes the library. Undo/redo and project dependencies are retained. It does not modify list copies. Add to graphics list separately for reuse. Remote packs download on demand.
+Library resources and canvas instances are two separate scopes. Use + Add or Add directly to canvas to create independent instances; a thumbnail or Try editing opens a trial. Save changes publishes a personal resource version. Save as new resource keeps a separate result. Built-in and remote edits become personal copies. Library saves, renames and deletions leave existing canvas instances unchanged.
 
-Search/filter library names/aliases/categories/tags and sources/types. Select current results, batch-add or export selected resources. Higher-version updates are scoped, never global instance replacements. Identity has resource ID, formal version and personal revision. Explicit list updates increment personal revision; publication increments formal version and resets the publishing copy. Do not hand-edit IDs to bypass content conflicts.
+Create resource supports Image, Import files, Formula and Generator. Saved or imported resources appear in the sidebar immediately. Export selected resources as complete ZIPs with dependencies. Personal resources can be renamed or deleted; deletion removes their packages, thumbnails and historical versions while preserving files referenced by other entries. Library folder → Clean unused files previews leftovers before deletion, supports retries and leaves existing canvas copies unchanged. Canvas undo does not roll library versions back.
 
-Batch add shows progress and the current resource name, then saves once. Cancel keeps completed resources; unprocessed or failed items remain selected for retry. The whole addition can be undone. Batch add never confirms version updates automatically.
-
-Create resource offers Image/Import files/Formula/Generator. Export resources includes dependencies, not just screenshots. Generator supports custom GLSL/multipass JSON. Built-in edits save copies; custom editors can update their originals. Explain deletion scopes and let the user act.
-
-List + Add creates an instance. Thumbnail opens trial editing; Add to canvas inserts it and Return to canvas restores the old work. Updating replaces only that list copy and offers Undo update; Save as makes another entry.
-
-Unlinked nodes offer Save to graphics; linked nodes offer update/save-as. Saving prompts for name, defaulting to canvas name for the whole canvas. Deleting a linked list entry hides update actions but retains the canvas. Undo can restore it. More → Rename changes the entry/future initial instance names, not existing nodes/library. Names are 1–80 characters; cancel changes nothing. List edits/renames persist separately with undo; unrelated canvas undo does not reset them.
+On upgrade, unchanged legacy copies reuse their originals. Personal parameters, colors, effects, keys, compositions or renamed entries become independent resources with their source relationships and favorites. Failed entries remain available for preview and retry; original list data and dependencies are retained. No separate list is maintained after migration.
 
 ## Nodes and canvas
 
@@ -91,13 +81,15 @@ Shape selects the current/basic graphic, name/visibility and exclusive parameter
 
 Save project writes a canvas ZIP with dependencies; Open project restores it. Autosave is not backup. Custom/offline configurations share as project files; simple built-in configurations can use links.
 
-The list persists independently across new/open/share/reload. Opening projects restores only canvas/dependencies, not the entire list, and project ZIPs do not back up that list. Legacy draft lists migrate only when no independent list exists; an explicitly empty independent list wins. Transfer list items by saving/exporting resources. Nothing syncs across devices/origins automatically.
+The library is independent of the canvas: opening or creating projects does not change it. Project ZIPs include canvas dependencies; back up the complete library with resource ZIPs or a bound folder. Personal legacy-list changes migrate to independent resources and original records are retained. Nothing syncs across devices/origins automatically.
+
+Personal resources come only from the current local library folder. Rebinding updates the list without copying or merging the previous library. Creation and saving check binding and permission first. Legacy browser resources trigger a startup binding dialog, automatically save and verify packages, then remove migrated browser resources and the old list. Failures keep unmigrated originals for retry. Closing a library leaves disk files and canvases unchanged.
 
 Save canvas to library produces one reusable composition; selection save uses that subtree. PNG/SVG exports are delivery files, not fully editable project backups.
 
 ## Multiple remote libraries
 
-Read [Remote libraries](remote-libraries.en.md) for subscription, downloads, offline use, merged identities, update/delete boundaries, static manager and publication. Distinguish remote index/cache, browser originals/list and the computer's managed folder.
+Read [Remote libraries](remote-libraries.en.md) for subscription, downloads, offline use, merged identities, update/delete boundaries, static manager and publication. Distinguish remote subscriptions/downloads, the unified library, its storage location and canvas instances.
 
 ## Filters and material preview
 
@@ -125,7 +117,7 @@ The preference also covers library, previews/export, timeline, layouts, examples
 
 Multilingual graphic names are edited beside default names with fixed choices, shared by built-ins/custom resources. Library/list/remote indexes display selected-language-first, then default, and search all aliases/IDs. JSON/ZIP preserve metadata; composition publishing/list rename support it. New nodes use the then-current display name, then persist independently.
 
-The graphics list automatically receives all built-in graphics on first initialization. Existing browsers receive missing built-ins once on upgrade, preserving existing resources, versions and personal edits. Built-ins are deduplicated by resource identity. Later intentional removals, including an empty list, stay removed after refresh. New/open canvases continue sharing this list; initialization does not draw every built-in on the canvas.
+The sidebar and manager show the same built-in, local and remote resources, without a separate reusable-copy collection.
 
 Thumbnail grids automatically add or remove columns based on available panel width, with a minimum card width of about 120px. Widen the panel for three, four or more columns; narrow panels fall back to one. View → List remains a single column.
 

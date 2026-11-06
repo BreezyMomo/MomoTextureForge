@@ -6,7 +6,7 @@
 
 [Manual contents](README.en.md) · [Quick start](01-quick-start.en.md)
 
-The node tree, graphics list, canvas preview, inspector and timeline can be positioned independently. Enlarge the canvas, move parameters closer to the preview, or reserve more room for animation editing.
+The node tree, sidebar library, canvas preview, inspector and timeline can be positioned independently. Enlarge the canvas, move parameters closer to the preview, or reserve more room for animation editing.
 
 The default places **Graphics, Node tree, Canvas preview, and Inspector** from left to right in four full-height columns, using approximately 15%, 13%, 50%, and 22% of the width. The canvas keeps the largest area, with more room for node names and parameters. Existing current and named layouts are retained; choose **Layout → Restore default layout** to adopt the new arrangement.
 
@@ -45,7 +45,7 @@ Floating windows stay within the page; they do not open separate browser windows
 1. Arrange panels, then open **Layout**.
 2. Enter a name and choose **Save current layout**. Saving the same name replaces it; up to 12 named layouts are supported.
 3. Select a saved name and **Apply layout**, or delete an unneeded saved layout.
-4. **Restore default layout** starts over; **Resource browsing layout** enlarges the graphics list, **Animation layout** opens a separate timeline, and **Focus canvas** displays only the preview.
+4. **Restore default layout** starts over; **Resource browsing layout** enlarges the sidebar library, **Animation layout** opens a separate timeline, and **Focus canvas** displays only the preview.
 
 The current layout is remembered automatically and restored after reload. Named layouts let you switch between working arrangements.
 
@@ -53,7 +53,7 @@ Layouts store panel positions, proportions, tabs and visibility. Nodes, graphics
 
 ## 4. Panel contents and parameter order
 
-- Expand **Categories** to filter the graphics list; the collapsed summary retains the active selection. **View** switches between grid/list and collapses or expands graphic groups. Bottom-docked lists keep a separate scrolling thumbnail area.
+- Expand **Categories** to filter the sidebar library; the collapsed summary retains the active selection. **View** switches between grid/list and collapses or expands graphic groups. Bottom-docked lists keep a separate scrolling thumbnail area.
 - The Shape tab starts with graphic parameters and node colors. Existing custom orders are retained. **Parameter layout → Reset module order for this tab** resets only that tab, preserving panel positions, section expansion and pinned controls.
 - Wide inspectors align labels, sliders, values and action buttons on one row. Narrower inspectors wrap the controls; very narrow inspectors place sliders on their own row, with values, reset and keyframe buttons below.
 - **Save as resource** groups graphics-list and graphics-library actions and identifies the current selection. Project saving remains in **File**. Trial editing explains how updates affect existing instances.

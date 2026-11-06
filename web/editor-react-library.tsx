@@ -138,21 +138,29 @@ function GraphicCard({
     entry.resourceId,
     entry.versionId,
     entry.personalRevision,
+    entry.sourceId,
+    entry.libraryId,
+    entry.hash ?? entry.sha256,
   ]);
   const visual = useMemo(
     () => ({
       key: thumbnailVisualKey(entry.root),
-      source: builtinThumbnail(entry),
+      source: entry.thumbnail || builtinThumbnail(entry),
       animated: graphicIsAnimated(entry),
       shader: graphicEntryHasShader(entry),
     }),
-    [revision],
+    [revision,entry.root,entry.thumbnail],
   );
   const name = graphicLabel(entry),
     language = interfaceLanguage(),
     favorite = options.isFavorite(entry);
   useLayoutEffect(() => {
     const element = image.current!;
+    if (!entry.root) {
+      element.src = visual.source || 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72"><path d="M18 18h36v36H18Z" fill="none" stroke="#888"/></svg>');
+      element.loading = 'lazy';
+      return;
+    }
     options.thumbnails.observe(element, "preset:" + entry.id, entry.root, {
       source: visual.source,
       visualKey: visual.key,
@@ -287,27 +295,18 @@ function GraphicCard({
             <div className="tree-note">
               {uiText("editor.version") + entry.versionId}
             </div>
-            <div className="tree-note">
-              {uiText("editor.personalEdits") + entry.personalRevision}
-            </div>
           </div>
           <div className="component-more-actions">
             {action(
               "component-rename",
-              "editor.rename",
+              "unified.renameResource",
               "M14 5l5 5M4 20l4-1L20 7a2.1 2.1 0 0 0-3-3L5 16l-1 4Z",
               options.onRename,
               uiText("library.renamePrefix") + name,
             )}
-            {action(
-              "component-publish",
-              "editor.saveToGraphicsLibrary",
-              "M3 9V5h7l2 2h9v13H3V9ZM12 17v-6M9 14l3-3 3 3",
-              options.onPublish,
-            )}
-            {action(
+            {!entry.builtin && (!entry.remote || entry.folder) && action(
               "component-remove",
-              "editor.removeFromGraphicsList",
+              "unified.deleteResource",
               "M4 6h16M9 6V3h6v3M6 6l1 15h10l1-15M10 10v7M14 10v7",
               options.onRemove,
             )}

@@ -2,7 +2,7 @@ export default {
 workspace:`# Workspace and resources
 
 ## Panels and layout
-The default workspace has a node tree and graphics list on the left, a canvas in the middle, and an inspector on the right. Selecting a node opens Shape (including coloring), Transform / arrangement, Animation and Composite tabs.
+The default workspace has a node tree and library on the left, a canvas in the middle, and an inspector on the right. Selecting a node opens Shape (including coloring), Transform / arrangement, Animation and Composite tabs.
 Drag a panel tab to another panel's edge to split the area, or to its center to combine tabs. Drag separators to resize panels. Use the arrow button or Alt-drag to float a panel inside the browser. Escape cancels a drag. Closing a panel keeps its content; reopen it from Layout.
 Layout includes default, animation and focused-canvas presets. The current layout is saved in this browser. You can save up to 12 named layouts. Layouts are separate from projects and undo history.
 
@@ -10,8 +10,8 @@ Layout includes default, animation and focused-canvas presets. The current layou
 - Graphics library: reusable formulas, images, generators and compositions, including bundled resources, your local resources and subscribed remote libraries.
 - Graphics list: your frequently used resource copies, stored in the current browser across canvases. Opening or creating a canvas keeps this list.
 - Canvas nodes: editable instances. Editing a node does not automatically update its library resource or other instances.
-Use Directly add to canvas on a library card to create an independent instance immediately. Add to graphics list stores a reusable copy; use its + Add button to instantiate it. Clicking a list thumbnail opens a trial-editing session. Back to canvas returns to your work, while Add to canvas inserts the edited result.
-Update in graphics list updates that list entry only. Save as a new entry creates another resource. Renaming a list entry changes future instances, while existing instance names remain unchanged.
+Use Directly add to canvas on a library card to create an independent instance immediately. The sidebar and manager show the same resources; use + Add in the sidebar directly. Clicking a list thumbnail opens a trial-editing session. Back to canvas returns to your work, while Add to canvas inserts the edited result.
+Save changes publishes a new personal library version; Save as new resource keeps an independent result. Built-in and remote edits become personal resources. Existing canvas instances retain their names and contents.
 Use File → Save project for an editable project backup. Library resource exports include their dependencies. Browser storage is not a substitute for backups.
 
 ## Selection and color
@@ -71,7 +71,7 @@ The transparent-background setting belongs to export. The checkerboard, guides, 
 image:`# Resource creation and image processing
 
 ## Create or import a resource
-Open Graphics library → Create resource. The Image, Import file, Formula and Generator tabs share resource name, category and description. A successful preview does not save automatically; import/save the resource, then add it to the canvas or graphics list.
+Open Graphics library → Create resource. The Image, Import file, Formula and Generator tabs share resource name, category and description. A successful preview does not save automatically; import/save the resource, it appears in the sidebar immediately and can be added to the canvas.
 Formal exported ZIP packs contain a manifest and dependencies. AI Skill ZIPs are instruction packages, not graphics resources. Authoring JSON is parsed and validated before preview. Imported scripts must use the documented formula/generator interface.
 Formula parameters use unique code-style variables and optional language aliases. Aliases change display names; formulas and animation bind to stable variables/slots. Missing aliases fall back in the configured language order, then to the variable name.
 

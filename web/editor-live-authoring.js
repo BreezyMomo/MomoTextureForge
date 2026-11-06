@@ -17,7 +17,7 @@ export async function editorRevision(serialized){
  const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(serialized));
  return [...new Uint8Array(bytes)].map(v=>v.toString(16).padStart(2,'0')).join('');
 }
-export function createLiveAuthoring({getProject,commitProject,commitGraphicsList,arrangementRecords,getComponents=()=>[],getEditorState,controlEditor,getPageURL,getTimeline,controlTimeline,getListView,controlListView,getInspector,controlInspector,getComponentSession,controlComponentSession,capturePreview,getWorkspace,controlWorkspace,changeHistory,validatePack,readPack,library=createLiveLibrary(),resource=createLiveResource({library,getProject,revision:editorRevision}),importLibrary=createLiveLibraryImport({library})}){
+export function createLiveAuthoring({getProject,commitProject,commitGraphicsList,arrangementRecords,getComponents=()=>[],prepareComponents,unifiedList,getEditorState,controlEditor,getPageURL,getTimeline,controlTimeline,getListView,controlListView,getInspector,controlInspector,getComponentSession,controlComponentSession,capturePreview,getWorkspace,controlWorkspace,changeHistory,validatePack,readPack,library=createLiveLibrary(),resource=createLiveResource({library,getProject,revision:editorRevision}),importLibrary=createLiveLibraryImport({library})}){
  const remote=createLiveRemote({revision:editorRevision});
  const componentSession=createComponentSession({getSession:getComponentSession,operate:controlComponentSession,revision:editorRevision});
  const controls=createLiveProjectControls({getProject,commitProject,getEditorState,controlEditor,getPageURL,changeHistory,validatePack,readPack,revision:editorRevision});
@@ -64,8 +64,8 @@ export function createLiveAuthoring({getProject,commitProject,commitGraphicsList
   if(['library-catalog-export','library-authoring-export','library-list','library-detail','library-export','library-export-batch','library-delete'].includes(operation))return library(operation,args,isActive);
   if(operation==='library-import')return importLibrary(args,isActive);
   if(['library-edit-resource','library-aliases','library-create','library-update','library-save-node','library-process-image'].includes(operation))return resource({...args,fromNode:operation==='library-save-node'},isActive);
-  if(['graphics-list-batch','graphics-list-job'].includes(operation))return listBatch(operation,args,isActive);
-  if(['graphics-list','graphics-list-edit'].includes(operation))return graphicsList(operation,args,isActive);
+  if(['graphics-list-batch','graphics-list-job'].includes(operation))return (unifiedList??listBatch)(operation,args,isActive);
+  if(['graphics-list','graphics-list-edit'].includes(operation))return (unifiedList??graphicsList)(operation,args,isActive);
   if(LIVE_PROJECT_OPERATIONS.includes(operation))return controls(operation,args,isActive);
   if(operation==='schema'){
    let currentNode;
@@ -84,6 +84,7 @@ export function createLiveAuthoring({getProject,commitProject,commitGraphicsList
   const {expectedRevision,recipe,mode='edit'}=args;
   if(!['edit','create'].includes(mode)||!recipe||recipe.resources?.length)throw messageError('editorBridge.invalidRequest');
   const before=JSON.stringify(getProject());
+  await prepareComponents?.(recipe,isActive);
   if(await editorRevision(before)!==expectedRevision)throw messageError('editorBridge.conflict');
   const result=applyProjectRecipe(mode==='create'?null:JSON.parse(before),recipe,{components:new Map(getComponents().map(r=>[r.id,r.root])),records:arrangementRecords});
   const unchanged=semanticJSON(result.project)===semanticJSON(JSON.parse(before));

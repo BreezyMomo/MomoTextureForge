@@ -1,3 +1,4 @@
+import {seedBrowserFolder} from './browser-folder-fixture.mjs';
 import {chooseWorkbench} from './workbench-browser.mjs';
 // Check rendered UI text and interactions, including the distributed static site.
 import http from 'node:http';
@@ -9,13 +10,14 @@ import {chromium} from 'playwright';
 import {project,node} from '../web/tree-model.js';
 const built=process.argv.includes('--built'),standalone=process.argv.includes('--standalone'),root=fileURLToPath(new URL(standalone?'../dist/':built?'../site/':'../web/',import.meta.url));
 const types={'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.glsl':'text/plain','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp'};
-const server=http.createServer(async(req,res)=>{try{let url=new URL(req.url,'http://localhost').pathname;if(built)url=url.replace(/^\/MomoTextureForge\//,'/');const file=path.resolve(root,'.'+(url==='/'?'/index.html':url));if(!file.startsWith(root)||!types[path.extname(file)])throw Error();res.setHeader('Content-Type',types[path.extname(file)]);res.end(await readFile(file));}catch{res.writeHead(404);res.end();}});
+const server=http.createServer(async(req,res)=>{try{let url=new URL(req.url,'http://localhost').pathname;if(url==='/__test_setup__'){res.setHeader('Content-Type','text/html');res.end('<p>Test setup</p>');return;}if(built)url=url.replace(/^\/MomoTextureForge\//,'/');const file=path.resolve(root,'.'+(url==='/'?'/index.html':url));if(!file.startsWith(root)||!types[path.extname(file)])throw Error();res.setHeader('Content-Type',types[path.extname(file)]);res.end(await readFile(file));}catch{res.writeHead(404);res.end();}});
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));let browser,page;
 const report={},errors=[];
 try{
  browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-webgl','--ignore-gpu-blocklist']});
  const context=await browser.newContext({viewport:{width:1400,height:1000}});page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
  const address=`http://127.0.0.1:${server.address().port}${standalone?'/MomoTextureForge.html':built?'/MomoTextureForge/':'/'}`;
+ await page.goto(new URL('/__test_setup__',address).href);await seedBrowserFolder(page);
  const draft=project();if(process.argv.includes('--exports-only'))Object.assign(draft.output,{width:32,height:32,seconds:.3,exportSeconds:.6,fps:10});draft.name='文件';draft.root.name='画布';draft.root.children=[node('shape','Circle'),node('shape','Circle')];draft.root.children[0].name='颜色';draft.root.children[1].name='保存';
  draft.root.children[0].tracks['params.0']={mode:'absolute',ease:'linear',keys:[[0,.3],[1,.8]]};
  await page.goto(address+'#tree='+Buffer.from(JSON.stringify(draft)).toString('base64'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.locator('[role=treeitem]').first().click();

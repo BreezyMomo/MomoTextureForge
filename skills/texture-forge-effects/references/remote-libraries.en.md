@@ -11,20 +11,22 @@ Choose the relevant workflow: subscribe to another library, maintain your local 
 | Content | Location/purpose |
 | --- | --- |
 | Remote library | Hosted index, packs and thumbnails |
-| Remote download cache | Current browser, offline-capable but still remote-sourced |
-| Local graphics library | Independent browser resources, not a Git folder |
-| Graphics list/canvas | Reusable copies and instances, not auto-replaced by cache updates |
+| Saved remote resources | Complete ZIPs, thumbnails and provenance in the bound folder; available offline |
+| Personal resources | Originals, imports or independent copies in the same folder |
+| Sidebar/canvas | Sidebar and manager share resources; canvas instances remain independent |
 | Manager folder | Downloaded/cloned files on the user's computer, requiring separate publication |
 
-Download locally does not mean writing a Git checkout or saving a new original. Storage is browser/origin-specific. Projects carry used dependencies, not whole subscriptions/cache.
+Download writes to the bound directory, prompting for binding if needed. Switching folders switches resources and saved state. Subscriptions are browser preferences; copy the folder to another computer and select it there. Projects carry used dependencies, not the whole library. Legacy browser downloads migrate through startup guidance and are cleared after disk read-back verification.
 
 ## Subscribe and use
 
 1. Open Graphics library → Manage resources → Remote libraries.
 2. Enter a name and direct `index.json` URL, such as `https://example.com/library/index.json` (format example only). Trailing slash appends the index. Repository homepages, ZIP links and `library.json` are not subscription indexes.
 3. After connection, close the dialog and filter by source. Multiple sources can be enabled, disabled, renamed, refreshed or removed.
-4. Download locally caches only. Add to graphics list downloads as needed, then use + Add for an instance. Add directly to canvas is also available.
-5. Downloaded resources work offline. Summary-only entries need a network for initial use/edit/export. Editing remote resources saves new originals, not server changes.
+4. Resources appear directly in the sidebar and manager. Add to canvas reads the selected remote pack on demand without saving it to the library.
+5. Select Download for offline retention. Downloaded confirms persistence. Preview and export read temporarily. Editing remote resources saves independent resources, not server changes.
+
+Downloading adds and selects Local library in the source/version control, reading directly from the current folder. Remote and built-in choices remain selectable without another file copy. Opening a folder without the resource removes the local choice.
 
 Use Refresh now in subscriptions or Refresh remote libraries. Default automatic checks run every five minutes while the library is open, not realtime server push.
 
@@ -34,20 +36,19 @@ One resource ID produces one card. Source/download labels describe its active ve
 
 | State/action | Scope |
 | --- | --- |
-| Local exists, identical | Known hashes match for the ID/version; browsing merges, storage stays separate |
+| Local exists, identical | Matching ID/version/hash reuses the same folder package |
 | Remote newer / Local newer | Version comparison, not automatic replacement |
 | Awaiting comparison / Conflict | Missing hash cannot establish equality; differing same-version content cannot overwrite |
-| Auto-download updates | Off by default; tracks downloaded resources only, including version jumps |
-| Update local version | Confirmed remote→browser-original replacement; list/canvas remain |
-| New version → Update | Confirmed list replacement, including personal edits; existing instances remain |
+| Automatic updates | Off by default; updates same-source resources already saved in the current folder, allowing version jumps |
+| Update local version | Confirmed current-folder update; canvas instances remain |
 
-Save subscription settings after enabling automatic downloads. Cache, local library, list and canvas updates are different. Share personal edits by saving/exporting/publishing independent resources, not automatic uploads.
+Save subscription settings after enabling automatic updates. Catalog refresh changes browsing information; resource saves write the current folder. Canvas instances retain their own data. Share personal edits by saving/exporting/publishing independent resources, not automatic uploads.
 
 ## Delete and disable scopes
 
-- Removing/disabling subscriptions retains cache/list/canvas. Downloaded-remote browsing remains usable. Readdressing clears the old index identity, not old downloads.
-- Delete local download clears all downloaded versions for that source/resource, retaining other sources/originals/list/canvas. Active sources show undownloaded; removed/disabled cached cards may disappear until resubscription. Auto-update tracking stops until downloaded again.
-- Delete resource on a local source removes that original only. Other sources can keep the merged card. It does not delete server files.
+- Removing/disabling subscriptions retains folder resources and canvases. Saved remote resources remain usable. Readdressing clears the subscription catalog, retaining saved files.
+- Delete resource on a saved card removes its current-folder entry, ZIPs, thumbnails and historical versions, protecting shared references. Failed deletions can be retried. Active catalogs show Not downloaded. Automatic tracking stops; delayed saves cannot restore the resource.
+- Server files and existing canvas instances remain. Subscriptions sharing one physical package all reflect its changed saved state.
 - Remove from directory in the manager unlists local files without removing ZIPs/thumbnails. Hosted users see changes only after publishing; old links/cache do not immediately vanish.
 
 ## Static manager: maintain your library

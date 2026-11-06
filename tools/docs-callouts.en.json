@@ -22,7 +22,7 @@
   "graphics-library": [
     "Search resources",
     "Add directly to canvas",
-    "Add to the reusable list",
+    "Try editing a resource",
     "Expand details and resource management"
   ],
   "project-files": [
@@ -34,7 +34,7 @@
     "Open an editable composition"
   ],
   "graphics-list": [
-    "Search the reusable list",
+    "Search the library",
     "Switch All, Favorites, Recent, or Animated",
     "Select graphic categories",
     "Add an instance to the canvas"

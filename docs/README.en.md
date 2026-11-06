@@ -25,7 +25,7 @@ Start with Quick start, then consult individual chapters as needed. Screenshots 
 | Goal | Tutorial |
 | --- | --- |
 | Start with an empty canvas, learn the interface and save | [01 · Quick start](01-quick-start.en.md) |
-| Find graphics, add to canvas, trial-edit and back up resources | [02 · Graphics library and graphics list](02-graphics-library.en.md) |
+| Find graphics, add to canvas, trial-edit and back up resources | [02 · Graphics library and resource management](02-graphics-library.en.md) |
 | Upload, remove backgrounds, extract colors, center and convert SVG | [03 · Images and SVG](03-images-and-svg.en.md) |
 | Write formulas, enter generator JSON, adjust fire and smoke | [04 · Formulas and generators](04-formulas-and-generators.en.md) |
 | Select/group, transform, repeat, blend and filter | [05 · Canvas, arrangement and compositing](05-canvas-and-compositing.en.md) |

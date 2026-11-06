@@ -10,7 +10,7 @@ These rules apply to the Momo Texture Forge editor and appearance preview. Artwo
 
 ## 1. Hierarchy and color
 
-Large surfaces use low-saturation, palette-specific brightness layers for the workspace, panels, controls and overlays. Peer panels share their header treatment. Do not assign separate header colors to the graphics list, node tree and inspector. Moving a panel preserves these rules.
+Large surfaces use low-saturation, palette-specific brightness layers for the workspace, panels, controls and overlays. Peer panels share their header treatment. Do not assign separate header colors to the sidebar library, node tree and inspector. Moving a panel preserves these rules.
 
 | Role | Use | Constraint |
 | --- | --- | --- |

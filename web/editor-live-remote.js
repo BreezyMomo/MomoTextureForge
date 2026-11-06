@@ -1,8 +1,8 @@
 import * as native from './remote-library.js';
 
 export function createLiveRemote({revision,api=native}){
- const raw=async()=>{const [sources,catalogs,downloads]=await Promise.all([api.remoteSources(),api.remoteCatalogs(),api.remoteDownloads()]);return {sources,catalogs,downloads};};
- const describe=async state=>({revision:await revision(JSON.stringify(state)),sources:state.sources,catalogs:state.catalogs.map(({entries,...meta})=>({...meta,count:entries.length})),downloads:state.downloads.map(({thumbnail,...meta})=>meta),scope:'Browser subscriptions and downloaded cache only; canvas, list copies and local originals are unchanged.'});
+ const raw=async()=>{const [sources,catalogs,downloads,destination]=await Promise.all([api.remoteSources(),api.remoteCatalogs(),api.remoteDownloads(),api.remoteDestination?.()??null]);return {sources,catalogs,downloads,...(api.remoteDestination?{destination}:{})};};
+ const describe=async state=>({revision:await revision(JSON.stringify(state)),sources:state.sources,catalogs:state.catalogs.map(({entries,...meta})=>({...meta,count:entries.length})),downloads:state.downloads.map(({thumbnail,...meta})=>meta),destination:state.destination??null,scope:'Subscriptions and saved remote resources in the current folder. Download saves to that folder; delete-cache physically removes its saved resource files and historical versions. Canvas instances retain their own data.'});
  let tail=Promise.resolve();const jobs=new Map();
  const publicJob=job=>{const {canceled,...state}=job;return structuredClone(state);};
  const run=(operation,args,isActive)=>{
@@ -33,11 +33,11 @@ export function createLiveRemote({revision,api=native}){
      case 'download':{
       const entry=state.catalogs.find(c=>c.sourceId===args.sourceId)?.entries.find(e=>e.resourceId===args.resourceId&&(args.versionId===undefined||e.versionId===args.versionId));
       if(!source||!entry)throw Error('Unknown current remote catalog resource');
-      const bytes=await api.downloadRemoteResource({...entry,sourceId:source.id,remote:true},{signal:controller.signal});result={sourceId:source.id,resourceId:entry.resourceId,versionId:entry.versionId,bytes:bytes.length};break;
+      const bytes=await api.downloadRemoteResource({...entry,sourceId:source.id,remote:true},{signal:controller.signal,expectedDestination:state.destination?.token});result={sourceId:source.id,resourceId:entry.resourceId,versionId:entry.versionId,bytes:bytes.length};break;
      }
      case 'delete-cache':{
       const entry=state.downloads.find(e=>e.sourceId===args.sourceId&&e.resourceId===args.resourceId);if(!entry)throw Error('Unknown downloaded resource');
-      result={deletedVersions:await api.deleteRemoteDownload(entry,{expectedDownloads:state.downloads})};break;
+      const removed=await api.deleteRemoteDownload(entry,{expectedDownloads:state.downloads,expectedDestination:state.destination?.token});result=typeof removed==='number'?{deletedVersions:removed}:{deletedResources:removed.removed?1:0,diskCleanup:removed};break;
      }
      default:throw Error('Unknown remote action');
     }

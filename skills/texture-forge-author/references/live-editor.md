@@ -126,20 +126,18 @@ MCP 参数成员与数组元素总数最多 65,536，HTTP JSON 请求体上限 1
 
 开发回归：`node --test tests/editor-bridge.test.mjs`、`node tests/editor-mcp-start-browser-check.mjs` 与 `node tests/editor-mcp-browser-check.mjs --built`。覆盖本地网页启动、真实 HTTP SDK、多页面／多 Agent、快照与资源渲染、断开重连、双语窄屏及 HTTPS 页面连接本机服务，不生成截图。
 
-## 个人图形列表与原件更新
+## 统一图库兼容接口
 
-`forge_graphics_list({pageId,query?,id?})` 返回个人列表及 revision；传 id 读取完整 root。`forge_graphics_list_edit({snapshotId,expectedListRevision,action,...})` 是一次原生可撤销事务：
+左侧与管理窗口共用同一图库，原有列表接口保留名称以兼容客户端，不再维护独立资源副本。
 
-- `add-library` / `insert-library`：传 libraryKey，分别加入列表或直接插入画布。只使用已有缓存，不自动下载。
-- `update-library`：entryId 加同 resourceId 的新版 libraryKey；只更新列表副本。
-- `rename` / `remove`：entryId，改名另传 name 与可选 aliases；已有画布实例不变。
-- `save-node`：nodeId（整画布用 @root）、可选 name/aliases，保存列表并关联来源节点。
-- `replace-from-node`：entryId 与 nodeId，用节点内容更新列表副本。
-- `insert-list`：entryId；两种插入操作都可传 parentId/index/name，返回新 nodeId。
+- `forge_graphics_list({pageId,query?,id?})` 返回统一资源及 revision；id 按需读取完整 root。
+- `forge_graphics_list_edit({snapshotId,expectedListRevision,action,...})` 必须使用新鲜画布快照和资源 revision。
+- `add-library` 只确认资源存在，不创建副本；`update-library` 已停用，使用正式图库更新接口。
+- `rename` / `remove` 修改实际个人图库资源，已有画布实例不变。
+- `save-node` 保存节点或整画布为新资源；`replace-from-node` 发布个人资源的新版本。图库保存不改变画布。
+- `insert-list` / `insert-library` 按 entryId 或 libraryKey 克隆画布实例，可传 parentId/index/name，返回 nodeId。这类画布插入可撤销。
 
-`forge_library_update({pageId,key,inputFile,expectedLibraryRevision})` 用创作JSON或图片更新本地原件，保留 resourceId，版本加一；存储事务校验原版本/hash。另存为独立原件使用 forge_library_create。
-
-`forge_library_save_node({snapshotId,nodeId,expectedLibraryRevision,name?,aliases?,category?,description?,updateKey?})` 将节点、组合或整画布（@root）编译预览后存为图库组合原件；传 updateKey 更新本地原件，否则分配新ID。上述图库保存均不改画布和个人列表，也不自动更新已有实例。图库版本更新不能通过画布撤销；需要保留旧版文件时先 export。
+`forge_library_update` 保留个人资源 resourceId 并发布下一版本；另存新资源使用 `forge_library_create`。`forge_library_save_node` 支持节点、组合或整画布，updateKey 指定更新个人原件。资源保存后立即出现在两处图库视图，已有实例保持原样；图库版本不能通过画布撤销回滚。
 
 ## 图库批量文件与图片处理
 
@@ -197,7 +195,7 @@ forge_edit 现有配方还支持以下原生动作，字段与枚举在 forge_sc
 
 ## 远程订阅与下载缓存
 
-`forge_remote({pageId})` 返回订阅配置、目录概况、已下载资源和独立 revision，不联网。资源列表仍用 forge_library。`forge_remote_edit` 使用 expectedRemoteRevision 和 add/update/remove/refresh/download/delete-cache；配置用 config，下载明确 sourceId/resourceId，删除缓存移除该来源资源的所有已下载版本。移除订阅保留下载，所有操作不改画布、个人列表或本地原件。新订阅默认 autoCheck/autoDownload 为 false；只有用户要求持续更新时启用。refresh 和 download 才显式联网，只访问用户要求的来源。此接口不上传、不撤下远程服务器文件。
+`forge_remote({pageId})` 返回订阅配置、目录概况、当前文件夹中已保存的远程资源、destination 和独立 revision，不联网。资源列表仍用 forge_library。`forge_remote_edit` 使用 expectedRemoteRevision 和 add/update/remove/refresh/download/delete-cache；配置用 config。download 明确 sourceId/resourceId，先检查绑定与权限，再保存到当前图库文件夹。delete-cache 保留兼容名称，实际删除当前文件夹资源及其 ZIP、缩略图和历史版本；检查 diskCleanup.complete/failed，处理未完成清理。移除订阅保留磁盘资源，已有画布不变。新订阅默认 autoCheck/autoDownload 为 false；只有用户要求持续更新时启用，自动更新仅针对当前文件夹中已保存的同源资源。只访问用户要求的来源，不上传或删除远程服务器文件。
 
 refresh/download 需要可取消作业时传 background:true，立即返回 jobId；通过 forge_remote_job({pageId,jobId,action:'status'|'cancel'}) 查询或取消。取消中断尚在进行的原生网络请求，已提交的目录或下载不会回滚。普通 SDK 请求中止不等于业务取消。作业最多等待/运行120秒，页面断开也会终止；最多4个待处理作业，保留32条结果。试编辑期间 forge_graphics_list 仍可只读查询个人列表。
 
@@ -233,6 +231,6 @@ forge_library_create/update/process_image 支持 previewOnly:true，仅验证、
 
 forge_library_edit_resource 对已缓存的单图形资源使用 key、expectedLibraryRevision、defaults（稳定变量到数值）、metadata、previewOnly、previewTime；默认另存本地原件，update:true 仅更新本地原件。内置程序式生成器无需转换为公式JSON，保留生成器元数据、参数与专用编辑器。不会覆盖内置资源或修改画布/列表。
 
-forge_graphics_list_batch 使用新鲜 snapshotId、expectedListRevision、expectedLibraryRevision 和1..100个明确keys，返回jobId；forge_graphics_list_job(pageId,jobId,action:status/cancel) 查询进度或取消。沿用界面规则：已有同版跳过，新版报告需显式更新，其他失败逐项报告；取消时以一次撤销事务保存已完成部分，保存阶段不再取消。连接过期或作品/列表/图库变化会拒绝未提交的批次。最多4个待处理任务，保留32项结果；只处理缓存资源，不隐式下载。
+forge_graphics_list_batch is a compatibility existence check: resources already belong to the unified library, so it returns a completed job with skipped keys and does not create copies.
 
 长操作在已派发请求的截止时间内维持页面连接；空队列不能无限保活，主动断开仍立即撤销连接。请求超时、断连或取消发生在派发后，结果可能未知：先重新连接并读取对应图库/列表/作品状态，确认是否已提交，再决定是否重试；不要盲目重复导入或创建资源。

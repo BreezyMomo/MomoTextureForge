@@ -4,7 +4,7 @@
 [简体中文](01-quick-start.md) · [English](01-quick-start.en.md)
 <!-- /doc-language -->
 
-[Manual contents](README.en.md) · Next: [Graphics library and graphics list](02-graphics-library.en.md)
+[Manual contents](README.en.md) · Next: [Graphics library and resource management](02-graphics-library.en.md)
 
 ## 1. Open the editor
 
@@ -15,7 +15,7 @@ Visit the [online editor](https://breezymomo.github.io/MomoTextureForge/). See [
 > Callouts: 1 Open the graphics library; 2 Select a node; 3 Switch texture channel; 4 Edit the selected node.
 
 - **Toolbar:** canvas name, File, undo/redo, canvas settings, export, graphics and help. Narrow windows move Canvas settings into File and Examples into the menu beside Graphics library.
-- **Far left:** full-height graphics list with reusable copies.
+- **Far left:** full-height sidebar library with reusable copies.
 - **Second column:** node tree. Select an instance or group to decide what the inspector edits.
 - **Center:** composite preview, texture channels, 2D/3D modes, canvas tools and playback.
 - **Right:** selected node's shape, color, transform/layout, animation and compositing. No node means no node parameters.
@@ -51,13 +51,13 @@ While dragging a parameter module, adjacent modules smoothly make room. The new 
 3. Choose **Add directly to canvas**. The library closes and selects the new node.
 4. Change inspector parameters and watch the preview. Adding again creates an independent instance; undo is available.
 
-For reusable favorites, also **Add to graphics list** and use **+ Add** from the left panel later. Direct insertion does not overwrite personal edits in that list.
+For reusable favorites, also **Add to sidebar library** and use **+ Add** from the left panel later. Direct insertion does not overwrite personal edits in that list.
 
 ![Library resource cards](images/en/graphics-library.png)
 
-> Callouts: 1 Search resources; 2 Add directly to canvas; 3 Add to the reusable list; 4 Expand details and resource management.
+> Callouts: 1 Search resources; 2 Add directly to canvas; 3 Try editing a resource; 4 Expand details and resource management.
 
-The library is the source, the graphics list holds reusable copies, and nodes are canvas instances. See the [library chapter](02-graphics-library.en.md).
+The library is the source, the sidebar library holds reusable copies, and nodes are canvas instances. See the [library chapter](02-graphics-library.en.md).
 
 ## 3. Adjust position and size
 

@@ -9,15 +9,16 @@ import {TreeRenderer} from './tree-renderer.js';
 import {project,node} from './tree-model.js';
 import {EMPTY_GENERATOR,GENERATOR_AUTHORING_LIMIT,parseGeneratorAuthoring,assetFromGeneratorAuthoring,generatorAuthoringFromAsset} from './generator-authoring.js';
 import {download} from './encoders.js';
+import {libraryDestinationText} from './folder-library-manager.js';
 
-export async function editGenerator(asset,{item,embedded,ui,onSave,onClose}={}){
+export async function editGenerator(asset,{item,embedded,ui,onSave,onClose,beforeSave=async()=>true}={}){
  const {modal,el,button,labelled}=ui,{d,body}=embedded??modal(uiText("generator.graphicGenerator"));d.classList.add('graphic-editor-dialog');
  const custom=!asset||asset.definition.generator.effect==='pipeline';let draft=asset?structuredClone(asset):assetFromGeneratorAuthoring(EMPTY_GENERATOR);
  const layout=el('div',{className:'graphic-editor'}),form=el('div'),right=el('div',{className:'graphic-preview-panel'}),canvas=el('canvas',{width:320,height:320,className:'checker'}),status=el('p',{role:'status'}),controls=el('div');
  const name=embedded?.fields.name??el('input',{value:item?.name??draft.definition.name,maxLength:80}),category=embedded?.fields.category??el('input',{value:item?.category??'特效素材',maxLength:80}),description=embedded?.fields.desc??el('textarea',{value:item?.description??'',maxLength:2000});
  const nameAliases=embedded?.nameAliases??createGraphicNameEditor(name,item?.aliases??draft.definition.aliases,{onchange:()=>schedule()});
  if(!asset&&name.value==='新资源')name.value='新生成器';
- if(!embedded)form.append(labelled(uiText("library.graphicName"),name),nameAliases.element,labelled(uiText("library.category"),category),labelled(uiText("library.description"),description));
+ if(!embedded)form.append(el('p',{className:'folder-save-destination',text:await libraryDestinationText()}),labelled(uiText("library.graphicName"),name),nameAliases.element,labelled(uiText("library.category"),category),labelled(uiText("library.description"),description));
  form.append(el('p',{className:'tree-note',text:uiText("generator.generatorsBuildGraphicsFromParticleNoiseAndPostProcessingPassesThese")}));
  let disposed=false,cleaned=false,revision=0,timer=null,busy=false,lastGood=null,active=true,saving=false,sourceDirty=custom,loading=false;
  const renderSurface=document.createElement('canvas'),renderer=new TreeRenderer(renderSurface);
@@ -52,7 +53,7 @@ export async function editGenerator(asset,{item,embedded,ui,onSave,onClose}={}){
   }catch(error){lastGood=null;status.textContent=(error.message + uiText("generator.lastSuccessfulPreviewRetainedFixErrorsBeforeSaving"));}finally{if(registered)unregisterAsset(id);busy=false;if(disposed)cleanup();else if(active&&started!==revision)timer=setTimeout(preview,0);}
  }
  async function save(updateExisting=false){
-  if(busy||saving||loading||disposed)return;clearTimeout(timer);await preview();if(!lastGood||lastGood.revision!==revision)return;const record=lastGood;record.asset.definition.name=name.value.trim();if(!record.asset.definition.name){status.textContent=uiText("library.enterAGraphicName");return;}
+  if(busy||saving||loading||disposed)return;if(!await beforeSave())return;clearTimeout(timer);await preview();if(!lastGood||lastGood.revision!==revision)return;const record=lastGood;record.asset.definition.name=name.value.trim();if(!record.asset.definition.name){status.textContent=uiText("library.enterAGraphicName");return;}
   saving=true;layout.inert=true;status.textContent=uiText("generator.savingGenerator");try{await onSave(record,{name:name.value.trim(),aliases:nameAliases.read(),category:category.value.trim(),description:description.value,generator:true},updateExisting);d.close();}catch(error){status.textContent=uiError(error);}finally{saving=false;layout.inert=false;if(disposed)cleanup();}
  }
  const actions=el('div',{className:'graphics-actions'},[button((custom ? uiText("library.validatePreview") : uiText("generator.updatePreview")),preview)]);if(custom)actions.append(button(uiText("generator.exportGeneratorJSON"),()=>{try{const parsed=parseGeneratorAuthoring(code.value);Object.assign(parsed,{name:name.value.trim(),aliases:nameAliases.read(),category:category.value.trim(),description:description.value});download(new TextEncoder().encode(JSON.stringify(parseGeneratorAuthoring(parsed),null,2)),'graphic.generator.json','application/json');}catch(error){status.textContent=uiError(error);}}));if(!embedded)actions.append(button(uiText("library.saveAsNewGraphic"),()=>save(false)));if(item&&!item.builtin&&!item.remote)actions.append(button(uiText("library.updateGraphic"),()=>save(true)));body.append(actions);

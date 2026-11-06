@@ -57,7 +57,7 @@ Reduce sampling or detail if there are too many paths. Simplify SVG files above 
 ## 5. Save, insert and set aspect ratio
 
 1. Confirm the result and choose **Import into library**.
-2. Add it to the graphics list, then use **+ Add** to insert it.
+2. After saving, use + Add in the sidebar to create a canvas instance.
 3. **Shape → Image fit** preserves the source aspect ratio by default. Choose stretch only when deformation is intended.
 4. **Image mode** distinguishes original color and alpha, luminance mask and alpha mask. Choose original color to see the image's actual colors.
 

@@ -21,18 +21,18 @@
 | 发现页面与检查服务 | forge_pages / forge_status | 只列出用户接入页；多个目标时按名称、来源和pageId确认，不默认选择第一页。 |
 | 固定作品与读取依赖 | forge_capture / forge_inspect / forge_resource / forge_render | 同一snapshotId固定节点、资源和渲染版本；render是参考渲染，不等于完整导出。 |
 | 创建与修改作品 | forge_schema / forge_catalog / forge_edit | 查询实际图形、variable与操作；原子配方和撤销。默认edit保留作品，create仅用于用户要求的新作品；切换图形使用set-graphic。 |
-| 编辑器与项目文件 | forge_editor_state / forge_history / forge_project_open / forge_project_save / forge_project_share | 读回选择/播放/历史，按版本撤销重做，打开/保存正式JSON或ZIP；不覆盖整个个人图形列表。分享链接不携带任意自定义依赖，必要时改交项目ZIP。 |
+| 编辑器与项目文件 | forge_editor_state / forge_history / forge_project_open / forge_project_save / forge_project_share | 读回选择/播放/历史，按版本撤销重做，打开/保存正式JSON或ZIP；不覆盖整个个人左侧图库。分享链接不携带任意自定义依赖，必要时改交项目ZIP。 |
 | 示例、选择与预览控制 | forge_examples / forge_example_open / forge_editor_control / forge_preview_capture | 加载实际组合示例、选择与多选、播放/定位、2D/3D/特效预览设置及截图；更改作品的操作仍按请求授权。 |
 | 参数、排列、效果与动画数据 | forge_edit | 原生参数、变换、遮罩、排列与展开、Bezier、颜色/曲线、效果增删与顺序、轨道/关键帧和模板；先查schema，不发明字段或跨过受控参数限制。 |
 | 时间轴与参数面板 | forge_timeline / forge_timeline_edit / forge_inspector / forge_inspector_edit | 范围、轨道筛选、缩放、关键帧选择、参数页签、模块顺序/展开和固定；界面偏好不写入项目。 |
 | 工作区与外观 | forge_workspace / forge_workspace_edit / forge_editor_control | 停靠/悬浮/分隔条、命名布局、语言和已注册主题/风格/密度；不替用户清空浏览器偏好。 |
 | 图库查询与导出 | forge_library / forge_library_export / forge_library_export_batch | 内置、本地与已加载远程资源，参数/源码、正式资源ZIP及AI目录。查询已加载注册表的forge_catalog不等于完整个人图库目录；AI目录不含当前作品或完整像素/源码。 |
 | 资源创作与更新 | forge_library_create / forge_library_update / forge_library_edit_resource / forge_library_process_image / forge_library_save_node / forge_library_aliases / forge_library_delete | 公式/生成器、图片/SVG处理、节点保存与名称/参数别名；支持previewOnly的入口可先渲染后保存。删除和更新遵守资源引用与版本规则。 |
-| 资源导入与图形列表 | forge_library_import / forge_graphics_list / forge_graphics_list_edit / forge_graphics_list_batch / forge_graphics_list_job / forge_list_view / forge_list_view_edit | 正式包导入、备份恢复、列表增删改/收藏/筛选，批量作业进度与取消；保留原生资源、常用副本和画布实例的区别。 |
+| 资源导入与左侧图库 | forge_library_import / forge_graphics_list / forge_graphics_list_edit / forge_graphics_list_batch / forge_graphics_list_job / forge_list_view / forge_list_view_edit | 正式包导入、备份恢复、列表增删改/收藏/筛选，批量作业进度与取消；保留原生资源、常用副本和画布实例的区别。 |
 | 组件试编辑 | forge_component / forge_component_edit / forge_capture(context:component) | 进入、修改、返回、插入与更新；试编辑revision和主画布snapshot分开，组件快照不能授权主画布写入。 |
 | 图片与动画文件交付 | forge_export_start / forge_export_job | PNG8/16、EXR、序列/图集、三档批量、GIF、PSD、SVG/矢量PSD及RGBA通道；沿用原生尺寸/帧数/预算，支持进度、取消与错误读回。 |
 | Shader与作品实现资料 | forge_deliver | 先shader-support，再选realtime或postprocess；见下方范围。handoff交付源项目、说明与参考图，不等于完成引擎适配。 |
-| 远程图库订阅 | forge_remote / forge_remote_edit / forge_remote_job | 查询、增删/启用订阅、刷新、下载和缓存管理；后台作业支持取消，已提交变化不会随取消回滚。 |
+| 远程图库订阅 | forge_remote / forge_remote_edit / forge_remote_job | 查询、增删/启用订阅、刷新，以及保存到当前绑定文件夹；delete-cache 兼容名实际清理已保存资源的磁盘文件，返回 diskCleanup。后台作业支持取消，已提交变化不回滚。 |
 | 本机图库目录管理 | forge_directory_open / forge_directory | 用户明确指定主机绝对目录后获得handle，支持索引、导入预览/确认、元数据、撤回/恢复和清理；不继承浏览器目录权限，不自动上传或发布。具体资源ABI限制见连接协议。 |
 | 帮助、Skill与目录资料 | forge_help / forge_guide / forge_library_export | 获取相关指南、Skill包和实际图库目录；文档描述不授予操作其他页面、目录或客户端配置的权限。 |
 

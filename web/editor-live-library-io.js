@@ -5,7 +5,8 @@ import {graphicVariantKey} from './graphics-identity.js';
 
 export function createLiveLibraryImport({library,readLocal=libraryEntries,save=saveLibraryBatch,render=renderPreview,stage=stageResourceFiles}={}){
  return async(args,isActive=()=>true)=>{
-  const check=async()=>{if(!isActive())throw Error('Import expired');if((await library('library-list',{limit:1},isActive)).revision!==args.expectedLibraryRevision)throw Error('Library changed; query again');};
+  let destination=null;
+  const check=async()=>{if(!isActive())throw Error('Import expired');const current=await library('library-list',{limit:1},isActive);if(current.revision!==args.expectedLibraryRevision)throw Error('Library changed; query again');destination=current.destination?.token??null;};
   await check();
   if(!Array.isArray(args.files)||!args.files.length||args.files.length>100||!['error','copy'].includes(args.conflict??'error'))throw Error('Invalid import request');
   let size=0;const files=args.files.map(file=>{
@@ -35,7 +36,7 @@ export function createLiveLibraryImport({library,readLocal=libraryEntries,save=s
   }
   await check();
   if(!records.length)return {applied:false,entries:[],skipped};
-  const entries=await save(records,{expectedEntries:before,isActive});
+  const entries=await save(records,{expectedEntries:before,isActive,expectedDestination:destination});
   return {applied:true,entries:entries.map(entry=>({key:graphicVariantKey(entry),entry})),skipped,scope:'Local library only; canvas and personal list are unchanged.'};
  };
 }

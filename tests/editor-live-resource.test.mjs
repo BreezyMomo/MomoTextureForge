@@ -45,7 +45,7 @@ test('local updates preserve identity, increment version and pass atomic storage
  let saved;
  const create=createLiveResource({library:async op=>op==='library-detail'?{revision,item:previous}:{revision},render:()=>'',save:async(entry,bytes,options)=>{saved={entry,options};return entry;}});
  await create({mime:'application/json',data,expectedLibraryRevision:revision,updateKey:'local:old'});
- assert.equal(saved.entry.resourceId,previous.resourceId);assert.equal(saved.entry.versionId,4);assert.deepEqual(saved.options,{update:true,expectedLocal:{versionId:3,hash:previous.hash}});
+ assert.equal(saved.entry.resourceId,previous.resourceId);assert.equal(saved.entry.versionId,4);assert.deepEqual(saved.options,{expectedDestination:null,update:true,expectedLocal:{versionId:3,hash:previous.hash}});
  for(const source of ['builtin','remote']){previous.source=source;saved=null;await assert.rejects(create({mime:'application/json',data,expectedLibraryRevision:revision,updateKey:'old'}),/Only local/);assert.equal(saved,null);}
 });
 

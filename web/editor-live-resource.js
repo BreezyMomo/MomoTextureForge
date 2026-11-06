@@ -20,7 +20,8 @@ export function createLiveResource({library,render=renderPreview,save=saveLibrar
   const previewTime=args.previewTime??0;if(!Number.isFinite(previewTime)||previewTime<0||previewTime>3600)throw Error('previewTime must be 0..3600 seconds');
   const before=args.fromNode?JSON.stringify(getProject()):null;
   if(args.fromNode&&await revision(before)!==args.expectedRevision)throw Error('Canvas changed; capture again');
-  const check=async()=>{if(before!==null&&JSON.stringify(getProject())!==before)throw Error('Canvas changed; capture again');if(!isActive())throw Error('Resource request expired');if((await library('library-list',{limit:1},isActive)).revision!==args.expectedLibraryRevision)throw Error('Library changed; query forge_library again');};
+  let destination=null;
+  const check=async()=>{if(before!==null&&JSON.stringify(getProject())!==before)throw Error('Canvas changed; capture again');if(!isActive())throw Error('Resource request expired');const current=await library('library-list',{limit:1},isActive);if(current.revision!==args.expectedLibraryRevision)throw Error('Library changed; query forge_library again');destination=current.destination?.token??null;};
   await check();
   let previous;
   if(args.updateKey){const detail=await library('library-detail',{key:args.updateKey},isActive);previous=detail.item;if(detail.revision!==args.expectedLibraryRevision)throw Error('Library changed; query again');if(previous.source!=='local')throw Error('Only local originals can be updated');}
@@ -84,7 +85,7 @@ export function createLiveResource({library,render=renderPreview,save=saveLibrar
    const thumbnail=await render(root,{previewTime}),packed=await packageGraphic(root,meta,thumbnail);
    await check();if(!isActive())throw Error('Resource request expired');
    if(args.previewOnly)return {applied:false,previewOnly:true,previewTime,preview:thumbnail,metadata:meta,...(trace?{trace:{stats:trace.stats,warnings:trace.warnings}}:{}),scope:'Validated and rendered draft only; no library, list, canvas or persistent resource writes.'};
-   const entry=await save(packed.entry,packed.bytes,previous?{update:true,expectedLocal:{versionId:previous.versionId,hash:previous.hash}}:{});
+   const entry=await save(packed.entry,packed.bytes,{expectedDestination:destination,...(previous?{update:true,expectedLocal:{versionId:previous.versionId,hash:previous.hash}}:{})});
    return {applied:true,key:graphicVariantKey(entry),entry,preview:thumbnail,...(trace?{trace:{stats:trace.stats,warnings:trace.warnings}}:{}),scope:'Local library original only; canvas and personal graphics list are unchanged.'};
   }finally{
    // Registry indices are referenced by density fields. A concurrent native

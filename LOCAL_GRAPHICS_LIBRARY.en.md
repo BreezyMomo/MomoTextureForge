@@ -1,29 +1,42 @@
-# Local graphics library, graphics list and resource editor
+# Unified graphics library and resource editor
 
 <!-- doc-language -->
 [简体中文](LOCAL_GRAPHICS_LIBRARY.md) · [English](LOCAL_GRAPHICS_LIBRARY.en.md)
 <!-- /doc-language -->
 
-## Three independent levels
+## Library resources and canvas instances
 
-- **Library:** browse built-in/user resources; create, edit, categorize, delete and import/export. User resources live in IndexedDB `momo-graphics-library-v1`, with metadata separate from ZIP bytes. Updating/deleting an entry does not alter canvas copies.
-- **Graphics list:** reusable resource copies and dependencies, with independent local IDs. Stored separately in this browser, not included wholesale in saved canvas projects.
-- **Canvas instances:** deep copies with their own node IDs. Save an instance as a list entry or explicitly update its linked entry; other instances retain their content. Removing the list entry does not break existing instances.
+- **Library:** browse built-in/user resources; create, edit, categorize, delete and import/export. User resources live in the opened library folder; the browser stores its binding and cache. Updating/deleting an entry does not alter canvas copies.
+- **Canvas instances:** independent copies created from library resources. Saving, renaming or deleting a library resource leaves existing instances unchanged.
 
 ## Identity and versions
 
-`resourceId` is a stable UUID; formal `versionId` starts at 1 and `personalRevision` at 0. Library entries keep personal revision zero. An explicitly updated list copy increments its personal revision; ordinary parameter dragging does not. Publishing increments the formal version and resets the publishing list copy to the published snapshot, leaving other copies unchanged. Save as new creates a UUID at version/revision 1/0. Built-ins use namespace-derived stable UUIDs and are copied rather than overwritten.
+`resourceId` is a stable UUID. Saving changes to a personal resource publishes the next `versionId`; saving a new resource creates a new UUID at version 1. `personalRevision` remains zero for compatibility. Built-in and remote resources are read-only; edited results become personal resources.
 
 `asset_*` content hashes identify immutable formula/image dependencies, separately from authored-resource identity. Dependencies can be shared. Different bytes with the same resource ID/version are rejected. Stale publishers must reload or save a new resource rather than silently overwrite updates. Organization permissions, accounts, remote publishing and historical-version browsing are not provided.
 
 ## Workflow
 
 1. Open Graphics library, search names/aliases/categories and filter formula/image/composition resources. Add to graphics list for reuse or add directly to canvas for an independent instance.
-2. A list card's Add creates an instance; its thumbnail enters trial editing. The preview offers list updates, save-as and library publication.
+2. The sidebar and manager show the same resources. + Add creates a canvas instance; thumbnails open trial editing.
 3. Create resource → Formula provides GLSL expression/body, up to 16 parameter bindings, ranges, steps, defaults and live preview. `time` is in seconds; detected use enables built-in motion. Compilation errors retain the previous successful image and block saving.
 4. Create resource → Image supports PNG/JPG/WebP/SVG, with original-color/luminance/alpha modes. Bitmaps allow 16 MB and a 4096-pixel longest side; bytes are self-contained in packs.
 5. Save a selected node or the whole canvas to the library with its composition/dependencies. Load and edit compositions in the main editor.
-6. Custom resources can publish new versions or save independent copies. Deletion requires confirmation and removes that entry's pack; dependencies held in other packs remain.
+6. Custom resources can publish new versions or save independent copies. Deletion requires confirmation and removes resource ZIPs, thumbnails and historical versions, preserving files referenced by other entries.
+
+## Folder libraries
+
+Remote **Download** uses the same directory. Original ZIP bytes and hashes stay unchanged; remoteOrigin in index.json records provenance. Preview, insertion and export read temporarily, while saved state comes from the current folder. Legacy remote downloads migrate with personal resources and their browser packages are removed only after disk read-back verification. Subscription settings and catalogs remain. Deletion and unused-file cleanup use the shared physical-file workflow.
+
+Downloaded resources expose a **Local library** storage choice with a distinct display key, sharing the original resource ID, version and disk files with the remote choice. Selecting it reads directly from the folder. Provenance and edit-as-new behavior are retained; no second library entry is written.
+
+Open a personal library through Graphics library → Resource management → Library folder. The folder is the sole source for personal resources. Without a binding the personal collection is empty; create/save actions ask for one first. Switching changes the current collection without copying or merging the previous library. Canvas instances and dependencies remain independent.
+
+The folder uses the `momo.texture-remote-library/v1` index, stable identities, versioned ZIPs and thumbnails. `web/graphics-library.js` routes all normal reads and writes to the folder for the UI and explicitly connected MCP. `momo-folder-library-v1` remembers the handle and metadata cache; permission renewal requires user action. Missing or unavailable bindings reject writes without browser fallback.
+
+Startup checks legacy browser records, remote downloads and lists, and offers a binding dialog after the editor is ready. Opening a folder automatically migrates them: verify source hashes, identities and dependencies, write immutable files and read them back, then publish the index. After verifying every package and rechecking the index, remove old browser metadata and packages in transactions that check their source collections have not changed. Clear the old list only after verification too. Failure, cancellation or conflicts retain unmigrated originals. Older browser versions are saved as their original disk version files, without replacing a newer current index entry. Copies left by the previous backup workflow are migrated and cleared in the same upgrade.
+
+Destination locks span editor tabs; file writes share the standalone manager's lock and recheck index revisions. Closing a library only removes the binding. Deletion publishes the index change before removing the resource packages, thumbnails and standard version files; shared references are protected. Disk failures return remaining files and an ephemeral retry plan for the UI. Plans pin library identity, binding token, index revision and every file hash; validation precedes deletion, and changes reject the plan. Clean unused files scans generated version files under resources/ and thumbnails/ and requires preview confirmation. It never recursively deletes directories or handles unrelated files. There is no active browser library, browser copyback or automatic recovery backup flow. See the [library tutorial](docs/02-graphics-library.en.md#6-folder-libraries-and-migration).
 
 ## Assets and backups
 
@@ -33,15 +46,15 @@ Project autosave snapshots canvas dependencies. Density maps serialize stable ID
 
 Single-resource ZIPs use `momo.texture-pack/v1`; `content.json.graphicResource` carries identity, version, name/aliases, kind, category, description and thumbnail. Nodes carry required formula/image dependencies. Library ZIPs use `library.json` (`momo.graphics-library/v1`) and `resources/<UUID>.zip`. The combined pack limit is 64 MB; export separately if needed. Identical versions are reused; conflicts can explicitly be saved as new resources. Project ZIPs and library backups are independent.
 
-Storage is browser/origin-specific. Export backups for another computer/browser. Obsolete image-hidden metadata is unused, but old resource snapshots are not proactively deleted. Legacy global component lists are not automatically restored as the current list.
+Folder bindings and preferences are browser/origin-specific. Reopen the same folder in another browser, or copy/export it for another computer. Obsolete image-hidden metadata is unused, but old resource snapshots are not proactively deleted. Legacy global component lists are not automatically restored as the current list.
 
 List recovery handles unreadable entries separately: it first retains the exact original text and failure details in `momo-texture-tree:graphic-list-recovery:v1`, then allows the valid list to be saved. Entire unreadable entries are set aside without replacing their graphics. Custom dependency snapshots are retained while a recovery backup exists. Notifications offer the original records and currently available dependencies as a download. Failed backup writes leave the original list protected. This recovery archive is for recovery and diagnosis, not a directly importable formal resource ZIP.
 
-## Batch adding and added status
+## Shared resource management
 
-Batch add shows processed/total counts and the current resource name while yielding to keep the interface responsive. It saves and refreshes the editor once after preparation. Cancel keeps completed resources, leaving unprocessed and failed items selected for retry. Undo reverses the whole addition.
+`web/unified-graphics-library.js` supplies the sidebar and manager from the same built-in, active local and remote sources. Metadata browsing does not create copies. Resources load on demand; canvas instances are cloned. Import/save appears in both views immediately. There is no added-to-list status or action. Multiple selection exports complete resource packages.
 
-Select multiple items, all current results or none, then batch-add. Added status uses global `resourceId + versionId`, not personal revision. Duplicate same-version additions are disabled by default. A higher version offers confirmed replacement of the corresponding list entry and resets personal changes while keeping existing canvas instances. Batch-add does not auto-upgrade versions. Partial failures report reasons and keep failed items selected.
+Legacy migration reuses unchanged originals and preserves personal roots, effects, animation, aliases and names as independent resources. Deterministic identities make retries idempotent. Verified migration removes old browser records. Failed entries retain original data for retry. Sidebar favorites, recent usage and the last view are separate browser preferences. Legacy MCP list endpoints address these same resources.
 
 ## Formula parameter bindings
 
@@ -113,4 +126,4 @@ Download Effects Skill provides `texture-forge-effects`, Markdown-only with no i
 
 Maintain sources under `skills/texture-forge-effects`; `node build-effects-kit.mjs` regenerates ranges, embedded files and ZIP. Authoring/offline builds regenerate both kits too. Update guidance when controls/behavior change; generated ranges use current definitions. Both kits include Chinese and English Markdown editions.
 
-The graphics list automatically receives all built-in graphics on first initialization. Existing browsers receive missing built-ins once on upgrade, preserving existing resources, versions and personal edits. Built-ins are deduplicated by resource identity. Later intentional removals, including an empty list, stay removed after refresh. New/open canvases continue sharing this list; initialization does not draw every built-in on the canvas.
+Built-in resources appear directly in both library views. Creating or opening canvases does not change the library.

@@ -5,6 +5,7 @@ import {uiText,uiFormat} from './ui-language.js';
 import {effectsUseTime} from './post-effect-specs.js';
 
 export function graphicIsAnimated(entry,{usesTime=id=>BY_ID.get(id)?.usesTime}={}){
+ if(!entry.root)return entry.animated===true;
  function animated(n){
   if(!n)return false;
   const tracks=n.animationEnabled!==false&&!n.timing?.frozen&&Object.values(n.tracks??{}).some(track=>!track.muted&&track.keys?.length>1);

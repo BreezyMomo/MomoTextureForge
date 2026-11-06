@@ -94,7 +94,7 @@ Keep an adequate-resolution bitmap when appropriate. Saving/importing confirms p
 
 ## 6. Delivery and feedback
 
-Deliver actual files, actual previews when available, and import instructions. State performed checks, remaining differences and visual decisions. Do not substitute stale images. The user previews in Create resource, then imports into the library and adds to the list/canvas.
+Deliver actual files, actual previews when available, and import instructions. State performed checks, remaining differences and visual decisions. Do not substitute stale images. The user previews in Create resource, then imports into the library; it appears in the sidebar immediately and can be added to the canvas.
 
 For batches, deliver independent `.graphic.json` files selected together. An ordinary JSON collection ZIP must say **extract first, then select JSON**. Graphic resource packs must come from the official resource export workflow and be tested. For complete editable works, use bundled project create/edit/pack and open the native ZIP through File → Open project. See [delivery formats](references/authoring-guide.en.md#delivery-formats-and-batch-import). Do not fabricate a manifest or insert an empty one.
 

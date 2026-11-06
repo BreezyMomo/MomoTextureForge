@@ -14,10 +14,12 @@
 
 1. Open **Graphics library → Manage resources → Remote libraries** and enter a name and directory URL.
 2. Refresh the directory to browse resources. The server must allow cross-origin access.
-3. Download as needed, then add to the graphics list and canvas.
-4. Downloaded resources work offline; refreshing or acquiring new resources needs a network connection.
+3. Resources appear directly in the library. Preview and insertion read on demand without saving them.
+4. Select **Download** and open a folder if needed. **Downloaded** confirms that this version is available offline.
 
-Identical names can come from different subscriptions. Check source labels and versions before updating. “Downloaded” means a browser cache, not files copied into the manager's local folder.
+Downloading adds and selects **Local library** in **Source & version in use**, reading the resource directly from the current folder. Remote and built-in versions remain selectable without creating another disk copy. Opening a folder without that resource removes the local choice.
+
+Identical names can come from different subscriptions. Check sources and versions before updating. Preview and insertion read temporarily. Select **Download** for persistence; open a folder first if needed. **Downloaded** means that version is available offline. Packages, thumbnails and provenance live in the current folder; switching folders changes saved state. Deleting a saved resource removes its folder packages, thumbnails and historical versions, leaving the server and canvas instances intact. Legacy browser downloads move through the startup upgrade dialog and are cleared after verification.
 
 ## 2. Create your own static library
 

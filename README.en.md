@@ -38,11 +38,11 @@ Source and documentation: [GitHub primary repository](https://github.com/BreezyM
 ## First use
 
 1. Open **Graphics library**, search for a resource and choose **Add directly to canvas**.
-2. The library closes and selects the new node. For frequent reuse, also **Add to graphics list** and use **+ Add** from the left panel later.
+2. The library closes and selects the new node. The same resources appear in the sidebar library; use **+ Add** directly without a separate add-to-list step.
 3. Edit the selected node's shape, color, transform/layout, animation and compositing in the inspector.
 4. **File → Save project** preserves editable content. **Export…** creates delivery files.
 
-The library is the resource source, the graphics list holds reusable copies, and canvas nodes are editable instances. Editing an instance does not automatically update the library.
+The sidebar and manager share one library. Canvas nodes are independent instances; saving library changes leaves existing instances unchanged.
 
 **Examples** groups editable effects and studies by category. Choose **Edit on canvas** to inspect their layers; animated examples include playback and export settings:
 
@@ -61,7 +61,7 @@ Each chapter includes real interface screenshots with numbered callouts, entry p
 | Task | Documentation |
 | --- | --- |
 | Learn the interface, add a graphic, save a project | [Quick start](docs/01-quick-start.en.md) |
-| Search, trial-edit, insert and share resources | [Graphics library and graphics list](docs/02-graphics-library.en.md) |
+| Search, trial-edit, insert and share resources | [Graphics library and resource management](docs/02-graphics-library.en.md) |
 | Upload, remove backgrounds, extract colors, center and convert to SVG | [Images and SVG](docs/03-images-and-svg.en.md) |
 | Write formulas, create generators, tune fire and smoke | [Formulas and generators](docs/04-formulas-and-generators.en.md) |
 | Select/group, transform, arrange, blend, mask and filter | [Canvas, arrangement and compositing](docs/05-canvas-and-compositing.en.md) |
@@ -94,7 +94,7 @@ npm run build:pages       # generates the deployable multi-file site/ directory
 
 After a push to `main`, GitHub Actions checks and builds the site, then uploads the complete `site/` directory, including the entry page and `assets/`, as a Pages deployment artifact; no backend is required. Git ignores both `site/` and `dist/`, and build output is not committed back to the repository. Skills, library images and the export Worker load on demand. For offline use, download `dist/MomoTextureForge.html` rather than saving the online entry page alone.
 
-The built offline HTML does not require Node.js. Browser storage is isolated by origin: the online site, local ports and offline files do not automatically share drafts or libraries. Save project files and resource packs as backups.
+The built offline HTML does not require Node.js. Drafts, preferences and folder permissions are separate for each browser and address. Reopen the same local library folder to read personal resources. Back up projects and library folders or resource ZIPs.
 
 See [development documentation](docs/development.en.md) for tests, Skill regeneration, screenshot capture and GitHub Pages deployment.
 

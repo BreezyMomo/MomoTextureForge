@@ -6,7 +6,7 @@
 
 [Manual contents](README.en.md)
 
-## Why is the canvas empty after adding to the graphics list?
+## Why is the canvas empty after adding to the sidebar library?
 
 The list stores reusable copies. Click **+ Add** to create a canvas instance. See [Graphics library](02-graphics-library.en.md) for the three resource/instance scopes.
 
@@ -48,13 +48,13 @@ Preview and export channels are independent. Choose **Output content → Normal*
 
 Playback looping and omitting the export endpoint do not repair the motion. Check keyframe endpoints, formula seconds, UV scrolling and per-instance phase together.
 
-## Why does opening a project leave my graphics list unchanged?
+## Why does opening a project leave my sidebar library unchanged?
 
 A project restores the canvas and its dependencies, not the entire reusable list. To move reusable items, save them to the library and export resources.
 
 ## Why is my data missing on another port or in offline HTML?
 
-Storage is isolated by browser and origin, including domains and ports. Use project ZIPs and official resource ZIPs for backups. You can try reopening the previous address to inspect its stored data.
+Drafts, preferences and folder permissions are isolated by browser and origin. Personal resources come from the local library folder; reopen the same folder to read them. Startup guides legacy browser resources into a folder and removes them after verification. Back up project ZIPs and library folders or resource ZIPs.
 
 ## Which image remains after a preview fails?
 

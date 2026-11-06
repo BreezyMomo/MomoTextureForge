@@ -53,8 +53,8 @@ export function installWorkspaceWorkflow({resetModules,getScope}){
  const actions=document.querySelector('.preview-actions'),resources=menu('workspace.saveResource');resources.details.id='resource-actions-menu';
  function group(key,ids){const section=make('section','workspace-action-group'),title=make('strong','',key);section.append(title);for(const id of ids)section.append($(id));resources.panel.append(section);}
  const saveScope=make('p','workspace-scope-note');resources.panel.append(saveScope);
- group('workspace.graphicsList',['save-project-resource','update-project-resource','preview-save']);
- group('workspace.graphicsLibrary',['save-selected-component','save-whole-library']);
+ group('workspace.graphicsLibrary',['save-project-resource','update-project-resource','preview-save','save-whole-library']);
+ $('save-selected-component').hidden=true;
  group('workspace.resourceSession',['preview-reset','preview-undo-update']);
  actions.insertBefore(resources.details,$('solo'));
  $('preview-update').classList.add('primary');
