@@ -1,0 +1,65 @@
+import assert from 'node:assert/strict';
+import http from 'node:http';
+import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {resolve,extname,sep} from 'node:path';
+import {chromium} from 'playwright';
+import {seedBrowserFolder} from './browser-folder-fixture.mjs';
+import {chooseWorkbench} from './workbench-browser.mjs';
+import {encodeResourcePack} from '../web/resource-pack.js';
+import {builtinAsset} from '../web/resource-assets.js';
+import {node,PRESET_SCHEMA} from '../web/tree-model.js';
+
+const root=resolve('.'),out=resolve('test-results/library-loading');await mkdir(out,{recursive:true});
+const pixel='iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFUlEQVR4nGP8////fwYGBgYmEAHCAD34BABm6tHAAAAAAElFTkSuQmCC',records=[];
+for(let i=0;i<6;i++){
+ const entry={resourceId:crypto.randomUUID(),versionId:1,personalRevision:0,name:'Loading fixture '+i,category:'Fixture',kind:i<2?'image':'formula',thumbnail:''},shape=node('shape',i<2?'loading_image':'Circle');
+ if(i===2)shape.tracks['params.0']={mode:'absolute',ease:'linear',keys:[[0,.2],[1,.8]]};
+ const assets=i<2?{assets:[['loading_image',{...builtinAsset('Circle'),kind:'image',mime:'image/png',data:pixel}]]}:{};
+ records.push({entry,bytes:await encodeResourcePack({schema:PRESET_SCHEMA,root:shape,graphicResource:entry},assets)});
+}
+const types={'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.glsl':'text/plain','.png':'image/png','.svg':'image/svg+xml','.webp':'image/webp'};
+const server=http.createServer(async(req,res)=>{try{const path=new URL(req.url,'http://test').pathname;if(path==='/seed'){res.setHeader('Content-Type','text/html');res.end('<p>Isolated library loading fixture</p>');return;}const file=path==='/offline.html'?resolve(root,'dist/MomoTextureForge.html'):path.startsWith('/pages/')?resolve(root,'site','.'+path.slice(6)):resolve(root,'web','.'+(path==='/'?'/index.html':path));if(!file.startsWith(root+sep)||!types[extname(file)])throw Error();res.setHeader('Content-Type',types[extname(file)]);res.end(await readFile(file));}catch{res.writeHead(404).end();}});
+await new Promise(ok=>server.listen(0,'127.0.0.1',ok));const origin='http://127.0.0.1:'+server.address().port,browser=await chromium.launch({headless:true}),report=[];
+try{
+ for(const mode of process.argv.includes('--source')?['source']:process.argv.includes('--pages')?['pages']:['source','standalone']){
+  const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors=[];page.setDefaultTimeout(30000);page.on('pageerror',error=>errors.push(error.message));
+  await context.addInitScript(()=>{
+   FileSystemHandle.prototype.queryPermission=async()=> 'granted';window.__reads={};window.__waiting=[];
+   window.__release=kind=>{window[kind==='index'?'__holdIndex':'__holdZIP']=false;const waiting=window.__waiting.filter(entry=>entry.kind===kind);window.__waiting=window.__waiting.filter(entry=>entry.kind!==kind);for(const entry of waiting)entry.resolve();};
+   const read=FileSystemFileHandle.prototype.getFile;FileSystemFileHandle.prototype.getFile=async function(...args){if(window.__countReads){window.__reads[this.name]=(window.__reads[this.name]??0)+1;const kind=this.name==='index.json'?'index':this.name.endsWith('.zip')?'zip':null;if(kind&&(kind==='index'?window.__holdIndex:window.__holdZIP))await new Promise(resolve=>window.__waiting.push({kind,resolve}));if(this.name.endsWith('.zip')&&window.__zipDelay)await new Promise(ok=>setTimeout(ok,window.__zipDelay));if(this.name===window.__failZIP)throw Error('Fixture resource temporarily unavailable');}return read.apply(this,args);};
+   const open=IDBFactory.prototype.open;IDBFactory.prototype.open=function(name,...args){if(name==='momo-folder-library-v1'&&window.__failBinding)throw Error('Fixture folder connection unavailable');return open.call(this,name,...args);};
+  });
+  await page.goto(origin+'/seed');await seedBrowserFolder(page,{name:'Loading fixture',records});
+  await page.goto(origin+(mode==='source'?'/':mode==='pages'?'/pages/index.html':'/offline.html'));await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.waitForTimeout(200);
+  const manager=page.locator('.graphics-library-dialog'),state=manager.locator('.graphics-library-state'),cards=manager.locator('.graphics-card'),search=manager.locator('input[type=search]'),filter=manager.locator('.graphics-browse-controls>select').first();
+  const close=()=>manager.locator('header .graphics-close').click(),open=()=>page.locator('#open-graphics-library').click(),ready=async()=>{try{await page.waitForFunction(()=>document.querySelector('.graphics-library-state')?.dataset.state==='ready');}catch(error){console.error(await state.innerText(),errors,await page.evaluate(()=>({waiting:window.__waiting.map(e=>e.kind),reads:window.__reads})));throw error;}};
+  async function snapshot(name){const html=await manager.evaluate(dialog=>{const root=document.documentElement.cloneNode(false),head=document.createElement('head'),style=document.createElement('style'),body=document.body.cloneNode(false);head.innerHTML='<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">';style.textContent=[...document.styleSheets].flatMap(sheet=>{try{return [...sheet.cssRules].map(rule=>rule.cssText);}catch{return [];}}).join('\n')+'\nbody{display:block!important;min-height:100vh;padding:16px}dialog[open]{position:relative!important;inset:auto!important;margin:0 auto!important}';head.append(style);body.append(dialog.cloneNode(true));root.append(head,body);return '<!doctype html>'+root.outerHTML;});await writeFile(resolve(out,mode+'-'+name+'.html'),html);await manager.screenshot({path:resolve(out,mode+'-'+name+'.png')});}
+  await page.evaluate(()=>{window.__countReads=true;window.__holdIndex=true;window.__holdZIP=true;window.__openedAt=performance.now();});await open();await state.waitFor();assert.equal(await state.getAttribute('data-state'),'loading');assert.match(await state.innerText(),/正在加载图库/);assert.equal(await cards.count(),0);assert.equal(await manager.getByText('没有匹配的资源',{exact:true}).count(),0);assert.ok(await manager.locator('.graphics-browse-controls>select').last().inputValue());await snapshot('loading');
+  await page.evaluate(()=>window.__release('index'));await page.waitForFunction(()=>window.__waiting.filter(entry=>entry.kind==='zip').length===4);
+  // A focus/library notification can start a newer refresh while details from
+  // the old one are still pending. They must share reads and keep the new UI.
+  await cards.first().evaluate(card=>window.__previousCard=card);await page.evaluate(()=>window.dispatchEvent(new Event('focus')));await page.waitForFunction(()=>!window.__previousCard.isConnected&&document.querySelector('.graphics-library-state')?.dataset.state==='details');
+  await filter.selectOption('local');assert.equal(await cards.count(),6);assert.equal(await state.getAttribute('data-state'),'details');
+  const animated=manager.locator('[data-resource-id="'+records[2].entry.resourceId+'"]');assert.equal(await animated.locator('.graphic-animated').count(),0);
+  const first=cards.first();await first.locator('input[type=checkbox]').check();await first.locator('.graphics-card-details summary').click();await search.focus();await first.evaluate(card=>window.__firstCard=card);await snapshot('details');await page.evaluate(()=>window.__release('zip'));await ready();
+  assert.equal(await first.locator('input[type=checkbox]').isChecked(),true);assert.equal(await first.locator('.graphics-card-details').getAttribute('open'),'');assert.equal(await first.evaluate(card=>card===window.__firstCard),true);assert.equal(await search.evaluate(input=>input===document.activeElement),true);assert.equal(await animated.locator('.graphic-animated').count(),1);assert.equal(await animated.locator('.graphics-download-shader').count(),1);assert.match(await cards.first().locator('.graphics-card-type').innerText(),/位图/);
+  const reads=await page.evaluate(()=>({...window.__reads}));for(const record of records)assert.equal(reads[record.entry.resourceId+'-v1.zip'],1,'one package read per resource');
+  await page.evaluate(()=>window.__reads={});await search.fill('Loading fixture 2');assert.equal(await cards.count(),1);await search.fill('');await filter.selectOption('image');assert.equal(await cards.count(),2);await filter.selectOption('local');await cards.first().locator('.graphics-resource-favorite').click();await manager.getByRole('button',{name:'全选当前结果',exact:true}).click();await manager.getByRole('button',{name:'取消选择',exact:true}).click();assert.deepEqual(await page.evaluate(()=>window.__reads),{});await close();
+  // Reopening the same immutable resources reuses verified metadata in memory.
+  await page.evaluate(()=>{window.__reads={};window.__zipDelay=60;window.__openedAt=performance.now();});await open();await cards.first().waitFor();const firstCardMs=await page.evaluate(()=>performance.now()-window.__openedAt);await ready();const warmReads=await page.evaluate(()=>({...window.__reads}));assert.ok(!Object.keys(warmReads).some(name=>name.endsWith('.zip')));await close();
+  // A failure must be actionable and not become an empty, unlabelled panel.
+  await page.evaluate(()=>window.__failBinding=true);await open();await page.waitForFunction(()=>document.querySelector('.graphics-library-state')?.dataset.state==='error');assert.match(await state.innerText(),/Fixture folder connection unavailable/);assert.equal(await state.locator('[role=alert]').count(),1);await snapshot('error');await page.evaluate(()=>window.__failBinding=false);await state.getByRole('button',{name:'重新加载',exact:true}).click();await ready();assert.ok(await cards.count()>6);await close();
+  // Cold start comparison uses the same real files and synthetic ZIP delay as
+  // library-open-before.mjs, keeping disk variance out of the result.
+  await page.reload();await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.waitForTimeout(200);await page.evaluate(()=>{window.__countReads=true;window.__zipDelay=60;window.__openedAt=performance.now();});await open();await cards.first().waitFor();const coldFirst=await page.evaluate(()=>({ms:performance.now()-window.__openedAt,reads:{...window.__reads}}));await ready();const coldComplete=await page.evaluate(()=>({ms:performance.now()-window.__openedAt,reads:{...window.__reads}}));await close();
+  // Closing during a slow read must not revive the dialog or fail asynchronously.
+  await page.reload();await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.waitForTimeout(200);await page.evaluate(()=>{window.__countReads=true;window.__holdZIP=true;});await open();await page.waitForFunction(()=>window.__waiting.some(entry=>entry.kind==='zip'));await close();await page.evaluate(()=>window.__release('zip'));await page.waitForTimeout(100);assert.equal(await manager.count(),0);
+  // One failed resource keeps the list usable and retry resolves its details.
+  await page.reload();await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');await page.waitForTimeout(200);await page.evaluate(name=>{window.__countReads=true;window.__failZIP=name;},records[2].entry.resourceId+'-v1.zip');await open();await page.waitForFunction(()=>document.querySelector('.graphics-library-state')?.dataset.state==='partial');assert.match(await state.innerText(),/1 个资源的附加信息暂不可用/);await filter.selectOption('local');assert.equal(await cards.count(),6);await page.evaluate(()=>window.__failZIP=null);await state.getByRole('button',{name:'重新加载',exact:true}).click();await ready();assert.equal(await animated.locator('.graphic-animated').count(),1);await close();
+  // Check loading and error states in both languages at narrow widths too.
+  await chooseWorkbench(page,'language-settings','en');for(const width of [1440,768,390]){await page.setViewportSize({width,height:1000});await page.evaluate(()=>{window.__countReads=true;window.__holdIndex=true;});await open();assert.match(await state.innerText(),/Loading library/);assert.ok(await manager.evaluate(dialog=>dialog.scrollWidth<=dialog.clientWidth+1));await snapshot('english-loading-'+width);await close();await page.evaluate(()=>window.__release('index'));}
+  await open();await ready();assert.ok(!(await manager.locator('.graphics-card-type').allTextContents()).some(text=>/[\u3400-\u9fff]/.test(text)),'cached builtin categories follow the current language');await close();
+  assert.deepEqual(errors,[]);report.push({mode,resources:6,initialReads:reads,firstCardMs,warmReads,artificialZipReadDelay:60,coldFirst,coldComplete,errors});await context.close();console.log('Passed library loading '+mode);
+ }
+}finally{await browser.close();await new Promise(ok=>server.close(ok));}
+await writeFile(resolve(out,process.argv.includes('--pages')?'report-pages.json':process.argv.includes('--source')?'report-source.json':'report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));

@@ -14,6 +14,8 @@ Open management with **Manage**, immediately after **View** at the top of the si
 
 The sidebar and manager share the same built-in, local and subscribed remote resources. New resources appear immediately after saving or importing. Opening a canvas does not clear the library.
 
+The manager first shows **Loading library…**, then displays resource cards while animation, image type, and Shader details load in the background. Search and filters use the loaded list. A loading failure shows its reason and **Retry loading** instead of an empty library. If additional details are unavailable for individual resources, the list remains usable.
+
 Thumbnail grids automatically add or remove columns based on available panel width, with a minimum card width of about 120px. Widen the panel for three, four or more columns; narrow panels fall back to one. View → List remains a single column.
 
 Pending thumbnails show a loading spinner until the image is ready. Failed previews show an indicator with details on hover; you can still view or add the graphic.
@@ -103,6 +105,10 @@ Personal resources come from the local folder you have opened. You can create wi
 4. Creating, importing and publishing versions write directly to the current folder. **Close library** only removes the connection. **Delete resource** also removes its ZIPs, thumbnails and historical versions; files still referenced by other library entries are preserved. Changing, closing or deleting library resources leaves existing canvas copies unchanged.
 
 At startup, personal resources, remote downloads or lists saved by an older browser version trigger an upgrade dialog. Open a local library and the tool automatically saves complete packages and dependencies, verifies every package by reading it back, then removes the migrated browser resources and old list. Failure or cancellation keeps unmigrated originals for a later retry. Personal parameters, colors, effects, animation, names and aliases are preserved. Identical resources are reused; content conflicts stop the operation with an explanation.
+
+After selecting a folder, choose **Open and migrate legacy resources**, or **Create and migrate legacy resources** for a new folder. Progress distinguishes saving, index publication, read-back verification, browser cleanup and legacy-list migration; the saving count reaching its total does not mean everything is complete. When all steps finish, the dialog shows **Legacy graphics migration complete**, hides pending/retry controls and can be closed. After failure or cancellation, use **Continue legacy migration** in the bound library.
+
+Thumbnail generation failures do not block migration of complete graphic data. The dialog reports the number of unavailable thumbnails; graphic structure, parameters, animation and dependencies are still saved and verified in resource packages. If the main canvas reports insufficient rendering resources, close the migration dialog and choose **Retry preview**; reduce preview zoom or output dimensions if needed.
 
 If a browser resource is older than the folder version, the folder continues using its newer version. The older package is saved on disk under its original version before its browser copy is removed. Migration excludes the canvas and unsaved edits; save those as projects. Unreadable legacy entries retain their original data and a warning, rather than being deleted as migrated.
 

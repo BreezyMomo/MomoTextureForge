@@ -1,4 +1,5 @@
 import {noiseWarpActive} from './noise-warp.js';
+import {messageError} from './message-catalog.js';
 import {NORMAL_GLSL,setNormalUniforms} from './normal-map.js';
 import {CURVES_GLSL,curveUniforms,hasChannelCurves} from './channel-curves.js';
 import {channelSourceSelection,sanitizeChannelSources} from './output-channels.js';
@@ -84,7 +85,7 @@ export class TreeRenderer{
  if(this.allocated+bytes>this.budget)throw Error('渲染超过中间纹理预算，请简化嵌套或降低导出尺寸');
  const t={w,h,aspect,bytes,colorOnly,bounds:UNIT_BOUNDS,textures:[],fb:gl.createFramebuffer()};gl.bindFramebuffer(gl.FRAMEBUFFER,t.fb);
  for(let i=0;i<(colorOnly?1:2);i++){const tex=gl.createTexture();t.textures.push(tex);gl.bindTexture(gl.TEXTURE_2D,tex);gl.texImage2D(gl.TEXTURE_2D,0,this.float?(i?gl.R32F:gl.RGBA32F):(i?gl.R8:gl.RGBA8),w,h,0,i?gl.RED:gl.RGBA,this.float?gl.FLOAT:gl.UNSIGNED_BYTE,null);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0+i,gl.TEXTURE_2D,tex,0);}
- gl.drawBuffers(colorOnly?[gl.COLOR_ATTACHMENT0]:[gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1]);if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE||gl.getError()){t.textures.forEach(x=>gl.deleteTexture(x));gl.deleteFramebuffer(t.fb);throw Error('浏览器或显卡无法分配当前渲染缓冲，请关闭其他图形程序后重试');}gl.viewport(0,0,w,h);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);this.live.add(t);this.allocated+=bytes;return t;}
+ gl.drawBuffers(colorOnly?[gl.COLOR_ATTACHMENT0]:[gl.COLOR_ATTACHMENT0,gl.COLOR_ATTACHMENT1]);if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE||gl.getError()){t.textures.forEach(x=>gl.deleteTexture(x));gl.deleteFramebuffer(t.fb);throw messageError('render.bufferUnavailable');}gl.viewport(0,0,w,h);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);this.live.add(t);this.allocated+=bytes;return t;}
  release(t){if(!t||!this.live.delete(t))return;this.reclaimable.delete(t);if(this.streaming)this.discard(t);else this.pool.push(t);}
  boundedTarget(w,h,bounds=UNIT_BOUNDS,aspect=w/h){const [sx,sy]=boundsSize(bounds),limit=Math.min(4096,this.base.maxSize),shrink=Math.min(1,limit/Math.max(w*sx,h*sy)),out=this.target(Math.max(1,Math.ceil(w*sx*shrink)),Math.max(1,Math.ceil(h*sy*shrink)),false,aspect);out.bounds=bounds;return out;}
  consumed(t){if(t.repeatHeld)return;if(this.streaming){if(!t.streamHeld)this.release(t);}else this.reclaimable.add(t);}
@@ -263,7 +264,7 @@ export class TreeRenderer{
  if(captureEffectInput)this.clearCache();this.captureEffectInput=captureEffectInput;
  // The export view shares native contour, Rough.js geometry and placement. Never reuse ordinary cached pixels.
  if(this.sketchStrokeOnly!==sketchStrokeOnly||this.sketchFillOnly!==sketchFillOnly)this.clearCache();this.sketchStrokeOnly=sketchStrokeOnly;this.sketchFillOnly=sketchFillOnly;
- if(this.gl.isContextLost())throw Error('图形上下文已丢失，请等待恢复或重试');
+ if(this.gl.isContextLost())throw messageError('editor.graphicsContextLostRetryAfterItRecovers');
  const activeImages=new Set();const visit=n=>{if(n.kind==='shape')activeImages.add(n.type);if(n.arrange?.[0]===12){activeImages.add(CATALOG[n.arrange[39]]?.id);for(const k of n.tracks?.['arrange.39']?.keys??[])activeImages.add(CATALOG[k[1]]?.id);}for(const c of n.children??[])visit(c);if(n.mask)visit(n.mask);};visit(project.root);for(const [id,tex]of this.base.assetTextures??[]){if(!activeImages.has(id)){this.gl.deleteTexture(tex);this.base.assetTextures.delete(id);}}
  this.formulaSeconds=formulaSeconds;const start=performance.now();this.quality=quality===1?1:2;this.sampleLimit=Math.min(4096,this.base.maxSize,Math.max(w,h)*2);this.operations=0;this.measureOperations=0;this.measureCache=new Map();if(w*h>16777216)throw Error('输出超过像素预算');
  // Evict between frames, never while ancestors reference cached descendants.
@@ -295,5 +296,6 @@ export class TreeRenderer{
   if(gl.getError())throw Error('浏览器或显卡未能完成当前尺寸的输出，请关闭其他图形程序后重试');for(const source of packedSources.values())this.release(source);this.release(target);this.release(placed);this.lastMs=performance.now()-start;return pixels;
  }catch(error){this.clearCache();throw error;}finally{this.packSelection=null;this.clearStreamSources();this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,null);for(const [key,t]of this.cache)if(!this.usedKeys.has(key)){this.release(t);this.cache.delete(key);}const cached=new Set(this.cache.values());for(const t of [...this.live])if(!cached.has(t))this.release(t);this.trimPool(128*1024*1024);while(this.allocated>128*1024*1024&&this.cache.size){const key=this.cache.keys().next().value;this.release(this.cache.get(key));this.cache.delete(key);this.trimPool(128*1024*1024);}this.trimPool(128*1024*1024);this.streaming=false;this.budget=384*1024*1024;}
  }
- destroy(){this.base.generators?.destroy();this.footprintCache?.clear();this.layoutCache?.clear();for(const tex of this.base.assetTextures?.values()??[])this.gl.deleteTexture(tex);this.clearCache();for(const t of [...this.live])this.release(t);this.trimPool();this.uniforms.clear();for(const p of this.programs.values())this.gl.deleteProgram(p);for(const p of this.base.programs.values())this.gl.deleteProgram(p.p);}
+ // Shared preview canvases keep their context; one-off canvases release it explicitly.
+ destroy({releaseContext=false}={}){this.base.generators?.destroy();this.footprintCache?.clear();this.layoutCache?.clear();for(const tex of this.base.assetTextures?.values()??[])this.gl.deleteTexture(tex);this.base.assetTextures?.clear();this.clearCache();for(const t of [...this.live])this.release(t);this.trimPool();this.uniforms.clear();for(const p of this.programs.values())this.gl.deleteProgram(p);this.programs.clear();for(const p of this.base.programs.values())this.gl.deleteProgram(p.p);this.base.programs.clear();if(releaseContext){this.canvas.width=this.canvas.height=1;this.gl.getExtension('WEBGL_lose_context')?.loseContext();}}
 }

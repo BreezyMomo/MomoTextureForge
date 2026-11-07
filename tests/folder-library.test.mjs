@@ -55,6 +55,18 @@ test('an invalid target or failed binding retains the current library',async()=>
 test('legacy migration verifies exact packages and aliases before removing browser originals',async()=>{
  const f=await fixture(),original=structuredClone(f.browser);await f.model.connect(f.store.handle);assert.equal(f.browser.length,1);const result=await f.model.importBrowserResources();assert.equal(result.copied,1);assert.equal(f.browser.length,0);const [entry]=await f.model.entries();assert.deepEqual(entry.aliases,{en:'Test graphic'});assert.deepEqual(await f.model.bundle(bundleKey(entry)),original[0].bytes);assert.equal((await f.model.legacyBrowserStatus()).count,0);assert.equal((await f.model.importBrowserResources()).total,0);
 });
+
+test('migration reports publication, read-back and cleanup separately before removing originals',async()=>{
+ const f=await fixture(),original=f.browser[0],phases=[];await f.model.connect(f.store.handle);
+ await f.model.importBrowserResources({onPhase:phase=>{phases.push(phase);assert.equal(f.browser.length,1);if(phase==='verifying'||phase==='cleaning'){assert.equal(index(f.store).entries.length,1);assert.deepEqual(f.store.files.get('resources/'+id+'-v1.zip'),original.bytes);}}});
+ assert.deepEqual(phases,['publishing','verifying','cleaning']);assert.equal(f.browser.length,0);
+});
+
+test('canceling after disk verification retains browser originals and allows a verified retry',async()=>{
+ const f=await fixture(),abort=new AbortController();await f.model.connect(f.store.handle);
+ await assert.rejects(f.model.importBrowserResources({signal:abort.signal,onPhase:phase=>{if(phase==='cleaning')abort.abort();}}),error=>error.messageKey==='folder.canceled');
+ assert.equal(f.browser.length,1);assert.equal(index(f.store).entries.length,1);await f.model.importBrowserResources();assert.equal(f.browser.length,0);assert.equal(index(f.store).entries.length,1);
+});
 test('native generators and all dependencies survive the one-time move',async()=>{
  const f=await fixture([await record({generator:true})]),original=f.browser[0].bytes;await migrate(f);const [entry]=await f.model.entries();assert.equal(entry.generator,true);assert.deepEqual(await f.model.bundle(bundleKey(entry)),original);assert.equal(f.browser.length,0);
 });

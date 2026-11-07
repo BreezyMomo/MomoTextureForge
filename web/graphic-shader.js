@@ -32,6 +32,7 @@ export async function graphicBundleCapabilities(bytes,kind){
   const prepared=new Map(pack.prepared.map(([id,asset])=>[id,asset])),resolve=id=>prepared.get(id)??assetFor(id),entry={...pack.payload,kind};
   const animated=graphicIsAnimated(entry,{usesTime:id=>{const asset=resolve(id);return asset.kind!=='image'&&formulaUsesTime(asset.definition,asset.sources??{},asset.libraries);}});
   const profile=singleGraphic(entry)?graphicAssetShaderProfile(resolve(entry.root.type)):null;
-  return {animated,shaderGraphic:profile?{type:profile,params:[...entry.root.params],asset:resolve(entry.root.type)}:null};
+  const imageMime=kind==='image'&&entry.root?.kind==='shape'?resolve(entry.root.type).mime:null;
+  return {animated,shaderGraphic:profile?{type:profile,params:[...entry.root.params],asset:resolve(entry.root.type)}:null,...(imageMime?{imageMime}:{})};
  }finally{pack.rollback();}
 }

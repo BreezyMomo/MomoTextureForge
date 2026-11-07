@@ -55,10 +55,11 @@ export class UnifiedGraphicsLibrary {
  }
  async rename(input,metadata){const existing=await this.materialize(input);return this.saveRoot(existing.root,{existing,...metadata,thumbnail:existing.thumbnail});}
  async delete(input,{expectedDestination}={}){const item=typeof input==='string'?this.find(input):input;if(!item||item.builtin||item.remote&&!item.folder)throw messageError('unified.readOnlyResource');const options={expectedLocal:{versionId:item.versionId,hash:item.hash}};if(item.libraryId)options.expectedLibraryId=item.libraryId;if(expectedDestination!==undefined)options.expectedDestination=expectedDestination;const result=await this.remove(item.resourceId,options);await this.refresh();return result;}
- async migrateLegacy(entries,{thumbnail=()=>'',onProgress=()=>{},expectedDestination}={}){
-  const mappings=[],pending=[];let copied=0;await this.refresh();
+ async migrateLegacy(entries,{thumbnail=()=>'',onProgress=()=>{},expectedDestination,signal}={}){
+  const check=()=>{if(signal?.aborted)throw messageError('folder.canceled');};
+  const mappings=[],pending=[],warnings=[];let copied=0;check();await this.refresh();
   for(const entry of entries){
-   onProgress(entry);const current=this.find(entry.resourceId),root=entry.root;
+   check();onProgress(entry);check();const current=this.find(entry.resourceId),root=entry.root;
    let same=false;
    if(current&&entry.personalRevision===0&&entry.name===current.name&&canonical(entry.aliases??{})===canonical(current.aliases??{})){
     try{const original=await this.materialize(current);same=canonical({...root,name:undefined})===canonical({...original.root,name:undefined});}catch{}
@@ -66,13 +67,14 @@ export class UnifiedGraphicsLibrary {
    if(same){this.aliases.set(entry.id,current.id);mappings.push([entry.id,current.id]);continue;}
    try{
     const fingerprint=await contentHash({legacyId:entry.id,resourceId:entry.resourceId,versionId:entry.versionId,name:entry.name,aliases:entry.aliases??{},root:JSON.parse(canonical(root))}),resourceId=uuidFromHash(fingerprint),old=(await this.readLocal()).find(e=>e.resourceId===resourceId);
-    const meta={...libraryIdentity({resourceId}),name:entry.name,aliases:entry.aliases??{},category:entry.category??'我的图形',description:entry.description??'',kind:entry.kind??'composition',thumbnail:old?.thumbnail??await thumbnail(root),animated:graphicIsAnimated(entry),source:{resourceId:entry.resourceId,versionId:entry.versionId},legacyFingerprint:fingerprint};
+    let preview=old?.thumbnail??'';if(!old)try{preview=await thumbnail(root);}catch(error){check();warnings.push({entry,error});}
+    const meta={...libraryIdentity({resourceId}),name:entry.name,aliases:entry.aliases??{},category:entry.category??'我的图形',description:entry.description??'',kind:entry.kind??'composition',thumbnail:preview,animated:graphicIsAnimated(entry),source:{resourceId:entry.resourceId,versionId:entry.versionId},legacyFingerprint:fingerprint};
     const bytes=old?await this.readBundle(bundleKey(old)):await encodeResourcePack({schema:PRESET_SCHEMA,name:entry.name,root:structuredClone(root),graphicResource:meta});
-    const saved=old??await this.save(meta,bytes,expectedDestination===undefined?{}:{expectedDestination});const written=await this.readBundle(bundleKey(saved));if(!written||await bytesHash(written)!==saved.hash)throw messageError('unified.migrationVerification');
+    check();const saved=old??await this.save(meta,bytes,expectedDestination===undefined?{}:{expectedDestination});check();const written=await this.readBundle(bundleKey(saved));if(!written||await bytesHash(written)!==saved.hash)throw messageError('unified.migrationVerification');
     this.aliases.set(entry.id,resourceId);mappings.push([entry.id,resourceId]);copied++;
-   }catch(error){pending.push({entry,error});}
+   }catch(error){check();pending.push({entry,error});}
   }
-  await this.refresh();return {copied,mappings,pending};
+  check();await this.refresh();check();return {copied,mappings,pending,warnings};
  }
 }
 export const unifiedGraphicsLibrary=new UnifiedGraphicsLibrary();

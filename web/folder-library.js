@@ -107,7 +107,7 @@ export class FolderLibrary {
  }
  // An explicit upgrade action, independent of opening or switching folders.
  // Delete browser originals only after every exact package is verified on disk.
- async importBrowserResources({signal,onProgress=()=>{}}={}){
+ async importBrowserResources({signal,onProgress=()=>{},onPhase=()=>{}}={}){
   return withLibraryTarget(async()=>{
    const {binding,index}=await this.connected(),snapshot=await this.readBrowserSnapshot(),fingerprint=await this.legacyFingerprint(snapshot.entries);
    if(!snapshot.records.length)return {copied:0,reused:0,total:0};
@@ -123,10 +123,11 @@ export class FolderLibrary {
      files.push({file,entry});onProgress({done:copied+reused,total:snapshot.records.length,name:entry.name});
     }
     check();if(await this.legacyFingerprint(await this.readBrowser())!==fingerprint)throw messageError('folder.browserChanged');
-    const final=copied?await this.commit(store,state,state.index):state;await this.remember(binding,final);
+    onPhase('publishing');check();const final=copied?await this.commit(store,state,state.index):state;await this.remember(binding,final);
+    onPhase('verifying');check();
     for(const {file,entry}of files){check();const bytes=await store.read(file);if(!bytes||await bytesHash(bytes)!==entry.hash)throw messageError('folder.resourceChanged',entry.name);await this.verify(bytes,entry);}
     check();if((await this.load(binding.handle,binding.libraryId)).revision!==final.revision)throw messageError('folder.indexChanged');
-    await this.clearBrowser(snapshot);
+    onPhase('cleaning');check();await this.clearBrowser(snapshot);
    });
    libraryChanged();return {copied,reused,total:snapshot.records.length};
   });

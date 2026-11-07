@@ -38,6 +38,23 @@ test('failed migration preserves the original entry as pending and never edits i
  const f=await fixture(),entry=createProjectResource(node('shape','Circle'),{name:'Only in old list'}),before=JSON.stringify(entry);f.store.save=async()=>{throw Error('Disk unavailable');};
  const result=await f.store.migrateLegacy([entry]);assert.equal(result.pending.length,1);assert.equal(result.mappings.length,0);assert.equal(JSON.stringify(entry),before);assert.equal(f.records.size,0);
 });
+
+test('thumbnail GPU failures do not block verified migration of the complete editable graphic',async()=>{
+ const f=await fixture(),entry=createProjectResource(node('shape','Circle'),{name:'Legacy without thumbnail'});entry.root.params[0]=.37;entry.root.tracks.opacity={mode:'absolute',ease:'linear',keys:[[0,.2],[1,.9]]};const before=structuredClone(entry);
+ const result=await f.store.migrateLegacy([entry],{thumbnail:()=>{throw Error('GPU allocation failed');}});assert.equal(result.pending.length,0);assert.equal(result.warnings.length,1);assert.equal(result.warnings[0].entry.id,entry.id);assert.equal(f.records.size,1);
+ const migrated=await f.store.materialize(result.mappings[0][1]);assert.equal(migrated.root.params[0],.37);assert.deepEqual(migrated.root.tracks,entry.root.tracks);assert.equal(migrated.thumbnail,'');assert.deepEqual(entry,before);
+});
+
+test('a thumbnail warning never hides a failure to persist the actual resource',async()=>{
+ const f=await fixture(),entry=createProjectResource(node(),{name:'Legacy disk failure'});f.store.save=async()=>{throw Error('Disk unavailable');};
+ const result=await f.store.migrateLegacy([entry],{thumbnail:()=>{throw Error('GPU allocation failed');}});assert.equal(result.pending.length,1);assert.equal(result.warnings.length,1);assert.equal(result.mappings.length,0);assert.equal(f.records.size,0);
+});
+
+test('canceling legacy list migration stops before another resource is saved and retains source entries',async()=>{
+ const f=await fixture(),abort=new AbortController(),entries=[createProjectResource(node(),{name:'First legacy'}),createProjectResource(node(),{name:'Second legacy'})],before=structuredClone(entries),seen=[];
+ await assert.rejects(f.store.migrateLegacy(entries,{signal:abort.signal,onProgress:entry=>{seen.push(entry.name);abort.abort();}}),error=>error.messageKey==='folder.canceled');
+ assert.deepEqual(seen,['First legacy']);assert.equal(f.records.size,0);assert.deepEqual(entries,before);
+});
 test('saving changes publishes one resource version while previously inserted instances remain independent',async()=>{
  const f=await fixture(),original=await f.seed();await f.store.refresh();const loaded=await f.store.materialize(original.resourceId),instance=cloneNode(loaded.root),before=JSON.stringify(instance),modified=cloneNode(loaded.root);modified.opacity=.4;
  const saved=await f.store.saveRoot(modified,{existing:loaded,name:loaded.name});assert.equal(saved.resourceId,original.resourceId);assert.equal(saved.versionId,2);assert.equal(f.records.size,1);assert.equal(saved.root.opacity,.4);assert.equal(JSON.stringify(instance),before);
