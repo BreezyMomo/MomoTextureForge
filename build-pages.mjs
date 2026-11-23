@@ -42,7 +42,7 @@ const entryFile=relative(output,join(root,entry)).replaceAll('\\','/');
 const styles=['theme-tokens','style','tree','graphics-workspace','dock-workspace','inspector-color','editor-surfaces','creative-skins','tab-styles','palette-roles','workspace-workflow'];
 const css=await build({...common,stdin:{contents:(await Promise.all(styles.map(name=>readEditorStyle(name+'.css')))).join('\n'),loader:'css',resolveDir:web}});
 const cssFile=named('editor','css',css.outputFiles[0].contents);
-const policy="default-src 'none'; script-src 'self' 'unsafe-inline' https://hm.baidu.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https: http:; connect-src https: http:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'";
+const policy="default-src 'none'; script-src 'self' 'unsafe-inline' https://hm.baidu.com https://stats.breezymomo.com/momo-pages-analytics.js https://stats.breezymomo.com/script.js; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https: http:; connect-src https: http:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'";
 let html=(await readFile(join(web,'index.html'),'utf8'))
  .replace('<html lang="zh-CN" data-momo-workbench="true">','<html lang="zh-CN" data-momo-workbench="true" data-distribution="pages">')
  .replace('<link rel="stylesheet" href="theme-tokens.css" />',()=>`<meta http-equiv="Content-Security-Policy" content="${policy}"><link rel="stylesheet" href="./${cssFile}" data-tree-style>`)

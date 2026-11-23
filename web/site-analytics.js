@@ -3,7 +3,7 @@
 import {EXPORT_COMPLETED_EVENT,exportEventData} from './export-events.js';
 export function analyticsTarget(href){
  const url=new URL(href);
- if(url.protocol!=='https:'||url.port)return null;
+ if(url.protocol!=='https:'||url.port||url.username||url.password)return null;
  let id,base;
  if(url.hostname==='breezymomo.github.io'&&/^\/MomoTextureForge\/(?:index\.html|examples\.html)?$/.test(url.pathname)){
   id='067c64539a82f8a5cc10389781ba1b75';base='/MomoTextureForge/';
@@ -19,6 +19,14 @@ export function startSiteAnalytics(win=window,doc=document){
  try{
   const target=analyticsTarget(win.location.href);
   if(!target||doc.getElementById('momo-site-analytics'))return false;
+  try{
+   if(new URL(win.location.href).hostname==='breezymomo.github.io'&&!doc.getElementById('momo-pages-analytics')){
+    const script=doc.createElement('script');
+    script.id='momo-pages-analytics';script.async=true;script.referrerPolicy='origin';
+    script.src='https://stats.breezymomo.com/momo-pages-analytics.js';
+    doc.head.append(script);
+   }
+  }catch{/* Umami initialization is independent of Baidu. */}
   const queue=win._hmt=win._hmt||[];
   // No automatic clicks/heatmaps or raw query/hash URLs from shared projects.
   queue.push(['_setAutoPageview',false]);

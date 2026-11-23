@@ -5,8 +5,11 @@ import {pagesAsset} from './helpers/pages-assets.mjs';
 
 const html=await readFile('site/index.html','utf8'),offline=await readFile('dist/MomoTextureForge.html','utf8');
 const realSDK=process.argv.includes('--real-sdk');
-assert.ok(html.includes("script-src 'self' 'unsafe-inline' https://hm.baidu.com;"));
+const adapter='https://stats.breezymomo.com/momo-pages-analytics.js';
+const sdk='https://stats.breezymomo.com/script.js';
+assert.ok(html.includes(`script-src 'self' 'unsafe-inline' https://hm.baidu.com ${adapter} ${sdk};`));
 assert.ok(!offline.includes('hm.baidu.com'));
+assert.ok(!offline.includes(adapter));
 const browser=await chromium.launch({channel:'msedge',headless:true});
 try{
  for(const [url,id,path]of [
@@ -16,9 +19,13 @@ try{
   ['https://example.com/',null,null],
   ['http://127.0.0.1:8799/',null,null]
  ]){
-  const page=await browser.newPage(),requests=[];
+  const page=await browser.newPage(),requests=[],adapterRequests=[];
   await page.route('**/*',async route=>{
    const request=route.request();
+   if(request.url()===adapter){
+    adapterRequests.push(await request.allHeaders());
+    return route.fulfill({contentType:'text/javascript',body:'window.__umamiAdapterLoaded=true;'});
+   }
    if(request.url().startsWith('https://hm.baidu.com/')){
     const headers=await request.allHeaders();requests.push({url:request.url(),headers});
     // Baidu can reply 200 with no code when the script omits its Referer.
@@ -57,11 +64,16 @@ try{
    await page.waitForFunction(()=>document.documentElement.dataset.ready==='true');
    assert.equal(requests.length,0);
   }
+  if(new URL(url).hostname==='breezymomo.github.io'){
+   await page.waitForFunction(()=>window.__umamiAdapterLoaded===true);
+   assert.equal(adapterRequests.length,1);
+   assert.equal(adapterRequests[0].referer,'https://breezymomo.github.io/');
+  }else assert.equal(adapterRequests.length,0);
   await page.close();
  }
  const blocked=await browser.newPage();
  await blocked.route('**/*',async route=>{if(route.request().isNavigationRequest())return route.fulfill({contentType:'text/html',body:html});const asset=await pagesAsset(route.request().url());return asset?route.fulfill(asset):route.abort();});
- await blocked.goto('https://momo-texture-forge.app.workbuddy.host/');
+ await blocked.goto('https://breezymomo.github.io/MomoTextureForge/');
  await blocked.waitForFunction(()=>document.documentElement.dataset.ready==='true');
  assert.equal(await blocked.locator('#open-graphics-library').count(),1);
  console.log('Analytics browser checks passed'+(realSDK?' (real Baidu SDK, intercepted beacons)':'')+': host isolation, CSP, sanitized PV/events, origin-only script Referer, offline isolation, blocked tracker does not block editor.');

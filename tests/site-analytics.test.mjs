@@ -29,8 +29,17 @@ function analyticsWindow(href='https://momo-texture-forge.app.workbuddy.host/'){
  const events=new Map(),scripts=[];
  const win={location:{href},CustomEvent:class{constructor(type,{detail}){this.type=type;this.detail=detail;}},addEventListener:(name,fn)=>events.set(name,fn),dispatchEvent:event=>events.get(event.type)?.(event)};
  const doc={referrer:'',getElementById:id=>scripts.find(s=>s.id===id),createElement:()=>({}),head:{append:s=>scripts.push(s)}};
- return {win,doc,events};
+ return {win,doc,events,scripts};
 }
+
+test('only the official GitHub Pages load Umami, once per page',()=>{
+ const {win,doc,scripts}=analyticsWindow('https://breezymomo.github.io/MomoTextureForge/examples.html');
+ assert.equal(startSiteAnalytics(win,doc),true);
+ assert.equal(startSiteAnalytics(win,doc),false);
+ assert.deepEqual(scripts.filter(script=>script.id==='momo-pages-analytics'),[
+  {id:'momo-pages-analytics',src:'https://stats.breezymomo.com/momo-pages-analytics.js',async:true,referrerPolicy:'origin'},
+ ]);
+});
 
 test('completed export events use bounded format/channel labels and distinguish clipboard',()=>{
  const {win,doc}=analyticsWindow();startSiteAnalytics(win,doc);startSiteAnalytics(win,doc);
